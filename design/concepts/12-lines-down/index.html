@@ -1,0 +1,1070 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spokane County ARES-ACS</title>
+<meta name="description" content="Spokane County ARES-ACS: licensed amateur radio volunteers who provide backup communications when normal systems are overloaded or down. Follow one message on a bad night, then join the team.">
+<link rel="icon" href="../../assets/Spokane_County_ARES-ACS_logo_slightly_smaller_550x550.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#0E1A33;
+  --slate:#33415C;
+  --peach:#F3C29B;
+  --day:#FFFFFF;
+  --red:#D0202A;
+  --red-ink:#B01A23;
+  --amber:#FFC857;
+  --mist:#C5CEDF;
+  --ink:#0E1A33;
+  --ink-2:#3C4863;
+  --rule:#D9DEE8;
+  --off:#56627C;
+  --serif:"Crimson Pro", Georgia, "Times New Roman", serif;
+  --sans:"Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --header-h:72px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--night);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit}
+h1,h2,h3,h4{margin:0}
+p{margin:0}
+ul,ol{margin:0;padding:0}
+[id]{scroll-margin-top:calc(var(--header-h) + 16px)}
+.wrap{width:min(1240px, calc(100% - 64px));margin-inline:auto}
+.vh{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+:focus-visible{outline:3px solid var(--amber);outline-offset:0;box-shadow:0 0 0 6px var(--night)}
+.skip-link{position:absolute;left:16px;top:-80px;z-index:100;background:var(--amber);color:var(--night);padding:10px 16px;border-radius:6px;font-weight:600;text-decoration:none}
+.skip-link:focus{top:12px}
+
+/* ---------- Header ---------- */
+.site-header{position:fixed;inset:0 0 auto 0;z-index:50;color:#fff;transition:background-color .3s ease, box-shadow .3s ease}
+.site-header.is-solid{background:rgba(14,26,51,.95);box-shadow:0 1px 0 rgba(197,206,223,.14);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.header__bar{display:flex;align-items:center;gap:28px;height:var(--header-h)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto;min-width:0}
+.brand img{width:44px;height:44px;border-radius:50%;background:#fff;flex:none}
+.brand__name{display:flex;flex-direction:column;line-height:1.1;font-size:13px;font-weight:500;color:var(--mist)}
+.brand__name strong{font-size:19px;font-weight:700;color:#fff;letter-spacing:.005em}
+.nav ul{display:flex;gap:26px;list-style:none}
+.nav a{display:inline-block;font-size:15px;font-weight:500;color:#E7ECF5;text-decoration:none;padding:6px 0}
+.nav a:hover{color:#fff;text-decoration:underline;text-decoration-color:var(--amber);text-decoration-thickness:2px;text-underline-offset:7px}
+.nav__toggle{display:none}
+.pill{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--red);color:#fff;font-family:var(--sans);font-weight:600;font-size:15px;line-height:1.2;padding:11px 20px;border-radius:999px;text-decoration:none;white-space:nowrap;border:0;transition:background-color .2s}
+.pill:hover{background:#B51C25}
+.pill--lg{font-size:17px;padding:15px 28px}
+.textlink{font-weight:600;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:5px}
+.textlink:hover{text-decoration-thickness:3px}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;isolation:isolate;overflow:hidden;color:#fff;display:flex;flex-direction:column;min-height:660px;height:min(100svh, 1000px)}
+.hero__bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:62% 72%;z-index:-2;filter:brightness(.6) saturate(.85)}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg, rgba(14,26,51,.82) 0%, rgba(14,26,51,.38) 26%, rgba(14,26,51,.18) 55%, rgba(14,26,51,.7) 80%, var(--night) 100%)}
+.skip-story{position:absolute;top:calc(var(--header-h) + 18px);right:max(32px, calc((100% - 1240px)/2));font-size:15px;font-weight:600;color:#fff;text-decoration:underline;text-underline-offset:5px;text-decoration-color:rgba(255,255,255,.55);padding:6px 0}
+.skip-story:hover{text-decoration-color:var(--amber)}
+.hero__inner{flex:1;display:flex;flex-direction:column;justify-content:center;padding-top:calc(var(--header-h) + 40px);padding-bottom:24px}
+.tag{display:inline-flex;align-items:center;gap:8px;width:max-content;white-space:nowrap;flex:none;font-family:var(--sans);font-size:14px;font-weight:600;line-height:1;color:var(--amber);border:1px solid rgba(255,200,87,.6);border-radius:999px;padding:7px 12px 7px 10px}
+.tag::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--amber)}
+.hero h1{font-family:var(--serif);font-weight:500;font-size:clamp(2.75rem, 1rem + 5.4vw, 6rem);line-height:1.02;letter-spacing:-.012em;margin:22px 0 26px;max-width:15ch;text-wrap:balance}
+.hero h1 span{display:block}
+.hero__narr{font-family:var(--serif);font-size:clamp(1.35rem, 1.05rem + .7vw, 1.75rem);line-height:1.4;color:#E4E9F2;max-width:32ch}
+.hero__ctas{display:flex;flex-wrap:wrap;align-items:center;gap:18px 28px;margin-top:34px}
+.hero__ctas .textlink{color:#fff;text-decoration-color:rgba(255,255,255,.6);font-size:17px}
+.hero__foot{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;padding-bottom:34px;border-top:1px solid rgba(197,206,223,.18);padding-top:20px}
+.hero__foot p{font-size:15px;line-height:1.55;color:var(--mist);max-width:62ch}
+.hero__foot p strong{color:#fff;font-weight:600}
+.scroll-cue{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--mist);white-space:nowrap}
+.scroll-cue::after{content:"";width:1px;height:34px;background:linear-gradient(var(--mist), transparent)}
+
+/* ---------- Story (scrollytelling) ---------- */
+.story{position:relative;color:#fff;background:linear-gradient(180deg, var(--night) 0%, var(--night) 30%, #1F2C47 70%, var(--slate) 100%);padding:40px 0 60px}
+.story__grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:64px;align-items:start}
+.story__steps{position:relative;z-index:1}
+.step{padding:56px 0}
+.step h3{font-family:var(--serif);font-weight:500;font-size:clamp(2rem, 1.3rem + 1.5vw, 2.75rem);line-height:1.1;letter-spacing:-.005em;margin-bottom:18px;max-width:17ch;text-wrap:balance}
+.step p{font-family:var(--serif);font-size:clamp(1.35rem, 1.1rem + .55vw, 1.75rem);line-height:1.45;color:var(--mist);max-width:32ch}
+.step p + p{margin-top:14px}
+.step p strong{color:#fff;font-weight:600}
+.step .fact{font-family:var(--sans);font-size:15px;line-height:1.55;color:var(--mist);border-left:2px solid var(--red);padding-left:14px;margin-top:22px;max-width:40ch}
+.story__intro{font-family:var(--sans);font-size:15px;color:var(--mist);display:flex;align-items:center;gap:12px;padding-top:24px}
+.scrolly .step{min-height:min(92vh, 860px);display:flex;flex-direction:column;justify-content:center}
+.scrolly .step:first-of-type{min-height:min(80vh, 760px)}
+.scrolly .step:last-of-type{min-height:min(100vh, 960px)}
+
+/* ICS-213 paper */
+.form213{margin-top:28px;background:#fff;color:var(--ink);border-radius:4px;max-width:400px;box-shadow:0 24px 50px -18px rgba(0,0,0,.6);border-top:6px solid var(--red);font-family:var(--sans)}
+.form213__head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 18px 10px;border-bottom:1px solid var(--rule)}
+.form213__head b{font-size:15px;font-weight:700}
+.form213__head span{font-size:13px;color:var(--ink-2)}
+.form213 dl{margin:0;display:grid;grid-template-columns:1fr 1fr}
+.form213 dl div{padding:9px 18px;border-bottom:1px solid var(--rule)}
+.form213 dl div:nth-child(odd):not(.full){border-right:1px solid var(--rule)}
+.form213 dl .full{grid-column:1 / -1}
+.form213 dt{font-size:12px;font-weight:500;color:var(--ink-2)}
+.form213 dd{margin:0;font-family:var(--serif);font-style:italic;font-size:19px;line-height:1.3}
+.step .form213__foot{font-family:var(--sans);font-size:12.5px;line-height:1.4;color:var(--ink-2);padding:9px 18px 12px;max-width:none;margin:0}
+
+/* Diagram */
+.story__figure{margin:0}
+.scrolly .story__figure{position:sticky;top:calc(var(--header-h) + 20px)}
+.diagram{background:rgba(5,11,26,.55);border:1px solid rgba(197,206,223,.16);border-radius:16px;padding:16px 18px 18px}
+.diagram__status{display:flex;align-items:center;gap:12px;min-height:44px;margin-bottom:6px}
+.diagram__status-text{font-size:15.5px;font-weight:500;color:#fff;line-height:1.35}
+.diagram__status .tag{font-size:13px;padding:6px 10px 6px 9px;flex:none}
+.stage{position:relative;aspect-ratio:720 / 520;width:100%;margin-inline:auto}
+.scrolly .stage{width:min(100%, max(300px, calc((100vh - 360px) * 1.3846)))}
+.stage svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+
+.map .ground{fill:rgba(4,9,22,.45)}
+.map .groundline{stroke:#2B3A5A;stroke-width:1.5}
+.map .hill{fill:url(#hillg)}
+.map .tower path{stroke:#DCE3EF;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.map .bldg{fill:#16233F;stroke:#8190AE;stroke-width:1.6;transition:stroke .5s, fill .5s}
+.map .mast{stroke:#DCE3EF;stroke-width:2;stroke-linecap:round}
+.map .door{fill:#0A1328}
+.map .cross{fill:#DCE3EF}
+.map .win{fill:var(--amber);transition:fill .6s}
+.map .swin{fill:#2A3857}
+.map .wires{fill:none;stroke:#AEBBD4;stroke-width:1.6;transition:stroke .6s, opacity .6s}
+.map .poles path{stroke:#AEBBD4;stroke-width:2;stroke-linecap:round;transition:stroke .6s}
+.map .cell path{stroke:#AEBBD4;stroke-width:1.8;fill:none;stroke-linecap:round;transition:stroke .6s}
+.map .cell-waves{stroke:#AEBBD4;stroke-width:1.8;fill:none;stroke-linecap:round;transition:opacity .5s}
+.map .sleet-layer{opacity:0;transition:opacity .8s}
+.map .hop{fill:none;stroke:var(--red);stroke-width:4;stroke-linecap:round;filter:drop-shadow(0 0 5px rgba(208,32,42,.75))}
+.map .node{fill:var(--amber);opacity:0;transition:opacity .4s}
+.map .pulse{fill:none;stroke:var(--amber);stroke-width:2;opacity:0;transform-box:fill-box;transform-origin:center}
+.map .badge{opacity:0;transition:opacity .4s}
+.map .badge circle{fill:var(--night);stroke:var(--amber);stroke-width:2}
+.map .badge text{fill:#fff;font:700 15px var(--sans);text-anchor:middle;dominant-baseline:central}
+.map #token{opacity:0}
+.map #token rect{fill:var(--amber)}
+.map #token text{fill:var(--night);font:700 12px var(--sans);text-anchor:middle;dominant-baseline:central}
+
+/* state: power + cell down */
+.is-down .map .win{fill:#1D2944}
+.is-down .map .wires{stroke:var(--off);opacity:.8}
+.is-down .map .poles path{stroke:var(--off)}
+.is-down .map .cell path{stroke:var(--off)}
+.is-down .map .cell-waves{opacity:0}
+.is-down .map .sleet-layer{opacity:.45}
+/* state: shelter has a message */
+.is-shelter .map .shelter .bldg{stroke:var(--amber);fill:#23304D}
+.is-shelter .map .n-shelter{opacity:1}
+/* state: sending via repeater to EOC */
+.is-send .map .n-rep,.is-send .map .n-eoc{opacity:1}
+.is-send .map .eoc .bldg{stroke:var(--amber)}
+.is-send .map .b1,.is-send .map .b2{opacity:1}
+/* state: relayed to hospital net */
+.is-relay .map .n-hosp{opacity:1}
+.is-relay .map .hosp .bldg{stroke:var(--amber)}
+.is-relay .map .b3,.is-relay .map .b4{opacity:1}
+.is-static .map .badge{opacity:1}
+
+.scrolly .map .hop{stroke-dasharray:var(--len, 1000);stroke-dashoffset:var(--len, 1000)}
+.scrolly .diagram.pulse-shelter .p-shelter,.scrolly .diagram.pulse-eoc .p-eoc{animation:ping 1.8s ease-out 3}
+@keyframes ping{0%{opacity:.9;transform:scale(.4)}100%{opacity:0;transform:scale(2.4)}}
+
+/* HTML labels on the stage */
+.lbl{position:absolute;font-size:14px;line-height:1.25;font-weight:600;color:#fff;white-space:nowrap}
+.lbl small{display:block;font-size:13px;font-weight:500;color:var(--mist)}
+.lbl .role{display:block;font-size:13px;font-weight:600;color:var(--amber);opacity:0;transition:opacity .4s}
+.lbl--shelter{left:3%;top:90.6%}
+.lbl--rep{right:52.6%;top:5.6%;text-align:right}
+.lbl--eoc{left:61%;top:90.6%}
+.lbl--hosp{right:1.5%;top:90.6%;text-align:right}
+.lbl--cell{left:42%;top:62.5%;font-size:13px;font-weight:500;color:var(--mist)}
+.lbl--cell .off{display:none;color:#A9B4C9}
+.stage-tag{display:none;position:absolute;right:2%;top:2%;font-size:11.5px;font-weight:600;color:var(--amber)}
+.is-down .lbl--cell .on{display:none}
+.is-down .lbl--cell .off{display:inline}
+.is-send .lbl--shelter .role,.is-send .lbl--rep .role,.is-relay .lbl--eoc .role,.is-relay .lbl--hosp .role{opacity:1}
+
+.legend{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:10px 22px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(197,206,223,.14)}
+.legend li{display:grid;grid-template-columns:26px 1fr;gap:10px;align-items:start;font-size:14px;line-height:1.4;color:var(--mist);transition:opacity .4s}
+.legend b{display:block;color:#fff;font-weight:600;font-size:14.5px}
+.legend .n{width:26px;height:26px;border-radius:50%;border:2px solid var(--amber);display:grid;place-items:center;font-weight:700;font-size:13px;color:#fff;line-height:1}
+.scrolly .legend li{opacity:.65}
+.scrolly .legend li.is-lit{opacity:1}
+.scrolly .legend li.is-lit .n{background:var(--amber);color:var(--night)}
+.figure__note{font-size:13px;color:#A9B4C9;margin-top:12px;line-height:1.45}
+
+/* ---------- Dawn ---------- */
+.dawn{background:linear-gradient(180deg, var(--slate) 0, #5E5F80 90px, #A68A9A 190px, #DDAE9E 290px, var(--peach) 400px, #F8D6BD 55%, #FFF3E9 85%, var(--day) 100%);color:var(--ink);padding:0 0 110px}
+.dawn__sky{height:clamp(150px, 15vw, 230px);position:relative}
+.dawn__sky p{position:absolute;left:16px;right:16px;top:clamp(40px, 4vw, 64px);text-align:center;font-family:var(--serif);font-style:italic;font-size:clamp(1.25rem, 1rem + .5vw, 1.5rem);color:#fff}
+.dawn__grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:64px;align-items:end}
+.dawn h2{font-family:var(--serif);font-weight:500;font-size:clamp(2.75rem, 1.2rem + 4.4vw, 5.5rem);line-height:1;letter-spacing:-.015em;max-width:13ch;text-wrap:balance}
+.dawn__lede{font-family:var(--serif);font-size:clamp(1.35rem, 1.1rem + .55vw, 1.75rem);line-height:1.45;margin-top:26px;max-width:34ch}
+.quote{margin:28px 0 0;padding:0;max-width:44ch}
+.quote p{font-family:var(--serif);font-style:italic;font-size:1.25rem;line-height:1.45}
+.quote footer{font-size:14px;color:var(--ink-2);margin-top:8px}
+.photo{margin:0}
+.photo img{border-radius:6px;width:100%;box-shadow:0 30px 60px -30px rgba(14,26,51,.55)}
+.photo--dawn img{filter:sepia(.14) saturate(1.05) brightness(1.02)}
+.photo figcaption{font-size:14px;color:var(--ink-2);margin-top:10px;line-height:1.45}
+.tuesday{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:64px;margin-top:88px;padding-top:44px;border-top:1px solid rgba(14,26,51,.18)}
+.tuesday h3{font-family:var(--serif);font-weight:500;font-size:clamp(2rem, 1.4rem + 1.3vw, 2.75rem);line-height:1.08;max-width:14ch}
+.tuesday__intro p{margin-top:16px;font-size:17px;color:var(--ink-2);max-width:40ch}
+.netcard{display:grid;grid-template-columns:repeat(3, auto);justify-content:start;gap:8px 40px;margin-top:26px}
+.netcard div{display:flex;flex-direction:column}
+.netcard dt{font-size:14px;color:var(--ink-2)}
+.netcard dd{margin:0;font-size:24px;font-weight:600;letter-spacing:-.01em;line-height:1.2}
+.netcard dd small{display:block;font-size:14px;font-weight:500;color:var(--ink-2);letter-spacing:0}
+.fall h4{font-size:16px;font-weight:700;margin-bottom:6px}
+.fall p.sub{font-size:15px;color:var(--ink-2);margin-bottom:14px}
+.fall ul{list-style:none;border-top:1px solid rgba(14,26,51,.2)}
+.fall li{display:grid;grid-template-columns:118px 1fr;gap:18px;padding:12px 0;border-bottom:1px solid rgba(14,26,51,.14);font-size:16px;line-height:1.45}
+.fall time{font-weight:600}
+.fall li span small{display:block;color:var(--ink-2);font-size:14px}
+.fall .more{margin-top:14px;font-size:15px}
+
+/* ---------- Light sections ---------- */
+.light{background:var(--day);color:var(--ink)}
+.band{padding:110px 0}
+.band--tight{padding-top:40px}
+.h2{font-family:var(--serif);font-weight:500;font-size:clamp(2.4rem, 1.3rem + 3vw, 4.25rem);line-height:1.02;letter-spacing:-.012em;max-width:16ch;text-wrap:balance}
+.lede-serif{font-family:var(--serif);font-size:clamp(1.35rem, 1.1rem + .55vw, 1.75rem);line-height:1.45;max-width:40ch;margin-top:22px}
+.who__top{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,6fr);gap:64px;align-items:end}
+.sides{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:64px;border-top:2px solid var(--ink)}
+.side{padding:32px 40px 8px 0}
+.side + .side{padding-left:40px;padding-right:0;border-left:1px solid var(--rule)}
+.side__head{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.side__head img{width:64px;height:64px;object-fit:contain;flex:none}
+.side h3{font-size:26px;font-weight:700;line-height:1.15;letter-spacing:-.01em}
+.side h3 small{display:block;font-size:15px;font-weight:500;color:var(--ink-2);letter-spacing:0}
+.side p{font-size:17px;color:var(--ink-2);max-width:52ch}
+.side p + p{margin-top:12px}
+.side p strong{color:var(--ink)}
+.both{margin-top:28px;display:flex;gap:18px;align-items:baseline;flex-wrap:wrap;padding:18px 22px;background:#FDF1E7;border-radius:8px}
+.both p{font-size:16px;max-width:none}
+.both q{font-family:var(--serif);font-style:italic;font-size:19px}
+.year{margin-top:88px;display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:64px}
+.year h3{font-family:var(--serif);font-weight:500;font-size:clamp(1.9rem, 1.4rem + 1.2vw, 2.6rem);line-height:1.08;max-width:12ch}
+.year__intro p{margin-top:14px;color:var(--ink-2);max-width:34ch}
+.year dl{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:0 40px}
+.year dl div{padding:16px 0;border-top:1px solid var(--rule)}
+.year dt{font-weight:700;font-size:17px}
+.year dd{margin:2px 0 0;color:var(--ink-2);font-size:16px;line-height:1.5}
+.honest{margin-top:40px;font-size:15px;color:var(--ink-2);max-width:78ch;padding-left:16px;border-left:2px solid var(--rule)}
+
+/* Join */
+.join{background:linear-gradient(180deg, var(--day) 0%, #FFF6EE 30%, #FDEBDD 70%, var(--day) 100%)}
+.join__top{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,6fr);gap:64px;align-items:center}
+.join__top .quote{border-left:3px solid var(--red);padding-left:18px}
+.join__need{margin-top:24px;font-size:17px;color:var(--ink-2);max-width:46ch}
+.path{list-style:none;display:grid;grid-template-columns:repeat(4, 1fr);gap:0;margin-top:80px;counter-reset:path}
+.path li{position:relative;padding:28px 28px 8px 0;border-top:3px solid var(--ink)}
+.path li + li{padding-left:28px;border-left:1px solid rgba(14,26,51,.14)}
+.path li.opt{border-top-style:dashed}
+.path .num{display:flex;align-items:baseline;gap:12px;font-family:var(--serif);font-size:3.5rem;line-height:.9;font-weight:500;color:var(--red-ink);margin-bottom:12px;font-variant-numeric:lining-nums}
+.path h3{font-size:21px;font-weight:700;line-height:1.2;margin-bottom:8px}
+.path .num small{font-family:var(--sans);font-size:13px;font-weight:600;line-height:1;color:var(--ink-2);border:1px dashed rgba(14,26,51,.45);border-radius:999px;padding:5px 10px;align-self:center}
+.path p{font-size:16px;color:var(--ink-2);line-height:1.55}
+.path .links{margin-top:12px;display:flex;flex-direction:column;gap:6px;font-size:15px}
+.path .links a{color:var(--red-ink)}
+.join__cta{display:flex;flex-wrap:wrap;align-items:center;gap:16px 28px;margin-top:44px}
+.join__cta .textlink{color:var(--ink)}
+.panels{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:28px;margin-top:88px}
+.panel{border-radius:12px;padding:36px 36px 32px}
+.panel--peach{background:#fff;border:1px solid #F0D5BF}
+.panel--night{background:var(--night);color:#fff}
+.panel h3{font-family:var(--serif);font-weight:500;font-size:clamp(1.9rem, 1.4rem + 1vw, 2.5rem);line-height:1.08}
+.panel .intro{margin-top:10px;font-size:17px;color:var(--ink-2);max-width:48ch}
+.panel--night .intro{color:var(--mist)}
+.lic{list-style:none;margin-top:22px;counter-reset:lic}
+.lic li{counter-increment:lic;display:grid;grid-template-columns:34px 1fr;gap:12px;padding:14px 0;border-top:1px solid #F0DCCB;font-size:16px;line-height:1.5}
+.lic li::before{content:counter(lic);width:28px;height:28px;border-radius:50%;background:var(--peach);display:grid;place-items:center;font-weight:700;font-size:14px;color:var(--ink)}
+.lic li b{display:block;font-size:17px}
+.lic li span{color:var(--ink-2)}
+.lic a{color:var(--red-ink)}
+.listen__big{display:flex;flex-wrap:wrap;gap:6px 26px;margin-top:22px}
+.listen__big div{display:flex;flex-direction:column}
+.listen__big span{font-size:14px;color:var(--mist)}
+.listen__big strong{font-size:clamp(2rem, 1.5rem + 1.2vw, 2.6rem);font-weight:600;letter-spacing:-.02em;line-height:1.1;color:#fff}
+.listen dl{margin:22px 0 0;display:grid;grid-template-columns:auto 1fr;gap:8px 18px;font-size:16px}
+.listen dt{color:var(--mist)}
+.listen dd{margin:0;color:#fff;font-weight:500}
+.listen .note{margin-top:18px;font-size:15px;color:var(--mist);padding:12px 14px;border:1px solid rgba(197,206,223,.22);border-radius:8px}
+.listen .note b{color:var(--amber);font-weight:600}
+.listen .textlink{display:inline-block;margin-top:20px;color:#fff;text-decoration-color:var(--amber)}
+
+/* Alert levels */
+.levels__head{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,6fr);gap:64px;align-items:end}
+.levels__head p{color:var(--ink-2);max-width:46ch}
+.scale{list-style:none;display:grid;grid-template-columns:repeat(4, 1fr);gap:0;margin-top:52px;align-items:end}
+.scale li{padding:0 24px 0 0}
+.scale li + li{padding-left:24px;border-left:1px solid var(--rule)}
+.scale .bar{display:block;border-radius:3px;margin-bottom:18px}
+.scale li:nth-child(1) .bar{height:8px;margin-top:24px;background:#2F7D4F}
+.scale li:nth-child(2) .bar{height:16px;margin-top:16px;background:var(--amber)}
+.scale li:nth-child(3) .bar{height:24px;margin-top:8px;background:#F09010}
+.scale li:nth-child(4) .bar{height:32px;background:var(--red)}
+.scale h3{font-size:19px;font-weight:700;line-height:1.2}
+.scale h3 small{display:block;font-size:15px;font-weight:500;color:var(--ink-2)}
+.scale p{font-size:15.5px;color:var(--ink-2);margin-top:8px;line-height:1.5}
+.scale li{align-self:stretch}
+.after{margin-top:30px;font-size:16px;color:var(--ink-2)}
+.after b{color:var(--ink)}
+
+/* Partners */
+.partners{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:64px;padding-top:88px;margin-top:88px;border-top:1px solid var(--rule)}
+.marks{display:flex;gap:22px;align-items:center;margin-top:28px}
+.marks img{width:96px;height:96px;object-fit:contain}
+.marks img.ares{width:78px;height:78px}
+.marks__note{font-size:13px;color:var(--ink-2);margin-top:12px;max-width:34ch}
+.partners__title{font-family:var(--serif);font-weight:500;font-size:clamp(1.9rem, 1.4rem + 1.2vw, 2.6rem);line-height:1.08}
+.partners__intro p{margin-top:12px;color:var(--ink-2);max-width:36ch}
+.plist{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:0 40px}
+.plist div{padding:16px 0;border-top:1px solid var(--rule)}
+.plist dt{font-weight:700;font-size:17px;line-height:1.3}
+.plist dd{margin:3px 0 0;color:var(--ink-2);font-size:15.5px;line-height:1.5}
+
+/* ---------- Footer ---------- */
+.footer{background:var(--night);color:#fff;padding:88px 0 40px}
+.footer__top{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,3fr) minmax(0,3fr) minmax(0,3fr);gap:48px}
+.footer h2{font-size:16px;font-weight:700;margin-bottom:14px}
+.footer p,.footer li,.footer dd,.footer dt{font-size:15px;line-height:1.55;color:var(--mist)}
+.footer .brand img{width:52px;height:52px}
+.footer__mission{margin-top:18px;font-family:var(--serif);font-size:18px!important;line-height:1.45!important;color:#E4E9F2!important;max-width:40ch}
+.footer__legacy{margin-top:14px;font-size:14px!important}
+.footer ul{list-style:none}
+.footer li + li{margin-top:6px}
+.footer a{color:#fff;text-decoration:underline;text-decoration-color:rgba(197,206,223,.45);text-underline-offset:4px}
+.footer a:hover{text-decoration-color:var(--amber)}
+.roster{margin:4px 0 0;display:grid;grid-template-columns:auto 1fr;gap:4px 14px}
+.roster dt{white-space:nowrap}
+.roster dd{margin:0;color:#fff!important;font-weight:500}
+.roster dd.open{color:var(--amber)!important}
+.footer__net strong{color:#fff;font-weight:600}
+.footer__bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 28px;margin-top:64px;padding-top:22px;border-top:1px solid rgba(197,206,223,.16);font-size:14px;color:#A9B4C9}
+.footer__bottom ul{display:flex;gap:22px;flex-wrap:wrap}
+.footer__bottom li + li{margin-top:0}
+.concept-label{color:#8D99B2}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1100px){
+  .nav ul{gap:20px}
+  .footer__top{grid-template-columns:1fr 1fr}
+  .path{grid-template-columns:1fr 1fr;row-gap:28px}
+  .path li:nth-child(3){padding-left:0;border-left:0}
+}
+@media (max-width: 980px){
+  :root{--header-h:64px}
+  .header__bar{gap:10px}
+  .nav{order:2}
+  .pill.header__pill{order:3}
+  .nav__toggle{display:inline-flex;align-items:center;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:9px 14px;font:500 14px/1 var(--sans);cursor:pointer}
+  .nav ul{display:none;position:absolute;top:var(--header-h);left:0;right:0;background:var(--night);flex-direction:column;gap:0;padding:6px 16px 18px;border-bottom:1px solid rgba(197,206,223,.18)}
+  .nav.is-open ul{display:flex}
+  .nav ul a{display:block;padding:13px 0;font-size:17px;border-bottom:1px solid rgba(197,206,223,.12)}
+  .site-header:has(.nav.is-open){background:var(--night)}
+  .story__grid,.dawn__grid,.tuesday,.who__top,.year,.join__top,.panels,.levels__head,.partners{grid-template-columns:1fr;gap:36px}
+  .story__figure{order:-1}
+  .story{background:var(--night)}
+  .dawn{background:linear-gradient(180deg, var(--night) 0, var(--slate) 50px, #5E5F80 110px, #A68A9A 170px, #DDAE9E 240px, var(--peach) 330px, #F8D6BD 45%, #FFF3E9 80%, var(--day) 100%)}
+  .scrolly .story__figure{top:var(--header-h);z-index:3;background:var(--night);margin-inline:-32px;padding:10px 32px 12px;box-shadow:0 12px 18px -10px rgba(0,0,0,.6)}
+  .scrolly .diagram{padding:10px 12px 12px;border-radius:12px}
+  .scrolly .legend,.scrolly .figure__note{display:none}
+  .scrolly .stage{width:min(100%, 520px)}
+  .scrolly .step,.scrolly .step:first-of-type{min-height:min(78vh, 640px);justify-content:flex-start;padding-top:40px}
+  .sides{grid-template-columns:1fr}
+  .side,.side + .side{padding:28px 0 8px;border-left:0}
+  .side + .side{border-top:1px solid var(--rule)}
+  .scale{grid-template-columns:1fr 1fr;row-gap:32px}
+  .scale li:nth-child(3){padding-left:0;border-left:0}
+}
+@media (max-width: 600px){
+  body{font-size:16px}
+  .wrap{width:calc(100% - 32px)}
+  .brand img{width:38px;height:38px}
+  .brand__name{font-size:11.5px}
+  .brand__name strong{font-size:16px}
+  .pill{font-size:14px;padding:10px 15px}
+  .pill--lg{font-size:16px;padding:14px 22px}
+  .skip-story{right:16px;top:calc(var(--header-h) + 12px);font-size:14px}
+  .hero{min-height:640px;height:min(100svh, 820px)}
+  .hero__inner{padding-top:calc(var(--header-h) + 56px)}
+  .hero__foot{flex-direction:column;align-items:flex-start;gap:14px}
+  .scrolly .story__figure{margin-inline:-16px;padding:8px 16px 10px}
+  .diagram__status{min-height:40px;gap:8px;margin-bottom:4px}
+  .stage-tag{display:block}
+  .diagram__status-text{font-size:14px}
+  .diagram__status .tag{display:none}
+  .lbl{font-size:11.5px}
+  .lbl small,.lbl .role,.lbl--cell{display:none}
+  .legend{grid-template-columns:1fr}
+  .step{padding:36px 0}
+  .form213 dd{font-size:17px}
+  .band{padding:80px 0}
+  .dawn{padding-bottom:80px}
+  .tuesday{margin-top:64px}
+  .netcard{grid-template-columns:1fr 1fr;gap:14px 28px}
+  .fall li{grid-template-columns:1fr;gap:2px}
+  .year dl,.plist{grid-template-columns:1fr}
+  .path{grid-template-columns:1fr}
+  .path li,.path li + li{padding:22px 0 10px;border-left:0}
+  .panel{padding:26px 20px 24px}
+  .scale{grid-template-columns:1fr}
+  .scale li,.scale li + li{padding:0;border-left:0}
+  .footer__top{grid-template-columns:1fr;gap:36px}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header" id="site-header">
+  <div class="wrap header__bar">
+    <a class="brand" href="#top" aria-label="Spokane County ARES-ACS, home">
+      <img src="../../assets/Spokane_County_ARES-ACS_logo_slightly_smaller_550x550.png" alt="" width="44" height="44">
+      <span class="brand__name">Spokane County <strong>ARES-ACS</strong></span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-list">Menu</button>
+      <ul id="nav-list">
+        <li><a href="#story">How it works</a></li>
+        <li><a href="#who">Who we are</a></li>
+        <li><a href="#licensed">Get licensed</a></li>
+        <li><a href="#practice">Calendar</a></li>
+        <li><a href="#member-tools">Member tools</a></li>
+      </ul>
+    </nav>
+    <a class="pill header__pill" href="#join">Join the team</a>
+  </div>
+</header>
+
+<main id="main">
+  <!-- 1. Opening frame -->
+  <section class="hero" id="top" aria-labelledby="hero-title">
+    <img class="hero__bg" src="../../assets/1920x1200sunset.jpg" alt="" fetchpriority="high">
+    <a class="skip-story" href="#who">Skip the story</a>
+    <div class="wrap hero__inner">
+      <p class="tag">A scenario</p>
+      <h1 id="hero-title"><span>It’s 2 AM.</span> <span>The power’s out, and so is cell service.</span></h1>
+      <p class="hero__narr">Follow one message across Spokane County on a night like that, and meet the volunteers who carry it.</p>
+      <div class="hero__ctas">
+        <a class="pill pill--lg" href="#join">Join the team</a>
+        <a class="textlink" href="#story">See how the message gets through</a>
+      </div>
+    </div>
+    <div class="wrap hero__foot">
+      <p><strong>Spokane County ARES-ACS</strong> is a team of licensed amateur radio volunteers who provide backup communications for Spokane County Emergency Management, the National Weather Service, local hospitals and community events.</p>
+      <span class="scroll-cue" aria-hidden="true">Scroll to follow the message</span>
+    </div>
+  </section>
+
+  <!-- 2–5. The message path -->
+  <section class="story" id="story" aria-labelledby="story-title">
+    <div class="wrap">
+      <h2 id="story-title" class="vh">A scenario: how a message gets from a shelter to a hospital without phones</h2>
+      <div class="story__grid">
+        <div class="story__steps">
+          <p class="story__intro"><span class="tag">A scenario</span> Not a real event. It shows how the system is meant to work.</p>
+
+          <article class="step" data-state="down">
+            <div class="step__inner">
+              <h3>First the power goes. Then the phones.</h3>
+              <p>Ice has been building on the lines since dusk. Around midnight they start to come down.</p>
+              <p>Cell towers fall back on their batteries, then go quiet. Home internet goes with them. There’s <strong>no way to call anyone</strong>.</p>
+            </div>
+          </article>
+
+          <article class="step" data-state="shelter">
+            <div class="step__inner">
+              <h3>At a warming shelter, someone needs help.</h3>
+              <p>Neighbors without heat have gathered at a shelter. One of them uses oxygen at home, and the concentrator needs power. The shelter manager has to reach the county’s Emergency Operations Center.</p>
+              <div class="form213" role="group" aria-label="Example ICS-213 message, part of the scenario">
+                <div class="form213__head"><b>ICS-213</b><span>General message</span></div>
+                <dl>
+                  <div><dt>To</dt><dd>EOC Logistics</dd></div>
+                  <div><dt>From</dt><dd>Shelter Manager</dd></div>
+                  <div class="full"><dt>Subject</dt><dd>Resident needs oxygen</dd></div>
+                  <div class="full"><dt>Message</dt><dd>One resident uses home oxygen. Concentrator has no power. Request transport or supply.</dd></div>
+                </dl>
+                <p class="form213__foot">A scenario. The message is illustrative.</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="step" data-state="send">
+            <div class="step__inner">
+              <h3>A volunteer picks up the radio.</h3>
+              <p>A licensed ham assigned to the shelter has a go-kit: a radio, an antenna and batteries that don’t depend on the grid.</p>
+              <p>They call net control on the <strong>W7GBU repeater, 147.300 MHz</strong>, and read the message out word for word. Net control keeps the frequency orderly, so every station gets its turn.</p>
+              <p class="fact">ACS members have passed a county background check, so they can work inside shelters, hospitals and the EOC.</p>
+            </div>
+          </article>
+
+          <article class="step" data-state="relay">
+            <div class="step__inner">
+              <h3>The EOC writes it down and passes it on.</h3>
+              <p>In the county’s radio room, another volunteer copies the message and logs it on an ICS-309. The EOC acts on it, and the request goes out on the <strong>hospital net</strong>, where a hospital team operator is listening.</p>
+              <p>None of this needs a cell tower, or the internet.</p>
+            </div>
+          </article>
+        </div>
+
+        <figure class="story__figure" aria-labelledby="map-caption">
+          <div class="diagram is-static is-down is-shelter is-send is-relay" id="diagram">
+            <div class="diagram__status" aria-hidden="true">
+              <span class="tag">A scenario</span>
+              <span class="diagram__status-text" id="status">A shelter radio operator sends the message through W7GBU. The EOC logs it and relays it to the hospital net.</span>
+            </div>
+            <div class="stage">
+              <svg class="map" viewBox="0 0 720 520" role="img" aria-labelledby="map-title map-desc" focusable="false">
+                <title id="map-title">The message path, from shelter to hospital</title>
+                <desc id="map-desc">A scenario diagram. Power lines and a cell tower are out. A shelter radio operator sends an ICS-213 message through the W7GBU repeater on 147.300 megahertz. Net control directs the traffic, the county EOC radio room logs the message, and it is relayed on the hospital net to a hospital.</desc>
+                <defs>
+                  <linearGradient id="hillg" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#243554"/>
+                    <stop offset="1" stop-color="#14203B"/>
+                  </linearGradient>
+                  <pattern id="sleet" width="120" height="96" patternUnits="userSpaceOnUse">
+                    <path d="M14 4 L9 14 M58 18 L53 28 M96 6 L92 14 M34 44 L29 54 M80 50 L75 60 M110 70 L106 78 M20 76 L16 84 M62 82 L58 90" stroke="#A9B8D6" stroke-width="1.2" stroke-linecap="round"/>
+                  </pattern>
+                </defs>
+
+                <rect class="sleet-layer" x="0" y="0" width="720" height="460" fill="url(#sleet)"/>
+                <path class="hill" d="M140 460 C 232 440 292 198 360 184 C 428 198 498 440 590 460 Z"/>
+
+                <!-- repeater tower -->
+                <g class="tower">
+                  <path d="M348 186 L360 104 L372 186 M351 166 L369 166 M354 144 L366 144 M357 124 L363 124 M351 166 L366 144 M354 144 L369 166 M354 144 L363 124 M357 124 L366 144"/>
+                  <path d="M360 104 V 82"/>
+                </g>
+
+                <!-- ground -->
+                <rect class="ground" x="0" y="460" width="720" height="60"/>
+                <path class="groundline" d="M0 460 H720"/>
+
+                <!-- power grid -->
+                <g class="poles">
+                  <path d="M18 460 V392 M8 398 H28"/>
+                  <path d="M150 460 V392 M140 398 H160"/>
+                  <path d="M300 460 V392 M290 398 H310"/>
+                  <path d="M420 460 V392 M410 398 H430"/>
+                  <path d="M575 460 V392 M565 398 H585"/>
+                </g>
+                <path class="wires" d="M-10 404 Q4 402 18 398 Q84 416 150 398 Q225 416 300 398 Q360 416 420 398 Q497 416 575 398 Q650 416 730 400"/>
+
+                <!-- houses -->
+                <g class="houses">
+                  <path class="bldg" d="M160 460 V432 L178 416 L196 432 V460 Z"/>
+                  <rect class="win" x="168" y="438" width="8" height="8"/><rect class="win" x="181" y="438" width="8" height="8"/>
+                  <path class="bldg" d="M206 460 V436 L222 422 L238 436 V460 Z"/>
+                  <rect class="win" x="217" y="442" width="10" height="8"/>
+                  <path class="bldg" d="M372 460 V438 L388 424 L404 438 V460 Z"/>
+                  <rect class="win" x="383" y="444" width="10" height="8"/>
+                </g>
+
+                <!-- cell tower -->
+                <g class="cell">
+                  <path d="M252 460 L262 340 L272 460 M255 428 L269 428 M257 398 L267 398 M259 370 L265 370 M255 428 L267 398 M257 398 L269 428 M257 398 L265 370 M259 370 L267 398"/>
+                  <path d="M256 336 V350 M268 336 V350"/>
+                </g>
+                <g class="cell-waves">
+                  <path d="M246 352 Q238 340 246 328"/><path d="M237 358 Q224 340 237 322"/>
+                  <path d="M278 352 Q286 340 278 328"/><path d="M287 358 Q300 340 287 322"/>
+                </g>
+
+                <!-- shelter -->
+                <g class="shelter">
+                  <rect class="bldg" x="30" y="404" width="100" height="56"/>
+                  <rect class="swin" x="40" y="416" width="20" height="10"/>
+                  <rect class="swin" x="100" y="416" width="20" height="10"/>
+                  <rect class="door" x="71" y="432" width="18" height="28"/>
+                  <path class="mast" d="M116 404 V376"/>
+                </g>
+
+                <!-- EOC -->
+                <g class="eoc">
+                  <rect class="bldg" x="440" y="384" width="108" height="76"/>
+                  <rect class="swin" x="452" y="398" width="24" height="10"/>
+                  <rect class="swin" x="484" y="398" width="24" height="10"/>
+                  <rect class="swin" x="452" y="420" width="24" height="10"/>
+                  <rect class="swin" x="484" y="420" width="24" height="10"/>
+                  <rect class="door" x="516" y="432" width="18" height="28"/>
+                  <path class="mast" d="M530 384 V344"/>
+                </g>
+
+                <!-- hospital -->
+                <g class="hosp">
+                  <rect class="bldg" x="596" y="364" width="108" height="96"/>
+                  <path class="cross" d="M642 382 h16 v12 h12 v16 h-12 v12 h-16 v-12 h-12 v-16 h12 z"/>
+                  <rect class="door" x="641" y="438" width="18" height="22"/>
+                  <path class="mast" d="M690 364 V330"/>
+                </g>
+
+                <!-- message path -->
+                <path class="hop" id="hop1" d="M116 376 Q 190 190 360 84"/>
+                <path class="hop" id="hop2" d="M360 84 Q 480 150 530 344"/>
+                <path class="hop" id="hop3" d="M530 344 Q 612 256 690 330"/>
+
+                <circle class="node n-shelter" cx="116" cy="376" r="5"/>
+                <circle class="node n-rep" cx="360" cy="84" r="5"/>
+                <circle class="node n-eoc" cx="530" cy="344" r="5"/>
+                <circle class="node n-hosp" cx="690" cy="330" r="5"/>
+                <circle class="pulse p-shelter" cx="116" cy="376" r="12"/>
+                <circle class="pulse p-eoc" cx="530" cy="344" r="12"/>
+
+                <g class="badge b1"><circle cx="90" cy="366" r="14"/><text x="90" y="366">1</text></g>
+                <g class="badge b2"><circle cx="392" cy="70" r="14"/><text x="392" y="70">2</text></g>
+                <g class="badge b3"><circle cx="506" cy="362" r="14"/><text x="506" y="362">3</text></g>
+                <g class="badge b4"><circle cx="666" cy="346" r="14"/><text x="666" y="346">4</text></g>
+
+                <g id="token" aria-hidden="true">
+                  <rect x="-19" y="-12" width="38" height="24" rx="3"/>
+                  <text x="0" y="0.5">213</text>
+                </g>
+              </svg>
+              <span class="stage-tag" aria-hidden="true">A scenario</span>
+              <span class="lbl lbl--rep" aria-hidden="true">W7GBU repeater<small>147.300 MHz</small><span class="role">Net control</span></span>
+              <span class="lbl lbl--cell" aria-hidden="true"><span class="on">Cell tower</span><span class="off">Cell service out</span></span>
+              <span class="lbl lbl--shelter" aria-hidden="true">Shelter<span class="role">Radio operator</span></span>
+              <span class="lbl lbl--eoc" aria-hidden="true">County EOC<span class="role">Radio room</span></span>
+              <span class="lbl lbl--hosp" aria-hidden="true">Hospital<span class="role">Hospital net</span></span>
+            </div>
+            <ol class="legend" aria-label="Who is on the radio at each hop">
+              <li data-hop="1"><span class="n" aria-hidden="true">1</span><span><b>Shelter radio operator</b>Reads the ICS-213 over the air.</span></li>
+              <li data-hop="2"><span class="n" aria-hidden="true">2</span><span><b>Net control station</b>Directs traffic on W7GBU, 147.300 MHz.</span></li>
+              <li data-hop="3"><span class="n" aria-hidden="true">3</span><span><b>EOC radio room operator</b>Copies the message and logs it.</span></li>
+              <li data-hop="4"><span class="n" aria-hidden="true">4</span><span><b>Hospital team operator</b>Takes it on the hospital net.</span></li>
+            </ol>
+          </div>
+          <figcaption class="figure__note" id="map-caption">A scenario. Every hop on this path is a trained volunteer, not a machine.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Dawn -->
+  <section class="dawn" id="practice" aria-labelledby="dawn-title">
+    <div class="dawn__sky" aria-hidden="true"><p>By morning, the message has been handled.</p></div>
+    <div class="wrap">
+      <div class="dawn__grid">
+        <div>
+          <h2 id="dawn-title">Radio still works. Because people practice.</h2>
+          <p class="dawn__lede">None of that night depends on luck. It depends on volunteers who have practiced on ordinary Tuesdays, so that a real night feels familiar.</p>
+          <blockquote class="quote">
+            <p>“Amateur radio can be particularly helpful because it can function even if other modes of communication cannot.”</p>
+            <footer>Eastern Washington Standing Order 1b</footer>
+          </blockquote>
+        </div>
+        <figure class="photo">
+          <img src="../../assets/8091bb_cfac747e80b142cf8c06b2286c1c6e0b.jpg" alt="Six volunteers, four in high-visibility vests, raise an antenna mast in a foggy, frosty field." width="659" height="372" loading="lazy">
+          <figcaption>Raising an antenna mast on a frosty morning. Field practice is where the Tuesday-night habits get used.</figcaption>
+        </figure>
+      </div>
+
+      <div class="tuesday">
+        <div class="tuesday__intro">
+          <h3>Every Tuesday night we practice.</h3>
+          <p>The weekly net is a directed net that doubles as emergency-operations training. Members take turns as net control, and new net controls are coached. Visitors are invited to check in.</p>
+          <dl class="netcard">
+            <div><dt>When</dt><dd>8:00 PM<small>Every Tuesday</small></dd></div>
+            <div><dt>Repeater</dt><dd>147.300<small>MHz, W7GBU</small></dd></div>
+            <div><dt>Settings</dt><dd>+600 kHz<small>100 Hz tone</small></dd></div>
+          </dl>
+        </div>
+        <div class="fall">
+          <h4>Practice this fall</h4>
+          <p class="sub">Meetings and workshops are at the Spokane County DEM building, 1121 W. Gardner Ave.</p>
+          <ul>
+            <li><time datetime="2026-09-26">Sat, Sep 26–27</time><span>ARES-ACS and WSDOT exercise</span></li>
+            <li><time datetime="2026-10-03">Sat, Oct 3</time><span>Simulated Emergency Test (SET)<small>Held every year</small></span></li>
+            <li><time datetime="2026-10-10">Sat, Oct 10</time><span>Second Saturday Workshop<small>9:00 AM to noon, hands-on</small></span></li>
+            <li><time datetime="2026-10-15">Thu, Oct 15</time><span>Third Thursday training meeting<small>[Start time to be confirmed]. Also the Great ShakeOut “Did You Feel It” message.</small></span></li>
+            <li><time datetime="2026-10-24">Sat, Oct 24</time><span>State COMMEX</span></li>
+          </ul>
+          <p class="more"><a class="textlink" href="https://spokaneares-acs.groups.io/g/main/calendar">See the full calendar on Groups.io</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who we are (skip-the-story target) -->
+  <section class="light band band--tight" id="who" aria-labelledby="who-title">
+    <div class="wrap">
+      <div class="who__top">
+        <h2 class="h2" id="who-title">Who carries the message</h2>
+        <p class="lede-serif">Spokane County ARES-ACS is one team of licensed amateur radio (“ham”) operators who volunteer to provide backup communications when normal systems are overloaded or down.</p>
+      </div>
+
+      <div class="sides">
+        <div class="side">
+          <div class="side__head">
+            <img src="../../assets/ARES_logo.png" alt="ARRL Amateur Radio Emergency Service emblem" width="64" height="64" loading="lazy">
+            <h3>ARES<small>Amateur Radio Emergency Service</small></h3>
+          </div>
+          <p>A national ARRL program, <strong>open to any licensed ham</strong>. ARES members support community events, the National Weather Service and the Red Cross, without an emergency being declared.</p>
+        </div>
+        <div class="side">
+          <div class="side__head">
+            <img src="../../assets/ACS_logo_1000x1000.png" alt="Spokane Auxiliary Communications (ACS) seal" width="64" height="64" loading="lazy">
+            <h3>ACS<small>Auxiliary Communications</small></h3>
+          </div>
+          <p>Spokane County Emergency Management’s own volunteer communications unit. It carries on the county’s RACES program (Radio Amateur Civil Emergency Service), the FCC provision that lets hams operate for government during emergencies.</p>
+          <p>ACS members have <strong>passed a county background check</strong>, so the county can activate them to work in emergency operations centers, incident command posts, hospitals and shelters.</p>
+        </div>
+      </div>
+      <div class="both">
+        <p><strong>Join ARES only, or both.</strong> The two sides train and operate together.</p>
+        <q>Even [if] you don’t or can’t qualify for ACS, our ARES group welcomes you.</q>
+      </div>
+
+      <div class="year">
+        <div class="year__intro">
+          <h3>Most of the year looks like this</h3>
+          <p>The same skills that carry a message on a bad night are used all year, often in daylight.</p>
+        </div>
+        <dl>
+          <div><dt>Public events</dt><dd>Primary or backup communications for Bloomsday, the Lilac Torchlight Parade, fun runs and bike races.</dd></div>
+          <div><dt>Hospitals</dt><dd>Backup radio and computer equipment kept ready at Greater Spokane area hospitals, and a hospital net.</dd></div>
+          <div><dt>SKYWARN</dt><dd>Weather spotting for the National Weather Service in Spokane. Encouraged, not required.</dd></div>
+          <div><dt>Digital messaging</dt><dd>The W7GBU-10 Winlink gateway, and regular Winlink assignments sent on ICS-213 forms.</dd></div>
+          <div><dt>County radio room</dt><dd>Staffing the county’s Radio Communications room and comm trailer when activated.</dd></div>
+          <div><dt>Exercises and training</dt><dd>The Simulated Emergency Test, state exercises, and monthly meetings and workshops.</dd></div>
+        </dl>
+      </div>
+      <p class="honest">About the scenario above: ARES-ACS is an auxiliary support function. Volunteers back up the county’s own systems when asked; they are not first responders.</p>
+    </div>
+  </section>
+
+  <!-- 7. The invitation -->
+  <section class="join band" id="join" aria-labelledby="join-title">
+    <div class="wrap">
+      <div class="join__top">
+        <div>
+          <h2 class="h2" id="join-title">Could you be the one on the radio?</h2>
+          <p class="lede-serif">The repeater in this story carries the call sign W7GBU, a memorial call for Ira “Dean” Bula.</p>
+          <blockquote class="quote">
+            <p>“He was a person who made a difference in Spokane by making others feel like they could make a difference themselves.”</p>
+          </blockquote>
+          <p class="join__need">You need an amateur radio license and a willingness to practice. ARRL membership isn’t required, and there are no specific equipment requirements. Meetings, workshops and a coached net help with the rest.</p>
+        </div>
+        <figure class="photo photo--dawn">
+          <img src="../../assets/IMG_6574.jpg" alt="A portable radio station on a pickup tailgate at a mountain overlook: a rack case of radios, a digital interface, a laptop and binders of forms." width="3264" height="2448" loading="lazy">
+          <figcaption>A go-kit on a tailgate. Radios, a digital interface, a laptop and the binder of forms, ready to run off the grid.</figcaption>
+        </figure>
+      </div>
+
+      <ol class="path" aria-label="Your path to joining">
+        <li>
+          <span class="num" aria-hidden="true">1</span>
+          <h3>Get licensed</h3>
+          <p>You need an FCC Technician class license or higher.</p>
+          <div class="links"><a href="#licensed">Not licensed yet? Start here</a></div>
+        </li>
+        <li>
+          <span class="num" aria-hidden="true">2</span>
+          <h3>Join ARES</h3>
+          <p>Fill out the Spokane County ARES registration form and bring it to a meeting, or email it in.</p>
+          <div class="links"><a href="#" title="Placeholder: links to the registration form download">Download the registration form</a><a href="http://www.arrl.org/ares">Get the ARRL ARES Task Book</a></div>
+        </li>
+        <li>
+          <span class="num" aria-hidden="true">3</span>
+          <h3>Get connected</h3>
+          <p>Subscribe to the Groups.io list, check in to the Tuesday net, and come to a Third Thursday meeting or a Second Saturday workshop.</p>
+          <div class="links"><a href="https://spokaneares-acs.groups.io/">Join the Groups.io list</a></div>
+        </li>
+        <li class="opt">
+          <span class="num"><span aria-hidden="true">4</span><small>Optional</small></span>
+          <h3>Qualify for ACS</h3>
+          <p>Apply as a county volunteer emergency worker, pass a background check and attend New Member Orientation, usually on the 4th Tuesday at 6 PM. This lets the county call on you.</p>
+          <div class="links"><a href="https://www.spokanecounty.org/FormCenter/Emergency-Management-31/Volunteer-Emergency-Worker-Application-276">County volunteer application</a></div>
+        </li>
+      </ol>
+      <div class="join__cta">
+        <a class="pill pill--lg" href="#" title="Placeholder: links to the registration form download">Download the registration form</a>
+        <a class="textlink" href="#listen">Or listen in first, this Tuesday</a>
+      </div>
+
+      <div class="panels">
+        <div class="panel panel--peach" id="licensed">
+          <h3>Not licensed yet?</h3>
+          <p class="intro">You can start before you have a license. Here’s the usual order.</p>
+          <ol class="lic">
+            <li><span><b>Listen to the Tuesday net</b><span>Any radio or scanner that receives the 2-meter band can tune to 147.300 MHz at 8 PM.</span></span></li>
+            <li><span><b>Take a license class</b><span>Classes run periodically through the year, sponsored by Spokane County Emergency Management, the VHF Club and local ARES. <a href="#contact">Ask about the next class</a></span></span></li>
+            <li><span><b>Pass the Technician exam</b><span>At a local volunteer examiner session, or <a href="https://hamstudy.org/sessions/glaarg">online through GLAARG on HamStudy</a>. The FCC charges a $35 application fee.</span></span></li>
+            <li><span><b>Train as a weather spotter (no license needed)</b><span><a href="https://www.weather.gov/otx/Current_Spotter_Training">SKYWARN spotter training</a> from the National Weather Service in Spokane, online or in person.</span></span></li>
+          </ol>
+        </div>
+        <div class="panel panel--night listen" id="listen">
+          <h3>Listen this Tuesday</h3>
+          <p class="intro">No license is needed to listen. Licensed? Net control calls for visitors after members, so you’re invited to check in.</p>
+          <div class="listen__big">
+            <div><span>Tuesdays</span><strong>8:00 PM</strong></div>
+            <div><span>W7GBU repeater</span><strong>147.300</strong></div>
+          </div>
+          <dl>
+            <dt>Offset</dt><dd>+600 kHz</dd>
+            <dt>Tone</dt><dd>100 Hz</dd>
+            <dt>Next net</dt><dd>Tue, Sep 29. Net control: NZ2S</dd>
+          </dl>
+          <p class="note"><b>This week runs as a simplex net.</b> Some weeks do. Groups.io has the frequency and the schedule.</p>
+          <a class="textlink" href="https://spokaneares-acs.groups.io/g/main/calendar">See the net schedule on Groups.io</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Alert levels and partners -->
+  <section class="light band" id="alert-levels" aria-labelledby="levels-title">
+    <div class="wrap">
+      <div class="levels__head">
+        <h2 class="h2" id="levels-title">When the county calls</h2>
+        <p>Members follow four alert levels, from a quiet month to a full deployment. Green is normal.</p>
+      </div>
+      <ol class="scale">
+        <li><span class="bar" aria-hidden="true"></span><h3>Condition Green<small>Inactive</small></h3><p>Normal conditions. Do a monthly battery check.</p></li>
+        <li><span class="bar" aria-hidden="true"></span><h3>Condition Yellow<small>Alert</small></h3><p>Something might happen. Check go-kits and monitor frequencies.</p></li>
+        <li><span class="bar" aria-hidden="true"></span><h3>Condition Orange<small>Stand by</small></h3><p>Something has happened. Load the car and monitor NWS WXL86 (162.400) and W7GBU (147.300).</p></li>
+        <li><span class="bar" aria-hidden="true"></span><h3>Condition Red<small>Deploy</small></h3><p>Activation text sent and full nets start. Check in with net control on W7GBU (147.300).</p></li>
+      </ol>
+      <p class="after"><b>After the event:</b> members are released, the level returns to Green, and an action review is held within 72 hours.</p>
+
+      <section class="partners" aria-labelledby="partners-title">
+        <div class="partners__intro">
+          <h2 class="partners__title" id="partners-title">Who we serve</h2>
+          <p>Spokane County Emergency Management activates the team. We’re affiliated with the ARRL’s ARES program.</p>
+          <div class="marks">
+            <img src="../../assets/SCDEM_Logo.png" alt="Spokane County Emergency Management seal" width="96" height="96" loading="lazy">
+            <img class="ares" src="../../assets/ARES_logo.png" alt="ARRL Amateur Radio Emergency Service emblem" width="78" height="78" loading="lazy">
+          </div>
+          <p class="marks__note">Affiliation marks. [Use pending permission from the county and ARRL.]</p>
+        </div>
+        <dl class="plist">
+          <div><dt>Spokane County Emergency Management</dt><dd>Primary served agency. Activates ACS, runs the background check and issues volunteer IDs.</dd></div>
+          <div><dt>National Weather Service, Spokane</dt><dd>SKYWARN spotting and severe-weather nets.</dd></div>
+          <div><dt>Greater Spokane area hospitals</dt><dd>Backup communications, a hospital coordinator and a hospital net.</dd></div>
+          <div><dt>American Red Cross</dt><dd>Service under the ARRL and Red Cross agreement, plus shelter training.</dd></div>
+          <div><dt>Inland Empire VHF Radio Amateurs</dt><dd>A formal agreement covering the 146.88 backup repeater and packet and Winlink nodes.</dd></div>
+          <div><dt>Community events</dt><dd>Bloomsday, the Lilac Torchlight Parade and Valleyfest.</dd></div>
+        </dl>
+      </section>
+    </div>
+  </section>
+</main>
+
+<footer class="footer" aria-labelledby="footer-title">
+  <h2 id="footer-title" class="vh">Site footer</h2>
+  <div class="wrap">
+    <div class="footer__top">
+      <div>
+        <a class="brand" href="#top" aria-label="Spokane County ARES-ACS, back to top" style="text-decoration:none">
+          <img src="../../assets/Spokane_County_ARES-ACS_logo_slightly_smaller_550x550.png" alt="" width="52" height="52" loading="lazy">
+          <span class="brand__name">Spokane County <strong>ARES-ACS</strong></span>
+        </a>
+        <p class="footer__mission">Our group concentrates on emergency and civil communications to support the safety of Spokane County residents.</p>
+        <p class="footer__legacy">Formerly Spokane County ARES / RACES. W7GBU honors Ira “Dean” Bula.</p>
+      </div>
+      <div class="footer__net">
+        <h2>Tuesday net</h2>
+        <p><strong>8:00 PM</strong>, W7GBU repeater, 147.300 MHz, +600 kHz, 100 Hz tone.</p>
+        <p style="margin-top:12px">Net control</p>
+        <dl class="roster" aria-label="Net control roster">
+          <dt>Sep 29</dt><dd>NZ2S (simplex)</dd>
+          <dt>Oct 6</dt><dd class="open">Open, volunteer on Groups.io</dd>
+          <dt>Oct 13</dt><dd>AE7RJ</dd>
+          <dt>Oct 20</dt><dd>WA7LNC</dd>
+        </dl>
+      </div>
+      <div>
+        <h2>Meetings</h2>
+        <ul>
+          <li>Third Thursday training meeting [time to be confirmed]</li>
+          <li>Second Saturday workshop, 9 AM to noon</li>
+          <li>New Member Orientation, usually the 4th Tuesday, 6 PM</li>
+        </ul>
+        <p style="margin-top:12px">Spokane County DEM building<br>1121 W. Gardner Ave<br>Spokane, WA 99260</p>
+      </div>
+      <div id="member-tools">
+        <h2>Member tools</h2>
+        <ul>
+          <li><a href="#">Net preamble and script</a></li>
+          <li><a href="#">Net roster (PDF)</a></li>
+          <li><a href="#">ICS forms: 213, 213RR, 214, 309</a></li>
+          <li><a href="#">ARRL Radiogram form</a></li>
+          <li><a href="#alert-levels">Alert levels</a></li>
+          <li><a href="#">ACS Task Book</a></li>
+          <li><a href="https://spokaneares-acs.groups.io/">Groups.io</a></li>
+          <li><a href="#">Member login</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© Spokane County ARES-ACS</span>
+      <ul>
+        <li><a href="#" id="contact">Contact us</a></li>
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Terms</a></li>
+      </ul>
+      <span class="concept-label">Concept 12 — When the Lines Go Down</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+  var header = document.getElementById('site-header');
+  var ticking = false;
+
+  function headerState(){ header.classList.toggle('is-solid', window.scrollY > 24); }
+
+  // mobile menu
+  var nav = document.querySelector('.nav');
+  var toggle = nav.querySelector('.nav__toggle');
+  toggle.addEventListener('click', function(){
+    var open = nav.classList.toggle('is-open');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  nav.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){ nav.classList.remove('is-open'); toggle.setAttribute('aria-expanded','false'); });
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && nav.classList.contains('is-open')) { nav.classList.remove('is-open'); toggle.setAttribute('aria-expanded','false'); toggle.focus(); }
+  });
+
+  // ----- the message path -----
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var stacked = window.matchMedia('(max-width: 980px)');
+  var diagram = document.getElementById('diagram');
+  var figure = document.querySelector('.story__figure');
+  var statusEl = document.getElementById('status');
+  var token = document.getElementById('token');
+  var hops = [document.getElementById('hop1'), document.getElementById('hop2'), document.getElementById('hop3')];
+  var steps = Array.prototype.slice.call(document.querySelectorAll('.step[data-state]'));
+  var legend = Array.prototype.slice.call(diagram.querySelectorAll('.legend li'));
+  var ORDER = ['normal','down','shelter','send','relay'];
+  var STATUS = {
+    normal: 'Before the storm: power, phones and internet all working.',
+    down: 'Power lines down. Cell service out.',
+    shelter: 'A shelter has a message for the county EOC.',
+    send: 'On the air: the shelter operator reads it to net control on W7GBU, 147.300 MHz.',
+    relay: 'The EOC radio room logs it and passes it to the hospital net.'
+  };
+  var current = -1, raf = null, enabled = false;
+
+  hops.forEach(function(p){ p._len = p.getTotalLength(); p.style.setProperty('--len', p._len.toFixed(1)); });
+
+  function drawTo(p, amt){ p.style.strokeDashoffset = (p._len - amt).toFixed(1); }
+  function moveToken(pt){ token.setAttribute('transform', 'translate(' + pt.x.toFixed(1) + ' ' + pt.y.toFixed(1) + ')'); }
+
+  function settle(idx){
+    cancelAnimationFrame(raf);
+    drawTo(hops[0], idx >= 3 ? hops[0]._len : 0);
+    drawTo(hops[1], idx >= 3 ? hops[1]._len : 0);
+    drawTo(hops[2], idx >= 4 ? hops[2]._len : 0);
+    if (idx < 3) { token.style.opacity = 0; return; }
+    var p = idx === 3 ? hops[1] : hops[2];
+    moveToken(p.getPointAtLength(p._len));
+    token.style.opacity = 1;
+  }
+
+  function run(paths, dur){
+    cancelAnimationFrame(raf);
+    var total = paths.reduce(function(s, p){ return s + p._len; }, 0);
+    var t0 = performance.now();
+    token.style.opacity = 1;
+    function frame(now){
+      var k = Math.min(1, (now - t0) / dur);
+      var e = 0.5 - Math.cos(Math.PI * k) / 2;
+      var d = e * total;
+      for (var i = 0; i < paths.length; i++) {
+        var p = paths[i];
+        var amt = Math.max(0, Math.min(p._len, d));
+        drawTo(p, amt);
+        if (d <= p._len || i === paths.length - 1) { moveToken(p.getPointAtLength(amt));
+          for (var j = i + 1; j < paths.length; j++) drawTo(paths[j], 0);
+          break; }
+        d -= p._len;
+      }
+      if (k < 1) raf = requestAnimationFrame(frame);
+    }
+    raf = requestAnimationFrame(frame);
+  }
+
+  function setState(idx){
+    var prev = current;
+    current = idx;
+    for (var i = 1; i < ORDER.length; i++) diagram.classList.toggle('is-' + ORDER[i], idx >= i);
+    statusEl.textContent = STATUS[ORDER[idx]];
+    var lit = idx >= 4 ? 4 : idx >= 3 ? 2 : 0;
+    legend.forEach(function(li){ li.classList.toggle('is-lit', +li.dataset.hop <= lit); });
+    diagram.classList.remove('pulse-shelter','pulse-eoc');
+    if (idx === 3 && prev < 3) {
+      drawTo(hops[2], 0);
+      void diagram.offsetWidth; diagram.classList.add('pulse-shelter');
+      run([hops[0], hops[1]], 2000);
+    } else if (idx === 4 && prev < 4) {
+      drawTo(hops[0], hops[0]._len); drawTo(hops[1], hops[1]._len);
+      void diagram.offsetWidth; diagram.classList.add('pulse-eoc');
+      run([hops[2]], 1200);
+    } else {
+      settle(idx);
+    }
+  }
+
+  function measure(){
+    if (!enabled) return;
+    var vh = window.innerHeight, line;
+    if (stacked.matches) {
+      var fb = figure.getBoundingClientRect().bottom;
+      line = Math.min(fb + (vh - fb) * 0.35, vh * 0.9);
+    } else {
+      line = Math.min(vh, 1000) * 0.6;
+    }
+    var idx = 0;
+    steps.forEach(function(s){
+      var inner = s.querySelector('.step__inner') || s;
+      if (inner.getBoundingClientRect().top < line) idx = ORDER.indexOf(s.dataset.state);
+    });
+    if (idx !== current) setState(idx);
+  }
+
+  function onScroll(){
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){ headerState(); measure(); ticking = false; });
+  }
+
+  function enable(){
+    enabled = true;
+    root.classList.add('scrolly');
+    diagram.classList.remove('is-static');
+    current = -1;
+    setState(0);
+    measure();
+  }
+  function disable(){
+    enabled = false;
+    cancelAnimationFrame(raf);
+    root.classList.remove('scrolly');
+    diagram.classList.add('is-static','is-down','is-shelter','is-send','is-relay');
+    diagram.classList.remove('pulse-shelter','pulse-eoc');
+    hops.forEach(function(p){ p.style.strokeDashoffset = ''; });
+    token.style.opacity = 0;
+    statusEl.textContent = 'A shelter radio operator sends the message through W7GBU. The EOC logs it and relays it to the hospital net.';
+  }
+
+  if (!reduce.matches) enable();
+  var onReduce = function(){ reduce.matches ? disable() : enable(); };
+  if (reduce.addEventListener) reduce.addEventListener('change', onReduce); else if (reduce.addListener) reduce.addListener(onReduce);
+
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', function(){ measure(); });
+  headerState();
+})();
+</script>
+</body>
+</html>

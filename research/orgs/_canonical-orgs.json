@@ -1,0 +1,1210 @@
+{
+ "generated": "2026-09-25",
+ "hierarchy_sketch": "TWO PARALLEL CHAINS LEAD TO THE SAME VOLUNTEERS ('Spokane County ARES-ACS / RACES')\n\nRegulation over all operations: FCC Part 97 (47 CFR 97.407 governs RACES).\n\nAMATEUR / ARRL CHAIN (ARES)\n- ARRL national\n  - Board and EC-FSC committee; HQ Emergency Communications-Field Services (Josh Johnston KE5MHV)\n  - ARES program: ARES Plan (July 2025), Task Book, Form 2/4 reporting, EmComm courses, SET, Field Day\n  - National MOUs: Red Cross, NWS/SKYWARN, FEMA (2023 MOA), SATERN, NVOAD, RRI\n  - ARRL Northwestern Division (Director Mark Tharp KB7HDX; SEA-PAC; Northwestern News)\n    - ARRL Eastern Washington Section (SM Jo Whitney KA7LJQ; SEC Frank Hutchison AG7QP; EWSEN nets; Standing Order 1b; ag7qp.com)\n      - ARES District 9, which is the same area as WA EMD / Homeland Security Region 9 (DEC Sam Jenkins WA7EC)\n        - Spokane County EC/RO Asa Laughton W7TSC\n          - AECs: NV2Z public events/Winlink, K7MHG hospitals, K7DSR logistics/comms, AG7QP net manager\n            - Volunteer members\n- Peer ARES groups: District 9 counties (Stevens, Lincoln, Pend Oreille, Ferry and others) and North Idaho (Kootenai, Bonner; ARRL Idaho Section).\n- Statewide coordination: wastateares.org / WSEN, mostly maintained by the Western Washington Section.\n\nGOVERNMENT / AHJ CHAIN (ACS, formerly RACES)\n- Federal\n  - FEMA: ICS/NIMS training, ICS forms\n  - CISA: SAFECOM field guides, AUXCOMM/COMU credentials, SHARES HF\n- WA Emergency Management Division, Camp Murray\n  - Law: RCW 38.52 and WAC 118-04 emergency-worker registration and coverage\n  - Mission numbers\n  - State RACES Plan (1995/2013), superseded by the EMD Communications Annex (~2021)\n  - EOC-to-EOC exercises and State COMMEX; Region 9 (SCEM is lead)\n  - Spokane County Emergency Management (SCEM)\n    - The Sheriff is Director of EM; the BOCC sets policy; 2021 CEMP (ESF-2, 5, 6, 8, 9)\n    - Inter-Local Agreement covers the unincorporated county, Spokane Valley and 11 other municipalities (not the City of Spokane since 2020)\n    - ACS program (RACES folded in; ACS Task Book: New Member, RADO, S-RADO, Leadership). Peer programs: CERT, MRC, SAR, DART, MLST, HEART\n      - The same volunteers. The EC is normally also appointed RACES Officer by the county EM Director.\n\nLEGAL / ON-AIR IDENTITY\n- 'Spokane County ARES RACES Support Group' holds the FCC club license W7GBU (trustee K7DSR; expires 2027-02-15).\n  - 147.30 repeater, primary; hardware possibly county-owned\n  - 443.40 repeater\n  - W7GBU-10 Winlink gateway\n- IEVHFRA, by MOU Rev 5 (2023-05-06): 146.88 alternate repeater, backup repeaters, packet paths into Winlink. It also served as a fiscal conduit in 2019.\n- KBARA linked system: carries the EWSEN VHF net and is the SOP 1b fallback.\n- Other clubs and repeaters (SRG 147.20, 147.06 link to Stevens, WA7DRE VE team, SDXA, IACC coordinator) are informal resources.\n\nSERVED AGENCIES AND PARTNERS\n- Government: SCEM (primary AHJ); NWS Spokane/SKYWARN (SRD station at the NWS office since 1999); hospitals and ESF-8 (Hospital Coordinator AEC, hospital net); SREC 911 / Combined Communications Building (historic gateway site); fire agencies and DNR Northeast (historic plan annexes); WSDOT (2026 exercise); City of Spokane OEM (separate since 2020).\n- NGOs: American Red Cross (ESF-6 lead; ARRL MOU); Spokane COAD (ARES/ACS reports there; Salvation Army/VOAD historic).\n- LDS ERC Spokane Council: overlapping leadership and nets; no agreement found.\n\nNETS AND TRAFFIC PATH\n- Local: Spokane Tuesday net on 147.30.\n- Section: EWSEN (KBARA / 3985 kHz / EWA-WL2K Winlink).\n- State: WSEN on 3985 kHz.\n- Traffic: WARTS and WSN connect to NTS Region 7 (DRN7/RN7) and then the Western Area. RRI is affiliated through DRN7.\n\nWEB PRESENCE\n- spokares.org: Joomla 3, compromised in 2026; domain expires 2027-03-10.\n- Current content is held temporarily on ag7qp.com/spokane-county-ares-acs, run by the EWA SEC.\n- Member communications run on spokaneares-acs.groups.io.\n- Digital references come from felge.us (K7BFL).",
+ "orgs": [
+  {
+   "slug": "spokane-county-ares-acs-races",
+   "name": "Spokane County ARES-ACS / RACES (subject organization)",
+   "aliases": [
+    "Spokane County ARES/RACES",
+    "Spokane County ARES-ACS",
+    "Spokane County ARES/ACS/RACES",
+    "Spokane ARES",
+    "spokares.org",
+    "SpokaneARES-ACS groups.io (formerly spokaneares-races.groups.io)",
+    "aresraces.wix.com/spokane (2015-16 interim site)"
+   ],
+   "category": "subject-organization",
+   "urls": [
+    "https://www.spokares.org/",
+    "https://spokaneares-acs.groups.io/g/main",
+    "https://ag7qp.com/spokane-county-ares-acs"
+   ],
+   "evidence_urls": [
+    "https://www.spokares.org/",
+    "https://www.spokares.org/index.php/4-about-spokane-county-ares-races",
+    "https://www.spokares.org/index.php/about/ares-races-leadership",
+    "https://www.spokares.org/index.php/contact/welcome-letter",
+    "https://www.spokares.org/index.php/contact/join-ares-races",
+    "https://www.spokares.org/index.php/2-uncategorised/2-ares-races-plan",
+    "https://www.spokares.org/index.php/downloads/general",
+    "https://spokaneares-acs.groups.io/g/main/subgroups",
+    "https://rdap.publicinterestregistry.org/rdap/domain/spokares.org",
+    "https://web.archive.org/web/20250315160139/https://www.spokares.org/",
+    "https://web.archive.org/web/20160109192152/http://spokares.org/",
+    "https://web.archive.org/web/2004/http://www.spokares.org/StaffList.html",
+    "https://web.archive.org/web/2014/http://www.spokares.org/StaffList.html",
+    "https://www.kxly.com/news/local-news/ham-radio-operators-will-test-their-skills-on-the-airwaves-this-saturday/article_0990757a-7223-5169-8698-82ac9f7d30cf.html",
+    "https://www.spokesman.com/calendar/events/117056/519608/",
+    "https://www.vhfclub.org/pdf/Waves%20Newsletter%20October%202019.pdf",
+    "https://ag7qp.com/spokane-county-ares-acs",
+    "https://ag7qp.com/new-members-orientation",
+    "https://arrlnwdiv.org/2025/08/13/northwestern-news-volume-2-august-2025/"
+   ],
+   "relationship_summary": "This is the organization whose site is being rebuilt. It serves as the hub entry that absorbs people, platform and history mentions about the group itself.\n\nAffiliation and leadership (CONFIRMED): The spokares.org About page says the group is 'affiliated with the ARRL ... and Spokane Emergency Management'. The leadership page (last modified 2026-03-24) lists:\n- EC and Website Admin: Asa Jay Laughton W7TSC. The Welcome Letter signs him as EC and RACES Officer. Wayback captures show him signing as EC/RO since at least 2019.\n- AECs: Dan Croskrey NV2Z (Public Events; W7GBU-10 and Winlink); Mary Griffith K7MHG (Hospital Coordinator); Dave Carleton K7DSR (Logistics & Comms, also named training AEC); Frank Hutchison AG7QP (Net Manager).\n- PIO: open.\n\nMeetings and nets: The group meets at SCEM, 1121 W Gardner Ave. The current schedule on ag7qp.com is 1st Tue 5:30 PM staff, 2nd Sat 9 AM workshop, 3rd Thu 6 PM training and 4th Tue orientation. This conflicts with the older times on spokares.org and in the Welcome Letter. Nets:\n- Tuesday 8 PM on the 147.30 W7GBU repeater.\n- Simplex net on 5th Tuesdays.\n- ACS GMRS net, 3rd Tuesday, on WRCY281.\n- Twice-monthly Winlink assignments.\n\ngroups.io (CONFIRMED, 2026-09-25): 107 members and 2,882 topics. Subgroups are Digital-Modes, HamWan, Hospital-Coordination, Leadership, SHARES, Winlink and WinterFieldDay. The Spokane County ACS Field Operating Guide (ACSFOG) is distributed there.\n\nWeb history (CONFIRMED):\n- The domain was registered 2004-03-10 and expires 2027-03-10.\n- About 2004-2015: a static site on hosting donated by ASISNA.\n- 2015-16: a Wix interim site.\n- From 2017: Joomla 3, using the js_wright template by PA4RM and hosted on InMotion.\n- Wayback on 2025-03-15 shows a '/lander' redirect.\n- The EWA SEC says 'The spokares.org website was hacked'. The Downloads pages currently fail with an Alledia framework error.\n\nOther facts:\n- The ARES/RACES Plan on the site is 'Attachment 3 to ESF-2' of the old City/County CEMP. Its content dates from about 2001-2013, although the site shows it as published 2017 and modified 2018-11-21.\n- IEVHFRA's Oct 2019 newsletter says 'the other group [ARES] has no bank account'.\n- KXLY (2011) reported about 40 active members.\n- Historical leaders include EC Bob Wiese KD7AMV/W7UWC and plan co-author Gordon Grove WA7LNC.\n- INFERENCE: day-to-day coordination may have moved to AG7QP during the site outage.",
+   "tier": "core",
+   "research_questions": [
+    "Who are the current EC, AECs and PIO as of fall 2026? Is W7TSC still the EC, RACES Officer and website admin, given that the temporary ag7qp.com page names Frank Hutchison AG7QP as contact?",
+    "What official name should the rebuilt site use: 'Spokane County ARES-ACS', 'ARES/RACES' or 'ARES/ACS/RACES'? Does SCEM have a preference?",
+    "Build a complete content inventory of spokares.org: every Joomla article, menu item, JCal Pro event category, OSDownloads file (currently broken) and the Wayback-only pages (2004-2024). Which items must migrate, and which are obsolete?",
+    "What happened in the 2026 compromise? Who controls the domain (GoDaddy) and hosting (InMotion) credentials? Did the 2025 '/lander' capture mean the domain lapsed?",
+    "Does the group have bylaws, officers, a bank account or any legal entity besides the W7GBU Support Group? Does IEVHFRA still act as its fiscal conduit?",
+    "Which meeting schedule is authoritative? The current ag7qp.com times (3rd Thu 6 PM, and so on) conflict with the spokares.org and Welcome Letter times (7-9 PM, 3rd Thu 1900).",
+    "Is the ARES/RACES Plan being revised or replaced by an ACS SOP? Which version should the new site publish, if any?",
+    "What are the roster size and activity levels? Which member-only materials (roster PDF, ACSFOG, preambles) must sit behind a login rather than be published?",
+    "What is the status of the HamWan subgroup project and the 2019 AREDN idea?",
+    "Have the member presenters (Mel Ming N7GCO, K7PKT, AD7DD, WA7AQH) given permission to republish their slides and videos?"
+   ]
+  },
+  {
+   "slug": "w7gbu-support-group",
+   "name": "Spokane County ARES RACES Support Group (W7GBU club license, 147.30 repeater and W7GBU-10 Winlink gateway)",
+   "aliases": [
+    "W7GBU",
+    "KC7SOT (previous club call)",
+    "Spokane County ARES-RACES Support Group",
+    "147.300+ PL 100 Brownes Mountain repeater",
+    "'SCEM' / DEM repeater",
+    "W7GBU-10",
+    "443.400+ W7GBU",
+    "7:30 Bunch / 0730 Bunch net",
+    "Ira 'Dean' Bula W7GBU (SK)"
+   ],
+   "category": "legal-regulatory",
+   "urls": [
+    "https://wireless2.fcc.gov/UlsApp/UlsSearch/license.jsp?licKey=816703",
+    "https://www.spokares.org/index.php/about/w7gbu-history",
+    "https://www.repeaterbook.com/repeaters/details.php?ID=288&state_id=53"
+   ],
+   "evidence_urls": [
+    "https://wireless2.fcc.gov/UlsApp/UlsSearch/license.jsp?licKey=816703",
+    "https://callook.info/W7GBU/json",
+    "https://callook.info/KC7SOT/json",
+    "https://www.spokares.org/index.php/about/w7gbu-history",
+    "https://www.spokares.org/index.php?option=com_content&view=article&id=7",
+    "https://www.repeaterbook.com/repeaters/details.php?ID=288&state_id=53",
+    "https://www.repeaterbook.com/repeaters/details.php?state_id=53&ID=23242",
+    "http://www.felge.us/SpokGateTable.html",
+    "https://www.spokares.org/index.php/2-uncategorised/2-ares-races-plan",
+    "https://ag7qp.com/nets-in-the-inland-northwest",
+    "https://www.spokares.org/index.php/about/ares-races-leadership"
+   ],
+   "relationship_summary": "This is the legal and FCC entity behind the group's on-air identity.\n\nLicense (CONFIRMED, FCC ULS/callook):\n- W7GBU is a CLUB license held by 'SPOKANE COUNTY ARES RACES SUPPORT GROUP'.\n- Trustee: K7DSR David E. Carleton, who is also the AEC for Logistics & Comms.\n- Previous call: KC7SOT.\n- Granted 2017-02-15; EXPIRES 2027-02-15.\n\nHistory (CONFIRMED, W7GBU History page, 2017): The Support Group was formed to obtain the call of the late Ira 'Dean' Bula W7GBU, with his widow Floy's support, after the county retired the old ARES call on 147.30. Bula ran the '7:30 Bunch' morning net, was active with the Spokane Dial Twisters and IEVHFRA, and worked the counter at Northwest Electronics.\n\nRepeaters (RepeaterBook, reviewed 2025-03-20):\n- 147.300+ PL 100 on Brownes Mountain. IACC record 1359, coordination to 2029-06-28, emergency power.\n- 443.400+ UHF. IACC record 1253, to 2029-02-09.\n- The ARES net (Tue 8 PM) and the weekday 0730 Bunch still run on 147.30.\n\nW7GBU-10 Winlink gateway: managed by NV2Z. DISCREPANCY: the old Plan puts it at the Combined Communications Building on 145.090 simplex; K7BFL's 2016 table lists it on 145.01 via WR7VHF-3. A legacy W7GBU HF Pactor gateway on 3624 kHz has been 'not in operation' since 2006.\n\nStale content: the site's Repeater Etiquette article (2021) still names WA7AQH as trustee.\n\nINFERENCES: The repeater hardware may be county-owned, since the old site called it the DEM repeater and ag7qp.com labels it 'SCEM'. No 501(c)(3) or state registration was found, so the Support Group looks like a licensing vehicle only.",
+   "tier": "core",
+   "research_questions": [
+    "Who will renew W7GBU before 2027-02-15? Is K7DSR still the trustee?",
+    "Who owns the 147.30 and 443.40 repeater hardware and the Brownes Mountain site (Support Group, SCEM or an individual)? Is there a site agreement?",
+    "What are W7GBU-10's current frequency, site and host (145.01 or 145.090; is it still at the CCB/SREC building given the 2026-2028 911 transition)?",
+    "Is the 443.400 repeater in active ARES use?",
+    "Does the Support Group have officers, bylaws or a Washington nonprofit registration?",
+    "Are the IACC coordination records current, and who maintains them?",
+    "Which History and Repeater Etiquette content should carry over, and what trustee corrections does it need?"
+   ]
+  },
+  {
+   "slug": "arrl-national-and-northwestern-division",
+   "name": "ARRL, The National Association for Amateur Radio (HQ, Board, national served-agency agreements) and ARRL Northwestern Division",
+   "aliases": [
+    "ARRL",
+    "American Radio Relay League",
+    "the League",
+    "ARRL Emergency Communications & Field Services / Emergency Management",
+    "ARRL Board EC-FSC committee",
+    "ARRL Northwestern Division",
+    "Northwestern News",
+    "SEA-PAC (Division convention, Seaside OR)"
+   ],
+   "category": "arrl-hierarchy",
+   "urls": [
+    "https://www.arrl.org/",
+    "https://arrlnwdiv.org/",
+    "https://www.arrl.org/served-agencies-and-partners"
+   ],
+   "evidence_urls": [
+    "https://www.spokares.org/index.php/4-about-spokane-county-ares-races",
+    "https://www.spokares.org/index.php/2-uncategorised/2-ares-races-plan",
+    "https://www.arrl.org/officers",
+    "https://www.arrl.org/contact-arrl",
+    "https://www.arrl.org/field-organization",
+    "https://www.arrl.org/board-committees",
+    "https://www.arrl.org/served-agencies-and-partners",
+    "https://www.arrl.org/divisions/view/northwestern",
+    "https://arrlnwdiv.org/sections/",
+    "https://arrlnwdiv.org/2024/12/24/arrl-division-news/",
+    "https://www.arrl.org/news/2024-arrl-board-of-directors-election-results",
+    "https://arrlnwdiv.org/2025/08/13/northwestern-news-volume-2-august-2025/",
+    "https://arrlnwdiv.org/2026/09/11/northwestern-news-volume-3-september-2026/",
+    "https://www.arrl.org/news/radio-relay-international-and-arrl-sign-memorandum-of-understanding"
+   ],
+   "relationship_summary": "ARRL is the national sponsor of ARES. The spokares.org About page says the group is 'affiliated with the ARRL', and the Spokane Plan calls ARES an activity of the ARRL through Field Services.\n\nOfficers and staff (CONFIRMED, arrl.org, fetched 2026-09-25):\n- President: Rick Roderick K5UR.\n- CEO: David Minster NA2AA.\n- Emergency Communications-Field Services Director: Josh Johnston KE5MHV.\n- Field Organization supervisor: Steve Ewald WV1X.\n- The Board's EC-FSC committee sets ARES policy (chair: Scott Yonally N8SY).\n\nNational served-agency agreements that Spokane relies on (CONFIRMED):\n- American Red Cross MOU, renewed April 2021.\n- NWS SKYWARN MOU, 1986.\n- FEMA MOA, 2023. The Spokane Plan still cites the 1984 FEMA MOU (outdated).\n- Salvation Army/SATERN MOU.\n- NVOAD membership.\n- Radio Relay International MOU, 2025-07-18.\n\nNorthwestern Division (CONFIRMED): This is Spokane's ARRL division, with six sections including EWA. Director Mark Tharp KB7HDX and Vice Director Michael Sterba KG7HQ serve terms from Jan 2025. The division publishes Northwestern News; the Aug 2025 issue describes 'Spokane County ARES/ACS, W7GBU' Field Day in Spokane Valley. It hosts SEA-PAC (next June 4-6, 2027).\n\nPolicy tension: under the July 2025 ARES Plan, full ARRL membership is required for Intermediate level and above and for EC/AEC appointments. The Spokane Plan says membership is not required to join.",
+   "tier": "core",
+   "research_questions": [
+    "Confirm ARRL officers, HQ emergency-management staff and Northwestern Division leadership close to the rebuild launch date.",
+    "Which ARRL national agreements (current versions and URLs) should the rebuilt site cite in place of the Plan's 1984 FEMA MOU reference?",
+    "What are ARRL's rules for using ARRL/ARES names and logos on a local ARES group website?",
+    "How should the site explain the ARRL-membership requirement for ARES Intermediate and above, alongside open county ACS membership?",
+    "Are there other Division newsletter or annual-report mentions of Spokane ARES (Field Day, SET, awards) worth linking?",
+    "Is Spokane ARES listed in any ARRL group or ARES locator, and is that listing accurate?"
+   ]
+  },
+  {
+   "slug": "arrl-ares-program",
+   "name": "ARRL ARES program: ARES Plan (July 2025), Task Book, reporting system, EmComm courses and national activities (SET, Field Day, PSHR)",
+   "aliases": [
+    "ARES",
+    "Amateur Radio Emergency Service",
+    "ARES Plan July 2025",
+    "ARES Standardized Training Plan Task Book (July 2024)",
+    "ARES levels (Basic/Intermediate/Advanced)",
+    "ares.arrl.org Field Reports (Forms 1-4, FSD-98)",
+    "ARES Connect (retired 2021)",
+    "ARRL Learning Center Basic/Intermediate/Advanced EmComm (replaced EC-001/EC-016)",
+    "ARES Leadership course",
+    "Simulated Emergency Test (SET)",
+    "ARRL Field Day",
+    "Public Service Honor Roll (PSHR)",
+    "ARES E-Letter",
+    "Field Organization appointments (EC/AEC/DEC/SEC/OES/PIO)"
+   ],
+   "category": "arrl-program",
+   "urls": [
+    "https://www.arrl.org/ares",
+    "https://www.arrl.org/files/file/ARES%20Plan%20July%202025.pdf",
+    "https://www.arrl.org/files/file/ARES%20Taskbook%20July%202024.pdf",
+    "https://ares.arrl.org/",
+    "https://www.arrl.org/emergency-communications-training",
+    "https://www.arrl.org/simulated-emergency-test"
+   ],
+   "evidence_urls": [
+    "https://www.arrl.org/ares",
+    "https://www.arrl.org/files/file/ARES%20Plan%20July%202025.pdf",
+    "https://www.spokares.org/index.php/contact/join-ares-races",
+    "https://www.spokares.org/index.php/contact/welcome-letter",
+    "https://ag7qp.com/ares-task-book",
+    "https://ares.arrl.org/",
+    "https://www.arrl.org/public-service-field-services-forms",
+    "https://www.arrl.org/emergency-coordinator",
+    "https://www.arrl.org/news/arrl-learning-center-features-two-new-emergency-communication-training-courses",
+    "http://www.arrl.org/emergency-communications-field-instructor-resources",
+    "https://www.arrl.org/simulated-emergency-test",
+    "https://www.spokares.org/index.php/about/mou-with-ievhfra",
+    "https://ag7qp.com/spokane-county-ares-acs",
+    "https://nediv.arrl.org/2021/01/11/ares-connect-announcement-january-11-2021/",
+    "https://www.arrl.org/public-service-honor-roll"
+   ],
+   "relationship_summary": "This is the ARRL program behind the 'ARES' half of the group.\n\nLevels under the July 2025 ARES Plan (CONFIRMED):\n- Basic: FEMA IS-100/200/700/800, ARRL Basic EmComm and the Level 1 Task Book.\n- Intermediate: adds Intermediate EmComm and full ARRL membership.\n- Advanced: adds IS-230/240/241/242/244/288. Required for EC, AEC, DEC and SEC, plus the ARES Leadership course for leaders.\n\nMISMATCHES on spokares.org:\n- The Join page requires the ARES Task Book but links only the generic arrl.org/ares page.\n- The Welcome Letter still lists only IS-100.C and IS-700.B.\n\nReporting: monthly EC reports go on Form 2 and SEC reports on Form 4 at ares.arrl.org. FSD-98 is the ARES registration form. The Spokane Net Manager's net statistics flow EC to SEC to the League.\n\nCourses (CONFIRMED): EC-001 and EC-016 were replaced in May 2024 by Basic and Intermediate EmComm; Advanced EmComm is 'on hold'. ARRL credits Jack Tiley AD7FO 'of Spokane County ARES/RACES' with the 2011 EC-001 materials.\n\nNational activities:\n- SET 2026 is Oct 3-4 (on the Spokane calendar Oct 3). The IEVHFRA MOU names SET as joint training.\n- Field Day participation is documented for 2006-2025.\n- ARES Connect (LIKELY retired June 2021): do not integrate.\n- PSHR relevance is INFERRED only.",
+   "tier": "core",
+   "research_questions": [
+    "Which ARES Plan requirements does Spokane actually enforce, and how should the site show ARES levels next to the stricter county ACS Task Book?",
+    "What are the stable direct URLs for the current Task Book PDF and the ARES Plan?",
+    "Does the Spokane EC file ARRL Form 2 monthly and a SET report? Are recent numbers public?",
+    "What are Spokane's plans and results for SET 2026, and Field Day and Winter Field Day history, for the events/history section?",
+    "Are there Spokane-area OES, PIO or other Field Organization appointees?",
+    "Do members report to the PSHR?",
+    "When will Advanced EmComm be available? This affects Advanced-level and ACS S-RADO wording."
+   ]
+  },
+  {
+   "slug": "arrl-eastern-washington-section",
+   "name": "ARRL Eastern Washington Section (EWA): SM/SEC office, ARES District 9, EWSEN nets and Standing Order 1b",
+   "aliases": [
+    "EWA Section",
+    "Eastern Washington Section",
+    "EWA SEC",
+    "ARES District 9 (= WA EMD Region 9)",
+    "ARES Districts 7 and 8",
+    "Eastern Washington Section Emergency Net (EWSEN)",
+    "EWA-WL2K Winlink net",
+    "EWA Standing Order 1 / 1b (2026-01-16)",
+    "C. Jo Whitney KA7LJQ (SM)",
+    "Frank E. Hutchison AG7QP (SEC)",
+    "C.M. 'Sam' Jenkins WA7EC (District 9 DEC)",
+    "Mary Wiese AA7RT (ASM)",
+    "Jack Tiley AD7FO (TC, former SM)"
+   ],
+   "category": "arrl-hierarchy",
+   "urls": [
+    "https://www.arrl.org/sections/view/eastern-washington",
+    "https://ag7qp.com/eastern-washington-section",
+    "https://ag7qp.com/ares-acs"
+   ],
+   "evidence_urls": [
+    "https://www.arrl.org/sections/view/eastern-washington",
+    "https://arrlnwdiv.org/2024/12/24/arrl-division-news/",
+    "https://www.spokares.org/index.php/about/ares-races-leadership",
+    "http://www.arrl.org/news/new-section-managers-appointed-in-orange-and-eastern-washington",
+    "https://www.arrl.org/news/view/arrl-section-managers-prepare-for-new-terms",
+    "https://www.wastateares.org/state-leadership/local-contacts",
+    "https://ag7qp.com/emcomm-groups",
+    "https://ag7qp.com/eastern-washington-section",
+    "https://assets.zyrosite.com/AVLpnMOEDxUWzNvE/ewsen-hf-net-preamble-your-call-sign-version-2025-10-28-Yan04zDDnRuKRzMW.docx",
+    "https://assets.zyrosite.com/AVLpnMOEDxUWzNvE/ewa-sop-1b---2026-01-16-dyxpta3oxpjzPI4U.pdf",
+    "https://docs.google.com/spreadsheets/d/1dZ5P6UGDfy3wH5DGgAANgRsOHnnv17on/edit",
+    "https://www.spokares.org/index.php/membership/amateur-training",
+    "https://www.spokares.org/index.php/operations/skywarn-weather-spotting"
+   ],
+   "relationship_summary": "Spokane's ARRL section. It covers 20 counties in ARES Districts 7, 8 and 9, and had 905 ARRL members in Nov 2024.\n\nOfficials (CONFIRMED, arrl.org, 2026-09-25):\n- SM: C. Jo Whitney KA7LJQ of Yakima. She was appointed in 2021 and elected unopposed for terms starting Oct 2023 and Oct 2025. INFERENCE: her current term runs to Sept 2027. The SM appoints the county EC.\n- SEC: Frank Hutchison AG7QP of Spokane Valley. spokares.org also lists him as Spokane AEC Net Manager. This dual role needs confirmation.\n- ASMs include Mary Wiese AA7RT, who is also Spokane's SKYWARN lead and a VE.\n- TC: Jack Tiley AD7FO, the former SM (2019-2021) and local license-class instructor.\n- ACC: Harold Hepner AD7QJ.\n- No STM is listed.\n\nDistrict 9: its DEC is C.M. 'Sam' Jenkins WA7EC, who is also Ferry County EC/RO. It maps directly to WA EMD Region 9.\n\nEWSEN Monday nets (CONFIRMED):\n- VHF at 1815 on the KBARA 147.36/147.38 system.\n- HF at 1845 on 3985 kHz.\n- Winlink check-ins to EWA-WL2K from 1700 to 1900.\n\nStanding Order 1b (2026-01-16) is the section's self-activation SOP:\n- Nets on HF 3985/3990/3995, then 40 m 7245/7250/7255, then KBARA.\n- Winlink WA Field Situation Reports and DYFI reports go to the local EM, EC, DEC and SEC.\n- It defers to the local AHJ.\n\nPARTLY STALE: District 7/8 DEC listings (for example Koehler KI4EZU). DISCREPANCY: sources disagree on whether Columbia County is in District 8 or 9.",
+   "tier": "core",
+   "research_questions": [
+    "When was Frank Hutchison appointed SEC? Does he still also serve as Spokane AEC Net Manager, or is the spokares.org listing stale?",
+    "Is the District 9 DEC (WA7EC) current? What does the DEC expect from Spokane (reports, net duty)?",
+    "Is the EWA Section Traffic Manager post vacant?",
+    "What does the section require of county groups (monthly reports, EWSEN check-ins, SET tasks)? How should Standing Order 1b be summarized or linked on the Spokane site?",
+    "Does the section have an official web presence besides ag7qp.com and the Facebook group?",
+    "Which district is Columbia County in (8 or 9)?",
+    "Should the rebuilt site list Mary Wiese AA7RT and Jack Tiley AD7FO in their section roles, local roles, or both?"
+   ]
+  },
+  {
+   "slug": "ag7qp-com-temporary-spokane-site",
+   "name": "ag7qp.com: EWA SEC's 'EmComm Inland Northwest' hub, hosting the temporary Spokane County ARES-ACS webpage",
+   "aliases": [
+    "ag7qp.com",
+    "Eastern Washington Emergency Communications Information Hub",
+    "Temporary Spokane County ARES-ACS Webpage",
+    "EmComm Inland Northwest"
+   ],
+   "category": "platform/tool",
+   "urls": [
+    "https://ag7qp.com/",
+    "https://ag7qp.com/spokane-county-ares-acs"
+   ],
+   "evidence_urls": [
+    "https://ag7qp.com/",
+    "https://ag7qp.com/spokane-county-ares-acs",
+    "https://ag7qp.com/ares-acs",
+    "https://ag7qp.com/acs-task-book",
+    "https://ag7qp.com/ares-task-book",
+    "https://ag7qp.com/new-members-orientation",
+    "https://ag7qp.com/emcomm-groups",
+    "https://ag7qp.com/nets-in-the-inland-northwest",
+    "https://ag7qp.com/license-exams",
+    "https://ag7qp.com/cert",
+    "https://ag7qp.com/sitemap.xml",
+    "https://assets.zyrosite.com/AVLpnMOEDxUWzNvE/net-preamble---2026-03-04-J61T3W2cH82FGj2t.docx"
+   ],
+   "relationship_summary": "CRITICAL for the rebuild (CONFIRMED). This Zyro/Hostinger site is run by Frank Hutchison AG7QP; its sitemap lastmod is 2026-09-23. It states: 'The spokares.org website was hacked. This page acts as a temporary repository for general information for the Spokane County ARES-ACS group.'\n\nIt currently hosts Spokane's live operational content:\n- The Sept-Oct 2026 Tuesday net-control roster (KE7RAP, NZ2S, AE7RJ, WA7LNC and others).\n- Net preambles: main 2026-03-04, simplex, and GMRS 2025-08-19.\n- The ARES-ACS roster PDF (2026-08-04) and the Winlink assignment schedule.\n- The ARES membership application (2024-11-07) and the ARES and Spokane ACS Task Book guides.\n- New Member Orientation.\n- The Fall 2026 calendar: WSDOT exercise 9/26-27, SET 10/3, ShakeOut 10/15, SHARES training 10/17, State COMMEX 10/24.\n\nIt also carries section-level material: District 9 EC contacts, an Inland Northwest nets list, license-exam and class pages, CERT pages and Standing Order 1b.\n\nSTALE items include Alert Spokane described as 'Code Red'.",
+   "tier": "core",
+   "research_questions": [
+    "Inventory every Spokane-specific page and zyrosite asset (docx/pdf) on ag7qp.com, with dates.",
+    "Which content should move to the rebuilt spokares.org, and which should stay on the section-level site? Will the temporary page redirect after launch?",
+    "Does AG7QP permit copying the content? Who edits which pages going forward?",
+    "Which currently public documents (roster PDF with contact data, Winlink addresses) should become members-only on the new site?",
+    "Which stale items need correcting during migration (Alert Spokane/CodeRED, meeting times)?"
+   ]
+  },
+  {
+   "slug": "spokane-county-emergency-management",
+   "name": "Spokane County Emergency Management (SCEM) and its Auxiliary Communication System (ACS) volunteer program",
+   "aliases": [
+    "SCEM",
+    "Spokane County Department of Emergency Management (DEM)",
+    "SCDEM",
+    "Spokane Emergency Management",
+    "Greater Spokane Emergency Management / GSEM (historical)",
+    "Spokane City/County DEM (historical)",
+    "ACS - Auxiliary Communication System(s) / Service(s)",
+    "Spokane County RACES (predecessor, 'now incorporated into ACS')",
+    "Spokane County Sheriff's Office (Sheriff = Director of EM)",
+    "Spokane County Board of County Commissioners (BOCC)",
+    "Spokane County CEMP (March 2021) / ESF-2",
+    "Spokane County Code ch. 1.08",
+    "ACS Position Task Book (v2024-08-09; New Member/RADO/S-RADO/Leadership)",
+    "ACS Field Operating Guide (ACSFOG)",
+    "ALERT Spokane (Regroup; formerly CodeRED)",
+    "Inland Northwest LECC / EAS",
+    "Inter-Local Agreement jurisdictions (Spokane Valley, Airway Heights, Cheney, Deer Park, Liberty Lake, Medical Lake, etc.)"
+   ],
+   "category": "government/served-agency",
+   "urls": [
+    "https://www.spokanecounty.gov/5498/Emergency-Management",
+    "https://www.spokanecounty.gov/1813/ACS-Auxiliary-Communication-Systems",
+    "https://www.spokanecounty.gov/FormCenter/Emergency-Management-31/Volunteer-Emergency-Worker-Application-276"
+   ],
+   "evidence_urls": [
+    "https://www.spokares.org/",
+    "https://www.spokares.org/index.php/about/mou-with-ievhfra",
+    "https://www.spokanecounty.gov/1813/ACS-Auxiliary-Communication-Systems",
+    "https://web.archive.org/web/20190819231916/https://www.spokanecounty.org/1813/ARESRACES-Amateur-Radio-Emergency-Servic",
+    "https://web.archive.org/web/20200927011324/https://www.spokanecounty.org/1813/ARESACS",
+    "https://www.spokanecounty.gov/FormCenter/Emergency-Management-31/Volunteer-Emergency-Worker-Application-276",
+    "https://www.spokanecounty.gov/DocumentCenter/View/40021/Spokane-County-CEMP-March_2021",
+    "https://www.spokanecounty.gov/DocumentCenter/View/4745/ESF-2---Communications-Information-Systems-and-Warning-PDF",
+    "https://www.spokanecounty.gov/DocumentCenter/View/71520/Emergency-Management-Communications-Specialist",
+    "https://www.governmentjobs.com/careers/spokanecountywa/jobs/newprint/4661112",
+    "https://www.spokanecounty.gov/m/newsflash/home/detail/6154",
+    "https://www.spokanecounty.gov/1914/WA-State-Homeland-Security-Region-9",
+    "https://www.spokesman.com/stories/2019/oct/23/spokane-plans-to-manage-its-own-emergencies-drop-o/",
+    "https://ag7qp.com/acs-task-book",
+    "https://ag7qp.com/new-members-orientation",
+    "https://www.spokanecounty.gov/3007/Alert-Spokane",
+    "https://www.spokesman.com/stories/2026/apr/21/spokane-county-announces-new-alert-spokane-system-/",
+    "https://www.spokanecounty.gov/1904/LECC-Local-Emergency-Communication-Commi",
+    "https://www.spokanevalleywa.gov/413/Emergency-Coordination",
+    "https://library.municode.com/wa/spokane_county/codes/code_of_ordinances?nodeId=TIT1ADPE_CH1.08DEEMMA"
+   ],
+   "relationship_summary": "SCEM is the primary served agency and the Agency Having Jurisdiction.\n\nACS program (CONFIRMED): ACS is SCEM's own volunteer program. The county ACS page says members may use government equipment and frequencies and that 'RACES ... is now incorporated into ACS'. The county page (ID 1813) was renamed from 'ARES/RACES' to 'ARES/ACS' (by 2020) to 'ACS' (current). The 2020 version linked to spokares.org; the current one does not.\n\nJoining ACS requires the ARES application, the county Volunteer Emergency Worker Application and a Sheriff's Office background check. IS-100 and IS-700 are required before a county ID is issued. The ACS Task Book (v2024-08-09) sets requirements beyond ARES.\n\nAuthority and county plan (CONFIRMED):\n- The 2021 CEMP makes the Sheriff the Director of Emergency Management and lists ACS as a supporting agency in ESF-2, 5, 6, 8 and 9.\n- A county Communications Specialist post (Sheriff's department, created 2023) 'develops, coordinates, and maintains' ACS, supervises ACS volunteers and coordinates radio volunteers across Homeland Security Region 9. SCEM is the Region 9 lead.\n- Current officials: Sheriff John Nowels and Deputy Director Chandra Fox (Aug 1, 2026 release). The BOCC declared a state of emergency for the Aug 2026 fires.\n- The Inter-Local Agreement covers Spokane Valley and 11 other municipalities plus the unincorporated county. It does NOT cover the City of Spokane.\n\nHISTORICAL: Emergency management was a joint city-county operation (GSEM) until the City left in 2020. The old Plan was Attachment 3 to ESF-2 of the City/County CEMP. SCC 1.08 (LIKELY) names the old 1618 N Rebecca office.\n\nOther: ALERT Spokane moved to Regroup in April 2026. SCEM also runs the INW LECC/EAS; the old Plan's idea of using EAS to call out ARES is SPECULATIVE. County-owned equipment (comm room, trailer, MNUs, hospital radios, caches) is what ACS members train on. Stale spokares.org labels still say 'Greater Spokane Emergency Management Application' and 'GSEM'.",
+   "tier": "core",
+   "research_questions": [
+    "Who is SCEM's current Communications Specialist or ACS coordinator? What are SCEM's expectations for the rebuilt site (approval, branding, county links, required disclaimers)?",
+    "What is ACS's official name: 'Auxiliary Communication System', 'Systems' or 'Services'?",
+    "Is there a CEMP or ESF-2 annex newer than March 2021? Does a current ACS SOP or plan replace the 2001-2013 ARES/RACES Plan?",
+    "Is there a current written RACES Officer or ACS lead appointment (W7TSC)?",
+    "How are activations, mission numbers, volunteer ID cards and emergency-worker registration handled in practice today?",
+    "Which equipment does SCEM own (147.30 repeater, comm room, comm trailer, MNUs, hospital radios, Region 9 caches), and where is it located?",
+    "Does ACS serve the City of Spokane since the 2020 split, and on what basis?",
+    "What stable URLs should the site use for the county application and ACS page? Which stale GSEM references need correcting?"
+   ]
+  },
+  {
+   "slug": "washington-emergency-management-division",
+   "name": "Washington Emergency Management Division (WA EMD, Washington Military Department): State EOC/AUXCOMM, RACES planning and Homeland Security Region 9",
+   "aliases": [
+    "WA EMD",
+    "State DEM (older usage)",
+    "Camp Murray",
+    "W7EMD",
+    "State EOC (SEOC) radio room",
+    "WA State RACES Plan (1995; Nov 2013 version on wastateares.org)",
+    "EMD Logistics Section Communications Annex (~2021)",
+    "EOC-to-EOC exercises (5th Saturdays) / State COMMEX / eoc2eoc.groups.io",
+    "WA Homeland Security Region 9 (SCEM lead)",
+    "R9 Radio Cache",
+    "WA Resource Request Form (ICS-213RR)",
+    "WA State Field Situation Report",
+    "WAFOG",
+    "SIEC / SCIP / SWIC"
+   ],
+   "category": "government/served-agency",
+   "urls": [
+    "https://mil.wa.gov/emergency-management-division",
+    "https://www.wastateares.org/eoc-to-eoc-exercises"
+   ],
+   "evidence_urls": [
+    "https://mil.wa.gov/asset/5bac13552b230",
+    "https://mil.wa.gov/asset/60f9cd5f8ad09",
+    "https://mil.wa.gov/asset/61009a6f16945",
+    "https://www.wastateares.org/eoc-to-eoc-exercises",
+    "https://www.wastateares.org/state-comm-plan",
+    "https://www.wastateares.org/online-documents",
+    "https://www.wastateares.org/state-leadership",
+    "https://www.spokares.org/index.php/2-uncategorised/2-ares-races-plan",
+    "https://www.spokares.org/index.php/about/mou-with-ievhfra",
+    "https://ag7qp.com/spokane-county-ares-acs",
+    "https://ag7qp.com/acs-task-book",
+    "https://www.spokanecounty.gov/1914/WA-State-Homeland-Security-Region-9",
+    "https://mil.wa.gov/asset/5ba420f505d91",
+    "https://docs.google.com/spreadsheets/d/1dZ5P6UGDfy3wH5DGgAANgRsOHnnv17on/edit",
+    "https://www.cisa.gov/safecom/comu-training-resources"
+   ],
+   "relationship_summary": "State-level authority and served agency (CONFIRMED).\n\nMission numbers: the Spokane Plan requires SCEM to obtain a mission number from the state before ARES/RACES serves government agencies. The mission number is what triggers RCW 38.52 emergency-worker coverage.\n\nRACES planning:\n- The 1995 State RACES Plan requires local EM to appoint a RACES Officer in writing, keep a local RACES plan and register participants as emergency workers.\n- It was superseded by the EMD Logistics Section Communications Annex (about 2021), which 'supersedes all preceding State RACES Plans'.\n- DISCREPANCY: wastateares.org still hosts a Nov 2013 State RACES Plan, and the Spokane Plan cites the state plan without a version.\n- The Annex covers 12 SHARES Winlink RMS stations, a 220 MHz network, the SEOC radio room and state RADO position task books. The Spokane ACS Task Book uses the same RADO/S-RADO structure.\n\nExercises: the State EOC AUXCOMM team at Camp Murray (W7EMD) runs EOC-to-EOC exercises on 5th Saturdays. Spokane joined them historically, for example sending WA ICS-213RR by Winlink in March 2019. A State COMMEX is on the Spokane calendar for Oct 24, 2026.\n\nRegions: EMD's 9 regions map directly to the 9 ARES districts. Region 9 (10 counties plus the Kalispel and Spokane Tribes) is led by SCEM. The 'R9 Radio Cache' portable repeaters appear in the ACS Task Book (the owning agency is INFERRED).\n\nForms and guides: WA ICS-213RR and the WA State Field Situation Report (2026 SET). WAFOG v1.10 (May 2026) exists per search, but its URL returned 404. The SCIP was updated in 2023/2024. AUXC/COMT courses are requested through the SWIC (LIKELY).",
+   "tier": "core",
+   "research_questions": [
+    "What is the current authoritative state document for RACES/AUXCOMM (the Communications Annex version), and what does it require of county programs like Spokane ACS?",
+    "Is a Spokane ACS or ARES plan on file with EMD? Should the rebuilt site cite the Annex rather than the 1995 or 2013 RACES Plan?",
+    "How does the mission-number process work today, and what can volunteers be told about coverage?",
+    "What is the current EOC-to-EOC and State COMMEX schedule, and how does Spokane take part?",
+    "Who manages the Region 9 radio cache, and are Spokane members credentialed as state RADOs?",
+    "What are the current URLs for the WA ICS-213RR, the Field Situation Report Winlink template and WAFOG?",
+    "Who is the State EOC radio room or AUXCOMM contact (the spreadsheet lists Scott Dakers W7SGD)?"
+   ]
+  },
+  {
+   "slug": "ievhfra",
+   "name": "Inland Empire VHF Radio Amateurs (IEVHFRA, 'VHF Club', WR7VHF)",
+   "aliases": [
+    "IEVHFRA",
+    "VHF Club",
+    "Inland Empire VHF Club",
+    "WR7VHF",
+    "Inland VHF Radio Amateurs (MOU misspelling)",
+    "WR7VHF-3 SPOKN1",
+    "WR7VHF-4 SPOKN2",
+    "WR7VHF-10 Winlink RMS",
+    "vhfclub.org"
+   ],
+   "category": "local-ham-club",
+   "urls": [
+    "https://www.vhfclub.org/",
+    "https://www.vhfclub.org/systems/"
+   ],
+   "evidence_urls": [
+    "https://www.spokares.org/index.php/about/mou-with-ievhfra",
+    "https://www.vhfclub.org/systems/",
+    "https://www.vhfclub.org/",
+    "https://www.vhfclub.org/pdf/Waves%20Newsletter%20October%202019.pdf",
+    "http://www.arrl.org/Groups/view/inland-empire-vhf-radio-amateurs",
+    "https://callook.info/WR7VHF/json",
+    "https://www.repeaterbook.com/repeaters/details.php?ID=283&state_id=53",
+    "https://assets.zyrosite.com/AVLpnMOEDxUWzNvE/net-preamble---2026-03-04-J61T3W2cH82FGj2t.docx",
+    "https://www.spokares.org/index.php/membership/amateur-training",
+    "http://www.felge.us/WR7VHF10.pdf",
+    "https://www.climbforthecure.org/sponsors/inland-empire-vhf-radio-amateurs"
+   ],
+   "relationship_summary": "The group's closest formal partner.\n\nThe MOU (CONFIRMED): 'MOU Regarding Emergency Operations On Repeater Systems in Spokane County', Revision #5 dated 2023-05-06. Points of contact were W7TSC for ARES and president@vhfclub.org for IEVHFRA. Under it:\n- ARES/ACS/RACES is the primary emergency center, activated by SCEM, using 147.30 W7GBU.\n- IEVHFRA provides the 146.88 backup, a second repeater for specialized nets such as weather, and packet/UHF paths for ICS-213 and WA ICS-213RR over Winlink.\n- The MOU says POCs should be revisited annually and that both websites will post it; it was not found on vhfclub.org.\n\nCURRENT: the March 2026 Spokane preamble names 146.880 as the 'alternate Spokane County ACS repeater'.\n\nClub systems:\n- Repeaters: 146.880- (tone 123, Krell Hill), 147.340+, 444.600+, 444.900+.\n- Packet nodes: WR7VHF-3 (145.010) and WR7VHF-4 (145.090).\n- WR7VHF-10 RMS on a 440.125 9600-baud backbone.\n- The club has been ARRL-affiliated since 1987. Its license is valid to 2031 (trustee AD7QJ).\n\nOther ties:\n- The club co-sponsors license classes with SCEM and ARES (Jack Tiley AD7FO).\n- Its Oct 2019 newsletter says IEVHFRA took a $300 donation 'for ARES' because ARES has no bank account.\n- Officers overlap with ARES: NZ2S is president and an ARES net control; NV2Z is VP and an ARES AEC; K7DSR was 2019 president. The ARES-ACS comm trailer appeared at the June 2026 tailgate.\n- It sponsors Climb for the Cure and co-sponsors the Spokane Hamfest.",
+   "tier": "core",
+   "research_questions": [
+    "Is MOU Rev 5 (2023-05-06) still in force? Have any revisions or annual POC reviews happened since?",
+    "Who are IEVHFRA's current officers and MOU POC?",
+    "Does IEVHFRA still hold funds for ARES? What is the arrangement?",
+    "What are the current status and frequencies of the WR7VHF packet nodes and WR7VHF-10 (these matter for the Winlink instructions on the new site)?",
+    "What is the 2026-27 schedule for joint license classes and testing?",
+    "Will vhfclub.org post the MOU and cross-link the rebuilt spokares.org?"
+   ]
+  },
+  {
+   "slug": "nws-spokane-skywarn",
+   "name": "National Weather Service Spokane (NWS OTX) and SKYWARN",
+   "aliases": [
+    "NWS Spokane",
+    "WFO OTX",
+    "NOAA",
+    "SKYWARN",
+    "SKYWARN Recognition Day (SRD)",
+    "NOAA Weather Radio WXL86 162.400",
+    "ARRL-NWS SKYWARN MOU (1986)",
+    "COMET MetEd spotter courses"
+   ],
+   "category": "government/served-agency",
+   "urls": [
+    "https://www.weather.gov/otx/",
+    "https://www.weather.gov/otx/Current_Spotter_Training",
+    "https://www.weather.gov/skywarn/"
+   ],
+   "evidence_urls": [
+    "https://www.spokares.org/",
+    "https://www.spokares.org/index.php/operations/skywarn-weather-spotting",
+    "https://www.spokares.org/index.php/operations/status-codes",
+    "https://www.spokares.org/index.php/2-uncategorised/2-ares-races-plan",
+    "https://www.arrl.org/served-agencies-and-partners",
+    "https://web.archive.org/web/2024/https://www.spokares.org/index.php/32-skywarn-2017-recap",
+    "https://web.archive.org/web/2024/https://www.spokares.org/index.php/57-2019-skywarn-recognition-day",
+    "https://www.weather.gov/otx/Current_Spotter_Training",
+    "https://www.weather.gov/otx/Spotter_Resource_Page",
+    "https://ag7qp.com/acs-task-book",
+    "https://ag7qp.com/"
+   ],
+   "relationship_summary": "A long-standing served-agency partner (CONFIRMED).\n\nOn spokares.org:\n- The homepage says the group activates severe-weather nets to assist NWS Spokane.\n- The SKYWARN page (2018) names Mary Wiese AA7RT primary SKYWARN representative and Bob Wiese W7UWC assistant. It links a STALE July 2016 training playlist. The Ham Radio Links page uses a dead wrh.noaa.gov URL.\n- The Status Codes page tells members to monitor WXL86 (162.400) and W7GBU.\n\nPlan and MOU: Plan Attachment 13 treats spotting as non-emergency ARES activity under the ARRL-NOAA MOU. It says DEM authorization and a mission number are needed only for field observers or for staffing the ARES station at the NWS office.\n\nSKYWARN Recognition Day: the group has run an SRD station inside the NWS office in Airway Heights every year since 1999 (2017 and 2019 recaps). SRD 2026 is Dec 4-5. NWS was an exercise site in March 2019.\n\nCurrent: the ACS Task Book encourages biennial spotter training. NWS OTX ran virtual spotter classes in spring 2026; fall 2026 is TBD.",
+   "tier": "core",
+   "research_questions": [
+    "Who is the current NWS OTX warning coordination meteorologist or SKYWARN contact, and how do they want amateur spotter reports received?",
+    "Is there still an ARES/ACS station or antenna at the NWS Spokane office? What are the SRD 2026 plans?",
+    "Are Mary Wiese AA7RT and Bob Wiese W7UWC still the SKYWARN representatives?",
+    "When are the fall 2026 and spring 2027 spotter classes, and what are the current training links to replace the 2016 playlist and dead wrh.noaa.gov link?",
+    "Does the group still activate formal severe-weather nets, and on which repeater (147.30 or IEVHFRA 146.88 per the MOU)?"
+   ]
+  },
+  {
+   "slug": "washington-state-ares-waemcomm-wsen",
+   "name": "Washington State ARES / WaEmcomm (wastateares.org), Washington State Emergency Net (WSEN) and ARRL Western Washington Section",
+   "aliases": [
+    "WaEmcomm",
+    "Washington State ARES/RACES",
+    "wastateares.org",
+    "WSEN (3985 kHz)",
+    "WSEN District 9 Net",
+    "ARRL Western Washington Section (WWA)",
+    "WWA Section Emergency Communications Group, Inc.",
+    "Oregon ACES Basic (training alternative accepted by WaEmcomm)"
+   ],
+   "category": "arrl-hierarchy",
+   "urls": [
+    "https://www.wastateares.org/",
+    "https://www.wastateares.org/washington-state-emergency-net",
+    "https://www.arrl.org/sections/view/western-washington"
+   ],
+   "evidence_urls": [
+    "https://www.wastateares.org/",
+    "https://www.wastateares.org/state-leadership",
+    "https://www.wastateares.org/state-leadership/local-contacts",
+    "https://www.wastateares.org/washington-state-emergency-net",
+    "https://www.wastateares.org/applications-and-reports",
+    "https://www.wastateares.org/training",
+    "https://www.wastateares.org/online-documents",
+    "https://www.wastateares.org/non-profit-organization",
+    "https://www.spokares.org/index.php/membership/ham-radio-links",
+    "https://www.spokares.org/index.php/2-uncategorised/2-ares-races-plan",
+    "https://www.spokares.org/index.php/component/jcalpro/42-wsen-district-9-net-control/1041-spokane-w7tsc",
+    "https://arrlnwdiv.org/sections/",
+    "https://docs.google.com/spreadsheets/d/1dZ5P6UGDfy3wH5DGgAANgRsOHnnv17on/edit"
+   ],
+   "relationship_summary": "wastateares.org (CONFIRMED) is the statewide ARES/RACES/AUXCOMM information hub, a Google Site. spokares.org links it ('Washington State ARES/RACES') and its WSEN page.\n\nWhat it is and hosts:\n- It is not a chartered ARRL body. INFERENCE: it is maintained mainly by Western Washington leadership, since corrections go to N7SS.\n- Local Contacts lists the Spokane EC as W7TSC under Region 9 (DEC WA7EC). It states the 9 EMD regions = 9 ARES districts mapping.\n- Also hosted: ARRL forms, an EC/RO monthly Google Form, the state comm plan (SCIP, ESF-2), and documents including the WA RACES Plan (Nov 2013), AUXFOG and NIFOG.\n- The training recommendations are STALE (EC-001/EC-016, old FEMA versions) and accept Oregon ACES Basic.\n\nWSEN (CONFIRMED):\n- Frequencies: 3985 kHz LSB, alternate 7245.\n- Schedule: Monday regional/county sessions at 1830 PT; Saturday statewide at 0900 PT.\n- Net manager: Michael Ditmore W7HUT.\n- The Spokane Plan names it the first 'Significant HF Network'.\n- A 2019 spokares.org calendar assigned WSEN District 9 net-control slots to Spokane (W7TSC) and Stevens (WD7K).\n\nWWA Section (per the state spreadsheet and NW Division): holds Districts 1-6. SM Bob Purdom AD7LJ; SEC Frank Wolfe NM7R. Its 501(c)(3) serves WWA teams only.",
+   "tier": "related",
+   "research_questions": [
+    "Does Spokane still provide WSEN District 9 net control, and on what schedule?",
+    "Is the Spokane and District 9 information on wastateares.org Local Contacts current? Who can correct it?",
+    "Should the rebuilt site link WSEN on wastateares.org, the section material on ag7qp.com, or both?",
+    "Are any statewide ARES/AUXCOMM requirements or reports (the EC/RO monthly form) expected of Spokane beyond the ARRL forms?",
+    "Which state documents on wastateares.org are current, and which are superseded (2013 RACES Plan versus the EMD Annex)?"
+   ]
+  },
+  {
+   "slug": "american-red-cross-inland-northwest",
+   "name": "American Red Cross, Greater Inland Northwest Chapter (and the ARRL-Red Cross MOU)",
+   "aliases": [
+    "Inland Northwest Chapter, American Red Cross",
+    "ARC",
+    "ARRL-American Red Cross MOU (renewed April 2021)",
+    "Red Cross Disaster Service and Shelter Fundamentals"
+   ],
+   "category": "government/served-agency",
+   "urls": [
+    "https://www.redcross.org/local/washington/about-us/locations/greater-inland-northwest.html",
+    "https://www.arrl.org/served-agencies-and-partners"
+   ],
+   "evidence_urls": [
+    "https://www.spokanecounty.gov/1813/ACS-Auxiliary-Communication-Systems",
+    "https://www.spokares.org/index.php/contact/welcome-letter",
+    "https://ag7qp.com/acs-task-book",
+    "https://www.spokares.org/index.php/2-uncategorised/2-ares-races-plan",
+    "https://www.arrl.org/served-agencies-and-partners",
+    "https://www.kxly.com/news/local-news/ham-radio-operators-will-test-their-skills-on-the-airwaves-this-saturday/article_0990757a-7223-5169-8698-82ac9f7d30cf.html",
+    "https://www.spokanecounty.gov/DocumentCenter/View/40021/Spokane-County-CEMP-March_2021",
+    "https://spokanecounty.gov/DocumentCenter/View/4749/ESF-6---Mass-Care-Housing-and-Human-Services-PDF?bidId=",
+    "https://spokanecounty.gov/AgendaCenter/ViewFile/Minutes/_09052023-2956",
+    "https://www.spokares.org/index.php/about/mou-with-ievhfra"
+   ],
+   "relationship_summary": "The main NGO served agency.\n\nCurrent ties (CONFIRMED):\n- The county ACS page names 'response partners such as the Red Cross'.\n- The Welcome Letter recommends Red Cross Disaster Service and Shelter Fundamentals.\n- The ACS Task Book includes a 'Red Cross Familiarity Training' that is still under development.\n- The 2021 CEMP makes the Inland Northwest Chapter the ESF-6 (Mass Care) lead, with ACS supporting.\n- The Red Cross and ARES/ACS both reported at the Sept 2023 COAD.\n\nHISTORICAL (Plan Attachment 14): ARES has 'a traditional bond of service to Red Cross'. The chapter office was then at 315 W Nora, with operators at shelters and ERVs. ARES may serve the Red Cross without EM authorization under the ARRL-Red Cross MOU, renewed April 2021. KXLY (2011) reported an ARES shelter station during the Valley View Fire relaying information to the Red Cross.\n\nINFERENCE: any local MOU would now need the EWA SM's or SEC's signature. The chapter page returned 403 to automated fetches, so the current address is unverified.",
+   "tier": "related",
+   "research_questions": [
+    "What are the current chapter name, address and disaster program contact?",
+    "Does any local MOU or written agreement exist between the chapter and Spokane ARES/ACS?",
+    "Do ARES/ACS operators still staff shelter or ERV communications? Does the chapter have its own Disaster Services Technology radio volunteers?",
+    "Is the Red Cross familiarity training in the ACS Task Book available, and how is it scheduled?"
+   ]
+  },
+  {
+   "slug": "voluntary-and-faith-based-partners",
+   "name": "Spokane COAD, the VOAD network and faith-based emcomm partners (Salvation Army/SATERN, LDS Emergency Response Communicators)",
+   "aliases": [
+    "Spokane Community Organizations Active in Disaster (COAD)",
+    "Eastern Washington VOAD (EWAVOAD) / INW VOAD",
+    "WA-VOAD",
+    "National VOAD (NVOAD)",
+    "The Salvation Army (Spokane) / SATERN",
+    "Church of Jesus Christ of Latter-day Saints Emergency Response Communicators (ERC), Spokane Coordinating Council",
+    "NAWN training",
+    "Emergency Response Communicators Convention (2026-11-14)"
+   ],
+   "category": "partner-volunteer-org",
+   "urls": [
+    "https://www.spokanecounty.gov/AgendaCenter/ViewFile/Agenda/_03052024-3057",
+    "https://www.salvationarmyusa.org/satern-program/",
+    "https://ag7qp.com/nets-in-the-inland-northwest"
+   ],
+   "evidence_urls": [
+    "https://www.spokanecounty.gov/AgendaCenter/ViewFile/Minutes/06072016-1422",
+    "https://www.spokanecounty.gov/AgendaCenter/ViewFile/Minutes/_09052017-1735",
+    "https://spokanecounty.gov/AgendaCenter/ViewFile/Minutes/_09052023-2956",
+    "https://www.spokanecounty.gov/AgendaCenter/ViewFile/Agenda/_03052024-3057",
+    "https://www.spokanecounty.gov/DocumentCenter/View/40021/Spokane-County-CEMP-March_2021",
+    "https://www.arrl.org/files/file/ARES%20Plan%20July%202025.pdf",
+    "https://www.arrl.org/served-agencies-and-partners",
+    "https://www.spokares.org/index.php/2-uncategorised/2-ares-races-plan",
+    "https://ag7qp.com/nets-in-the-inland-northwest",
+    "https://ag7qp.com/",
+    "https://ag7qp.com/emcomm-resources"
+   ],
+   "relationship_summary": "Spokane COAD (CONFIRMED participation): ARES/RACES/ACS gave reports at COAD meetings in June 2016, Sept 2017 and Sept 5, 2023. At the 2023 meeting it reported providing a mobile network unit for the ICP and the Disaster Assistance Center in the Gray and Oregon Road fires. The March 2024 agenda lists 'ARES/ACS - Frank Hutchison'. COAD documents are in SCEM's AgendaCenter, and the 2021 CEMP names COAD the ESF-6 coordinator with ACS supporting.\n\nVOADs: ARRL is an NVOAD member, and the 2025 ARES Plan encourages local VOAD membership.\n\nHISTORICAL (Plan Attachment 15): the Salvation Army (222 E Indiana) had 'traditional bonds of service', and EWAVOAD was a route to extra service requests. Whether EWAVOAD exists today is unverified. ARRL has a SATERN MOU (2018), but no local SATERN activity was found.\n\nLDS ERC Spokane Coordinating Council (LIKELY; linked by people, not by agreement):\n- ag7qp.com lists ERC nets on HF, KBARA, 146.500, GMRS 7 and a Winlink net 'addressed to AG7QP & K7DSR-1'.\n- K7DSR (ARES AEC and W7GBU trustee) runs NAWN training, an equipment GoFundMe and an ERC convention on 2026-11-14.\n- Stake and ward nets use the IEVHFRA and KARS repeaters.\n- No MOU was found.",
+   "tier": "related",
+   "research_questions": [
+    "Is Spokane ARES/ACS a formal Spokane COAD member? Who represents it, and how often does COAD meet?",
+    "Does an Inland Northwest or Eastern Washington VOAD exist today, and does ARES/ACS take part?",
+    "Is there any current Salvation Army or SATERN activity in Spokane involving ARES/ACS?",
+    "How do ARES/ACS and the LDS ERC network coordinate (joint nets, shared GMRS/Winlink practice, recruitment)? Should the public site mention it?"
+   ]
+  },
+  {
+   "slug": "spokane-healthcare-and-hospitals",
+   "name": "Greater Spokane hospitals and health/medical partners (hospital radio net, SRHD, EMS, regional healthcare coalition)",
+   "aliases": [
+    "MultiCare Deaconess Hospital (primary DMCC)",
+    "Providence Sacred Heart Medical Center (secondary DMCC)",
+    "Providence Holy Family",
+    "MultiCare Valley Hospital",
+    "Mann-Grandstaff VA Medical Center",
+    "St. Luke's Rehabilitation Institute",
+    "HEAR radio (historical)",
+    "Spokane Regional Health District (SRHD)",
+    "Spokane County EMS & Trauma Care Council",
+    "REDi Healthcare Coalition / Northwest Healthcare Response Network / WA DOH Healthcare Readiness",
+    "Inland Northwest Health Services (INHS) / Northwest MedStar",
+    "Hospital Team / Hospital Net"
+   ],
+   "category": "government/served-agency",
+   "urls": [
+    "https://srhd.org/programs-and-services/public-health-emergency-preparedness-response-phepr/get-involved-to-help-your-community",
+    "https://nwhrn.org/redi-healthcare-coalition-transition-feb-2023/"
+   ],
+   "evidence_urls": [
+    "https://www.spokares.org/index.php/about/ares-races-leadership",
+    "https://www.spokares.org/index.php/contact/welcome-letter",
+    "https://ag7qp.com/acs-task-book",
+    "https://ag7qp.com/new-members-orientation",
+    "https://ag7qp.com/spokane-county-ares-acs",
+    "https://spokaneares-acs.groups.io/g/main/subgroups",
+    "https://www.spokares.org/index.php/2-uncategorised/2-ares-races-plan",
+    "https://www.spokanecounty.gov/DocumentCenter/View/40021/Spokane-County-CEMP-March_2021",
+    "https://www.spokanecounty.gov/DocumentCenter/View/4745/ESF-2---Communications-Information-Systems-and-Warning-PDF",
+    "https://nwhrn.org/redi-healthcare-coalition-transition-feb-2023/",
+    "https://web.archive.org/web/2024/https://www.spokares.org/index.php/52-recap-march-2019-exercise",
+    "https://en.wikipedia.org/wiki/Inland_Northwest_Health_Services"
+   ],
+   "relationship_summary": "Current hospital work (CONFIRMED):\n- AEC Hospital Coordinator Mary Griffith K7MHG 'works with all Greater Spokane area hospitals to ensure they have radio and computer equipment in place and operational'.\n- There is a Hospital-Coordination groups.io subgroup, and the Oct 6, 2026 calendar has a 'Hospital Net' (channel withheld: SCEM FOUO rule, decisions.md D13).\n- HIPAA training is required for the Hospital Team (Welcome Letter) and for all new ACS members (Task Book).\n- County radios are placed at hospitals.\n\nHISTORICAL (Plan Attachment 10):\n- Operators were to back up the HEAR system at Deaconess, Sacred Heart, Holy Family, Valley, the VA and St. Luke's, all with ARES/RACES antennas.\n- One operator was to go to the MedStar comm center atop Sacred Heart.\n- Seven operators were to shadow MCI positions for Spokane County EMS.\n- Sacred Heart was a site in the March 2019 exercise.\n\nCounty plan: the 2021 CEMP ESF-8 names Deaconess the primary DMCC and Sacred Heart the secondary, SRHD the ESF-8 lead, and the EMS & Trauma Care Council the EMS lead, with ACS supporting. REDi is also listed.\n\nLIKELY/INDIRECT: SRHD left the REDi coalition in March 2023, and WA DOH and NWHRN took over its functions. No direct SRHD, INHS or coalition agreement with ARES/ACS was found. INFERENCE: the hospital names in the Plan predate mergers.",
+   "tier": "related",
+   "research_questions": [
+    "Which hospitals currently have ACS/ARES radio stations or antennas, and who are their emergency-management contacts?",
+    "How often does the Hospital Net run? (Do not research or record its channel: SCEM FOUO rule, decisions.md D13.)",
+    "Is there a written agreement with any hospital or healthcare coalition, and which coalition now covers Region 9?",
+    "Does the MCI or EMS support role in the old Plan still exist? Does the MedStar/INHS comm center link still apply?",
+    "Where do members take the required HIPAA training?"
+   ]
+  },
+  {
+   "slug": "other-government-served-agencies",
+   "name": "Other local and state government served agencies and exercise partners (SREC 911/Combined Communications Building, fire agencies, City of Spokane OEM, WSDOT, WA DNR Northeast, Fairchild AFB)",
+   "aliases": [
+    "Spokane Regional Emergency Communications (SREC 911)",
+    "Combined Communications Building / Center (CCB, 1620 N Rebecca)",
+    "Spokane County Fire District 9",
+    "Spokane Area Fire Resource Center",
+    "City of Spokane Office of Emergency Management",
+    "WSDOT (Eastern Region)",
+    "WA DNR Northeast Region (Colville)",
+    "Fairchild Air Force Base"
+   ],
+   "category": "government/served-agency",
+   "urls": [
+    "https://www.spokane911.com/",
+    "https://my.spokanecity.org/emergencymanagement/about-us/",
+    "https://wsdot.wa.gov/"
+   ],
+   "evidence_urls": [
+    "https://www.spokares.org/index.php/2-uncategorised/2-ares-races-plan",
+    "https://www.spokanecounty.gov/DocumentCenter/View/40021/Spokane-County-CEMP-March_2021",
+    "https://www.spokanecounty.gov/m/newsflash/home/detail/5867",
+    "https://www.spokanecounty.gov/DocumentCenter/View/4745/ESF-2---Communications-Information-Systems-and-Warning-PDF",
+    "https://spokanecounty.gov/AgendaCenter/ViewFile/Minutes/_09052023-2956",
+    "https://my.spokanecity.org/emergencymanagement/about-us/",
+    "https://www.spokesman.com/stories/2019/oct/23/spokane-plans-to-manage-its-own-emergencies-drop-o/",
+    "https://ag7qp.com/spokane-county-ares-acs",
+    "https://web.archive.org/web/2024/https://www.spokares.org/index.php/52-recap-march-2019-exercise",
+    "https://web.archive.org/web/2004/http://www.spokares.org/ThePlan.html"
+   ],
+   "relationship_summary": "SREC 911 and the Combined Communications Building: the old Plan put the ARES/RACES operating position and the W7GBU-10 gateway at the CCB, and the CCB could page ARES leaders. The CCB was an exercise site in 2019. The 2021 CEMP lists SREC as an ESF-2 supporting agency with ACS. A Dec 2025 ILA starts a 2026-2028 transition to a separate City PSAP, which may affect the site.\n\nFire agencies (HISTORICAL, Plan Attachment 11): an informal operating plan dating from 1994, under Fire District 9 and DEM leadership, linked dispatch, command posts, staging and the Fire Resource Center. In the 2023 fires ARES/ACS supplied a mobile network unit.\n\nWA DNR Northeast (Attachment 12): Spokane and Stevens ARES were to work jointly from Colville on project fires.\n\nCity of Spokane OEM: a separate office since about 2020, in the Mayor's Office (Director Sarah Nuss, LIKELY per the city site). The City is outside the county CEMP, yet many public-service events take place inside city limits.\n\nWSDOT (CONFIRMED on the calendar): 'Spokane County ARES-ACS/WSDOT Exercise', Sept 26-27, 2026. The scope is unknown.\n\nFairchild AFB: a March 2019 exercise site; the 2001 Plan listed its hospital.",
+   "tier": "related",
+   "research_questions": [
+    "Is there still an ARES/ACS operating position or gateway at the CCB/SREC building, and how does the 911 split affect it?",
+    "What is the relationship between ACS and the City of Spokane OEM today? Is there a request path or MOU for city incidents?",
+    "What were the scope and outcome of the Sept 2026 WSDOT exercise? Is there a standing arrangement?",
+    "Are the fire-agency and DNR Northeast operating plans from the old Plan still valid, or should they be treated as historical?",
+    "Does Fairchild AFB have any current relationship?"
+   ]
+  },
+  {
+   "slug": "scem-peer-volunteer-programs",
+   "name": "SCEM peer volunteer programs (CERT, Medical Reserve Corps, Search & Rescue, DART, MLST, HEART, SCOPE/SIRT)",
+   "aliases": [
+    "Spokane County CERT",
+    "Serve Washington (state CERT/Citizen Corps)",
+    "Medical Reserve Corps of Spokane County (MRC, SRHD-sponsored)",
+    "Spokane County Search & Rescue",
+    "Disaster Assistance Response Team (DART)",
+    "Mobile Logistics Support Team (MLST)",
+    "Humane Evacuation Animal Rescue Team (HEART)",
+    "SCOPE Incident Response Team (SIRT)",
+    "S.C.O.P.E. ERC"
+   ],
+   "category": "partner-volunteer-org",
+   "urls": [
+    "https://www.spokanecounty.gov/1811/Volunteer-Opportunities",
+    "https://www.spokanecounty.gov/6021/Mobile-Logistics-Support-Team-MLST"
+   ],
+   "evidence_urls": [
+    "https://www.spokanecounty.gov/1811/Volunteer-Opportunities",
+    "https://www.spokanecounty.gov/FormCenter/Emergency-Management-31/Volunteer-Emergency-Worker-Application-276",
+    "https://www.spokanecounty.gov/6021/Mobile-Logistics-Support-Team-MLST",
+    "https://www.spokanecounty.gov/DocumentCenter/View/40021/Spokane-County-CEMP-March_2021",
+    "https://spokanecounty.gov/DocumentCenter/View/4749/ESF-6---Mass-Care-Housing-and-Human-Services-PDF?bidId=",
+    "https://srhd.org/programs-and-services/medical-reserve-corps-spokane/volunteer-with-mrc",
+    "https://ag7qp.com/cert",
+    "https://servewashington.wa.gov/programs/cert-community-emergency-response-team",
+    "https://www.vhfclub.org/",
+    "https://www.spokanecounty.gov/AgendaCenter/ViewFile/Minutes/06072016-1422"
+   ],
+   "relationship_summary": "Peer programs under the same SCEM umbrella (CONFIRMED).\n- The county Volunteer Emergency Worker Application lists ACS alongside SAR, MLST, HEART, DART, MRC and CERT. All share the Sheriff's background check and the emergency-worker framework.\n- The CEMP lists ACS next to MRC and HEART in ESF-6 and ESF-8, and next to SAR in ESF-9.\n- MLST can 'establish temporary mobile communication networks', which overlaps with ACS's MNUs and trailer; joint operations are INFERENCE.\n- CERT is 'expanding in 2026 with volunteer leadership and county support'. ag7qp.com hosts Join Spokane County CERT pages, CERT PTBs and a Serve Washington CERT course notice. INFERENCE: ARES/ACS leaders are helping build CERT, and the ACS GMRS net may serve community comms.\n- The 2014 ESF-6 lists SCOPE's SIRT with ARES/RACES. A 'S.C.O.P.E. ERC' table appeared beside the ARES-ACS trailer at the June 2026 IEVHFRA tailgate; its nature is unclear.\n- MRC ran Bloomsday aid stations in 2016.",
+   "tier": "related",
+   "research_questions": [
+    "How does SCEM present ACS among its volunteer programs, so the rebuilt navigation and wording can match?",
+    "What role does ACS play in CERT communications (GMRS net, training)? Who leads Spokane CERT in 2026?",
+    "Do ACS and MLST or SAR train or deploy together, for example with shared mobile comm assets?",
+    "What is 'S.C.O.P.E. ERC', and is SIRT still active?"
+   ]
+  },
+  {
+   "slug": "kbara",
+   "name": "Kamiak Butte Amateur Repeater Association (KBARA) linked repeater system",
+   "aliases": [
+    "KBARA",
+    "KB7ARA",
+    "KBARA system",
+    "N7WRQ 147.38 Mica Peak",
+    "N7WRR 147.36 Stensgar Mt"
+   ],
+   "category": "repeater-org",
+   "urls": [
+    "https://kbara.org/"
+   ],
+   "evidence_urls": [
+    "https://kbara.org/",
+    "https://ag7qp.com/eastern-washington-section",
+    "https://ag7qp.com/ares-acs",
+    "https://assets.zyrosite.com/AVLpnMOEDxUWzNvE/ewsen-vhf-net-preamble-your-call-sign-version-2024-12-04-mk34e57kPPuV4QR1.docx",
+    "https://www.spokares.org/index.php/2-uncategorised/2-ares-races-plan",
+    "https://www.arrl.org/Groups/view/kamiak-butte-amateur-rptr-assn",
+    "https://callook.info/KB7ARA/json",
+    "https://www.arrl.org/hamfests/spokane-hamfest-arrl-washington-state-convention-1",
+    "https://arrlnwdiv.org/2025/08/13/northwestern-news-volume-2-august-2025/"
+   ],
+   "relationship_summary": "A Spokane-based association (PO Box 30801, Spokane 99223) that supports a linked multi-state VHF network (CONFIRMED).\n\nSystem (kbara.org, Dec 2025):\n- 147.38 N7WRQ (Mica Peak, tone 100).\n- 147.36 N7WRR (Stensgar Mt).\n- 147.02 (Lookout Pass), 147.28 (Walla Walla), 147.32 (Moscow), 223.90 and 444.35.\n- Links: IRLP 9075, EchoLink KB7ARA-R, AllStar 53587.\n\nRole for Spokane ARES:\n- It carries the EWSEN VHF section net (Mondays 1815).\n- EWA Standing Order 1b names it the third self-activation path.\n- The Spokane Plan lists it as network resource #19, including 146.74 Colfax.\n\nOther: KBARA co-sponsors the Spokane Hamfest (talk-in 147.38) and ran its own 2025 Field Day. It has been ARRL-affiliated since 1998, has 85 members and filed its last annual report 2026-09-11. LDS ERC nets also use it.",
+   "tier": "related",
+   "research_questions": [
+    "What are the current system map, links and emergency-power status? Is 146.74 Colfax still part of it?",
+    "Is there any formal agreement for emergency use of the system by EWA ARES or Spokane ACS?",
+    "Who are KBARA's current contacts, and should the rebuilt site link kbara.org?"
+   ]
+  },
+  {
+   "slug": "neighboring-county-ares-groups",
+   "name": "Neighboring county ARES/emcomm groups: EWA District 9 (and Walla Walla/Columbia) and North Idaho (Kootenai, Bonner, ARRL Idaho Section)",
+   "aliases": [
+    "Stevens County ARES (K7JAR Panorama Land ARC; EC Baron Lundberg KI7FDU)",
+    "Lincoln County ARES/RACES (LINCARES) and Lincoln County Repeater Group W7OHI (EC Gary Bytnar AD7XG)",
+    "Pend Oreille County ARES and Pend Oreille County Radio Group (EC Jennie Zubaugh K7ZIP)",
+    "Ferry County ARES/RACES (EC/RO and District 9 DEC Sam Jenkins WA7EC)",
+    "Adams County ARES (EC Paul Risenmay KA7APR)",
+    "Asotin County ARES (EC Dan Boyd KJ7BPN)",
+    "Walla Walla and Columbia ARES (EC Mikel Potts KB7POT; W7DP / wwares.org)",
+    "Whitman County (no organized group)",
+    "Garfield County (vacant)",
+    "Kootenai County OEM / KCSO-OEM Communications Support Group KC7ODP (Kootenai County ARES/RACES)",
+    "Kootenai Amateur Radio Society (KARS, K7ID)",
+    "Bonner County ARES/RACES (K7BNR)",
+    "ARRL Idaho Section / Idaho ARES (SM Dan Marler K7REX)",
+    "Latah County, ID"
+   ],
+   "category": "neighboring-ares",
+   "urls": [
+    "https://ag7qp.com/emcomm-groups",
+    "https://www.qsl.net/k7jar/ARES.html",
+    "https://pendoreilleares.org/",
+    "https://www.kcsheriff.com/268/Amateur-Radio",
+    "https://k7id.org/",
+    "https://bonnerares.org/",
+    "https://www.idahoares.info/"
+   ],
+   "evidence_urls": [
+    "https://ag7qp.com/emcomm-groups",
+    "https://www.wastateares.org/state-leadership/local-contacts",
+    "https://www.spokares.org/index.php/2-uncategorised/2-ares-races-plan",
+    "https://www.qsl.net/k7jar/ARES.html",
+    "https://web.archive.org/web/2024/https://www.spokares.org/index.php/52-recap-march-2019-exercise",
+    "https://web.archive.org/web/2024/https://www.spokares.org/index.php/32-skywarn-2017-recap",
+    "https://pendoreilleares.org/",
+    "http://www.lincares.org/",
+    "https://lcrg.net/about-us/",
+    "https://www.kcsheriff.com/268/Amateur-Radio",
+    "https://www.kcsheriff.com/269/2026-Calendar",
+    "https://k7id.org/links/",
+    "https://bonnerares.org/wp/resources/",
+    "https://www.idahoares.info/",
+    "https://www.spokares.org/index.php/component/jcalpro/28-upcoming-exercises/638-5th-saturday-exercise-2018-march-31",
+    "https://www.spokares.org/index.php?option=com_content&view=article&id=11",
+    "https://arrlnwdiv.org/sections/"
+   ],
+   "relationship_summary": "These are Spokane's mutual-aid and net peers. The Plan provides for mutual aid with adjoining Eastern Washington and North Idaho counties, as authorized by each county's EM and coordinated through Spokane DEM.\n\nDistrict 9 (EC names per the SEC's EmComm Groups page, 2026):\n- Stevens is the closest operational neighbor. Its 146.62 K7JAR repeater links to the 147.06 Lookout Point machine, which is Spokane's 2nd alternate. Stevens sent traffic to Spokane in the March 2019 exercise. Spokane and Stevens were to support DNR Colville jointly.\n- Lincoln: a member supported Spokane's 2017 SRD. W7OHI operates Davenport packet/Winlink nodes. lincares.org is stale (2011).\n- Pend Oreille: the Plan's W7ORR 147.12 listing is STALE. Current nets use 146.44 simplex, 145.470 and 147.140.\n- Ferry: EC/RO Sam Jenkins WA7EC is also the District 9 DEC.\n- Adams and Asotin have ECs. Garfield is vacant, and Whitman has no organized group.\n- Walla Walla and Columbia (EC Mikel Potts KB7POT) are grouped under District 8 by ag7qp.com, a DISCREPANCY. The wwares.org Winlink training link is dead.\n\nNorth Idaho (ARRL Idaho Section, SM Dan Marler K7REX):\n- Kootenai County ARES/RACES is hosted by the Kootenai County Sheriff OEM (KC7ODP, renewed 2025-12-02). It runs a Friday VHF net, 1st-Monday meetings and quarterly COMMEXes (2026-09-26 and 2026-11-14). DISCREPANCY: 147.080 or 147.280.\n- KARS (K7ID) runs the VE sessions spokares.org lists, at Kootenai OEM in Hayden, and the Northwest Traffic Net.\n- Bonner ARES links Spokane to a dead Wix URL (aresraces.wixsite.com/spokane).\n- The EWSEN roll call includes 'any Idaho counties'.\n- Latah appeared only in the 2018 exercise plan.",
+   "tier": "related",
+   "research_questions": [
+    "Are any written mutual-aid agreements with neighboring counties in effect, or is it only the Plan clause?",
+    "Confirm the 2026 ECs for each District 9 county and for Kootenai and Bonner.",
+    "Does Spokane still coordinate District 9 activities (WSEN District 9 net, joint exercises)? Are there joint exercises with Kootenai's 2026 COMMEXes?",
+    "Which neighbor repeaters and nets should the rebuilt site list, after correcting the Plan's stale entries (W7ORR, the Kootenai frequency)?",
+    "Ask Bonner ARES, KARS and Stevens ARES to update their links to the rebuilt spokares.org."
+   ]
+  },
+  {
+   "slug": "federal-fema-cisa-emcomm-programs",
+   "name": "Federal emergency-management and emergency-communications programs: FEMA (ICS/NIMS training, ICS forms, ARRL MOA) and CISA (SAFECOM FOGs, AUXCOMM/COMU, SHARES)",
+   "aliases": [
+    "FEMA Emergency Management Institute Independent Study (IS-100.c, IS-200.c, IS-700.b, IS-800.d; leadership IS-120/230/235/240/241/242/244/288/802/2200)",
+    "FEMA SID",
+    "FEMA ICS forms (ICS-201, 205, 213, 213RR, 214, 214a, 309)",
+    "ARRL-FEMA MOA (2023; 1984 MOU cited in Spokane Plan)",
+    "FEMA CPG 1-15 (1991 RACES guidance)",
+    "CISA (formerly DHS OEC) SAFECOM",
+    "NIFOG",
+    "AUXFOG / eAUXFOG",
+    "AUXCOMM (AUXC) course",
+    "COMT / COML / INCM",
+    "CISA SHARES HF Radio Program",
+    "Idaho OEM (host of the June 2019 AUXCOMM course, Hayden ID)"
+   ],
+   "category": "training-body",
+   "urls": [
+    "https://training.fema.gov/is/",
+    "https://training.fema.gov/emiweb/is/icsresource/icsforms/",
+    "https://www.cisa.gov/safecom/field-operations-guides",
+    "https://www.cisa.gov/safecom/comu-training-resources",
+    "https://www.cisa.gov/resources-tools/programs/shared-resources-shares-high-frequency-hf-radio-program"
+   ],
+   "evidence_urls": [
+    "https://www.spokares.org/index.php/contact/welcome-letter",
+    "https://www.spokares.org/index.php/operations/training-courses",
+    "https://www.spokares.org/index.php/operations/incident-command-system",
+    "https://www.spokares.org/index.php/operations/forms",
+    "https://ag7qp.com/acs-task-book",
+    "https://ag7qp.com/new-members-orientation",
+    "https://training.fema.gov/is/courseoverview.aspx?code=IS-100.c",
+    "https://training.fema.gov/is/courseoverview.aspx?code=IS-800.d",
+    "https://www.arrl.org/served-agencies-and-partners",
+    "https://www.dhs.gov/safecom/field-operations-guides",
+    "https://www.cisa.gov/safecom/field-operations-guides",
+    "https://www.cisa.gov/safecom/eauxfog-mobile-app",
+    "https://www.cisa.gov/sites/default/files/publications/CISA%20AUXCOMM%20PTB%20-%2012162020%20-%20508.pdf",
+    "https://www.spokanecounty.gov/DocumentCenter/View/71520/Emergency-Management-Communications-Specialist",
+    "https://spokaneares-acs.groups.io/g/main/subgroups",
+    "https://ag7qp.com/spokane-county-ares-acs",
+    "https://web.archive.org/web/2020/https://www.spokares.org/index.php/53-auxcomm-training-idaho-june-2019",
+    "https://mil.wa.gov/asset/60f9cd5f8ad09"
+   ],
+   "relationship_summary": "FEMA (CONFIRMED):\n- The Welcome Letter requires IS-100 and IS-700 before a county volunteer ID is issued and recommends IS-200 and IS-800. It cites old versions (.C/.B).\n- The Operations > Training page links obsolete versions (IS-100.b, 700.a, 200.b, 800.b). Current versions are IS-100.c, 200.c, 700.b and 800.d.\n- The ACS Task Book requires all four plus a FEMA SID. Its Leadership level adds IS-120, 230, 235, 240, 241, 242, 244 and 288.\n- spokares.org links FEMA ICS forms and hosts an obsolete 1994 ICS orientation text.\n- ARRL lists a 2023 FEMA MOA; the Spokane Plan cites the 1984 MOU.\n\nCISA (CONFIRMED):\n- The Operations menu 'Field Operations Guides' link (dhs.gov) now redirects to cisa.gov. Orientation recommends AUXFOG and NIFOG.\n- The ACS Task Book lists AUXCOMM (arranged by the AHJ) and COMT for S-RADO, and COML and INCM for Leadership. It mislabels AUXCOMM as a FEMA course.\n- The county Communications Specialist must obtain AUXCOMM and/or COML certification within a year of hire.\n- Members took the DHS AUXCOMM class in Hayden, ID in June 2019.\n\nSHARES: the ACS Task Book says 'Pass data over Government system (only those that have a SHARES call sign)'. There is a SHARES groups.io subgroup (9 members) and a SHARES Training Meeting at DEM on 2026-10-17. WA EMD runs 12 SHARES Winlink RMS stations. INFERENCE: some members or SCEM hold SHARES credentials.",
+   "tier": "related",
+   "research_questions": [
+    "Which FEMA IS versions and links should the site list? Should the 1994 ICS text be replaced?",
+    "What is the current CISA URL set for NIFOG, AUXFOG and eAUXFOG to replace the dhs.gov link?",
+    "How many members hold AUXC, COMT or COML credentials? When is the next AUXCOMM course (via the WA SWIC or a neighbor state)?",
+    "What is the SHARES station setup (SCEM or member stations), and what can be said publicly without exposing restricted SHARES information?",
+    "Should the rebuilt site cite the ARRL-FEMA 2023 MOA in place of the 1984 MOU?"
+   ]
+  },
+  {
+   "slug": "nts-and-traffic-nets",
+   "name": "ARRL National Traffic System (NTS 2.0) and regional traffic nets (WARTS, Washington State Net, NTS Region 7, Western/Pacific Area, Radio Relay International)",
+   "aliases": [
+    "NTS",
+    "NTS 2.0 / NTS Digital",
+    "ARRL Radiogram (FSD-218) / ARL numbered radiograms (FSD-3)",
+    "Washington Amateur Radio Traffic System (WARTS)",
+    "Washington State Net (WSN, CW)",
+    "Seventh Region Net (RN7) / Daytime Region 7 Traffic Net (DRN7)",
+    "NTS Western Area (formerly Pacific Area) / Pacific Area Net (PAN)",
+    "Northwest Traffic Net (KARS 146.98)",
+    "Noontime Net (7283.5 kHz)",
+    "Radio Relay International (RRI)",
+    "I Am Safe welfare-messaging suite"
+   ],
+   "category": "net",
+   "urls": [
+    "https://www.arrl.org/nts",
+    "http://wartsnet.net/",
+    "http://www.felge.us/wsn.html",
+    "https://qsl.net/ke7drt/",
+    "https://radiorelay.org/"
+   ],
+   "evidence_urls": [
+    "https://www.arrl.org/nts",
+    "https://www.spokares.org/index.php/about/ares-races-leadership",
+    "https://www.spokares.org/index.php/2-uncategorised/2-ares-races-plan",
+    "https://www.spokares.org/index.php/operations/forms",
+    "http://wartsnet.net/",
+    "http://www.felge.us/wsn.html",
+    "https://qsl.net/ke7drt/",
+    "https://ag7qp.com/national-traffic-system",
+    "https://ag7qp.com/nets-in-the-inland-northwest",
+    "https://nts2.arrl.org/2025/09/03/area-staff-chairs-reinstated/",
+    "https://www.arrl.org/news/radio-relay-international-and-arrl-sign-memorandum-of-understanding",
+    "https://ag7qp.com/emcomm-resources",
+    "http://www.felge.us/tfctools.html",
+    "https://web.archive.org/web/2024/https://www.spokares.org/index.php/31-qrp-day-on-the-noontime-net"
+   ],
+   "relationship_summary": "How the group relates to NTS (CONFIRMED):\n- The Spokane EC's duties on spokares.org include a welfare-traffic plan 'utilizing the National Traffic System'.\n- The Plan defines an NTS Liaison Station and requires ARRL radiogram forms.\n- The 2026 SET asks for an NTS radiogram to the SM and SEC.\n\nNets named in the Plan as 'ARRL National Traffic System Liaison' nets:\n- WARTS: 3970 kHz daily 1800. DISCREPANCY: wartsnet.net and search results give 3975 kHz (and 1730). Net Manager: Rick W7RNB.\n- WSN: 3563 kHz CW. Its page is on K7BFL's felge.us (2015; net manager N7YRT, possibly STALE).\n\nThe path above: Region 7 (DRN7, 3925/7235, affiliated with both NTS and RRI) and the Western Area/PAN.\n- LIKELY per nts2.arrl.org: elected Area Staff Chairs were restored in 2025 and the Pacific Area was renamed Western Area.\n- Other listed nets: the Northwest Traffic Net (KARS 146.98; NTS status SPECULATIVE) and the Noontime Net (posted 2017).\n\nRRI signed an MOU with ARRL in July 2025 and co-developed 'I Am Safe', which the EWA SEC points to. HAZARD: K7BFL's page links radio-relay.org, which is now a hijacked gambling domain; the real site is radiorelay.org.",
+   "tier": "related",
+   "research_questions": [
+    "Does Spokane currently have an NTS liaison station or traffic handlers? Who are they?",
+    "What are WARTS's current frequency and time (3970 or 3975; 1800 or 1730)? Is the WSN manager current?",
+    "Is the EWA Section Traffic Manager post vacant, and who receives PSHR reports?",
+    "Has Spokane adopted RRI's 'I Am Safe' for welfare messaging?",
+    "Which traffic-handling links (felge.us tfctools, ARRL NTS, RRI) should carry over, with the hijacked radio-relay.org link removed?"
+   ]
+  },
+  {
+   "slug": "winlink-and-regional-digital-network",
+   "name": "Winlink (ARSFI) and the Eastern Washington/North Idaho digital network (felge.us K7BFL resources, packet nodes, HamWAN/AREDN)",
+   "aliases": [
+    "Winlink Global Radio Email",
+    "Amateur Radio Safety Foundation, Inc. (ARSFI)",
+    "Winlink Development Team",
+    "Winlink Express / VARA / ARDOP",
+    "felge.us",
+    "Don Felgenhauer K7BFL",
+    "Winlink Info by K7BFL / Traffic Handling Tools (K7BFL)",
+    "EWA ARES/RACES Digital SOP (2011)",
+    "K7BFL-10 / K7BFL-11",
+    "AD7DD-10",
+    "NV2Z-10",
+    "K7SRG-8 (Chewelah)",
+    "W7OHI-3/-11 (Davenport)",
+    "K7TJ-9 EWAWAN (EWARG)",
+    "W7BFI-7 BLKMTN (Boundary ARC)",
+    "HamWAN",
+    "AREDN",
+    "Winlink practice nets (ETO, GLAWN, Winlink Wednesday)"
+   ],
+   "category": "platform/tool",
+   "urls": [
+    "https://winlink.org/",
+    "https://www.arsfi.org/",
+    "http://www.felge.us/digitalmessaging.html",
+    "http://www.felge.us/tfctools.html"
+   ],
+   "evidence_urls": [
+    "https://www.spokares.org/",
+    "https://www.spokares.org/index.php/digital-messaging/digital-messaging/software",
+    "https://www.spokares.org/index.php/membership/ham-radio-links",
+    "http://www.felge.us/digitalmessaging.html",
+    "http://www.felge.us/tfctools.html",
+    "http://www.felge.us/SpokGateTable.html",
+    "http://www.felge.us/SpokNS.pdf",
+    "http://www.felge.us/WR7VHF10.pdf",
+    "https://callook.info/K7BFL/json",
+    "https://www.spokares.org/index.php/2-uncategorised/2-ares-races-plan",
+    "https://ag7qp.com/spokane-county-ares-acs",
+    "https://ag7qp.com/nets-in-the-inland-northwest",
+    "https://spokaneares-acs.groups.io/g/main/subgroups",
+    "https://www.vhfclub.org/pdf/Waves%20Newsletter%20October%202019.pdf",
+    "http://web.archive.org/web/20191118044445/https://www.spokares.org/index.php/downloads/presentations",
+    "https://www.arsfi.org/"
+   ],
+   "relationship_summary": "Winlink is the group's primary digital mode (CONFIRMED):\n- The W7GBU-10 gateway and Winlink coordinator NV2Z.\n- Twice-monthly Winlink assignments to NV2Z and AG7QP (ICS-213, ICS-213RR, DYFI).\n- Winlink required at the ACS S-RADO level.\n- The IEVHFRA MOU's packet-to-Winlink example, a Winlink groups.io subgroup (20 members) and 2019 'Scripting in Winlink' and 'Ardop 101' presentations.\n- ARSFI is the 501(c)(3) that runs Winlink.\n\nfelge.us (CONFIRMED): Spokane's Don Felgenhauer K7BFL runs it, and the spokares.org menus link it ('Winlink Info by K7BFL', 'Traffic Handling Tools'). It hosts:\n- The EWA ARES/RACES Digital SOP (2011).\n- EWA/North Idaho packet-node and gateway maps (with AL1Q, July 2022) and the gateway table (March 2016, stale).\n- Traffic tools (revised Nov 2023) and the WSN/PAN/IMN net pages.\n- The site is HTTP-only.\n\nThe July 2022 diagram shows gateways and nodes at AD7DD-10, NV2Z-10 (VARA FM), K7BFL-10/-11, K7SRG-8, W7OHI, K7TJ-9 (EWARG) and W7BFI-7. It also notes gaps between some nodes.\n\nNewer projects:\n- The HamWan groups.io subgroup (8 members) is 'standing up and maintaining the HamWan system for Spokane County ARES - ACS'. Its status is unknown.\n- AREDN was presented in 2019 ('Intro to AREDN for Spokane County ACS'); no deployment was found.\n\nThe EWA SEC also lists national Winlink practice nets (ETO, GLAWN, Winlink Wednesday).",
+   "tier": "related",
+   "research_questions": [
+    "What is the current list of Spokane-area Winlink gateways and packet nodes (callsign, frequency, mode, site)? Is W7GBU-10 on 145.01 or 145.090?",
+    "Is the 2011 EWA Digital SOP still in force, or is a revision planned?",
+    "Will K7BFL keep felge.us online? Can its content be mirrored or linked from the rebuilt HTTPS site?",
+    "What are the HamWAN project's status, sites and affiliation (the Puget Sound HamWAN model, or an EWARG/SRECS Beacon Hill link)? Was AREDN dropped?",
+    "Where should the site point members for Winlink templates (WA Field Situation Report, ICS-213RR) and practice nets?"
+   ]
+  },
+  {
+   "slug": "spokane-area-clubs-repeaters-ve",
+   "name": "Spokane-area ham clubs, repeater owners, frequency coordinator, hamfest and VE testing teams",
+   "aliases": [
+    "Spokane Repeater Group (SRG, K7SRG; 147.20 wide-area)",
+    "Spokane DX Association (SDXA, K7SDX)",
+    "Eastern Washington Amateur Radio Group (EWARG, K7TJ)",
+    "Washington Digital Radio Enthusiasts (WA7DRE; Laurel VEC team)",
+    "Northwest Tri-State Amateur Radio Org (WA7HWD, formerly W7HCJ; 147.24)",
+    "Spokane Ham Radio Club / W7TRF repeaters (formerly Agilent Spokane ARC; 145.21, 443.475)",
+    "147.06 Five Mile/Lookout Point repeater (N7BFS; formerly WA6HSL)",
+    "Palouse Hills Amateur Radio Club",
+    "Spokane Dial Twisters (historical, K7LRD)",
+    "Spokane Hamfest / ARRL Washington State Convention",
+    "Inland Amateur Coordination Council (IACC)",
+    "Laurel VEC",
+    "W5YI-VEC",
+    "ARRL VEC"
+   ],
+   "category": "local-ham-club",
+   "urls": [
+    "https://www.srgclub.org/",
+    "https://sdxa.org/",
+    "http://ewarg.org",
+    "http://www.wa7dre.org/",
+    "https://iacc.online/",
+    "https://www.laurelvec.com/",
+    "http://spokanehamfest.org"
+   ],
+   "evidence_urls": [
+    "https://www.spokares.org/index.php/2-uncategorised/2-ares-races-plan",
+    "https://www.spokares.org/index.php/membership/ham-radio-links",
+    "https://www.srgclub.org/srglinks.html",
+    "https://www.repeaterbook.com/repeaters/details.php?state_id=53&ID=406",
+    "http://www.arrl.org/Groups/view/spokane-dx-association",
+    "http://www.arrl.org/Groups/view/eastern-washington-arg",
+    "https://callook.info/WA7DRE/json",
+    "https://callook.info/WA7HWD/json",
+    "https://callook.info/W7TRF/json",
+    "https://callook.info/N7BFS/json",
+    "https://www.spokares.org/index.php?option=com_content&view=article&id=11",
+    "https://ag7qp.com/license-exams",
+    "https://www.arrl.org/hamfests/spokane-hamfest-arrl-washington-state-convention-1",
+    "http://www.arrl.org/hamfests/spokane-hamfest-arrl-washington-state-convention",
+    "https://www.repeaterbook.com/repeaters/details.php?ID=288&state_id=53",
+    "https://www.arrl.org/sections/view/eastern-washington",
+    "https://www.vhfclub.org/pdf/Waves%20Newsletter%20October%202019.pdf",
+    "https://www.spokares.org/index.php/about/w7gbu-history"
+   ],
+   "relationship_summary": "The wider local amateur ecosystem. None of these has a formal ARES agreement (only IEVHFRA does).\n\nRepeater resources listed in the Plan:\n- SRG 147.20 wide-area. SRG is on spokares.org's links page and links back. Trustee AK2O is also an IEVHFRA director.\n- NW Tri-State 147.24. The Plan's W7HCJ reference is STALE; the call is now WA7HWD.\n- The 'Agilent Spokane ARC' 145.21 and 443.475, now under W7TRF (INFERENCE: same repeaters).\n- 147.06 N7BFS, the 2nd alternate, linked to Stevens 146.62.\n- EWARG's KC7AAD-4 packet node. EWARG is a digital club, possibly tied to HamWAN (INFERENCE).\n\nTesting:\n- The spokares.org test-sessions page (2023) and ag7qp.com name WA7DRE as the Laurel VEC team: 3rd Wed, 6 PM, Action Recycling.\n- A 2019 IEVHFRA newsletter mentions W5YI-VEC sessions.\n- An ARRL VEC team is associated with KARS and with AA7RT historically.\n\nOther clubs and events:\n- SDXA links through people (Mel Ming N7GCO, Lincoln EC AD7XG) and co-exhibited at the 2026 tailgate.\n- The Spokane Hamfest / ARRL WA State Convention is club-run (KBARA, SDXA, IEVHFRA, WA7DRE, Palouse Hills ARC, NW Tri-State). The last confirmed date was 2025-04-26 at Horizon MS; spokanehamfest.org failed DNS on 2026-09-25. ARES is not a sponsor.\n- The Spokane Dial Twisters appear only in the W7GBU history (probably defunct).\n\nIACC (CONFIRMED) coordinates EWA and North Idaho repeaters. It is linked from arrl.org's EWA page and holds records 1359 and 1253 for W7GBU.",
+   "tier": "related",
+   "research_questions": [
+    "Which repeaters should the rebuilt site list as current ARES/ACS alternates? Correct the Plan's stale entries (W7HCJ, Agilent, WA6HSL, W7ORR) and confirm 147.20's private status.",
+    "What are the current VE session schedules and contacts (WA7DRE/Laurel, KARS, sessions at Tiley classes now run by AG7QP)?",
+    "When is the next Spokane Hamfest, and does ARES/ACS exhibit or recruit there?",
+    "Are IACC coordinations current for W7GBU 147.30 and 443.40, and who is the contact?",
+    "Does EWARG's network or the SRG sites play a role in the Spokane HamWAN build-out?"
+   ]
+  },
+  {
+   "slug": "public-service-events-and-exercises",
+   "name": "Public-service events and recurring non-ARRL exercises (Bloomsday, Lilac Torchlight Parade, Climb for the Cure, Valleyfest, Winter Field Day, Great ShakeOut/USGS DYFI, Communications Academy, RATPAC)",
+   "aliases": [
+    "Lilac Bloomsday Run / Lilac Bloomsday Association",
+    "Armed Forces / Lilac Torchlight Parade (Spokane Lilac Festival Association)",
+    "Climb for the Cure",
+    "Valleyfest",
+    "Winter Field Day Association",
+    "Great ShakeOut",
+    "USGS 'Did You Feel It?' (DYFI)",
+    "Communications Academy (Seattle)",
+    "RATPAC (Radio Amateur Training Planning and Activities Committee) video library"
+   ],
+   "category": "public-service-event",
+   "urls": [
+    "https://winterfieldday.org/",
+    "https://www.shakeout.org/",
+    "https://earthquake.usgs.gov/data/dyfi/",
+    "https://www.ratpac.us/",
+    "https://www.commacademy.org/"
+   ],
+   "evidence_urls": [
+    "https://www.spokares.org/index.php/4-about-spokane-county-ares-races",
+    "https://www.spokares.org/index.php/about/ares-races-leadership",
+    "https://www.spokares.org/index.php/2-uncategorised/2-ares-races-plan",
+    "https://ag7qp.com/",
+    "https://ag7qp.com/spokane-county-ares-acs",
+    "https://ag7qp.com/ares-acs",
+    "https://www.climbforthecure.org/sponsors/inland-empire-vhf-radio-amateurs",
+    "https://www.spokares.org/index.php/component/jcalpro/31-other-events/1014-valleyfest",
+    "https://spokaneares-acs.groups.io/g/main/subgroups",
+    "https://web.archive.org/web/20160216120818/http://aresraces.wix.com/spokane/feed.xml",
+    "https://web.archive.org/web/2020/https://www.spokares.org/index.php/46-2018-communications-academy",
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVywG1s025_zsAaKrn8Lr_DPGT6tGV0SVsV5LEdBA91dFCYk_LP8S3kXhMcD9vXFM3Cg-q468jf6Nd/pubhtml",
+    "https://www.vhfclub.org/pdf/Waves%20Newsletter%20October%202019.pdf"
+   ],
+   "relationship_summary": "Public-service events:\n- Bloomsday and the Armed Forces/Lilac Torchlight Parade are the group's signature events (CONFIRMED). AEC Public Events NV2Z coordinates them. The Plan calls them primary training for working with fire and law enforcement, and a Torchlight Parade briefing was among the old downloads. Bloomsday 2027 is May 2 (volunteers go to NV2Z, per ag7qp.com).\n- Climb for the Cure, 2027-06-13: contact NZ2S; IEVHFRA is a sponsor.\n- Valleyfest appeared on the 2019 calendar.\n\nRecurring exercises and training outside ARRL:\n- Winter Field Day: a groups.io subgroup; 2016 at Five Mile Prairie; next 2027-01-23/24.\n- Great ShakeOut (Oct 15, 2026): send a DYFI Winlink message. EWA SOP 1b also calls for DYFI reports.\n- Communications Academy: four members attended in 2018.\n- RATPAC: its video list is linked from the Downloads menu.\n\nNo formal agreements with event organizers were found.",
+   "tier": "related",
+   "research_questions": [
+    "Who are the current contacts at the Lilac Bloomsday Association and the Spokane Lilac Festival? Are there written agreements, waivers or briefing packets?",
+    "How do volunteers sign up for events, and should the rebuilt site carry a public events calendar or a signup link?",
+    "What photos and after-action reports exist for these events, and what permissions apply?",
+    "Is Winter Field Day 2027 planned, and where?",
+    "Who maintains the RATPAC sheet link, and should it stay?"
+   ]
+  },
+  {
+   "slug": "legal-regulatory-framework",
+   "name": "Legal and regulatory framework: FCC Part 97 (incl. 47 CFR 97.407 RACES), RCW 38.52 and the WAC 118-04 emergency-worker program",
+   "aliases": [
+    "FCC",
+    "FCC Universal Licensing System (ULS)",
+    "47 CFR Part 97 Subpart E",
+    "47 CFR 97.407",
+    "RCW 38.52 (Washington Emergency Management Act; .010, .070, .180, .310)",
+    "WAC 118-04 (Emergency Worker Program; amended WSR 25-24-049, eff. 2025-12-27)",
+    "EMD-024 / EMD-025 / EMD-078 forms",
+    "Washington State Department of Labor & Industries (volunteer coverage; bloodborne pathogens course)",
+    "National RACES organization (usraces.org, non-governmental)"
+   ],
+   "category": "legal-regulatory",
+   "urls": [
+    "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-97/subpart-E/section-97.407",
+    "https://app.leg.wa.gov/rcw/default.aspx?cite=38.52",
+    "https://app.leg.wa.gov/Wac/default.aspx?cite=118-04&full=true"
+   ],
+   "evidence_urls": [
+    "https://www.law.cornell.edu/cfr/text/47/97.407",
+    "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-97/subpart-E/section-97.407",
+    "https://www.spokares.org/index.php/2-uncategorised/2-ares-races-plan",
+    "https://www.spokares.org/index.php/membership/ham-radio-links",
+    "https://app.leg.wa.gov/rcw/default.aspx?cite=38.52",
+    "https://app.leg.wa.gov/rcw/default.aspx?cite=38.52.010",
+    "https://app.leg.wa.gov/Wac/default.aspx?cite=118-04&full=true",
+    "https://lawfilesext.leg.wa.gov/Law/WACPDF/WAC%20118%20%20TITLE/WAC%20118%20-%2004%20%20CHAPTER/WAC%20118%20-%2004%20%20COMBINEDCHAPTER.pdf",
+    "https://mil.wa.gov/search-and-rescue-sar-program",
+    "https://www.spokanecounty.gov/1824/Volunteer-Policies-Procedures",
+    "https://www.spokanecounty.gov/FormCenter/Emergency-Management-31/Volunteer-Emergency-Worker-Application-276",
+    "https://www.spokares.org/index.php/contact/welcome-letter",
+    "http://www.felge.us/digitalmessaging.html"
+   ],
+   "relationship_summary": "FCC (CONFIRMED): The FCC licenses every member and the W7GBU club station. The Plan cites Part 97 Subpart E as its first authority and operates under ARES rules unless a national communications emergency requires RACES-only operation. 47 CFR 97.407 (last amended 2010) requires that RACES stations and operators be certified by a civil defense organization, restricts RACES traffic and limits drills (1 hr/week, or 72 hrs twice a year with approval). The Ham Radio Links ULS link is outdated.\n\nRCW 38.52 (CONFIRMED):\n- .010 defines an 'emergency worker' as registered with a local EM organization and holding its ID card.\n- .070 authorizes local and joint EM organizations, which is the basis for SCEM's ILA.\n- .180 covers liability; the county application cites it for vehicle use.\n- .310 covers registration and coverage.\n- The Plan's mission-number rule exists to secure RCW 38.52 coverage.\n\nWAC 118-04 (CONFIRMED): registration is a 'prerequisite for eligibility ... for benefits and legal protection'. Workers register on EMD-024 or an equivalent; the county Volunteer Application is that equivalent. There is a 'Communications' class of emergency worker, and training missions are covered. The chapter was amended effective 2025-12-27, so site copy must cite current text.\n\nL&I: the county Volunteer Policies page references L&I coverage. The Welcome Letter's L&I bloodborne-pathogens link is dead.\n\nusraces.org is a private organization, not an authority.",
+   "tier": "related",
+   "research_questions": [
+    "How should the site accurately describe volunteer legal status (registered emergency worker, mission-number coverage, L&I coverage) under current WAC 118-04 and RCW 38.52 text?",
+    "Does ACS operate under 47 CFR 97.407 RACES rules in practice, and has SCEM certified members as RACES operators? How should the 'RACES' label be used?",
+    "What is the replacement for the dead L&I bloodborne-pathogens course link, and is that training still recommended?",
+    "What current FCC ULS/license-lookup URL should replace the outdated wireless.fcc.gov link?"
+   ]
+  },
+  {
+   "slug": "spokares-external-resource-links",
+   "name": "Third-party resources linked from spokares.org (digital-mode hardware/software vendors, RFI references, widgets, general ham references)",
+   "aliases": [
+    "Tigertronics SignaLink",
+    "Kantronics KPC-3+",
+    "SCS PACTOR modems / Farallon cables",
+    "Byonics TinyTrak",
+    "RT Systems",
+    "FTDI and Prolific USB-serial drivers",
+    "Associated Radio",
+    "K4ABT TNC wiring diagrams (ohiopacket.org)",
+    "UZ7HO SoundModem / EasyTerm",
+    "Fldigi / Flmsg / NBEMS (W1HKJ)",
+    "PuTTY (chiark official site) and Tera Term",
+    "WB9LOZ and W6FFF packet primers",
+    "Mel Ming N7GCO RFI Resources page and video",
+    "Jim Brown K9YC papers",
+    "Palomar Engineers",
+    "KF7P Metalworks",
+    "DX Engineering / Fair-Rite",
+    "NK7Z 'I Have RFI' / ON4WW",
+    "ARRL RFI pages and RFI Book",
+    "HamQSL.com solar widget (N0NBH)",
+    "OpenWeatherMap weather module",
+    "AC6V reference guide",
+    "QRZ.com",
+    "Courage Kenny Handiham Program",
+    "Joomla extensions (JCal Pro, OSDownloads/Alledia, AlfContact, OSEmbed)"
+   ],
+   "category": "platform/tool",
+   "urls": [
+    "https://www.spokares.org/index.php/digital-messaging/digital-messaging/software",
+    "https://www.spokares.org/index.php/digital-messaging/digital-messaging/cables-and-drivers",
+    "https://www.spokares.org/index.php/digital-messaging/digital-messaging/digital-tncs-and-modems",
+    "https://www.spokares.org/index.php/digital-messaging/digital-messaging/packet-radio-resources",
+    "https://www.spokares.org/index.php/digital-messaging/rfi-resources/mel-ming-rfi-resources",
+    "https://www.spokares.org/index.php/membership/ham-radio-links"
+   ],
+   "evidence_urls": [
+    "https://www.spokares.org/index.php/digital-messaging/digital-messaging/software",
+    "https://www.spokares.org/index.php/digital-messaging/digital-messaging/cables-and-drivers",
+    "https://www.spokares.org/index.php/digital-messaging/digital-messaging/digital-tncs-and-modems",
+    "https://www.spokares.org/index.php/digital-messaging/digital-messaging/packet-radio-resources",
+    "https://www.spokares.org/index.php/digital-messaging/rfi-resources/mel-ming-rfi-resources",
+    "https://www.spokares.org/index.php/membership/ham-radio-links",
+    "https://www.spokares.org/",
+    "https://www.hamqsl.com/solar.html",
+    "https://callook.info/N7GCO/json",
+    "https://teratermproject.github.io/index-en.html",
+    "http://web.archive.org/web/20191118044912/https://www.spokares.org/index.php/downloads/digital-traffic-information-and-files"
+   ],
+   "relationship_summary": "This umbrella covers link targets only. There is no organizational relationship.\n\nCONFIRMED link targets:\n- The Digital Messaging menus (Software, Cables & Drivers, TNCs & Modems, Packet Radio Resources) link vendors and tools. The group's own how-to covers UZ7HO SoundModem with a SignaLink.\n- The RFI Resources page (2021-02-20) by Mel Ming N7GCO of Cheney, an SDXA presenter, cites K9YC, Palomar, KF7P, DX Engineering/Fair-Rite, NK7Z, ON4WW and the ARRL RFI Book. It also links his Dropbox RFI video.\n- Every page embeds the HamQSL solar widget and an OpenWeatherMap weather module.\n- Ham Radio Links points to AC6V, QRZ, Handiham, usraces.org and similar references.\n\nKnown link problems (CONFIRMED):\n- Dead or broken: Prolific 404, Farallon 404, the Tera Term osdn URL, and the Dropbox URL (redirects).\n- Bot-gated: K4ABT (ohiopacket.org).\n- Moved: the FTDI link.\n\nHAZARDS: putty.org is NOT the official PuTTY site, so keep the chiark URL. jcalpro.com now belongs to an unrelated company.",
+   "tier": "peripheral",
+   "research_questions": [
+    "Run a full link check of every outbound link on spokares.org. Which links should the rebuild keep, replace (Tera Term GitHub, FTDI new URL, W1HKJ .org) or drop?",
+    "Does Mel Ming N7GCO permit rehosting his RFI page and video?",
+    "Should the weather widget be replaced with NWS Spokane sources? What are HamQSL's widget attribution terms?",
+    "Which vendor links are endorsements the group wants to keep, and which would be better replaced with neutral guidance?"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,33 @@
+.venv/
+.DS_Store
+
+# --- PII and compromised-host captures: never commit (research/decisions.md D14) ---
+# Raw wget mirror of the hacked Joomla host: Joomla-cloaked personal e-mails
+# (raw/by-id/article-11.html, article-23.html and their menu-path duplicates).
+research/raw/
+# Raw Wayback bodies: two member rosters (Memberlist.pdf, ARES NET ROSTER FEB09.doc),
+# plus TestingSchedule.html, Pactor.html, Tree.html, index.php/about/email-list etc.
+# with personal phones, e-mails and a member list. The redacted Markdown is in
+# research/content/archive/.
+research/wayback/snapshots/
+# Early ag7qp.com captures. Redacted in place on 2026-09-25 (external/redaction-manifest.tsv),
+# kept out of git anyway; the canonical redacted copies are research/external/ag7qp/.
+research/sources/government/ag7qp_*
+research/external/ag7qp.com*.html
+# Never store these anywhere in the repo (README rules 4-5).
+*roster*.pdf
+*roster*.doc
+*ROSTER*
+Memberlist.pdf
+*.docx
+
+# Third-party website screenshots (design research) — notes live in design/inspiration.md
+design/inspiration/*.png
+# Scratch test output
+design/concepts/_test/
+# Python bytecode
+__pycache__/
+*.pyc
+# Original government PDFs (public, but contain individuals contact details we cannot redact in-PDF); redacted .txt extractions are committed
+research/sources/government/*.pdf
+research/sources/government/*.doc

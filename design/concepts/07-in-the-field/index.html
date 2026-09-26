@@ -1,0 +1,1088 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spokane County ARES-ACS</title>
+<meta name="description" content="Spokane County ARES-ACS: licensed amateur radio volunteers providing backup communications for Spokane County Emergency Management, the National Weather Service, hospitals and community events.">
+<link rel="icon" href="../../assets/Spokane_County_ARES-ACS_logo_slightly_smaller_550x550.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet">
+<style>
+/* ---------- Tokens ---------- */
+:root{
+  --black:#000000;
+  --white:#FFFFFF;
+  --red:#C8102E;
+  --red-deep:#A30D25;
+  --graphite:#3A3F47;
+  --fog:#E9ECEF;
+  --ash:#B4BAC2;          /* secondary text on black: 10.6:1 */
+  --smoke:#2A2E34;        /* hairlines on black */
+  --sans:'Libre Franklin','Helvetica Neue',Arial,sans-serif;
+  --serif:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --wrap:1360px;
+  --gutter:clamp(16px,4vw,48px);
+  --header-h:76px;
+  --grain:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:calc(var(--header-h) + 12px)}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{margin:0;background:var(--white);color:var(--black);font:400 1.125rem/1.6 var(--serif);text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit}
+h1,h2,h3,h4{font-family:var(--sans);font-weight:800;margin:0;line-height:1.05;letter-spacing:-.02em;text-wrap:balance}
+p{margin:0}
+ul,ol{margin:0;padding:0;list-style:none}
+.wrap{width:min(100% - 2 * var(--gutter), var(--wrap));margin-inline:auto}
+.nw{white-space:nowrap}
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+
+/* Focus: red ring on light, white ring on dark */
+:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+.on-dark :focus-visible,.site-header:not(.is-solid) :focus-visible{outline-color:var(--white)}
+.form :focus-visible,.site-header.menu-open :focus-visible{outline-color:var(--red)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+
+.skip{position:absolute;left:12px;top:-60px;z-index:100;background:var(--white);color:var(--black);font:700 1rem var(--sans);padding:12px 16px;text-decoration:none}
+.skip:focus{top:12px}
+
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:14px 24px;font:700 1rem/1.1 var(--sans);letter-spacing:.005em;text-decoration:none;border:2px solid transparent;border-radius:2px;cursor:pointer;transition:background-color .15s,color .15s,border-color .15s}
+.btn-red{background:var(--red);color:var(--white)}
+.btn-red:hover{background:var(--red-deep)}
+.btn-line{border-color:var(--white);color:var(--white);background:transparent}
+.btn-line:hover{background:var(--white);color:var(--black)}
+.btn-ink{border-color:var(--black);color:var(--black);background:transparent}
+.btn-ink:hover{background:var(--black);color:var(--white)}
+
+/* ---------- Header ---------- */
+.site-header{position:fixed;inset:0 0 auto 0;z-index:50;color:var(--white);transition:background-color .25s,color .25s,box-shadow .25s}
+.site-header.is-solid{background:var(--white);color:var(--black);box-shadow:0 1px 0 rgba(0,0,0,.14)}
+.header-row{display:flex;align-items:center;gap:24px;height:var(--header-h)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:auto}
+.brand img{width:46px;height:46px;border-radius:50%;background:var(--white)}
+.brand-name{font:800 1.125rem/1.05 var(--sans);letter-spacing:-.01em}
+.bn-sub{display:block;font-weight:600;font-size:.8125rem;letter-spacing:0;opacity:.85}
+.nav-list{display:flex;align-items:center;gap:4px}
+.nav-list a{display:block;padding:10px 12px;font:600 .9375rem/1 var(--sans);text-decoration:none;border-bottom:2px solid transparent}
+.nav-list a:hover{border-bottom-color:var(--red)}
+.nav-members{margin-left:8px;padding-left:12px;border-left:1px solid currentColor}
+.nav-list .nav-members a{font-weight:500;opacity:.9}
+.header-cta{min-height:44px;padding:10px 18px;font-size:.9375rem}
+.nav-join{display:none}
+.menu-btn{display:none;align-items:center;gap:8px;background:none;border:2px solid currentColor;color:inherit;font:700 .9375rem var(--sans);padding:8px 12px;border-radius:2px;cursor:pointer}
+.menu-btn svg{width:18px;height:18px}
+
+@media (max-width:1060px){
+  :root{--header-h:64px}
+  .menu-btn{display:inline-flex}
+  .site-nav{position:absolute;inset:var(--header-h) 0 auto 0;background:var(--white);color:var(--black);box-shadow:0 12px 24px rgba(0,0,0,.25);display:none}
+  .site-nav.is-open{display:block}
+  .nav-list{flex-direction:column;align-items:stretch;gap:0;padding:8px var(--gutter) 20px}
+  .nav-list a{padding:14px 0;font-size:1.0625rem;border-bottom:1px solid var(--fog)}
+  .nav-members{margin:0;padding:0;border:0}
+  .header-cta{display:none}
+  .nav-join{display:block;padding-top:16px}
+  .nav-list .nav-join a{display:flex;justify-content:center;border:0;padding:14px 20px;color:var(--white);font-weight:700}
+  .site-header.menu-open{background:var(--white);color:var(--black)}
+}
+@media (max-width:560px){.brand-name .bn{display:block}.bn-sub{display:none}.brand-name{font-size:1.0625rem}.brand img{width:42px;height:42px}}
+
+/* ---------- Photo treatment ---------- */
+.bw{filter:grayscale(1) contrast(1.14) brightness(.92)}
+.grain{position:relative;isolation:isolate}
+.grain::after{content:"";position:absolute;inset:0;background-image:var(--grain);background-size:240px 240px;opacity:.34;mix-blend-mode:overlay;pointer-events:none;z-index:1}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;margin:0;height:min(94svh,900px);min-height:640px;background:var(--black);color:var(--white);overflow:hidden}
+.hero-photo{position:absolute;inset:0}
+.hero-photo img{width:100%;height:100%;object-fit:cover;object-position:50% 45%}
+.hero-photo::before{content:"";position:absolute;inset:0;z-index:2;background:
+  linear-gradient(180deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,0) 22%),
+  linear-gradient(0deg,rgba(0,0,0,.94) 0%,rgba(0,0,0,.82) 32%,rgba(0,0,0,.35) 62%,rgba(0,0,0,.1) 100%),
+  linear-gradient(90deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,0) 60%)}
+@media (prefers-reduced-motion:no-preference){
+  .hero-photo img{animation:develop 2.2s cubic-bezier(.2,.7,.2,1) both}
+  @keyframes develop{from{filter:grayscale(1) brightness(2.6) contrast(.45)}to{filter:grayscale(1) contrast(1.14) brightness(.92)}}
+}
+.hero-inner{position:relative;z-index:3;height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:clamp(40px,7vh,84px)}
+.hero h1{font-size:clamp(2.6rem,6.4vw,6rem);line-height:.96;letter-spacing:-.03em;max-width:13.5ch}
+.hero-sub{margin-top:24px;max-width:36em;font-size:clamp(1.0625rem,1.4vw,1.25rem);line-height:1.55;color:#E6E8EB}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.hero-meta{margin-top:22px;font:500 .9375rem/1.5 var(--sans);color:var(--ash)}
+.hero-meta a{color:var(--white);font-weight:700;text-decoration-thickness:2px;text-underline-offset:3px;text-decoration-color:var(--red)}
+.hero-cap{position:absolute;z-index:3;right:var(--gutter);bottom:clamp(40px,7vh,84px);max-width:22em}
+.caption{border-left:4px solid var(--red);padding:2px 0 2px 14px;font:italic 400 1rem/1.45 var(--serif);color:#D9DDE2}
+.hero-cap .caption{color:#E6E8EB}
+@media (max-width:900px){
+  .hero{height:auto;min-height:0}
+  .hero-photo{position:relative;height:clamp(360px,100vw,520px)}
+  .hero-photo::before{background:linear-gradient(180deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,0) 34%),linear-gradient(0deg,#000 0%,rgba(0,0,0,.4) 32%,rgba(0,0,0,0) 60%)}
+  .hero-photo img{object-position:52% 40%}
+  .hero-inner{margin-top:-72px;padding-bottom:36px}
+  .hero-cap{position:relative;right:auto;bottom:auto;margin:0 var(--gutter) 36px;max-width:none}
+  .hero-ctas .btn{flex:1 1 220px}
+}
+
+/* ---------- Explainer ---------- */
+.explain{padding-block:clamp(72px,9vw,136px)}
+.explain-grid{display:grid;grid-template-columns:5fr 7fr;gap:clamp(40px,6vw,96px);align-items:start}
+.explain h2{font-size:clamp(2rem,3.6vw,3.25rem);max-width:14ch}
+.lede{margin-top:28px;font-size:clamp(1.1875rem,1.6vw,1.375rem);line-height:1.6;max-width:32em}
+.sides{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,3vw,48px)}
+.side{border-top:4px solid var(--black);padding-top:20px}
+.side-head{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.side-head img{width:60px;height:60px;object-fit:contain}
+.side h3{font-size:2rem;letter-spacing:-.02em}
+.side-exp{font:italic 400 1rem/1.35 var(--serif);color:var(--graphite)}
+.side p+p{margin-top:12px}
+.side-body{color:#1d2126}
+.both{grid-column:1/-1;margin-top:8px;padding:22px 24px;background:var(--fog);display:flex;gap:18px;align-items:flex-start}
+.both p{max-width:52em}
+.both strong{font-family:var(--sans);font-weight:800}
+@media (max-width:900px){.explain-grid,.sides{grid-template-columns:1fr}.explain h2{max-width:18ch}}
+
+/* ---------- Scenes ---------- */
+.scenes{background:var(--black);color:var(--white)}
+.scenes-intro{padding-block:clamp(72px,8vw,120px) clamp(24px,3vw,40px);display:grid;grid-template-columns:5fr 7fr;gap:clamp(24px,5vw,80px);align-items:end}
+.scenes-intro h2{font-size:clamp(2.25rem,4.4vw,4rem);letter-spacing:-.03em}
+.scenes-intro p{font-size:1.1875rem;color:#DADDE1;max-width:34em}
+.scenes-intro .how{display:inline-flex;align-items:center;gap:10px;margin-top:14px;font:600 .9375rem var(--sans);color:var(--ash)}
+.scene{padding-block:clamp(56px,7vw,104px);border-top:1px solid var(--smoke)}
+.scene-grid{display:grid;gap:28px clamp(28px,4vw,64px);grid-template-columns:2fr 1fr;grid-template-areas:"frame head" "frame list" "extra extra";align-items:start}
+.scene--flip .scene-grid{grid-template-columns:1fr 2fr;grid-template-areas:"head frame" "list frame" ". frame"}
+.scene--flip.has-extra .scene-grid{grid-template-areas:"head frame" "list frame" "list extra";grid-template-rows:auto 1fr auto}
+.scene--trio .scene-grid{grid-template-columns:1fr 1fr 1fr;grid-template-areas:"head frame extra" "list frame extra"}
+.scene--wide .scene-grid{grid-template-columns:2fr 1fr;grid-template-areas:"frame head" "frame list" "extra extra"}
+.row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px clamp(28px,4vw,64px);align-items:start;padding-top:clamp(20px,3vw,40px);border-top:1px solid var(--smoke)}
+.row3-note{font:400 1rem/1.6 var(--serif);color:#C9CED4;margin-top:14px}
+@media (max-width:980px){.row3{grid-template-columns:1fr}}
+.s-head{grid-area:head}
+.s-frame{grid-area:frame}
+.s-list{grid-area:list}
+.s-extra{grid-area:extra}
+.scene-count{display:flex;align-items:baseline;gap:12px;font:600 .9375rem/1 var(--sans);color:var(--ash);margin-bottom:18px}
+.scene-count b{font-weight:800;color:var(--white);font-variant-numeric:tabular-nums}
+.scene-count b::after{content:"";display:inline-block;width:28px;height:4px;background:var(--red);margin-left:12px;vertical-align:middle;transform:translateY(-2px)}
+.scene h3{font-size:clamp(2rem,3.4vw,3.25rem);letter-spacing:-.03em;max-width:12ch}
+.scene-body{margin-top:18px;color:#DADDE1;font-size:1.0625rem;line-height:1.65}
+.scene-body+.scene-body{margin-top:12px}
+.scene-body strong{color:var(--white);font-weight:600}
+figure{margin:0}
+.figcap{margin-top:14px}
+
+/* In-this-frame list (the accessible twin of the hotspots) */
+.inframe-title{font:700 .9375rem/1 var(--sans);color:var(--ash);margin-bottom:10px}
+.inframe li{border-top:1px solid var(--smoke)}
+.inframe li:last-child{border-bottom:1px solid var(--smoke)}
+.inframe a{display:grid;grid-template-columns:30px 1fr;gap:4px 12px;padding:12px 4px 12px 0;text-decoration:none;align-items:start}
+.inframe .k{grid-row:span 3;width:26px;height:26px;border-radius:50%;background:var(--red);color:var(--white);display:grid;place-items:center;font:800 .8125rem/1 var(--sans);margin-top:1px;box-shadow:0 0 0 2px var(--white)}
+.inframe .obj{font:500 .875rem/1.3 var(--sans);color:var(--ash)}
+.inframe .ifr-role{font:800 1.0625rem/1.25 var(--sans);color:var(--white);text-decoration:underline;text-decoration-color:var(--red);text-decoration-thickness:2px;text-underline-offset:4px}
+.inframe .train{font:400 .9375rem/1.45 var(--serif);color:#C9CED4}
+.inframe a:hover .ifr-role,.inframe li.is-active .ifr-role{text-decoration-color:var(--white)}
+.inframe li.is-active{background:linear-gradient(90deg,rgba(200,16,46,.18),rgba(200,16,46,0) 70%)}
+.this-role{margin-top:22px;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;font:600 .9375rem var(--sans);color:var(--ash)}
+.this-role a{font:800 1.25rem/1.2 var(--sans);color:var(--white);text-decoration-color:var(--red);text-decoration-thickness:3px;text-underline-offset:5px}
+.this-role a:hover{text-decoration-color:var(--white)}
+
+/* Frame + hotspots: "Find yourself in the frame" */
+.frame{position:relative}
+.frame-media{position:relative;overflow:hidden;aspect-ratio:var(--ar,16/9);background:#111;cursor:zoom-in}
+.frame.is-revealed .frame-media{cursor:zoom-out}
+.frame-media img{width:100%;height:100%;object-fit:cover;object-position:var(--pos,50% 50%);transition:filter .35s ease}
+.frame.is-revealed .frame-media img{filter:grayscale(1) contrast(1.05) brightness(.6)}
+.frame-toggle{position:absolute;z-index:4;left:12px;top:12px;display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:8px 14px 8px 10px;border:0;border-radius:2px;background:var(--white);color:var(--black);font:700 .875rem/1 var(--sans);cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.35)}
+.frame-toggle svg{width:20px;height:20px;flex:none}
+.frame-toggle:hover{background:var(--fog)}
+.frame-toggle[aria-pressed="true"]{background:var(--black);color:var(--white);box-shadow:inset 0 0 0 2px var(--white)}
+.frame-toggle .t-off{display:none}
+.frame-toggle[aria-pressed="true"] .t-on{display:none}
+.frame-toggle[aria-pressed="true"] .t-off{display:inline}
+.frame-toggle:focus-visible{outline-color:var(--white);outline-offset:3px;box-shadow:0 0 0 6px var(--black)}
+.hotspots{position:absolute;inset:0;z-index:3}
+.hotspots[hidden]{display:none}
+.hs{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);text-decoration:none;color:var(--black)}
+.hs-dot{position:relative;width:32px;height:32px;border-radius:50%;background:var(--red);color:var(--white);display:grid;place-items:center;font:800 .875rem/1 var(--sans);box-shadow:0 0 0 3px var(--white),0 4px 14px rgba(0,0,0,.6);transition:transform .15s,background-color .15s,color .15s}
+.hs-dot::after{content:"";position:absolute;inset:-3px;border-radius:50%;border:2px solid var(--white);opacity:0}
+.hs-tag{position:absolute;top:50%;left:calc(100% + 12px);transform:translateY(-50%);width:max-content;max-width:16em;background:var(--white);border-left:4px solid var(--red);padding:7px 11px 8px;box-shadow:0 6px 18px rgba(0,0,0,.45)}
+.hs[data-side="left"] .hs-tag{left:auto;right:calc(100% + 12px)}
+.hs-obj{display:block;font:500 .75rem/1.25 var(--sans);color:var(--graphite)}
+.hs-role{display:block;font:800 .9375rem/1.2 var(--sans);color:var(--black)}
+.hs-train{display:block;font:italic 400 .8125rem/1.3 var(--serif);color:var(--graphite);margin-top:2px}
+.hs:hover .hs-dot,.hs:focus-visible .hs-dot,.hs.is-active .hs-dot{transform:scale(1.15);background:var(--white);color:var(--red)}
+.hs:focus-visible{outline:none}
+.hs:focus-visible .hs-tag,.hs.is-active .hs-tag{outline:3px solid var(--red);outline-offset:0}
+@media (prefers-reduced-motion:no-preference){
+  .frame.is-revealed .hs-dot{animation:hs-in .45s cubic-bezier(.2,.9,.3,1.3) both;animation-delay:calc(var(--i,0) * 110ms)}
+  .frame.is-revealed .hs-dot::after{animation:hs-ping 1.1s ease-out both;animation-delay:calc(var(--i,0) * 110ms + .2s)}
+  .frame.is-revealed .hs-tag{animation:tag-in .4s ease-out both;animation-delay:calc(var(--i,0) * 110ms + .12s)}
+  @keyframes hs-in{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+  @keyframes hs-ping{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(2.3)}}
+  @keyframes tag-in{from{opacity:0}to{opacity:1}}
+}
+/* Small frames and phones: dots only; the numbered list carries the words */
+.frame--compact .hs-tag,
+.frame--compact .hs-train{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;padding:0;border:0;box-shadow:none}
+@media (max-width:640px){
+  .hs-tag{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;padding:0;border:0;box-shadow:none}
+  .frame-toggle{font-size:.8125rem;min-height:36px;padding:6px 12px 6px 8px}
+  .hs-dot{width:30px;height:30px}
+}
+
+/* Commission frames: honest empty slots with crop marks */
+.commission{position:relative;aspect-ratio:var(--ar,4/3);background:var(--graphite);color:var(--white);display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(28px,3vw,40px);
+  --cm:rgba(255,255,255,.9);
+  background-image:
+   linear-gradient(var(--cm),var(--cm)),linear-gradient(var(--cm),var(--cm)),
+   linear-gradient(var(--cm),var(--cm)),linear-gradient(var(--cm),var(--cm)),
+   linear-gradient(var(--cm),var(--cm)),linear-gradient(var(--cm),var(--cm)),
+   linear-gradient(var(--cm),var(--cm)),linear-gradient(var(--cm),var(--cm));
+  background-size:26px 2px,2px 26px,26px 2px,2px 26px,26px 2px,2px 26px,26px 2px,2px 26px;
+  background-position:12px 12px,12px 12px,calc(100% - 12px) 12px,calc(100% - 12px) 12px,12px calc(100% - 12px),12px calc(100% - 12px),calc(100% - 12px) calc(100% - 12px),calc(100% - 12px) calc(100% - 12px);
+  background-repeat:no-repeat}
+.commission::before{content:"";position:absolute;inset:0;background-image:var(--grain);background-size:240px;opacity:.16;mix-blend-mode:overlay;pointer-events:none}
+.commission-label{font:700 .9375rem/1.2 var(--sans);color:#E3E6EA}
+.commission-title{font:800 clamp(1.375rem,2.2vw,2rem)/1.05 var(--sans);letter-spacing:-.02em;margin-top:6px}
+.commission-note{margin-top:12px;font:italic 400 .9375rem/1.45 var(--serif);color:#E3E6EA;max-width:34em}
+.commission-icon{position:absolute;top:28px;left:50%;transform:translateX(-50%);opacity:.5}
+.commission--big{--ar:16/10}
+.commission--big .commission-title{font-size:clamp(1.75rem,3.4vw,3rem)}
+@media (max-width:980px){.commission{aspect-ratio:auto!important;min-height:240px}.commission-icon{position:static;transform:none;margin-bottom:auto;padding-bottom:20px}}
+
+/* Exercise calendar strip */
+.cal-strip{border-top:4px solid var(--white);padding-top:18px;display:grid;grid-template-columns:auto repeat(4,1fr);gap:18px 32px;align-items:start}
+.cal-strip h4{font-size:1.125rem;letter-spacing:-.01em;max-width:8ch;line-height:1.1}
+.cal-strip li{display:flex;flex-direction:column;gap:4px}
+.cal-strip time{font:800 1.25rem/1.1 var(--sans);font-variant-numeric:tabular-nums}
+.cal-strip span{font:400 1rem/1.4 var(--serif);color:#D1D5DA}
+.cal-strip ul{display:contents}
+
+@media (max-width:980px){
+  .scenes-intro{grid-template-columns:1fr}
+  .scene-grid,.scene--flip .scene-grid,.scene--flip.has-extra .scene-grid,.scene--trio .scene-grid,.scene--wide .scene-grid{grid-template-columns:1fr;grid-template-rows:none;grid-template-areas:"head" "frame" "list" "extra"}
+  .scene h3{max-width:16ch}
+  .cal-strip{grid-template-columns:1fr 1fr}
+  .cal-strip h4{grid-column:1/-1;max-width:none}
+}
+
+/* ---------- Roles ---------- */
+.roles{background:var(--fog);padding-block:clamp(72px,9vw,136px)}
+.roles-head{display:grid;grid-template-columns:5fr 7fr;gap:clamp(24px,5vw,80px);align-items:end;margin-bottom:clamp(36px,5vw,64px)}
+.roles-head h2{font-size:clamp(2.25rem,4.4vw,4rem);letter-spacing:-.03em;max-width:12ch}
+.roles-head p{font-size:1.1875rem;max-width:34em;color:#1d2126}
+.role-cols,.role{display:grid;grid-template-columns:128px minmax(0,1.05fr) minmax(0,1.35fr) minmax(0,1.35fr) minmax(0,.85fr);gap:12px clamp(20px,2.4vw,36px)}
+.role-cols{font:700 .875rem/1.2 var(--sans);color:var(--graphite);padding-bottom:12px}
+.role{padding:26px 0;border-top:2px solid var(--black);scroll-margin-top:calc(var(--header-h) + 16px);position:relative}
+.role:last-child{border-bottom:2px solid var(--black)}
+.role:target{background:var(--white);box-shadow:-16px 0 0 var(--white),16px 0 0 var(--white),inset 6px 0 0 var(--red);padding-left:18px;margin-left:-18px;margin-right:0}
+.thumb{width:128px;aspect-ratio:4/3;overflow:hidden;background:var(--graphite);position:relative}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb--empty{display:grid;place-items:center;color:#E3E6EA;font:600 .75rem/1.2 var(--sans);text-align:center;padding:8px;
+  background-image:linear-gradient(#fff,#fff),linear-gradient(#fff,#fff),linear-gradient(#fff,#fff),linear-gradient(#fff,#fff);
+  background-size:14px 2px,2px 14px,14px 2px,2px 14px;background-position:6px 6px,6px 6px,calc(100% - 6px) calc(100% - 6px),calc(100% - 6px) calc(100% - 6px);background-repeat:no-repeat}
+.role h3{font-size:1.5rem;letter-spacing:-.02em;line-height:1.1}
+.open-to{margin-top:8px;font:600 .875rem/1.35 var(--sans);color:var(--graphite);display:flex;gap:8px;align-items:flex-start}
+.roles-head .legend{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px 22px;font:600 .875rem/1.3 var(--sans);color:var(--graphite)}
+.legend span{display:inline-flex;align-items:flex-start;gap:8px}
+.legend i{margin-top:3px}
+.legend i,.open-to i{flex:none;width:10px;height:10px;margin-top:4px;border:2px solid var(--black);border-radius:50%}
+.legend i{width:10px;height:10px;border:2px solid var(--black);border-radius:50%}
+.legend i.ares,.open-to i.ares{background:var(--black)}
+.legend i.acs,.open-to i.acs{background:var(--red);border-color:var(--red)}
+.legend i.any,.open-to i.any{background:transparent}
+.role-do,.role-train{font-size:1rem;line-height:1.55;color:#1d2126}
+.role-train ul{display:grid;gap:4px}
+.role-train li{padding-left:14px;position:relative}
+.role-train li::before{content:"";position:absolute;left:0;top:.66em;width:6px;height:2px;background:var(--red)}
+.m-label{display:none;font:700 .8125rem/1.2 var(--sans);color:var(--graphite);margin-bottom:4px}
+.role-seen{display:flex;flex-direction:column;gap:10px;font:500 .875rem/1.35 var(--sans)}
+.role-seen a{color:var(--black);text-decoration-color:var(--red);text-decoration-thickness:2px;text-underline-offset:3px}
+.role-seen .none{color:var(--graphite);font-style:normal}
+.role-start{font-weight:800!important}
+@media (max-width:1100px){
+  .role-cols{display:none}
+  .role{grid-template-columns:128px 1fr 1fr;grid-template-areas:"thumb name name" "do do train" "seen seen seen"}
+  .role .thumb{grid-area:thumb}.role .role-name{grid-area:name;align-self:center}.role .role-do{grid-area:do}.role .role-train{grid-area:train}.role .role-seen{grid-area:seen;flex-direction:row;flex-wrap:wrap;gap:8px 20px}
+  .m-label{display:block}
+}
+@media (max-width:680px){
+  .roles-head{grid-template-columns:1fr}
+  .role{grid-template-columns:96px 1fr;grid-template-areas:"thumb name" "do do" "train train" "seen seen";gap:14px 16px}
+  .thumb{width:96px}
+  .role h3{font-size:1.3125rem}
+}
+
+/* ---------- Join path ---------- */
+.join{padding-block:clamp(72px,9vw,136px) clamp(56px,6vw,96px)}
+.join-head{display:grid;grid-template-columns:5fr 7fr;gap:clamp(24px,5vw,80px);align-items:end;margin-bottom:clamp(36px,5vw,64px)}
+.join-head h2{font-size:clamp(2.25rem,4.4vw,4rem);letter-spacing:-.03em;max-width:12ch}
+.join-head p{font-size:1.1875rem;max-width:34em}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;counter-reset:none}
+.step{padding:22px clamp(18px,2vw,28px) 26px;border-top:4px solid var(--black);position:relative}
+.step+.step{border-left:1px solid #CDD2D8}
+.step-n{display:block;font:800 3.5rem/1 var(--sans);color:var(--red);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.step h3{font-size:1.4375rem;margin-top:14px;letter-spacing:-.02em}
+.step h3 small{display:block;font:600 .875rem/1.3 var(--sans);color:var(--graphite);letter-spacing:0;margin-top:6px}
+.step p{margin-top:12px;font-size:1rem;line-height:1.6;color:#1d2126}
+.step-links{margin-top:14px;display:grid;gap:8px;font:700 .9375rem/1.3 var(--sans)}
+.step-links a{text-decoration-color:var(--red);text-decoration-thickness:2px;text-underline-offset:3px}
+.step--opt{background:var(--fog)}
+.step--opt .step-n{color:var(--graphite)}
+.voices{margin-top:clamp(48px,6vw,80px);display:grid;grid-template-columns:7fr 5fr;gap:clamp(24px,4vw,64px);align-items:stretch}
+.legacy{margin:0;border-left:4px solid var(--red);padding:4px 0 4px clamp(18px,2.4vw,32px)}
+.legacy p{font:italic 400 clamp(1.375rem,2.2vw,1.875rem)/1.4 var(--serif);max-width:26em}
+.legacy footer{margin-top:16px;font:500 .9375rem/1.5 var(--sans);color:var(--graphite)}
+.legacy footer b{font-weight:800;color:var(--black)}
+.voice-slot{border:2px dashed #9AA1AA;padding:22px 24px;display:flex;flex-direction:column;justify-content:space-between;gap:16px;background:repeating-linear-gradient(135deg,#fff 0 12px,#F6F7F8 12px 24px)}
+.voice-slot .lbl{font:700 .9375rem var(--sans);color:var(--graphite)}
+.voice-slot q{font:italic 400 1.25rem/1.45 var(--serif);color:var(--graphite);quotes:"\201C" "\201D"}
+.voice-slot small{font:500 .8125rem/1.4 var(--sans);color:var(--graphite)}
+@media (max-width:980px){
+  .join-head,.voices{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr 1fr}
+  .step:nth-child(3){border-left:0}
+}
+@media (max-width:600px){
+  .steps{grid-template-columns:1fr}
+  .step+.step{border-left:0}
+  .step{display:grid;grid-template-columns:52px 1fr;column-gap:14px}
+  .step-n{font-size:2.75rem;grid-row:span 4}
+  .step h3{margin-top:4px}
+}
+
+/* ---------- Signup ---------- */
+.signup{position:relative;background:var(--black);color:var(--white);overflow:hidden}
+.signup-bg{position:absolute;inset:0}
+.signup-bg img{width:100%;height:100%;object-fit:cover;object-position:50% 45%}
+.signup-bg::before{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(90deg,rgba(0,0,0,.86) 0%,rgba(0,0,0,.55) 50%,rgba(0,0,0,.4) 100%)}
+.signup-inner{position:relative;z-index:3;display:grid;grid-template-columns:6fr 5fr;gap:clamp(32px,6vw,96px);padding-block:clamp(72px,9vw,128px);align-items:center}
+.signup h2{font-size:clamp(2.5rem,5vw,4.5rem);letter-spacing:-.035em;line-height:.98;max-width:11ch}
+.signup-copy p{margin-top:22px;font-size:1.1875rem;color:#E1E4E8;max-width:30em}
+.signup-copy .fine{font:500 .9375rem/1.5 var(--sans);color:var(--ash);margin-top:18px}
+.signup-copy .fine a{color:var(--white);text-decoration-color:var(--red);text-decoration-thickness:2px;text-underline-offset:3px}
+.signup-cap{margin-top:28px;max-width:26em}
+.form{background:var(--white);color:var(--black);padding:clamp(22px,3vw,36px);border-top:6px solid var(--red)}
+.form h3{font-size:1.5rem;letter-spacing:-.02em}
+.form-intro{margin-top:6px;font-size:1rem;color:var(--graphite)}
+.field{margin-top:18px;display:grid;gap:6px}
+.field label,.field legend{font:700 .9375rem/1.2 var(--sans)}
+.field .hint{font:400 .8125rem/1.3 var(--sans);color:var(--graphite)}
+.field input[type=text],.field input[type=email],.field select{width:100%;min-height:48px;padding:10px 12px;font:400 1rem var(--sans);color:var(--black);background:var(--white);border:2px solid var(--graphite);border-radius:2px}
+.field input:focus-visible,.field select:focus-visible{outline:3px solid var(--red);outline-offset:1px;border-color:var(--black)}
+fieldset.field{border:0;padding:0;margin-inline:0}
+.radios{display:flex;flex-wrap:wrap;gap:10px}
+.radios label{display:flex;align-items:center;gap:8px;font:500 1rem var(--sans);border:2px solid var(--graphite);padding:10px 14px;border-radius:2px;cursor:pointer;flex:1 1 150px}
+.radios input{accent-color:var(--red);width:18px;height:18px;margin:0}
+.radios label:has(input:checked){border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red)}
+.form .btn{width:100%;margin-top:22px}
+.form-status{margin-top:14px;font:600 .9375rem/1.45 var(--sans);color:var(--black)}
+.form-status:empty{display:none}
+.form-alt{margin-top:14px;font:400 .875rem/1.5 var(--sans);color:var(--graphite)}
+.form-alt a{color:var(--black);font-weight:700;text-decoration-color:var(--red);text-decoration-thickness:2px}
+@media (max-width:980px){.signup-inner{grid-template-columns:1fr}}
+
+/* ---------- Partners ---------- */
+.partners{padding-block:clamp(72px,9vw,128px)}
+.partners-grid{display:grid;grid-template-columns:5fr 7fr;gap:clamp(32px,6vw,96px);align-items:start}
+.partners h2{font-size:clamp(2.25rem,4.4vw,4rem);letter-spacing:-.03em}
+.partners-intro{margin-top:22px;font-size:1.125rem;max-width:30em}
+.marks{margin-top:32px;display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+.mark{display:flex;align-items:center;gap:14px;font:600 .875rem/1.3 var(--sans);max-width:15em}
+.mark img{width:76px;height:76px;object-fit:contain;flex:none}
+.marks-note{margin-top:14px;font:italic 400 .875rem/1.45 var(--serif);color:var(--graphite)}
+.credits{display:grid;grid-template-columns:1fr 1fr;gap:0 clamp(24px,3vw,48px)}
+.credits div{padding:18px 0;border-top:1px solid #C9CED4}
+.credits dt{font:800 1.125rem/1.25 var(--sans);letter-spacing:-.01em}
+.credits dd{margin:6px 0 0;font-size:1rem;line-height:1.5;color:#2a2f36}
+.credits .lead{grid-column:1/-1;border-top:4px solid var(--black)}
+.credits .lead dt{font-size:1.375rem}
+@media (max-width:900px){.partners-grid,.credits{grid-template-columns:1fr}}
+
+/* ---------- Footer ---------- */
+.site-footer{background:var(--black);color:var(--white)}
+.netbar{border-bottom:1px solid var(--smoke)}
+.netbar-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px 28px;padding-block:16px;font:500 .9375rem/1.4 var(--sans)}
+.netbar-row .live{display:inline-flex;align-items:center;gap:10px;font-weight:800}
+.netbar-row .live::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--red);box-shadow:0 0 0 3px rgba(200,16,46,.35)}
+.netbar-row .muted{color:var(--ash)}
+.netbar-row .members-link{margin-left:auto;font-weight:700;text-decoration-color:var(--red);text-decoration-thickness:2px;text-underline-offset:3px}
+.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px clamp(24px,4vw,64px);padding-block:clamp(48px,6vw,80px)}
+.f-brand{display:flex;gap:14px;align-items:center}
+.f-brand img{width:64px;height:64px;border-radius:50%;background:#fff}
+.f-brand b{font:800 1.25rem/1.1 var(--sans);letter-spacing:-.01em}
+.f-about{margin-top:18px;font-size:1rem;line-height:1.55;color:#D1D5DA;max-width:28em}
+.f-about address{font-style:normal;margin-top:12px}
+.f-col h2{font:800 1rem/1.2 var(--sans);letter-spacing:0;margin-bottom:14px}
+.f-col li+li{margin-top:10px}
+.f-col a{font:500 .9375rem/1.35 var(--sans);text-decoration:none;color:#DADDE1}
+.f-col a:hover{color:var(--white);text-decoration:underline;text-decoration-color:var(--red)}
+.f-col .sched{font:500 .9375rem/1.4 var(--sans);color:#DADDE1}
+.f-col .sched b{display:block;color:var(--white);font-weight:700}
+.f-col .sched em{font-style:normal;color:var(--ash)}
+.f-legal{border-top:1px solid var(--smoke);padding-block:20px;display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between;font:500 .8125rem/1.4 var(--sans);color:var(--ash)}
+.f-legal a{color:var(--ash)}
+.concept-tag{color:#8E959E}
+@media (max-width:980px){.footer-grid{grid-template-columns:1fr 1fr}.f-brandcol{grid-column:1/-1}}
+@media (max-width:560px){.footer-grid{grid-template-columns:1fr}.netbar-row .members-link{margin-left:0}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="brand" href="#top" aria-label="Spokane County ARES-ACS, home">
+      <img src="../../assets/Spokane_County_ARES-ACS_logo_slightly_smaller_550x550.png" alt="" width="46" height="46">
+      <span class="brand-name"><span class="bn">Spokane County</span> <span class="bn">ARES-ACS</span><span class="bn-sub">Amateur radio emergency communications</span></span>
+    </a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18M3 12h18M3 18h18"/></svg>Menu
+    </button>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <ul class="nav-list">
+        <li><a href="#about">About</a></li>
+        <li><a href="#scenes">What we do</a></li>
+        <li><a href="#join">Join</a></li>
+        <li><a href="#calendar">Calendar</a></li>
+        <li class="nav-members"><a href="#members">Members</a></li>
+        <li class="nav-join"><a class="btn btn-red" href="#signup">Join the team</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn-red header-cta" href="#signup">Join the team</a>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- 1. Hero -->
+<section class="hero on-dark" aria-labelledby="hero-title">
+  <div class="hero-photo grain">
+    <img class="bw" src="../../assets/8091bb_cfac747e80b142cf8c06b2286c1c6e0b.jpg" alt="Six volunteers, four in high-visibility vests, raise a portable antenna mast in a foggy, frost-covered field." width="659" height="372" fetchpriority="high">
+  </div>
+  <div class="wrap hero-inner">
+    <h1 id="hero-title">Behind every message is a volunteer with a radio.</h1>
+    <p class="hero-sub">Spokane County ARES-ACS is a team of licensed amateur radio operators who provide backup communications for Spokane County Emergency Management, the National Weather Service, local hospitals and community events.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-red" href="#signup">Join the team</a>
+      <a class="btn btn-line" href="#scenes">See where you'd fit</a>
+    </div>
+    <p class="hero-meta">Not licensed yet? <a href="#step-license">Start with a license class</a>. An ARRL-affiliated ARES group.</p>
+  </div>
+  <div class="hero-cap"><p class="caption">Raising an antenna mast in freezing fog during a field exercise.</p></div>
+</section>
+
+<!-- 2. What the team does -->
+<section class="explain" id="about" aria-labelledby="about-title">
+  <div class="wrap explain-grid">
+    <div>
+      <h2 id="about-title">Backup communications, run by trained volunteers.</h2>
+      <p class="lede">When phones, radio systems or the internet are overloaded or down, Spokane County still needs messages to get through. Our members are licensed amateur radio (“ham”) operators who volunteer to carry them, and who practice on the air every Tuesday night.</p>
+    </div>
+    <div class="sides">
+      <article class="side">
+        <div class="side-head">
+          <img src="../../assets/ARES_logo.png" alt="ARRL Amateur Radio Emergency Service emblem" width="60" height="60">
+          <div><h3>ARES</h3><p class="side-exp">Amateur Radio Emergency Service</p></div>
+        </div>
+        <p class="side-body">A national ARRL program open to any licensed ham. ARES members support community events, the National Weather Service and the Red Cross without an emergency being declared.</p>
+      </article>
+      <article class="side">
+        <div class="side-head">
+          <img src="../../assets/ACS_logo_1000x1000.png" alt="Spokane Auxiliary Communications seal" width="60" height="60">
+          <div><h3>ACS</h3><p class="side-exp">Auxiliary Communications</p></div>
+        </div>
+        <p class="side-body">Spokane County Emergency Management's own volunteer communications unit. It carries on the county's RACES program (Radio Amateur Civil Emergency Service). ACS members have passed a county background check, so the county can activate them to work in emergency operations centers, command posts, hospitals and shelters.</p>
+      </article>
+      <div class="both">
+        <p><strong>Join ARES only, or both.</strong> The two sides train and operate together. In the group's own words: “Even [if] you don't or can't qualify for ACS, our ARES group welcomes you, and you can still volunteer for many events.”</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3–7. Scenes -->
+<section class="scenes on-dark" id="scenes" aria-labelledby="scenes-title">
+  <div class="wrap scenes-intro">
+    <h2 id="scenes-title">Five scenes from the work.</h2>
+    <div>
+      <p>Each photo shows a job someone on this team does. Tap a photo, or use the list beside it, to find yourself in the frame: every marked spot names a role and the training behind it.</p>
+      <p class="how"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2" fill="#C8102E" stroke="none"/><path d="M12 1v5M12 18v5M1 12h5M18 12h5"/></svg>Look for “Find yourself in the frame” on each photo.</p>
+    </div>
+  </div>
+
+  <!-- Scene 1: Exercises -->
+  <article class="scene" id="scene-exercises" aria-labelledby="s1-title">
+    <div class="wrap scene-grid">
+      <div class="s-head">
+        <p class="scene-count"><b>1 of 5</b>Exercises</p>
+        <h3 id="s1-title">Fog, frost, and a mast to raise.</h3>
+        <p class="scene-body">Drills test the whole chain: raise the antenna, power the station, pass the message, log it. The annual Simulated Emergency Test and state exercises give members practice before the day it counts.</p>
+      </div>
+      <figure class="s-frame frame" data-frame>
+        <div class="frame-media grain" style="--ar:4/3;--pos:100% 50%">
+          <img class="bw" src="../../assets/8091bb_cfac747e80b142cf8c06b2286c1c6e0b.jpg" alt="Close view of the mast team: one volunteer steadies the mast while another, in a vest reading Spokane County Amateur Radio Emergency Communications, braces the base." width="659" height="372" loading="lazy">
+          <button class="frame-toggle" type="button" aria-pressed="false" aria-controls="hs-s1">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2" fill="#C8102E" stroke="none"/><path d="M12 1v5M12 18v5M1 12h5M18 12h5"/></svg>
+            <span class="t-on">Find yourself in the frame</span><span class="t-off">Hide roles</span>
+          </button>
+          <div class="hotspots" id="hs-s1" hidden>
+            <a class="hs" data-hs="s1-1" data-side="left" href="#role-field" style="--x:31%;--y:34%;--i:0"><span class="hs-dot" aria-hidden="true">1</span><span class="hs-tag"><span class="hs-obj">Antenna mast</span><span class="hs-role">Field station operator</span><span class="hs-train">ARRL Basic EmComm course</span></span></a>
+            <a class="hs" data-hs="s1-2" data-side="right" href="#role-field" style="--x:48%;--y:62%;--i:1"><span class="hs-dot" aria-hidden="true">2</span><span class="hs-tag"><span class="hs-obj">The field team</span><span class="hs-role">Field station operator</span><span class="hs-train">One field operation a year</span></span></a>
+          </div>
+        </div>
+        <figcaption class="figcap"><p class="caption">Raising an antenna mast in freezing fog during a field exercise. Detail from the opening photograph.</p></figcaption>
+      </figure>
+      <div class="s-list">
+        <p class="inframe-title">In this frame</p>
+        <ol class="inframe">
+          <li data-hs="s1-1"><a href="#role-field"><span class="k" aria-hidden="true">1</span><span class="obj">Antenna mast</span><span class="ifr-role">Field station operator</span><span class="train">Training: ARRL Basic EmComm, and a radio deployment kit that runs 24 to 72 hours.</span></a></li>
+          <li data-hs="s1-2"><a href="#role-field"><span class="k" aria-hidden="true">2</span><span class="obj">The field team</span><span class="ifr-role">Field station operator</span><span class="train">Training: one field operation a year, an activation, exercise or public service event.</span></a></li>
+        </ol>
+        <p class="this-role">This role: <a href="#role-field">Field station operator</a></p>
+      </div>
+      <div class="s-extra">
+        <div class="cal-strip">
+          <h4>On the calendar this fall</h4>
+          <ul>
+            <li><time datetime="2026-09-26">Sept 26–27</time><span>ARES-ACS and WSDOT exercise</span></li>
+            <li><time datetime="2026-10-03">Oct 3</time><span>Simulated Emergency Test (SET)</span></li>
+            <li><time datetime="2026-10-15">Oct 15</time><span>Great ShakeOut “Did You Feel It” message</span></li>
+            <li><time datetime="2026-10-24">Oct 24</time><span>State COMMEX</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- Scene 2: Public service -->
+  <article class="scene scene--flip has-extra" id="scene-events" aria-labelledby="s2-title">
+    <div class="wrap scene-grid">
+      <div class="s-head">
+        <p class="scene-count"><b>2 of 5</b>Public service</p>
+        <h3 id="s2-title">Race days and parade nights.</h3>
+        <p class="scene-body">Members provide primary or backup communications for <strong>Bloomsday</strong>, the <strong>Lilac Torchlight Parade</strong>, fun runs and bicycle races. ARES members can serve at community events without an emergency being declared, which makes this a natural first assignment.</p>
+      </div>
+      <figure class="s-frame frame" data-frame>
+        <div class="frame-media grain" style="--ar:659/316;--pos:50% 0%">
+          <img class="bw" src="../../assets/8091bb_6c9b42987e484f27a66a6a7748a7db9c.jpg" alt="An operator in headphones speaks into a hand microphone at a desk. A parade route map listing ARES operators and tactical IDs is pinned beside him." width="659" height="372" loading="lazy">
+          <button class="frame-toggle" type="button" aria-pressed="false" aria-controls="hs-s2">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2" fill="#C8102E" stroke="none"/><path d="M12 1v5M12 18v5M1 12h5M18 12h5"/></svg>
+            <span class="t-on">Find yourself in the frame</span><span class="t-off">Hide roles</span>
+          </button>
+          <div class="hotspots" id="hs-s2" hidden>
+            <a class="hs" data-hs="s2-1" data-side="right" href="#role-events" style="--x:15%;--y:84%;--i:0"><span class="hs-dot" aria-hidden="true">1</span><span class="hs-tag"><span class="hs-obj">Route map with tactical IDs</span><span class="hs-role">Event communications</span><span class="hs-train">Technician license and ARES registration</span></span></a>
+            <a class="hs" data-hs="s2-2" data-side="left" href="#role-netcontrol" style="--x:90%;--y:40%;--i:1"><span class="hs-dot" aria-hidden="true">2</span><span class="hs-tag"><span class="hs-obj">Headset and hand mic</span><span class="hs-role">Net control station</span><span class="hs-train">Coached by the Net Manager</span></span></a>
+          </div>
+        </div>
+        <figcaption class="figcap"><p class="caption">Working the net-control desk during a parade, with the route map and tactical call signs pinned within reach.</p></figcaption>
+      </figure>
+      <div class="s-list">
+        <p class="inframe-title">In this frame</p>
+        <ol class="inframe">
+          <li data-hs="s2-1"><a href="#role-events"><span class="k" aria-hidden="true">1</span><span class="obj">Route map with tactical IDs</span><span class="ifr-role">Event communications</span><span class="train">Training: a Technician license and ARES registration.</span></a></li>
+          <li data-hs="s2-2"><a href="#role-netcontrol"><span class="k" aria-hidden="true">2</span><span class="obj">Headset and hand mic</span><span class="ifr-role">Net control station</span><span class="train">Training: check in on Tuesdays first; the Net Manager coaches new net controls.</span></a></li>
+        </ol>
+        <p class="this-role">This role: <a href="#role-events">Event communications</a></p>
+      </div>
+      <div class="s-extra">
+        <figure class="commission" style="--ar:21/8">
+          <p class="commission-label">Photo to commission:</p>
+          <p class="commission-title">Bloomsday</p>
+          <p class="commission-note">Shot list: an operator at a course station as runners pass, radio up, shot from behind or in profile. No readable badges.</p>
+        </figure>
+      </div>
+    </div>
+  </article>
+
+  <!-- Scene 3: Comm trailer -->
+  <article class="scene scene--trio" id="scene-trailer" aria-labelledby="s3-title">
+    <div class="wrap scene-grid">
+      <div class="s-head">
+        <p class="scene-count"><b>3 of 5</b>Emergency management</p>
+        <h3 id="s3-title">Inside the trailer.</h3>
+        <p class="scene-body">When Spokane County Emergency Management activates the team, members staff the county's Radio Communications room and comm trailer. That work is for ACS members, who have passed a county background check.</p>
+        <p class="scene-body">On activation, members get a text, full nets start, and everyone checks in with net control on <strong>W7GBU, 147.300 MHz</strong>.</p>
+      </div>
+      <figure class="s-frame frame frame--compact" data-frame>
+        <div class="frame-media grain" style="--ar:4/3">
+          <img class="bw" src="../../assets/Operating-in-VAN_4.jpg" alt="Looking into the open back of a communications trailer, where operators in headsets sit at desks and one stands at the door." width="640" height="480" loading="lazy">
+          <button class="frame-toggle" type="button" aria-pressed="false" aria-controls="hs-s3">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2" fill="#C8102E" stroke="none"/><path d="M12 1v5M12 18v5M1 12h5M18 12h5"/></svg>
+            <span class="t-on">Find yourself in the frame</span><span class="t-off">Hide roles</span>
+          </button>
+          <div class="hotspots" id="hs-s3" hidden>
+            <a class="hs" data-hs="s3-1" href="#role-eoc" style="--x:52%;--y:50%;--i:0"><span class="hs-dot" aria-hidden="true">1</span><span class="hs-tag"><span class="hs-obj">Operating positions</span><span class="hs-role">Comm room and EOC operator</span><span class="hs-train">County background check</span></span></a>
+          </div>
+        </div>
+        <figcaption class="figcap"><p class="caption">Operators on headsets at the desks inside a communications trailer.</p></figcaption>
+      </figure>
+      <div class="s-list">
+        <p class="inframe-title">In this frame</p>
+        <ol class="inframe">
+          <li data-hs="s3-1"><a href="#role-eoc"><span class="k" aria-hidden="true">1</span><span class="obj">Operating positions</span><span class="ifr-role">Comm room and EOC operator</span><span class="train">Training: county background check, FEMA IS-100, 200, 700 and 800, and New Member Orientation.</span></a></li>
+        </ol>
+        <p class="this-role">This role: <a href="#role-eoc">Comm room and EOC operator</a></p>
+      </div>
+      <div class="s-extra">
+        <figure class="commission" style="--ar:4/3">
+          <p class="commission-label">Photo to commission:</p>
+          <p class="commission-title">EOC comm room</p>
+          <p class="commission-note">Shot list: operators at the county radio room during an exercise, faces toward the work. No readable screens or badges.</p>
+        </figure>
+      </div>
+    </div>
+  </article>
+
+  <!-- Scene 4: Anywhere with a battery -->
+  <article class="scene scene--wide" id="scene-battery" aria-labelledby="s4-title">
+    <div class="wrap scene-grid">
+      <div class="s-head">
+        <p class="scene-count"><b>4 of 5</b>Digital messaging</p>
+        <h3 id="s4-title">Anywhere with a battery.</h3>
+        <p class="scene-body">A radio, a laptop and a battery make a message center. Through the group's <strong><span class="nw">W7GBU-10</span> Winlink gateway</strong>, members send email-style messages over the air, and keep in practice with biweekly Winlink assignments on ICS-213 forms. Station gear should run for at least 72 hours.</p>
+      </div>
+      <figure class="s-frame frame" data-frame>
+        <div class="frame-media grain" style="--ar:4/3">
+          <img class="bw" src="../../assets/IMG_6574.jpg" alt="A portable radio station on a pickup tailgate at a mountain overlook: a rack case of radios, a laptop, binders and an antenna mast, with a forested valley behind." width="3264" height="2448" loading="lazy">
+          <button class="frame-toggle" type="button" aria-pressed="false" aria-controls="hs-s4">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2" fill="#C8102E" stroke="none"/><path d="M12 1v5M12 18v5M1 12h5M18 12h5"/></svg>
+            <span class="t-on">Find yourself in the frame</span><span class="t-off">Hide roles</span>
+          </button>
+          <div class="hotspots" id="hs-s4" hidden>
+            <a class="hs" data-hs="s4-1" data-side="right" href="#role-field" style="--x:56%;--y:14%;--i:0"><span class="hs-dot" aria-hidden="true">1</span><span class="hs-tag"><span class="hs-obj">Antenna mast on the truck</span><span class="hs-role">Field station operator</span><span class="hs-train">Deployment kit for 24 to 72 hours</span></span></a>
+            <a class="hs" data-hs="s4-2" data-side="left" href="#role-winlink" style="--x:40%;--y:62%;--i:1"><span class="hs-dot" aria-hidden="true">2</span><span class="hs-tag"><span class="hs-obj">Laptop</span><span class="hs-role">Winlink and digital</span><span class="hs-train">Biweekly ICS-213 assignments</span></span></a>
+            <a class="hs" data-hs="s4-3" data-side="right" href="#role-winlink" style="--x:60%;--y:60%;--i:2"><span class="hs-dot" aria-hidden="true">3</span><span class="hs-tag"><span class="hs-obj">Go-box with radios and a digital interface</span><span class="hs-role">Winlink and digital</span><span class="hs-train">TNC, modem and software setup</span></span></a>
+          </div>
+        </div>
+        <figcaption class="figcap"><p class="caption">A go-box station set up on a pickup tailgate at a mountain overlook.</p></figcaption>
+      </figure>
+      <div class="s-list">
+        <p class="inframe-title">In this frame</p>
+        <ol class="inframe">
+          <li data-hs="s4-1"><a href="#role-field"><span class="k" aria-hidden="true">1</span><span class="obj">Antenna mast on the truck</span><span class="ifr-role">Field station operator</span><span class="train">Training: a radio deployment kit for 24 to 72 hours.</span></a></li>
+          <li data-hs="s4-2"><a href="#role-winlink"><span class="k" aria-hidden="true">2</span><span class="obj">Laptop</span><span class="ifr-role">Winlink and digital</span><span class="train">Training: biweekly Winlink assignments on ICS-213 forms.</span></a></li>
+          <li data-hs="s4-3"><a href="#role-winlink"><span class="k" aria-hidden="true">3</span><span class="obj">Go-box with radios and a digital interface</span><span class="ifr-role">Winlink and digital</span><span class="train">Training: TNC, modem and software setup, with help from members.</span></a></li>
+        </ol>
+      </div>
+      <div class="s-extra row3">
+        <figure class="frame frame--compact" data-frame>
+          <div class="frame-media grain" style="--ar:4/3">
+            <img class="bw" src="../../assets/Don-on-the-air.jpg" alt="An operator on a folding chair works a laptop on his knee, with mobile radios on a vehicle bumper and batteries on the pavement." width="1600" height="1200" loading="lazy">
+            <button class="frame-toggle" type="button" aria-pressed="false" aria-controls="hs-s4b">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2" fill="#C8102E" stroke="none"/><path d="M12 1v5M12 18v5M1 12h5M18 12h5"/></svg>
+              <span class="t-on">Find yourself in the frame</span><span class="t-off">Hide roles</span>
+            </button>
+            <div class="hotspots" id="hs-s4b" hidden>
+              <a class="hs" data-hs="s4-4" href="#role-winlink" style="--x:54%;--y:52%;--i:0"><span class="hs-dot" aria-hidden="true">4</span><span class="hs-tag"><span class="hs-obj">Laptop on the knee</span><span class="hs-role">Winlink and digital</span></span></a>
+              <a class="hs" data-hs="s4-5" href="#role-field" style="--x:19%;--y:86%;--i:1"><span class="hs-dot" aria-hidden="true">5</span><span class="hs-tag"><span class="hs-obj">Batteries on the pavement</span><span class="hs-role">Field station operator</span></span></a>
+            </div>
+          </div>
+          <figcaption class="figcap"><p class="caption">Running a station off a vehicle bumper, batteries on the pavement.</p></figcaption>
+        </figure>
+        <div>
+        <p class="inframe-title">In this frame</p>
+        <ol class="inframe" start="4">
+          <li data-hs="s4-4"><a href="#role-winlink"><span class="k" aria-hidden="true">4</span><span class="obj">Laptop on the knee</span><span class="ifr-role">Winlink and digital</span></a></li>
+          <li data-hs="s4-5"><a href="#role-field"><span class="k" aria-hidden="true">5</span><span class="obj">Batteries on the pavement</span><span class="ifr-role">Field station operator</span><span class="train">Station gear should run at least 72 hours.</span></a></li>
+        </ol>
+        </div>
+        <div>
+          <p class="this-role" style="margin-top:0">This role: <a href="#role-winlink">Winlink and digital</a></p>
+          <p class="row3-note">Members share setup help for TNCs and modems, software, and cables and drivers in the members area, and Second Saturday workshops cover hands-on setups.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- Scene 5: Severe weather -->
+  <article class="scene scene--flip" id="scene-weather" aria-labelledby="s5-title">
+    <div class="wrap scene-grid">
+      <div class="s-head">
+        <p class="scene-count"><b>5 of 5</b>Severe weather</p>
+        <h3 id="s5-title">When the sky turns.</h3>
+        <p class="scene-body">Many members are trained SKYWARN spotters for the National Weather Service in Spokane, and the group activates nets in severe weather. Spotter training is offered in person or online, and you can take it before you are licensed.</p>
+      </div>
+      <div class="s-frame">
+        <figure class="commission commission--big">
+          <svg class="commission-icon" width="56" height="56" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#fff" stroke-width="1.5"><path d="M7 15a4 4 0 1 1 .6-7.95A5.5 5.5 0 0 1 18 9a3 3 0 0 1 0 6H7z"/><path d="M12 15l-2 4h3l-2 4"/></svg>
+          <p class="commission-label">Photo to commission:</p>
+          <p class="commission-title">SKYWARN spotter at work</p>
+          <p class="commission-note">Shot list: a spotter at a roadside pull-off watching a storm cell build, radio in hand, shot from behind. A second frame: net control logging reports during a severe-weather net.</p>
+        </figure>
+      </div>
+      <div class="s-list">
+        <p class="this-role">This role: <a href="#role-skywarn">SKYWARN spotter</a></p>
+      </div>
+    </div>
+  </article>
+</section>
+
+<!-- 8. Role catalog -->
+<section class="roles" id="roles" aria-labelledby="roles-title">
+  <div class="wrap">
+    <div class="roles-head">
+      <h2 id="roles-title">Seven places you could stand.</h2>
+      <div>
+        <p>What you'd do in each role, who it's open to, and the training it takes. The training overlaps, so one role leads easily to the next.</p>
+        <p class="legend"><span><i class="ares" aria-hidden="true"></i>ARES: any licensed ham</span><span><i class="acs" aria-hidden="true"></i>ACS: after a county background check</span><span><i class="any" aria-hidden="true"></i>Open to anyone</span></p>
+      </div>
+    </div>
+    <div class="role-cols" aria-hidden="true"><span></span><span>Role</span><span>What you'd do</span><span>Training you'll need</span><span>Seen in</span></div>
+    <div class="role-list">
+
+      <article class="role" id="role-field">
+        <div class="thumb"><img class="bw" src="../../assets/KD7GHZ.jpg" alt="" width="301" height="200" loading="lazy"></div>
+        <div class="role-name"><h3>Field station operator</h3><p class="open-to"><i class="ares" aria-hidden="true"></i>ARES and ACS members</p></div>
+        <div class="role-do"><p class="m-label">What you'd do</p><p>Set up a working station wherever you're sent: raise the antenna, power the radios, pass traffic and keep a log of every message.</p></div>
+        <div class="role-train"><p class="m-label">Training you'll need</p><ul><li>ARRL Basic EmComm course</li><li>A radio deployment kit for 24 to 72 hours</li><li>One field operation a year</li></ul></div>
+        <div class="role-seen"><a href="#scene-exercises">Scene 1: Exercises</a><a href="#scene-battery">Scene 4: Anywhere with a battery</a><a class="role-start" href="#signup" data-role="field">Start with this role</a></div>
+      </article>
+
+      <article class="role" id="role-events">
+        <div class="thumb"><img class="bw" src="../../assets/8091bb_6c9b42987e484f27a66a6a7748a7db9c.jpg" alt="" width="659" height="372" loading="lazy" style="object-position:0% 100%"></div>
+        <div class="role-name"><h3>Event communications</h3><p class="open-to"><i class="ares" aria-hidden="true"></i>Any licensed ham (ARES)</p></div>
+        <div class="role-do"><p class="m-label">What you'd do</p><p>Staff a station along the course or the parade route at Bloomsday, the Lilac Torchlight Parade, fun runs and bicycle races, passing messages by tactical call sign.</p></div>
+        <div class="role-train"><p class="m-label">Training you'll need</p><ul><li>Technician license or higher</li><li>Spokane County ARES registration</li><li>Practice on the Tuesday net</li></ul></div>
+        <div class="role-seen"><a href="#scene-events">Scene 2: Race days and parade nights</a><a class="role-start" href="#signup" data-role="events">Start with this role</a></div>
+      </article>
+
+      <article class="role" id="role-netcontrol">
+        <div class="thumb"><img class="bw" src="../../assets/8091bb_6c9b42987e484f27a66a6a7748a7db9c.jpg" alt="" width="659" height="372" loading="lazy" style="object-position:75% 0%"></div>
+        <div class="role-name"><h3>Net control station</h3><p class="open-to"><i class="ares" aria-hidden="true"></i>Members, on a rotation</p></div>
+        <div class="role-do"><p class="m-label">What you'd do</p><p>Run the Tuesday 8:00 PM net on W7GBU: call officials, members and visitors in order, and keep traffic moving. Net control rotates among members.</p></div>
+        <div class="role-train"><p class="m-label">Training you'll need</p><ul><li>Regular check-ins first</li><li>Coaching from the Net Manager</li><li>The net preamble and script</li></ul></div>
+        <div class="role-seen"><a href="#scene-events">Scene 2: Race days and parade nights</a><a class="role-start" href="#signup" data-role="netcontrol">Start with this role</a></div>
+      </article>
+
+      <article class="role" id="role-eoc">
+        <div class="thumb"><img class="bw" src="../../assets/Operating-in-VAN_4.jpg" alt="" width="640" height="480" loading="lazy"></div>
+        <div class="role-name"><h3>Comm room and EOC operator</h3><p class="open-to"><i class="acs" aria-hidden="true"></i>ACS members (county background check)</p></div>
+        <div class="role-do"><p class="m-label">What you'd do</p><p>Work the county Radio Communications room and comm trailer, and operate inside emergency operations centers, command posts and shelters when the county activates the team.</p></div>
+        <div class="role-train"><p class="m-label">Training you'll need</p><ul><li>County volunteer application and background check</li><li>FEMA IS-100, IS-200, IS-700, IS-800</li><li>New Member Orientation</li></ul></div>
+        <div class="role-seen"><a href="#scene-trailer">Scene 3: Inside the trailer</a><a class="role-start" href="#signup" data-role="eoc">Start with this role</a></div>
+      </article>
+
+      <article class="role" id="role-winlink">
+        <div class="thumb"><img class="bw" src="../../assets/IMG_6574.jpg" alt="" width="3264" height="2448" loading="lazy" style="object-position:65% 70%"></div>
+        <div class="role-name"><h3>Winlink and digital</h3><p class="open-to"><i class="ares" aria-hidden="true"></i>ARES and ACS members</p></div>
+        <div class="role-do"><p class="m-label">What you'd do</p><p>Send and receive email-style messages over radio through the group's <span class="nw">W7GBU-10</span> Winlink gateway, including ICS-213 message forms.</p></div>
+        <div class="role-train"><p class="m-label">Training you'll need</p><ul><li>Biweekly Winlink assignments</li><li>TNC, modem and software setup</li><li>Second Saturday workshops</li></ul></div>
+        <div class="role-seen"><a href="#scene-battery">Scene 4: Anywhere with a battery</a><a class="role-start" href="#signup" data-role="winlink">Start with this role</a></div>
+      </article>
+
+      <article class="role" id="role-skywarn">
+        <div class="thumb thumb--empty" aria-hidden="true">To commission</div>
+        <div class="role-name"><h3>SKYWARN spotter</h3><p class="open-to"><i class="any" aria-hidden="true"></i>Anyone, licensed or not</p></div>
+        <div class="role-do"><p class="m-label">What you'd do</p><p>Watch for and report severe weather to the National Weather Service in Spokane. When storms hit, the group activates weather nets.</p></div>
+        <div class="role-train"><p class="m-label">Training you'll need</p><ul><li>NWS spotter training, in person or online</li><li>A refresher every two years</li><li>Encouraged for members, not required</li></ul></div>
+        <div class="role-seen"><a href="#scene-weather">Scene 5: When the sky turns</a><a class="role-start" href="#signup" data-role="skywarn">Start with this role</a></div>
+      </article>
+
+      <article class="role" id="role-hospital">
+        <div class="thumb thumb--empty" aria-hidden="true">To commission</div>
+        <div class="role-name"><h3>Hospital communications</h3><p class="open-to"><i class="acs" aria-hidden="true"></i>ACS members (county background check)</p></div>
+        <div class="role-do"><p class="m-label">What you'd do</p><p>Help keep backup radio and computer equipment working at Greater Spokane area hospitals, and check in on the Hospital Net that follows the regular net.</p></div>
+        <div class="role-train"><p class="m-label">Training you'll need</p><ul><li>HIPAA training, covered at orientation</li><li>The ACS requirements above</li></ul></div>
+        <div class="role-seen"><span class="none">Not photographed yet</span><a class="role-start" href="#signup" data-role="hospital">Start with this role</a></div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- 9. Join path -->
+<section class="join" id="join" aria-labelledby="join-title">
+  <div class="wrap">
+    <div class="join-head">
+      <h2 id="join-title">From curious to on the air.</h2>
+      <p>Four steps. Start at the one that fits you. There are no membership dues, and you bring your own radio; there are no specific equipment requirements.</p>
+    </div>
+    <ol class="steps">
+      <li class="step" id="step-license">
+        <span class="step-n" aria-hidden="true">0</span>
+        <h3>Get licensed<small>If you don't have a call sign yet</small></h3>
+        <p>You need an FCC Technician license or higher. License classes run through the year, sponsored by Spokane County Emergency Management, the VHF Club and local ARES. You can listen to the Tuesday net before you're licensed.</p>
+        <div class="step-links"><a href="#">License classes and exam sessions</a><a href="https://hamstudy.org/sessions/glaarg">Online exam sessions (GLAARG)</a></div>
+      </li>
+      <li class="step" id="step-ares">
+        <span class="step-n" aria-hidden="true">1</span>
+        <h3>Join ARES<small>Open to any licensed ham</small></h3>
+        <p>Fill out the Spokane County ARES registration form and bring it to a meeting or email it in. Download the ARRL ARES Task Book to track your training. ARRL membership is not required.</p>
+        <div class="step-links"><a href="#">ARES registration form (PDF)</a><a href="http://www.arrl.org/ares">ARRL ARES Task Book</a></div>
+      </li>
+      <li class="step">
+        <span class="step-n" aria-hidden="true">2</span>
+        <h3>Get connected<small>Meet the team</small></h3>
+        <p>Join the Groups.io list, check in to the Tuesday 8:00 PM net as a visitor, and come to a Third Thursday training meeting or a Second Saturday workshop.</p>
+        <div class="step-links"><a href="https://spokaneares-acs.groups.io/">Join the Groups.io list</a><a href="#calendar">Meeting schedule</a></div>
+      </li>
+      <li class="step step--opt">
+        <span class="step-n" aria-hidden="true">3</span>
+        <h3>Qualify for ACS<small>Optional: lets the county call on you</small></h3>
+        <p>Apply as a county Volunteer Emergency Worker and pass the background check. Then attend New Member Orientation and complete FEMA IS-100, 200, 700 and 800 (free online courses).</p>
+        <div class="step-links"><a href="https://www.spokanecounty.org/FormCenter/Emergency-Management-31/Volunteer-Emergency-Worker-Application-276">County volunteer application</a><a href="#">Full ACS Task Book</a></div>
+      </li>
+    </ol>
+
+    <div class="voices">
+      <blockquote class="legacy">
+        <p>“He was a person who made a difference in Spokane by making others feel like they could make a difference themselves.”</p>
+        <footer>Written of Ira “Dean” Bula. The group's call sign, <b>W7GBU</b>, is his memorial call.</footer>
+      </blockquote>
+      <aside class="voice-slot" aria-label="Member voice: to be collected">
+        <p class="lbl">Member voice: to be collected</p>
+        <q>[Member quote — to be collected]</q>
+        <small>A current member on their first assignment, with their permission. No invented quotes.</small>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- Sign up -->
+<section class="signup on-dark" id="signup" aria-labelledby="signup-title">
+  <div class="signup-bg grain" aria-hidden="true">
+    <img class="bw" src="../../assets/8091bb_f2f27737b12847819b5e343bf18efa27.jpg" alt="" width="659" height="372" loading="lazy">
+  </div>
+  <div class="wrap signup-inner">
+    <div class="signup-copy">
+      <h2 id="signup-title">There's room in the frame.</h2>
+      <p>Start with New Member Orientation, usually held on the 4th Tuesday at 6:00 PM at Spokane County Emergency Management. It's followed by a comm room tour and the 8:00 PM net.</p>
+      <p class="fine">Licensed already? Check in as a visitor this Tuesday on W7GBU. <a href="#calendar">See the net details</a>.</p>
+      <div class="signup-cap"><p class="caption">An antenna tower silhouetted at dusk.</p></div>
+    </div>
+    <form class="form" id="join-form" novalidate>
+      <h3>Join the team</h3>
+      <p class="form-intro">Tell us where you'd like to start. A team leader will reply with the registration form and the next orientation date.</p>
+      <div class="field">
+        <label for="f-name">Your name</label>
+        <input id="f-name" name="name" type="text" autocomplete="name" required>
+      </div>
+      <div class="field">
+        <label for="f-email">Email</label>
+        <input id="f-email" name="email" type="email" autocomplete="email" required>
+      </div>
+      <fieldset class="field">
+        <legend>Do you have an amateur radio license?</legend>
+        <div class="radios">
+          <label><input type="radio" name="licensed" value="yes" checked> Yes</label>
+          <label><input type="radio" name="licensed" value="no"> Not yet</label>
+        </div>
+      </fieldset>
+      <div class="field">
+        <label for="f-role">Which role caught your eye?</label>
+        <select id="f-role" name="role">
+          <option value="unsure">Not sure yet</option>
+          <option value="field">Field station operator</option>
+          <option value="events">Event communications</option>
+          <option value="netcontrol">Net control station</option>
+          <option value="eoc">Comm room and EOC operator</option>
+          <option value="winlink">Winlink and digital</option>
+          <option value="skywarn">SKYWARN spotter</option>
+          <option value="hospital">Hospital communications</option>
+        </select>
+      </div>
+      <button class="btn btn-red" type="submit">Join the team</button>
+      <p class="form-status" role="status" aria-live="polite"></p>
+      <p class="form-alt">Prefer paper? <a href="#step-ares">Download the ARES registration form</a> and bring it to any meeting.</p>
+    </form>
+  </div>
+</section>
+
+<!-- 10. Partners -->
+<section class="partners" id="partners" aria-labelledby="partners-title">
+  <div class="wrap partners-grid">
+    <div>
+      <h2 id="partners-title">Who we serve.</h2>
+      <p class="partners-intro">An ARRL-affiliated ARES group, and the volunteer communications unit of Spokane County Emergency Management.</p>
+      <div class="marks">
+        <div class="mark"><img src="../../assets/SCDEM_Logo.png" alt="Spokane County Emergency Management seal" width="76" height="76" loading="lazy">Spokane County Emergency Management</div>
+        <div class="mark"><img src="../../assets/ARES_logo.png" alt="ARRL Amateur Radio Emergency Service emblem" width="76" height="76" loading="lazy">ARRL Amateur Radio Emergency Service</div>
+      </div>
+      <p class="marks-note">Affiliation marks shown pending permission from their owners.</p>
+    </div>
+    <dl class="credits">
+      <div class="lead"><dt>Spokane County Emergency Management</dt><dd>Primary served agency. Activates ACS members and runs the volunteer background check.</dd></div>
+      <div><dt>ARRL</dt><dd>The national association for amateur radio, which runs the ARES program.</dd></div>
+      <div><dt>National Weather Service, Spokane</dt><dd>SKYWARN spotting and severe-weather nets.</dd></div>
+      <div><dt>Greater Spokane area hospitals</dt><dd>Backup radio and computer equipment, and the Hospital Net.</dd></div>
+      <div><dt>American Red Cross</dt><dd>Service under the ARRL and Red Cross agreement, and shelter training.</dd></div>
+      <div><dt>Inland Empire VHF Radio Amateurs</dt><dd>A formal agreement covering the 146.88 MHz backup repeater and packet and Winlink nodes.</dd></div>
+      <div><dt>Washington State Emergency Management</dt><dd>State nets, including the Washington State Emergency Net, and mission numbers.</dd></div>
+    </dl>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer on-dark">
+  <div class="netbar">
+    <div class="wrap netbar-row" id="next-net">
+      <span class="live">Next net</span>
+      <span data-net-when>Tue 29 Sep, 8:00 PM</span>
+      <span data-net-where class="muted">Simplex net this week; frequency in the net script</span>
+      <span data-net-ncs>Net control: NZ2S</span>
+      <a class="members-link" href="#members">Members</a>
+    </div>
+  </div>
+  <div class="wrap footer-grid">
+    <div class="f-brandcol">
+      <div class="f-brand"><img src="../../assets/Spokane_County_ARES-ACS_logo_slightly_smaller_550x550.png" alt="" width="64" height="64" loading="lazy"><b>Spokane County ARES-ACS</b></div>
+      <div class="f-about">
+        <p>Formerly Spokane County ARES/RACES. Meetings and orientation are held at:</p>
+        <address>Spokane County Emergency Management<br>1121 W. Gardner Ave, Spokane, WA 99260</address>
+      </div>
+    </div>
+    <div class="f-col" id="calendar">
+      <h2>Calendar</h2>
+      <ul>
+        <li class="sched"><b>Weekly net</b>Tuesdays, 8:00 PM, W7GBU <span class="nw">147.300 MHz</span>, <span class="nw">+600 kHz</span>, <span class="nw">100 Hz tone</span></li>
+        <li class="sched"><b>Training meeting</b>Third Thursdays at Emergency Management <em>(time to confirm)</em></li>
+        <li class="sched"><b>Second Saturday Workshop</b>9:00 AM to noon</li>
+        <li class="sched"><b>New Member Orientation</b>Usually the 4th Tuesday, 6:00 PM</li>
+        <li><a href="https://spokaneares-acs.groups.io/g/main/calendar">Full calendar on Groups.io</a></li>
+      </ul>
+    </div>
+    <div class="f-col" id="members">
+      <h2>For members</h2>
+      <ul>
+        <li><a href="#">Member login</a></li>
+        <li><a href="#">Net scripts and roster</a></li>
+        <li><a href="#">ICS forms and ARRL Radiogram</a></li>
+        <li><a href="#">ACS Task Book</a></li>
+        <li><a href="#">Winlink assignments</a></li>
+        <li><a href="#">Alert levels and status codes</a></li>
+        <li><a href="https://spokaneares-acs.groups.io/">Groups.io</a></li>
+      </ul>
+    </div>
+    <div class="f-col">
+      <h2>About</h2>
+      <ul>
+        <li><a href="#about">Who we are</a></li>
+        <li><a href="#partners">Who we serve</a></li>
+        <li><a href="#">Leadership</a></li>
+        <li><a href="#">The W7GBU story</a></li>
+        <li><a href="#">Contact us</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap f-legal">
+    <span>Spokane County ARES-ACS. Volunteer amateur radio operators supporting Spokane County Emergency Management. <a href="#">Privacy</a> <a href="#">Terms</a></span>
+    <span class="concept-tag">Concept 07 — In the Field</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* Header: transparent over the hero, solid white after it */
+  var header=document.querySelector('.site-header');
+  var hero=document.querySelector('.hero');
+  function onScroll(){
+    var limit=(hero?hero.offsetHeight:400)-header.offsetHeight-8;
+    header.classList.toggle('is-solid',window.scrollY>limit);
+  }
+  var ticking=false;
+  window.addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(function(){onScroll();ticking=false;});}},{passive:true});
+  onScroll();
+
+  /* Mobile menu */
+  var menuBtn=document.querySelector('.menu-btn');
+  var nav=document.getElementById('site-nav');
+  menuBtn.addEventListener('click',function(){
+    var open=menuBtn.getAttribute('aria-expanded')!=='true';
+    menuBtn.setAttribute('aria-expanded',String(open));
+    nav.classList.toggle('is-open',open);
+    header.classList.toggle('menu-open',open);
+  });
+  nav.addEventListener('click',function(e){
+    if(e.target.closest('a')){menuBtn.setAttribute('aria-expanded','false');nav.classList.remove('is-open');header.classList.remove('menu-open');}
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&nav.classList.contains('is-open')){menuBtn.click();menuBtn.focus();}
+  });
+
+  /* Find yourself in the frame */
+  var frames=document.querySelectorAll('[data-frame]');
+  function setRevealed(frame,on){
+    var btn=frame.querySelector('.frame-toggle');
+    var spots=frame.querySelector('.hotspots');
+    frame.classList.toggle('is-revealed',on);
+    btn.setAttribute('aria-pressed',String(on));
+    spots.hidden=!on;
+  }
+  frames.forEach(function(frame){
+    var btn=frame.querySelector('.frame-toggle');
+    btn.addEventListener('click',function(e){
+      e.stopPropagation();
+      setRevealed(frame,btn.getAttribute('aria-pressed')!=='true');
+    });
+    frame.querySelector('.frame-media').addEventListener('click',function(e){
+      if(e.target.closest('a,button'))return;
+      setRevealed(frame,!frame.classList.contains('is-revealed'));
+    });
+  });
+  function hsFor(id){return document.querySelector('.hs[data-hs="'+id+'"]');}
+  function activate(id,on){
+    var spot=hsFor(id); if(!spot)return;
+    var frame=spot.closest('[data-frame]');
+    if(on&&!frame.classList.contains('is-revealed'))setRevealed(frame,true);
+    spot.classList.toggle('is-active',on);
+    var li=document.querySelector('.inframe li[data-hs="'+id+'"]');
+    if(li)li.classList.toggle('is-active',on);
+  }
+  document.querySelectorAll('.inframe li[data-hs]').forEach(function(li){
+    var id=li.getAttribute('data-hs');
+    li.addEventListener('mouseenter',function(){activate(id,true);});
+    li.addEventListener('mouseleave',function(){activate(id,false);});
+    li.addEventListener('focusin',function(){activate(id,true);});
+    li.addEventListener('focusout',function(){activate(id,false);});
+  });
+  document.querySelectorAll('.hs').forEach(function(spot){
+    var id=spot.getAttribute('data-hs');
+    spot.addEventListener('mouseenter',function(){activate(id,true);});
+    spot.addEventListener('mouseleave',function(){activate(id,false);});
+  });
+
+  /* Role "Start here" preselects the form */
+  var roleSelect=document.getElementById('f-role');
+  document.querySelectorAll('[data-role]').forEach(function(a){
+    a.addEventListener('click',function(){roleSelect.value=a.getAttribute('data-role');});
+  });
+
+  /* Mock submit (static hosting: wire to a PHP handler) */
+  var form=document.getElementById('join-form');
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var status=form.querySelector('.form-status');
+    var name=form.elements.name, email=form.elements.email;
+    if(!name.value.trim()){status.textContent='Add your name so we know who to reply to.';name.focus();return;}
+    if(!/^\S+@\S+\.\S+$/.test(email.value)){status.textContent='Add an email address we can reply to, like name@example.com.';email.focus();return;}
+    status.textContent='Sent. Watch your inbox for the registration form and the next orientation date. (Mockup: nothing was sent.)';
+  });
+
+  /* Next net, from the posted net-control roster */
+  var roster={'2026-09-22':'KE7RAP','2026-09-29':'NZ2S','2026-10-06':null,'2026-10-13':'AE7RJ','2026-10-20':'WA7LNC','2026-10-27':null};
+  var simplex={'2026-09-29':true};
+  function pad(n){return (n<10?'0':'')+n;}
+  var now=new Date();
+  var d=new Date(now.getFullYear(),now.getMonth(),now.getDate(),20,0,0);
+  var add=(2-d.getDay()+7)%7;
+  if(add===0&&now.getTime()>d.getTime()+60*60*1000)add=7;
+  d.setDate(d.getDate()+add);
+  var key=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var whenEl=document.querySelector('[data-net-when]');
+  var whereEl=document.querySelector('[data-net-where]');
+  var ncsEl=document.querySelector('[data-net-ncs]');
+  whenEl.textContent=(add===0?'Tonight':'Tue '+d.getDate()+' '+months[d.getMonth()])+', 8:00 PM';
+  whereEl.textContent=simplex[key]?'Simplex net this week; frequency in the net script':'W7GBU 147.300 MHz, +600 kHz, 100 Hz tone';
+  if(key in roster){ncsEl.textContent=roster[key]?'Net control: '+roster[key]:'Net control: open slot';}
+  else{ncsEl.textContent='Net control: see the roster';}
+})();
+</script>
+</body>
+</html>

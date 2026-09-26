@@ -1,0 +1,1101 @@
+	STATE OF WASHINGTONPRIVATE 
+	RADIO AMATEUR CIVIL EMERGENCY SERVICES (RACES) PLAN
+	
+
+I.	INTRODUCTION
+
+	A.	RACES is a special part of the amateur operation sponsored by the Federal Emergency Management Agency (FEMA).  RACES was primarily created to provide emergency communications for civil defense preparedness agencies and  is governed in FCC Rules and Regulations, Part 97, Subpart E, Section 97.407.   Today, as in the past, RACES is utilized during a variety of emergency/disaster situations where normal governmental communications systems have sustained damage or when additional communications are required/desired.  Situations that RACES can be used include: natural disasters, technological disasters, terrorist incidents, civil disorder, and nuclear/chemical incidents or attack. 
+
+	B.	RACES is an organization of dedicated licensed amateur radio volunteers who provide radio communications in support of state and local government agencies during times of an emergency/disaster.  RACES provides essential communications and warning links to supplement state and local government assets during these emergencies/disasters.  
+
+	C.	The Amateur Radio Emergency Services (ARES) is the ARRL's public service arm for providing and supporting emergency communications, where needed, when an emergency/disaster strikes.  For purposes within this plan, ARES organizations are identified as primarily providing support for non-government agencies during an emergency or disaster.  ARES organizations/operators, during emergencies/disasters may be used if RACES resources are depleted or do not exist.  If called upon to support government needs the ARES organization/operators will be considered as operating under RACES and will be registered as an emergency worker in accordance with RCW 38.52 and WAC 118.04.
+
+	D.	It should be noted that RACES and ARES licensed operators can hold dual registration in RACES and ARES.  Further, it is encouraged by the ARRL that licensed amateur radio operators be registered/certified as both and that cooperative efforts between RACES and ARES organizations be established and maintained.    
+
+
+
+
+
+
+
+
+1
+
+II.	PURPOSE
+
+	The purpose of this plan is to provide guidance, establish responsibility, and ensure coordinated operations between State of Washington government officials (state/local) and the RACES organizations during times when there are extraordinary threats to the safety of life and/or property.  Maximum benefits from the RACES organizations can be obtained only through careful planning which identifies the organizations, agencies, and individuals concerned and assigns a definitive role to each.  This plan enables agencies and organizations having emergency responsibilities to include the RACES organizations in local emergency plans and programs.  
+
+	This plan, though issued separately, will be considered as the Tab D to Appendix 1 (Telecommunications) to Emergency Support Function (ESF) 2 of the state Comprehensive Emergency Management Plan.  
+
+III.	SCOPE
+
+	The focus of this plan will address the responsibilities and procedures that the state Emergency Management, State RACES Officer, local emergency management offices, and local RACES Officers/organizations have for utilizing amateur radio during region or statewide emergencies/disasters in support of state government agencies and others.  Possible missions will be identified for use of local RACES organizations in support of state government agencies/others located within a local jurisdiction.  These missions should be included in local RACES operations plans.             
+
+IV.	AUTHORITY
+
+	A.	Federal Communications Commission Rules and Regulations, Part 97 subpart E, section 97.407 addresses RACES.
+
+	B.	FEMA Civil Preparedness Guide (CPG) 1-15, dated March 1991, titled: Guidance for Radio Amateur Civil Emergency Service
+
+V.	ORGANIZATION
+
+	A.	Per CPG 1-15, the state and local Emergency Management Directors (or designated representative) appoints, in writing, a reliable amateur radio operator to serve as the RACES Officer.  In cooperation with the ARES, the Washington Section Emergency Coordinator's (SEC) are appointed as Assistant State RACES Officers and the District Emergency Coordinators (DEC) are appointed as RACES Region Coordinators.
+		
+
+
+
+
+						2		                        
+	B.	The RACES Officer serves as the liaison between the RACES organization and the emergency management director, recruits members for the organization, and develops plans for the employment of the organization in support of the government agencies, which it serves.
+
+	C.	The RACES organization consists of volunteers who possess a valid FCC Amateur Radio Operator License.  Additionally, RACES participants shall be registered as emergency workers with the state or local emergency management office they primarily support.
+
+	D.	ARES organizations may serve as RACES organizations as long as the requirements identified in CPG 1-15 are met.  All amateur radio organizations and/or individual operators within the state are encouraged to participate in the RACES program within respective jurisdictions.   
+
+VI.	CONCEPT OF OPERATIONS
+
+	A.	Should the need arise, the state's Director, Emergency Management, based on this plan, may request the use of available volunteer communications equipment and personnel.  
+
+	B.	The Director, through the Telecommunications and Warning Program Manager, will contact the State RACES Officer and request that the RACES organization supporting the state Emergency Operations Center (EOC) bring up communications links between needed locations.    
+
+	C.	Once contacted, the State RACES Officer will implement this plan in coordination with the RACES Region Coordinators and local RACES Officers.  Amateur radio, through RACES organizations/operators, should be prepared to support the following tasks/missions at the state and local levels:
+	
+		1.	Back-up emergency direction and control communications between the state EOC and local government Emergency Operations Centers (EOC). 
+
+		2.	Back-up direction and control communications within local jurisdictions. 
+
+		3.	Warning communications between state and local government agencies. 
+						 
+		4.	Back-up emergency communications between a state agency
+		headquarters and its respective district/region/area headquarters.  Back-up emergency communications between district/region/area headquarters and field units where communications are limited or non-existent.
+
+							3			   
+		5.	Communications between the state EOC, local EOC, and respective designated staging areas and base camps.
+
+		6.	Back-up emergency communications between the state EOC, FEMA Regional Operations Center (ROC), and the FEMA Disaster Field Office (DFO). 
+
+		7.	Back-up emergency communications for federal agencies (i.e. US Forest Service, Department of Energy and others), as needed. 
+		
+		8.	Communications and video (if available) support, as needed, for conduct of search and rescue operations, damage assessment, or other state and local government assigned tasks.
+
+		9.	Emergency communications for shelters, emergency worker centers, sheriff and police departments, sheriff/police/fire dispatch centers, 9-1-1 centers, fire departments/districts, and other requirements designated by the local emergency management office.
+
+	D.	When activated to conduct the above tasks/missions, RACES organizations/operators will be employed in the network levels depicted in Annex A, Network Levels.  
+
+	E.	Network and frequency assignments are identified at Annex A, Appendix 3, Network Assignment and Frequencies.  Message traffic should be sent/received using the message form in Annex B, Message Form.
+
+	F.	Should additional amateur radio resources be needed for the above tasks/missions, requests for resources should be made through the State EOC per Annex C, Communications Resources and Personnel Order.
+
+	G.	This plan recognizes that amateur radio, primarily through ARES organizations/operators, will continue to support requirements for American Red Cross, hospitals, the business community, other non-government agencies, and the general public.  If needed, the State RACES Officer will coordinate with the ARES SEC’s and DEC’s for employment of ARES organizations to support possible requirements identified above.  
+				
+VII.	RESPONSIBILITIES
+
+	A.	Local Emergency Management/Services Organizations are responsible for:
+
+		1.	Ensuring a RACES Officer is appointed.
+
+		     				4				
+		
+		2.	Developing and implementing a RACES plan for the employment of amateur radio within the jurisdiction.  The local RACES plan should complement the state plan.  
+
+		3.	Maintaining, at the local EOC, a RACES radio station capable of communicating on appropriate and assigned amateur frequencies used within the state and local jurisdiction for emergency communications. 
+
+		4.	Being prepared to provide amateur radio communications to state, federal, and other organizations located within the jurisdiction.  
+		
+		5.	Preparing, submitting to state EMD, and maintaining an Amateur Radio Resource List (Annex C, Appendix 1) of amateur radio personnel who are available to support emergency communications missions away from home jurisdiction. 
+
+		6.	Being prepared to receive traffic from the general public (licensed independent stations) over local emergency nets.
+	
+	B.	State Emergency Management, State RACES Officer shall be responsible for:
+
+		1.	Maintaining and executing this plan as needed.  Identifying and coordinating the operation of amateur networks to support the operational requirements identified above. 
+
+		2.	Identifying and designating the RACES Region Coordinator and Region Net Control Station.  Ensuring designated stations are prepared to assume role as the State NCS. 
+
+		3.	Supervise the operation of the RACES radio station located in the state EOC.  Ensuring that operators are trained and exercised on the equipment.
+
+		4.	Coordinating with local RACES Officers, ARES SEC, and/or ARES DEC the use of local amateur operators and equipment in support of state government agencies, federal agencies, and others located within a local jurisdiction. ARES organizations, which are employed to support above agencies, will be considered as RACES.
+
+Annexes:
+
+A.	Network Levels
+B.	Message Form
+C.	Requests for Resources
+
+	5				  
+
+ANNEX A (NETWORK LEVELS) TO STATE RACES PLAN
+
+
+I.	PURPOSE
+
+	The purpose of this annex is to describe and provide guidance on the implementation of the state and local level networks using amateur radio.
+
+II.	NETWORK LEVELS
+
+	For purposes of network management and control, state and local network levels will be established, as needed, to ensure emergency back-up communications are planned/coordinated for and are available to support emergency/disaster operations of the state.  Three network levels at both the state and local level have been identified and are defined below.
+
+	A.	State Level	
+
+		1.	State Command 1 (CMD 1) - As depicted at Appendix 1 the CMD 1 network provides communications between the State Net Control Station (NCS), State EOC, the nine (9) Region NCS's, and County EOC's  identified at Appendix 3. 
+
+		2.	State Command 2 (CMD 2) - As depicted at Appendix 1 the CMD 2 network provides emergency back-up communications between a state agency headquarters and their respective district/region offices.
+
+		3.	State Command 3 (CMD 3) - As depicted at Appendix 1 the CMD 3 network provides emergency back-up communications between state agency district/region offices and their units/elements deployed in the field which are supporting the emergency/disaster.  CMD 3 will be the network for providing emergency communications for federal agencies, as needed and requested.       
+	B.	Local Level
+
+		1.	Local Operations 1 (OPS 1) - As depicted at Appendix 2 the OPS 1 network provides communications between the Region NCS and the county EOC's within respective regions.
+						     
+			
+
+
+
+
+
+							A.1			Change 5, Aug. 03	
+		
+		2.	Local Operations 2 (OPS 2) - As depicted at Appendix 2 the OPS 2 network provides emergency back-up communications between the county EOC, respective local jurisdictions (cities), and county agencies/districts/command posts (i.e. Sheriff, fire department/district, 9-1-1 Center, public works department, staging areas/base camps, incident command post, and other government offices).
+
+		3.	Local Operations 3 (OPS 3) - As depicted at Appendix 2 the OPS 3 network provides emergency back-up communications between county agencies/districts/command posts and city EOC's and their respective units/elements that are in the field supporting emergency/disaster operations.  
+ 
+III.	CONCEPT OF OPERATIONS
+
+	A.	Upon activation of the State EOC RACES station, the CMD 1 nets to affected region(s) will be established.  
+
+	B.	The State EOC RACES Officer will coordinate with RACES Region Coordinators and/or local RACES officers and have established, the CMD 2 and 3 nets to support state agencies with emergency communications, as needed.
+
+  	C.	Region(s) NCS's will establish OPS 1 nets with affected counties and other government agencies, as needed.
+
+	D.	County and City EOC's will establish respective OPS 2 and 3 nets, as needed.
+
+IV.	RESPONSIBILITIES
+
+	A.	State Emergency Management 
+
+		1.	State RACES Officer
+
+			a.	As directed, activate and supervise the operation of the RACES station at the state EOC and the out-stations that will serve as traffic relay stations on the CMD nets as required.  
+
+			b.	Coordinate emergency communications for a state agency headquarters and ensure CMD 2 and 3 networks are activated as needed.
+						     
+			
+
+
+							A.2			
+			c.	Coordinate requests from the regions/counties for amateur radio resources (operator/equipment) that may be needed to augment local operations.
+
+		2.	State RACES Station
+
+			a.	Monitor CMD 1 nets on primary amateur frequencies listed in Appendix 3 and guard the primary Washington Emergency Net HF frequency. 
+
+			b.	Monitor CMD 2 nets, as required.  Identify stations that serve as the NCS's for the CMD 3 nets, as needed.
+	
+			c.	Send and receive message traffic for the State EOC using standard message handling procedures. 
+
+		3.	State Net Control Station (NCS)  
+
+Serve as Net Control Station (NCS) of the CMD 1 network.    Manage and control traffic in accordance with standard net control station procedures.
+
+Direct the movement of traffic according to precedence as needed between the regions and to the state EOC.  Annex B, General Message Form defines a timeframe for processing traffic.
+	
+		c.  	Identify and designate the primary and alternate frequencies (HF, 2-meter, other) to be used on CMD 1 network.  
+
+		4.	RACES Region Coordinator 
+
+a.	As directed, activate and supervise the operation of the  station identified to serve as the Region Net Control Station (NCS) of the OPS 1 net as required.   
+
+			b.	Assist the State RACES Officer in identifying and establishing CMD 2 and 3 network stations located within the region.
+
+c.	Assist the State RACES Officer and local jurisdiction RACES Officer in identifying amateur resources within the region that may be needed to augment local operations.
+
+			d.	Assist local jurisdiction RACES Officers and organizations in the development of local RACES plans to support OPS 2 and OPS 3 nets.	
+
+							A.3			
+		5.	Region Net Control Station (NCS)
+
+			a.	Serve as Net Control Station (NCS) of the OPS 1 network.  Assist in transmitting "Priority" traffic as needed within the region and to the state.  Annex B, General Message Form defines a timeframe for processing traffic.
+
+			b.	Monitor and serve as a relay on the state CMD 1 net for County EOC's which are not able to or are having difficulties in contacting the State EOC to pass "Emergency" traffic.  "Emergency" traffic are those messages where lives are gravely impacted/endangered and a response is required immediately or within a timeframe to ensure that lives are no longer further endangered.  Annex B, General Message Form defines a timeframe for processing priority and emergency traffic.     
+	
+			c.	Identify and designate the primary and alternate frequencies (HF, 2-meter, other) to be used on respective OPS 1 network.  Upon identification of frequencies, the Region NCS will provide assignment to the State RACES Officer.
+									
+			d.	Serve as NCS of the state CMD 1 network, when designated by the State RACES Officer.
+
+			e.	Manage and control traffic in accordance with prescribed net control station procedures. 
+
+	B.	County/City Emergency Management 
+
+		1.	RACES Radio Officer
+
+			a.	As directed, activate and supervise the operation of the RACES station at the county/city EOC.  
+
+			b.	Assist respective local jurisdictions and county agencies/districts/command posts in establishing OPS 3 networks.
+
+			c.	Coordinate and submit requests for amateur radio resources that may be needed to augment local operations to the State Emergency Management Division office.
+	
+		2.	County/City EOC RACES Station
+ 
+			a.	Identify and designate the primary and alternate frequencies (HF, 2-meter, other) to be used on respective OPS 2 and 3 
+ 
+							A.4			  
+				nets.  Upon identification of frequencies, provide assignment to the Region Coordinator and State RACES Officer.
+
+
+			b.	Send and receive message traffic for the county EOC using standard message handling procedures. 
+
+V.	COORDINATING INSTRUCTIONS
+
+	A.	Network assignments and frequencies are at Appendix 3.  Use of the HF frequencies by OPS 1 through OPS 3 networks within affected areas must be coordinated by respective net control stations. 
+	
+	B.	When transmitting/receiving traffic, stations should use the message form identified at Annex B.   The form may be reproduced locally.
+						
+	C.	Requests for amateur radio resources (operators/equipment) to augment/supplement local resources should be submitted to the State Emergency Management Division, State Emergency Operations Officer (SEOO) using the form at Annex C, Communications Resources and Personnel Order.
+
+
+
+Appendices:
+
+1 - State Level Networks (CMD 1 - 3)
+2 - Local Level Networks (OPS 1 - 3)
+3 - Network Assignments and Frequencies
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+						     A.5				
+APPENDIX 1 – STATE LEVEL NETWORKS
+
+
+							
+						
+
+
+
+CMD 1					
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CMD 2
+
+
+
+
+
+
+CMD 3
+
+
+
+
+
+
+
+NOTE:  COUNTY EOC ON CMD 1 TO PASS “EMERGENCY” TRAFFIC ONLY.  MAY PASS “PRIORITY” TRAFFIC IF REGION NCS IS NOT ABLE TO RELAY.
+
+
+
+
+						A.1.1					
+APPENDIX 2 – LOCAL LEVEL NETWORKS
+
+
+
+
+																																																
+
+
+OPS 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OPS 2
+
+
+
+
+
+
+
+OPS 3
+
+
+
+
+
+
+
+
+
+
+
+
+A.2.1	      			         
+
+APPENDIX 3 - NETWORK ASSIGNMENT & FREQUENCIES 
+
+
+I.	STATE LEVEL
+
+	A.	Command 1 (CMD 1).   The CMD 1 network will be comprised of the following stations:
+
+		State EOC	
+		State NCS
+		RACES Region 1 (NCS)		
+		RACES Region 2 (NCS)
+		RACES Region 3 (NCS)
+		RACES Region 4 (NCS) 
+		RACES Region 5 (NCS)
+		RACES Region 6 (NCS)
+		RACES Region 7 (NCS)
+		RACES Region 8 (NCS)
+		RACES Region 9 (NCS) 
+		County EOC's 
+
+		Primary Frequency:			3.985 MHz
+		HF Packet:				3.624 MHz
+	
+	B.	Command 2 and 3 (CMD 2/CMD 3).  CMD 2 and 3 networks will be comprised of stations identified to provide support to the following:
+
+		State Agency Headquarters (NCS for CMD 2) 
+		State Agency District/Region Office (NCS for CMD 3)
+		State Agency District/Region field units/command posts
+
+		HF frequency to use on CMD 2 and 3 networks will be assigned from the list of frequencies in Paragraph III.   The State EOC NCS and appropriate Region NCS will serve as NCS of CMD 2 and 3 networks, if needed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+						     A.3.1			Change 5, Aug. 03
+
+II.	LOCAL LEVEL
+
+	A.	Operations 1 (OPS 1).  OPS 1 networks will be comprised of the following stations within the region.  The RACES regions coincide with the Region Homeland Security Coordination Districts.
+
+		1.	RACES Region 1
+
+			Island County EOC			
+			San Juan County EOC 
+			Skagit County EOC
+			Snohomish County EOC
+				ESCA EOC 
+			Whatcom County EOC
+			 
+			
+		2.	RACES Region 2
+
+			Clallam County EOC
+			Jefferson County EOC
+			Kitsap County EOC
+
+		3.	RACES Region 3
+ 
+			Grays Harbor County EOC
+			Mason County EOC
+			Lewis County EOC
+			Pacific County EOC
+			Thurston County EOC
+		
+		4.	RACES Region 4
+
+			Clark County EOC
+			Cowlitz County EOC
+			Skamania County EOC
+			Wahkiakum County EOC
+					
+		5.	RACES Region 5
+
+			Pierce County EOC
+			
+		6.	RACES Region 6
+
+			King County EOC
+
+
+
+						     A.3.2			  Change 5, Aug. 03
+		
+		7.	RACES  Region 7
+
+			Chelan County EOC
+			Douglas County EOC
+			Grant County EOC
+			Kittitas County EOC
+			Okanogan County EOC
+					
+		8.	RACES Region 8
+
+			Benton County EOC 
+			Franklin County EOC
+			Klickitat County EOC
+			Walla Walla County EOC
+			Yakima County EOC
+			
+		9.	RACES Region 9
+
+			Adams County EOC
+			Asotin County EOC
+			Columbia County EOC
+			Ferry County EOC
+			Garfield County EOC
+			Lincoln County EOC
+			Pend Oreille County EOC
+			Spokane County EOC
+			Stevens County EOC
+			Whitman County EOC
+
+		10.	Where needed, other government agencies will receive support from the region they are located in.
+
+	B.	Operations 2 & 3 (OPS 2/OPS 3).  OPS  2 and 3 networks will be comprised of the following stations within respective counties and cities:
+
+		OPS  2:	County EOC 
+				City EOC
+				County Department/Districts/Command Posts
+	
+		OPS 3:	City EOC and/or County Department/District/Command Post	
+				Deployed field units/elements 
+
+
+
+
+
+						A.3.3				 Change 5, Aug. 03
+
+III.	FREQUENCY ASSIGNMENT
+
+	The State, Region, and/or County Net Control Stations may operate the networks previously discussed using any frequency within the amateur spectrum taking into consideration the capabilities of the stations within respective nets.  The State EOC RACES station will operate on frequencies assigned in subparagraph A and use other frequencies as needed.
+		   
+	A.	State EOC - CMD 1 net  
+
+		HF
+
+		3.985 MHz	Primary Washington Emergency Net  frequency
+			(Use for initial check-in and for EMERGENCY traffic to State 
+			EOC)
+	3.994 MHz	Secondary with other frequencies, as needed (Use for PRIORITY/
+			ROUTINE traffic to State EOC)
+		7.245 MHz	Alternate Washington Emergency Net frequency
+		5.373 MHz	Alternate Washington Emergency Net Frequency		
+		3.624 MHz	HF Packet (Pactor)
+
+		Other HF
+
+		5.332 MHz	Regional Coordination between sections/states
+		5.348 MHz	Montana/Oregon
+		5.368 MHz	Idaho
+		5.405 MHz	National/International	
+		
+		2-meter
+
+		145.37 MHz	Primary 2-meter frequency  (PL: 136.5)
+		145.47 MHz	Olympia repeater
+		146.80 MHz	Olympia repeater
+		147.06 MHz	Baw Faw Mountain 
+		
+		2-meter PACKET
+
+		145.01 MHz	Sea Node 
+
+		2-meter APRS
+
+		144.390 MHz
+
+
+
+A.3.4				Change 5, Aug. 03
+220/440 MHz
+The state RACES station has 220 and 440 MHz capability and will come up on local repeaters or simplex frequencies as appropriate.
+	
+	B.	Per FCC Part 97, Subpart E, section 97.407, use of frequency bands and segments and emissions authorized for the amateur service are available on a shared basis to stations in RACES.  In the event of a national crisis and the invocation of the President's War Powers, the frequencies listed below are designated for RACES, and only those stations participating in RACES are authorized to use them.  Use of these and other amateur service frequencies should be coordinated with the State and/or County RACES Officers.  These may be assigned and used on State and Local Level RACES nets. 
+
+		1.	1800-1825 kHz	14.047-14.053 MHz		28.55-28.75 MHz				1975-2000 kHz	14.22-14.23 MHz		29.237-29.273 MHz	
+			3.50-3.55 MHz	14.331-14.350 MHz		29.45-29.65 MHz				3.93-3.98 MHz	21.047-21.053 MHz		50.35-50.75 MHz
+			3.984-4.000 MHz	21.228-21.267 MHz		52-54 MHz
+			7.079-7.125 MHz	144.50-145.71 MHz		
+			7.245-7.255 MHz	146-148 MHz
+			10.10-10.15 MHz	2390-2450 MHz segments
+
+		2.	1.25 meter band
+			70 cm band
+			23 cm band
+
+		3.	Channels at 3.997 MHz (USB) and 53.30 MHz (FM) may be used in emergency areas when required to make initial contact with a military unit and for communications with military stations on matters requiring coordination.	
+		
+	C.	Use of frequencies should be coordinated with the County RACES Officer in which assigned or operating in.  
+
+
+
+
+	
+
+
+
+
+
+
+						     A.3.5			 
+ANNEX B (MESSAGE FORM) TO STATE RACES PLAN
+
+I.	PURPOSE
+
+	The purpose of this annex is to identify and establish guidance for use of the message form when transmitting and receiving message traffic between stations.
+
+II.	USE OF THE ARRL RADIOGRAM
+
+	A.	The ARRL Radiogram will be used by stations on State Command 1 to 3 networks (CMD 1/CMD 2/CMD 3) and the Local Operations 1 to 3 networks (OPS 1/OPS 2/OPS 3) for passing of voice message traffic.  If capability exists, the message form should be used via PACKET as well.  
+
+	B.	To ensure messages are handled in an efficient manner, three levels of precedence have been established.  The general criteria for choosing the appropriate precedence is explained in the instructions for the form.  Message drafters are responsible for choosing the appropriate precedence.  The precedence levels are:
+
+		EMERGENCY (E):	Message concerns a situation where lives are endangered or gravely impacted and immediate action/response is required.  Action/response should occur within 30 minutes to one (1) hour "after receipt" of message.  Emergency messages will be transmitted ahead of any priority or routine messages.
+
+		PRIORITY (P):	Message concerns a situation where a timely operational response is required that would ensure that lives are not further endangered.  Action/response should occur within four (4) to six (6) hours "after receipt" of message.  Priority messages will be transmitted ahead of any routine messages.
+
+	 	ROUTINE (R):	Message(s) that reflect routine data reference operational, logistical, and administrative concerns.  Action/response should occur within twelve (12) to (18) hours.
+						     
+An EMERGENCY precedence message must first be approved and initialed by responsible authority (i.e. EOC Supervisor, elected official or designated representative) prior to transmission.  PRIORITY and EMERGENCY messages should not exceed the maximum of 10 lines, 5 words per line, of uppercase 10-point typed letters or handwritten uppercase block lettering.
+
+
+
+	B.1				
+
+ANNEX C (REQUESTS FOR AMATEUR RESOURCES) TO STATE RACES PLAN
+
+I.	PURPOSE
+
+	The purpose of this annex is to establish the procedures for requesting additional amateur radio operator/equipment support.  
+
+II.	PROCEDURES FOR SUBMITTING REQUESTS
+
+	A.	Requesting Official/Agency. 
+
+		1.	The requesting official/agency is the local Emergency Management Director.  Prior to submitting requests, the following criteria must be met:
+
+			a.	All licensed/trained amateur radio operators and equipment resources within the county/city have been or will be exhausted.
+
+			b.	Any mutual agreements with neighboring jurisdictions or support from within the region have or will be exhausted/depleted.
+
+			c.	Ensure that a mission number has been assigned to the event that support is being requested for.
+
+		2.	Prepare the Communications Resources and Personnel Order form identified in this annex.   Instructions for filling out the form are provided on the back of the form.  The form can be reproduced locally.
+
+		3.	Submit request to the State Emergency Management Division, State Emergency Operations Officer (SEOO).
+
+		4.	Be prepared to accept personnel/equipment requested upon approval of request.  Lodging and meals must be provided by requesting jurisdiction.
+
+	B.	State Emergency Management Division (EMD)
+
+		1.	Upon receipt of request, the State EMD Telecommunications Office and RACES Radio Officer will review the requirements and contact region coordinator(s) to determine availability of resources being requested.	
+
+		2.	Region Coordinator(s), in coordination with local RACES/ARES officers will identify possible resources to support the request.
+
+
+						C.1				   
+		3.	Upon identification of resources, a RACES resource number will be assigned which will be used to track the resource while used.  A resource number will be assigned to each individual and/or piece of equipment being used. 
+
+		4.	The requesting official/agency and supporting Region Coordinator will be notified of approval and information will be provided concerning the request.
+
+	C.	Providing Organization 
+
+		1.	The organization being requested to provide the resources will identify and determine availability of resources.  Resources should be identified using the form at Appendix 1of this Annex.
+
+		2.	If resources are available, the providing organization must ensure that operators are licensed to meet the need, personnel are registered as emergency workers, and equipment is fully operational.
+
+		3.	Provide the names of any personnel being used to the State RACES Radio Officer.  
+
+		4.	Provide an estimated time that personnel/equipment will arrive on site.  Ensure that personnel are told to report to the EOC or staging area of the requesting jurisdiction.
+
+
+
+Appendix 1 – Amateur Radio Resource List
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+						C.2				  
+	
+
+COMMUNICATIONS RESOURCES AND PERSONNEL ORDER
+
+A.	INFORMATION FROM REQUESTING AGENCY:
+
+1.	DATE/TIME __________________________________/__________
+
+2.	EMD MISSION NO. ____________________________
+
+3.	AGENCY, AGENCY CONTACT, and TELEPHONE NO. 	
+	________________________________________________________________
+	
+	________________________________________________________________
+
+4.	WHAT (Type of personnel and/or equipment) IS REQUIRED? 
+	________________________________________________________________
+
+	________________________________________________________________
+
+	________________________________________________________________
+
+5.	WHEN? _________________________UNTIL: __________________________
+
+6.	WHERE? ________________________________________________________________
+
+	________________________________________________________________
+
+7.	REPORT TO:_____________________________________________________
+			                                 (Name/Title)
+8.	TASK/MISSION: ________________________________________________________________
+
+FREQUENCIES: __________________________________________________
+
+TAC CALLSIGNS:_________________________________________________
+
+B.	INFORMATION FROM AGENCY PROVIDING RESOURCE
+
+	WHO SENT (Name/Callsign)                                        Agency Registered With
+	________________________________________________________________
+	________________________________________________________________
+	________________________________________________________________
+	________________________________________________________________
+	________________________________________________________________
+
+C.	ORDER PREPARED BY: ____________________________________ 
+	
+	Title:_______________________ Signature: ____________________________
+
+
+RACES 11/94
+	INSTRUCTIONS FOR COMPLETING THIS FORM
+
+A.	INFORMATION FROM REQUESTING AGENCY
+
+1.	DATE/TIME:		08/23/94      0800 (24-hour time)
+
+2.	EMD MISSION NO.: 	Indicate the Mission Number assigned by the State Emergency Operations Officer (SEOO) or the Emergency Operations Center.  A mission number must be assigned when considering the use of volunteers such as amateur radio operators.
+
+3.	AGENCY, AGENCY CONTACT, AND PHONE NUMBER:	County, John Doe, (206) xxx-xxxx
+
+4.	WHAT (type of personnel/equipment) IS REQUIRED:
+
+		Identify equipment needed, number of personnel needed, license required, etc.
+
+5.	WHEN:         Provide date needed.      UNTIL:	Indicate date when requirement no longer needed.
+
+6.	WHERE:		Indicate where resource is to go to and report.
+
+7.	REPORT TO:	Provide name of individual to report to upon arrival. Should be local EOC or staging area.
+
+8.	TASK/MISSION:	Define what the operators and/or equipment will be used for or what they will be doing to support operation.
+
+	FREQUENCIES:	Indicate frequencies that will be used in support of the mission.
+
+	TAC CALLSIGNS:	Indicate any "tactical" callsigns that will be used.
+
+B.	INFORMATION FROM AGENCY PROVIDING RESOURCE
+
+	WHO SENT?	List of personnel being provided.  Personnel identified must be registered with the state or local emergency management office as an Emergency Worker - Communications.  
+
+C.	ORDER PREPARED BY:	Name of individual who prepared this order and signature.  
+
+
+
+
+
+
+
+APPENDIX 1 – AMATEUR RADIO RESOURCE LIST
+
+
+The following form (TAB A) should be prepared, maintained, and a copy submitted to the state Emergency Management Division identifying those personnel who volunteer and can be available to support emergency communications away from the home jurisdiction.  
+
+When identifying personnel for this list, the following should be considered.
+
+Are the personnel registered as Emergency Workers?
+Are personnel willing to be deployed out of their “home” jurisdiction?
+Are personnel capable to be self-sustaining for up to 72 hours when deployed out of their “home” jurisdiction?
+Are personnel trained to set-up and operate equipment and handle message traffic effectively and efficiently under varying conditions/environments?
+
+The information provided will be an invaluable tool for ensuring your resources are appropriately accounted for, particularly when personnel are deployed and possibly placed in harm’s way.
+
+Tab A – Amateur Radio Resources List
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TAB A - AMATEUR RADIO RESOURCE LIST
+
+
+
+JURISDICTION: _______________________ 
+
+POINT OF CONTACT: __________________________ PHONE NO. _____________
+										        (24-hr Number)
+
+
+NAME
+CALLSIGN
+LICENSE
+TYPE EQUIP.
+MOBILE/PORT.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CERTIFICATION:  Individuals listed have met the requirements to be registered as Emergency Workers within this jurisdiction.  
+
+EM Director and/or POC Initials: ____________ 		Date: _____________
+
+
+
+
+INSTRUCTIONS FOR COMPLETING INFORMATION
+
+
+JURISDICTION:		County or City
+
+POINT OF CONTACT:	Provide the name of the person who will be the primary contact for coordinating use of personnel and/or equipment.
+
+PHONE NO.:	Provide a 24-hour contact number of the POC.
+
+NAME:	Provide name of individual (last name, first name, middle initial)
+
+CALLSIGN:			Provide amateur radio callsign of individual.
+
+LICENSE:	Indicate highest level of amateur radio license obtained.  Levels (lowest to highest) are Technician, General, Advanced, and Extra.
+
+TYPE EQUIP.:	Using letter designator below, indicate type of equipment(s) individual can operate and/or has available for use.   
+
+A - 2-meter voice 
+2-meter packet
+C - APRS
+D - 6-meter voice
+E - 40-meter voice and/or pactor
+F - 80-meter voice and/or pactor
+G - 220 and/or 440 MHz voice
+
+MOBILE/PORT.:	Using letter designator above, indicate which equipment is available for use in mobile and/or portable configurations.  
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+ 
+
+
+
+
+
+STATE EOC
+
+FIELD UNITS
+
+
+DISTRICT/
+REGION
+
+STATE AGENCY HQ
+(NCS)
+
+REGION
+NCS
+
+
+STATE 
+NCS
+
+
+COUNTY EOC
+(NOTE)
+
+FIELD UNITS
+
+
+FIELD UNITS
+
+
+COUNTY
+AGENCY
+
+CITY
+EOC
+
+COUNTY
+EOC
+
+OTHER
+
+
+COUNTY
+EOC
+
+REGION 
+(NCS)
+
+
+
+
+
+

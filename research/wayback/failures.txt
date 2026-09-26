@@ -1,0 +1,4 @@
+FAIL 000 https://www.spokares.org/bin/
+FAIL 404 https://spokares.org/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/365-ares-net
+FAIL 404 https://spokares.org/index.php/calendars/calendar-jcalpro/day?date=2019-05-13
+FAIL 000 https://www.spokares.org/index.php/calendars/calendar-jcalpro?date=2019-09-17

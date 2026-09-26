@@ -1,0 +1,18 @@
+file	original_sha256	original_bytes	redactions	date	note
+research/sources/government/ag7qp_acs.html	cd1fd601eb18e4ec5fdd81bb154fcef9c4ef476eaab1f1a69b851abb3543d41e	146952	10	2026-09-25	
+research/sources/government/ag7qp_ares-acs.html	322914a1ba62d1684e5b4a5b3e4ac558ab8d1d3395c05602d1b113957df454e7	157346	8	2026-09-25	
+research/sources/government/ag7qp_cert.html	4a80db0ec53da6576010e4bf797361c18f5628d0344b7383d8773e008c23bc03	122799	12	2026-09-25	
+research/sources/government/ag7qp_disaster-resources.html	a5e1867e0d238a945ac98f52d77c914b5ba25416d34282c374744342f2d091fa	107274	10	2026-09-25	
+research/sources/government/ag7qp_eastern-washington-section.html	fdbcbef67454a129eb03d4c68985af3b570cf5f43a5af921567d95dcfb07b7d0	93468	12	2026-09-25	
+research/sources/government/ag7qp_emcomm-groups.html	0f8d8df739773910e0ce39f0d00fd7998467f3b9058f4afb1af1da317818942d	115287	110	2026-09-25	
+research/sources/government/ag7qp_home.html	4bcde9196f93d25023fe87e7a764af9208da9fed9aeb132a29d0d0d7f2836fd5	202169	26	2026-09-25	
+research/sources/government/ag7qp_nets-in-the-inland-northwest.html	fc04328be77ab191418b75ae01723ea0a95849cc9b7a5d1eabbfc79c39c9e7cc	126517	8	2026-09-25	
+research/sources/government/ag7qp_new-members-orientation.html	e8ae99f2f38f7fdc7e6aa40bf5e9fa6a7c2c44ddb7c3a97878f81e5a7b1c5ed7	126700	6	2026-09-25	
+research/sources/government/ag7qp_spokane-county-ares-acs.html	5141dc78919f856d17ff4be4ef68e0ea852f86cf77b32ccdfb66998954e213b5	94171	8	2026-09-25	
+research/external/ag7qp.com.html	4bcde9196f93d25023fe87e7a764af9208da9fed9aeb132a29d0d0d7f2836fd5	202169	26	2026-09-25	
+research/external/ag7qp.com_spokane-county-ares-acs.html	5141dc78919f856d17ff4be4ef68e0ea852f86cf77b32ccdfb66998954e213b5	94171	8	2026-09-25	
+research/sources/government/spokane-COAD-minutes-2016-06-07.txt	e420b671be411fb0ef19a7aa3a26d612786d87f7c4012947e910f7be338979ba	29024	16	2026-09-25	
+research/sources/government/spokane-COAD-minutes-2017-09-05.txt	644c76034c827634f840ffbddc574f0b0b5039e20a1cc35b3038645af2f4613b	31875	4	2026-09-25	
+research/sources/government/spokane-COAD-minutes-2023-09-05.txt	4c961f8a11dae464a473c98fd46b5ad41ddb98d6349ee62962b5d6b3bea42d79	6964	1	2026-09-25	
+research/sources/government/spokane-county-CEMP-2021-03.txt	0ab325bfd926e7c154632d20369afd754249d1335c713e910e0ea41fbef3d613	428607	7	2026-09-25	
+research/sources/government/wa-emd-logistics-comms-annex-2021.txt	c96b7a11dcca937fa5cd67fc10c43bb49c63df8a558311a1544e4073a5a5dc71	9285	1	2026-09-25	institutional WA EMD Winlink address restored (3)

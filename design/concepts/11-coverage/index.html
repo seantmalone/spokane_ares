@@ -1,0 +1,1557 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spokane County ARES-ACS</title>
+<meta name="description" content="Spokane County ARES-ACS: licensed amateur radio volunteers providing backup communications for Spokane County Emergency Management, the National Weather Service, local hospitals and community events.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Overpass+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F4F6F8;
+  --white:#FFFFFF;
+  --contour:#B8B09F;
+  --contour-ink:#766F5F;
+  --river:#2E7DAF;
+  --river-ink:#1F6694;
+  --forest:#3C6E47;
+  --navy:#24348A;
+  --navy-deep:#1A2566;
+  --red:#D0202A;
+  --red-deep:#A8141D;
+  --ink:#1B2233;
+  --muted:#4E5767;
+  --line:rgba(36,52,138,.16);
+  --sans:"Overpass", "Helvetica Neue", Arial, sans-serif;
+  --mono:"Overpass Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --netbar-h:40px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{color-scheme:light;-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.55 var(--sans);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+img{max-width:100%;display:block}
+h1,h2,h3,h4{margin:0;color:var(--navy);text-wrap:balance}
+p{margin:0}
+a{color:var(--river-ink);text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{color:var(--navy)}
+:focus-visible{outline:3px solid var(--navy);outline-offset:3px;border-radius:2px}
+.mono{font-family:var(--mono);letter-spacing:-.03em}
+.wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:16px;top:-80px;z-index:100;background:var(--navy);color:#fff;padding:10px 16px;border-radius:4px;font-weight:700}
+.skip:focus{top:10px;color:#fff}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;min-height:48px;padding:14px 22px 11px;font:800 16px/1 var(--sans);text-decoration:none;border-radius:4px;border:2px solid transparent;cursor:pointer;white-space:nowrap;transition:background-color .15s,color .15s}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:var(--red-deep);color:#fff}
+.btn-line{background:transparent;border-color:var(--navy);color:var(--navy)}
+.btn-line:hover{background:var(--navy);color:#fff}
+.btn-sm{min-height:40px;padding:11px 16px 9px;font-size:15px}
+.btn .ic{width:16px;height:16px;flex:none}
+
+/* ---------- net bar ---------- */
+.netbar{background:var(--navy-deep);color:#E6E9F5;font-size:14px;line-height:1.35}
+.netbar .wrap{display:flex;align-items:center;gap:20px;min-height:var(--netbar-h);padding-top:8px;padding-bottom:7px}
+.netbar p{flex:1}
+.netbar strong{color:#fff;font-weight:700}
+.netbar .mono{color:#fff}
+.netbar a{color:#fff;font-weight:700;white-space:nowrap}
+.netbar .hide-sm{}
+@media (max-width:640px){.netbar .hide-sm{display:none}}
+.onair{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 0 3px rgba(208,32,42,.3);margin-right:9px;vertical-align:1px}
+
+/* ---------- header ---------- */
+.stage{position:relative}
+.site-header{position:absolute;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;gap:28px;padding:12px 32px;background:rgba(244,246,248,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--navy);margin-right:auto}
+.brand img{width:46px;height:46px}
+.brand span{display:flex;flex-direction:column;font:800 19px/1.05 var(--sans);letter-spacing:-.005em}
+.brand small{font:600 13px/1.2 var(--sans);color:var(--muted);letter-spacing:.01em;margin-top:3px}
+.nav ul{display:flex;gap:4px;list-style:none;margin:0;padding:0}
+.nav a{display:block;padding:10px 12px 8px;font-weight:700;font-size:16px;color:var(--ink);text-decoration:none;border-radius:4px}
+.nav a:hover{background:rgba(36,52,138,.08);color:var(--navy)}
+.menu-btn{display:none;background:none;border:2px solid var(--navy);color:var(--navy);font:800 15px/1 var(--sans);padding:10px 14px 8px;border-radius:4px;cursor:pointer}
+
+/* ---------- hero map ---------- */
+.hero{position:relative;height:min(calc(100svh - var(--netbar-h)),980px);min-height:700px;overflow:hidden;background:var(--paper)}
+.map{position:absolute;inset:0;overflow:hidden;background:var(--paper);touch-action:pan-y}
+.map svg.geo{position:absolute;inset:0;width:100%;height:100%;display:block}
+.map.dragging{cursor:grabbing}
+.ov{position:absolute;inset:0;pointer-events:none}
+.ov svg.leaders{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.leaders line{stroke:var(--navy);stroke-width:1.25;stroke-dasharray:3 3}
+.leaders circle{fill:var(--red);stroke:#fff;stroke-width:1.5}
+
+.geo .ct{fill:none;stroke:var(--contour);stroke-width:.7;opacity:.85}
+.geo .cti{fill:none;stroke:#A2998604;stroke:#A39A86;stroke-width:1.1;opacity:.9}
+.geo .urban{fill:#E4E3DE;opacity:.75}
+.geo .road-c{fill:none;stroke:#fff;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.geo .road{fill:none;stroke:#B9B6AE;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.geo .road-i{stroke:#A7A399;stroke-width:2.2}
+.geo .river{fill:none;stroke:var(--river);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.geo .creek{fill:none;stroke:var(--river);stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;opacity:.9}
+.geo .lakeline{fill:none;stroke:var(--river);stroke-width:5.5;stroke-linecap:round;stroke-linejoin:round}
+.geo .lake{fill:#8DB9D6;stroke:var(--river);stroke-width:1}
+.geo .veil{fill:var(--paper);opacity:.58}
+.geo .state{fill:none;stroke:var(--navy);stroke-width:1.4;stroke-dasharray:10 4 2 4;opacity:.55}
+.geo .county{fill:none;stroke:var(--navy);stroke-width:2.2;stroke-linejoin:round}
+.geo .county-halo{fill:none;stroke:#fff;stroke-width:6;opacity:.8;stroke-linejoin:round}
+.geo .cov{stroke:var(--river);stroke-width:1.6;stroke-dasharray:7 5}
+.geo .hosp{stroke:var(--navy);stroke-width:1.4;stroke-dasharray:4 3}
+.geo .route{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.geo .route-c{stroke:#fff;stroke-width:7}
+.geo .route-b{stroke:var(--navy);stroke-width:3.4}
+.geo .route-t{stroke:var(--red);stroke-width:3;stroke-dasharray:6 4}
+.geo .youline{fill:none;stroke:var(--navy);stroke-width:2.2;stroke-dasharray:2 6;stroke-linecap:round}
+.geo [data-layer].off{display:none}
+.geo .draw{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:draw 1.6s cubic-bezier(.6,.05,.3,1) .15s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+/* map labels */
+.lbl{position:absolute;left:0;top:0;display:flex;align-items:center;gap:5px;white-space:nowrap;pointer-events:none;font:600 12px/1 var(--sans);color:var(--ink);
+  text-shadow:0 0 2px var(--paper),0 0 2px var(--paper),0 0 3px var(--paper),0 0 5px var(--paper);translate:-3px -50%}
+.lbl.a-r{flex-direction:row-reverse;translate:calc(-100% + 3px) -50%}
+.lbl.a-c{translate:-50% -50%}
+.lbl .dot{width:6px;height:6px;border-radius:50%;background:var(--navy);box-shadow:0 0 0 1.5px #fff;flex:none}
+.lbl.t1{font-size:16px;font-weight:800;color:var(--navy)}
+.lbl.t1 .dot{width:8px;height:8px}
+.lbl.t2{font-size:13px;font-weight:700;color:var(--ink)}
+.lbl.t3{font-size:12px;font-weight:600;color:#3E4656}
+.lbl.t3 .dot{width:5px;height:5px;background:#3E4656}
+.lbl.cty{font-size:12px;font-weight:600;letter-spacing:.16em;color:#6E6757}
+.lbl.water{font-style:italic;font-weight:600;color:var(--river-ink);font-size:12.5px;letter-spacing:.02em}
+.lbl.peak .tri{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:8px solid var(--forest)}
+.lbl.peak{color:var(--forest);font-weight:700}
+.lbl.dist{font:600 13px/1 var(--mono);color:var(--navy);background:#fff;padding:5px 7px 4px;border-radius:3px;box-shadow:0 0 0 1px var(--line);text-shadow:none}
+.lbl.hide{display:none}
+.narrow .lbl.t3,.narrow .lbl.cty,.narrow .lbl.minor{display:none}
+.narrow .pin:not(.major):not(.you):not(.active) .pin-tag{display:none}
+.narrow .pin.left{flex-direction:row;translate:-16px -40px}
+.narrow .pin:focus-visible .pin-tag{display:block}
+
+/* pins */
+.pin{position:absolute;left:0;top:0;display:flex;align-items:flex-start;gap:3px;padding:0;margin:0;border:0;background:none;cursor:pointer;pointer-events:auto;translate:-16px -40px;font:inherit;color:inherit;text-align:left}
+.pin-head{flex:none;filter:drop-shadow(0 2px 2px rgba(26,37,102,.35))}
+.pin-head .body{fill:var(--red);stroke:#fff;stroke-width:2}
+.pin.you .pin-head .body{fill:var(--navy)}
+.pin.major{translate:-19px -48px}
+.pin.major .pin-head{width:38px;height:48px}
+.pin-side{display:flex;flex-direction:column;gap:6px;margin-top:7px}
+.pin.major .pin-side{margin-top:10px}
+.pin-tag{display:block;background:#fff;color:var(--navy);font:700 13px/1 var(--sans);padding:6px 8px 4px;border-radius:3px;box-shadow:0 0 0 1px rgba(36,52,138,.18),0 2px 6px rgba(26,37,102,.12);white-space:nowrap}
+.pin.left{flex-direction:row-reverse;translate:calc(-100% + 16px) -40px}
+.pin:hover .pin-tag,.pin.active .pin-tag{background:var(--navy);color:#fff}
+.pin.active .pin-head .body{stroke:var(--navy);stroke-width:2.5}
+.pin:focus-visible{outline:none}
+.pin:focus-visible .pin-tag{outline:3px solid var(--navy);outline-offset:2px}
+.pin-thumb{display:block;width:132px;border:3px solid #fff;border-radius:3px;box-shadow:0 0 0 1px rgba(36,52,138,.18),0 4px 12px rgba(26,37,102,.18);overflow:hidden}
+.pin-thumb img{width:100%;height:84px;object-fit:cover;object-position:50% 70%}
+.pin.hide{display:none}
+.pulse{position:absolute;left:0;top:0;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;border:2px solid var(--red);opacity:0;pointer-events:none}
+.pulse.go{animation:pulse 1.6s ease-out 1.5s 2}
+@keyframes pulse{0%{transform:scale(.6);opacity:.9}100%{transform:scale(4.2);opacity:0}}
+
+/* left column: card + legend */
+.hero-col{position:absolute;z-index:20;left:32px;top:92px;width:468px;display:flex;flex-direction:column;gap:12px;max-height:calc(100% - 108px)}
+.hero-card{background:rgba(255,255,255,.97);border-radius:6px;padding:28px 30px 24px;box-shadow:0 0 0 1px var(--line),0 18px 44px -18px rgba(26,37,102,.35)}
+.hero-card h1{font:900 clamp(40px,3.6vw,52px)/.98 var(--sans);letter-spacing:-.022em;color:var(--navy)}
+.hero-card h1 span{display:block}
+.lede{margin-top:14px;font-size:17.5px;line-height:1.48;color:var(--ink);max-width:40ch}
+.cta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.hero-more{margin-top:14px;font-size:15px;color:var(--muted)}
+.hero-more a{font-weight:700}
+
+.legend{background:rgba(255,255,255,.97);border-radius:6px;padding:14px 18px 12px;box-shadow:0 0 0 1px var(--line),0 12px 30px -16px rgba(26,37,102,.3);border:0;margin:0;min-width:0}
+.legend legend{float:left;width:100%;padding:0;margin:0 0 6px;font:800 15px/1.2 var(--sans);color:var(--navy);display:flex;justify-content:space-between;align-items:baseline}
+.legend legend small{font:500 12.5px/1 var(--sans);color:var(--muted)}
+.layers{list-style:none;margin:0;padding:0;clear:both;display:grid;grid-template-columns:1fr;gap:0}
+.layer{display:grid;grid-template-columns:20px 26px 1fr auto;align-items:center;gap:6px;min-height:31px;padding:2px 0;font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;border-top:1px solid rgba(36,52,138,.08)}
+.layers li:first-child .layer{border-top:0}
+.layer input{width:18px;height:18px;margin:0;accent-color:var(--navy);cursor:pointer}
+.layer .note{font:500 12.5px/1 var(--sans);color:var(--muted)}
+.layer .note.v{font-family:var(--mono);font-size:11.5px;color:var(--river-ink);background:rgba(46,125,175,.1);padding:3px 5px 2px;border-radius:3px}
+.sym{display:block;width:22px;height:22px}
+.layer.lock{grid-template-columns:20px 26px 1fr auto;width:100%;background:none;border-left:0;border-right:0;border-bottom:0;font:inherit;font-weight:600;font-size:15px;text-align:left;color:var(--ink);padding:2px 0}
+.layer.lock .lk{width:16px;height:16px;color:var(--muted)}
+.lock-msg{margin:4px 0 4px 52px;font-size:14px;color:var(--muted);line-height:1.4}
+.lock-msg a{font-weight:700}
+
+/* map controls + marginalia */
+.map-ui{position:absolute;z-index:15;right:24px;bottom:20px;display:flex;align-items:flex-end;gap:14px;pointer-events:none}
+.map-ui > *{pointer-events:auto}
+.titleblock{position:absolute;z-index:14;top:128px;right:24px;width:250px;text-align:right;font-size:12.5px;line-height:1.4;color:var(--muted);text-shadow:0 0 3px var(--paper),0 0 3px var(--paper),0 0 6px var(--paper)}
+.titleblock b{display:block;font:800 15px/1.2 var(--sans);color:var(--navy);margin-bottom:3px}
+.pin-open .titleblock{display:none}
+.margin-note{background:rgba(255,255,255,.92);border-radius:4px;padding:8px 10px 6px;box-shadow:0 0 0 1px var(--line);font-size:12.5px;line-height:1.35;color:var(--muted);max-width:270px}
+.readout{display:flex;flex-direction:column;gap:6px;background:rgba(255,255,255,.92);border-radius:4px;padding:8px 10px 7px;box-shadow:0 0 0 1px var(--line)}
+.coords{font:400 12px/1 var(--mono);color:var(--navy);white-space:nowrap}
+.scalebar{display:flex;align-items:flex-end;gap:8px;font:600 12px/1 var(--mono);color:var(--navy)}
+.scalebar i{display:block;height:6px;border:1.5px solid var(--navy);border-top:0;background:linear-gradient(90deg,var(--navy) 0 50%,#fff 50% 100%);background-size:100% 3px;background-repeat:no-repeat;background-position:bottom}
+.zoom{display:flex;flex-direction:column;background:#fff;border-radius:4px;box-shadow:0 0 0 1px var(--line),0 4px 12px -6px rgba(26,37,102,.3);overflow:hidden}
+.zoom button{width:44px;height:40px;border:0;background:#fff;color:var(--navy);font:800 20px/1 var(--sans);cursor:pointer;display:grid;place-items:center;border-top:1px solid var(--line)}
+.zoom button:first-child{border-top:0}
+.zoom button:hover{background:#EEF1F8}
+.zoom button svg{width:18px;height:18px}
+.north{width:30px;height:40px;align-self:flex-end}
+
+/* pin card */
+.pin-card{position:absolute;z-index:25;right:24px;top:92px;width:370px;max-height:calc(100% - 112px);overflow:auto;background:#fff;border-radius:6px;box-shadow:0 0 0 1px var(--line),0 22px 50px -18px rgba(26,37,102,.45);padding:22px 24px 22px}
+.pin-card[hidden]{display:none}
+.pc-close{position:absolute;right:10px;top:10px;width:40px;height:40px;border:0;background:none;border-radius:4px;cursor:pointer;color:var(--navy);display:grid;place-items:center}
+.pc-close:hover{background:#EEF1F8}
+.pc-coord{font:400 12px/1 var(--mono);color:var(--river-ink)}
+.pin-card h2{font:900 27px/1.05 var(--sans);letter-spacing:-.01em;margin-top:8px;padding-right:36px}
+.pin-card h2:focus{outline:none}
+.pc-place{margin-top:6px;font-size:15px;color:var(--muted);line-height:1.4}
+.pc-photo{margin:14px -24px 0;position:relative}
+.pc-photo img{width:100%;height:190px;object-fit:cover;object-position:50% 62%}
+.pc-photo figcaption{font-size:12.5px;color:var(--muted);padding:6px 24px 0;line-height:1.35}
+.pin-card h3{font:800 14.5px/1.2 var(--sans);color:var(--navy);margin-top:16px}
+.pin-card p.pc-body{margin-top:5px;font-size:15.5px;line-height:1.5}
+.pc-role{margin-top:14px;padding:10px 12px 9px;background:#F1F4FA;border-left:3px solid var(--red);border-radius:0 4px 4px 0}
+.pc-role h3{margin:0}
+.pc-role p{margin-top:3px;font-size:15px;line-height:1.45}
+.pc-quote{margin:14px 0 0;padding:0 0 0 14px;border-left:2px solid var(--contour);font-size:15px;font-style:italic;color:var(--ink);line-height:1.5}
+.pc-quote cite{display:block;margin-top:4px;font-style:normal;font-size:13px;color:var(--muted)}
+.pc-note{margin-top:12px;font-size:13px;color:var(--muted);line-height:1.4}
+.pc-note b{font-family:var(--mono);font-weight:600;font-size:11.5px;color:var(--river-ink);background:rgba(46,125,175,.1);padding:2px 4px 1px;border-radius:3px}
+.pc-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.pc-freq{margin-top:10px;font:600 22px/1.1 var(--mono);color:var(--navy)}
+.pc-freq small{display:block;font-size:13px;font-weight:400;color:var(--muted);margin-top:4px}
+
+/* ---------- sections ---------- */
+section{scroll-margin-top:16px}
+.sec{padding:104px 0}
+.sec-head{max-width:720px}
+.sec-head h2{font:900 clamp(32px,3.6vw,46px)/1.02 var(--sans);letter-spacing:-.018em}
+.sec-head p{margin-top:14px;font-size:19px;line-height:1.5;color:var(--muted);max-width:60ch}
+
+/* who: one team, two layers */
+.who-grid{display:grid;grid-template-columns:minmax(0,470px) minmax(0,1fr);gap:56px;align-items:center;margin-top:48px}
+.stack svg{width:100%;height:auto;display:block}
+.who-list{display:flex;flex-direction:column;gap:26px}
+.who-item{display:grid;grid-template-columns:18px 1fr;gap:14px}
+.who-item .sw{width:18px;height:18px;border-radius:3px;margin-top:6px}
+.who-item h3{font:800 22px/1.15 var(--sans)}
+.who-item h3 span{font-weight:500;color:var(--muted);font-size:17px}
+.who-item p{margin-top:6px;max-width:58ch}
+.who-quote{margin:40px 0 0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;border-top:1px solid var(--line);padding-top:28px}
+.who-quote blockquote{margin:0;font:600 20px/1.45 var(--sans);color:var(--navy)}
+.who-quote cite{display:block;margin-top:8px;font:400 14px/1.4 var(--sans);color:var(--muted);font-style:normal}
+
+/* key: zebra neatline */
+.collar{position:relative;background:
+  repeating-linear-gradient(90deg,var(--navy) 0 56px,#fff 56px 112px) top left/100% 7px no-repeat,
+  repeating-linear-gradient(90deg,var(--navy) 0 56px,#fff 56px 112px) bottom left/100% 7px no-repeat,
+  repeating-linear-gradient(180deg,var(--navy) 0 56px,#fff 56px 112px) top left/7px 100% no-repeat,
+  repeating-linear-gradient(180deg,var(--navy) 0 56px,#fff 56px 112px) top right/7px 100% no-repeat,
+  #fff;
+  border:1px solid var(--navy);padding:64px 64px 56px}
+.collar::after{content:"";position:absolute;inset:7px;border:1px solid var(--navy);pointer-events:none}
+.corner{position:absolute;font:400 11.5px/1 var(--mono);color:var(--navy);background:var(--paper);padding:2px 4px}
+.corner.tl{top:-22px;left:0}.corner.tr{top:-22px;right:0}.corner.bl{bottom:-22px;left:0}.corner.br{bottom:-22px;right:0}
+.key-list{list-style:none;margin:40px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;column-gap:56px}
+.key-item{display:grid;grid-template-columns:44px 1fr;gap:18px;padding:26px 0 28px;border-top:1px solid #DAD6CB}
+.key-item svg.k{width:34px;height:43px;margin-top:2px}
+.key-item h3{font:800 23px/1.1 var(--sans)}
+.key-place{margin-top:4px;font-size:15px;color:var(--muted)}
+.key-item p.kb{margin-top:10px;max-width:56ch}
+.key-role{margin-top:12px;font-size:15.5px}
+.key-role b{color:var(--navy)}
+.show-map{margin-top:14px;display:inline-flex;align-items:center;gap:7px;background:none;border:0;padding:6px 0;font:700 15px/1 var(--sans);color:var(--river-ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.show-map:hover{color:var(--navy)}
+.show-map svg{width:14px;height:17px}
+.key-foot{margin-top:18px;padding-top:18px;border-top:1px solid #DAD6CB;display:flex;gap:14px;align-items:flex-start;font-size:15px;color:var(--muted)}
+.key-foot svg{flex:none;width:20px;height:20px;margin-top:1px;color:var(--navy)}
+
+/* reach */
+.reach{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.reach-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,560px);gap:56px;align-items:start}
+.zipform{margin-top:28px;display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.zipform label{display:block;width:100%;font-weight:700;font-size:15px;color:var(--navy);margin-bottom:-2px}
+.zipform input{flex:1 1 220px;min-width:0;height:52px;padding:14px 14px 10px;font:600 18px/1 var(--sans);color:var(--ink);background:var(--paper);border:2px solid #9FA6B8;border-radius:4px}
+.zipform input:focus{outline:3px solid var(--navy);outline-offset:1px;border-color:var(--navy)}
+.zipform .btn{height:52px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center;font-size:14px;color:var(--muted)}
+.chips button{border:1px solid rgba(36,52,138,.3);background:#fff;color:var(--navy);font:700 14px/1 var(--sans);padding:9px 12px 7px;border-radius:100px;cursor:pointer}
+.chips button:hover{background:#EEF1F8}
+.result{margin-top:26px}
+.result-empty{padding:18px 20px;border:1px dashed #B5BBC9;border-radius:6px;color:var(--muted);font-size:15.5px}
+.result-card{border-radius:6px;background:var(--paper);box-shadow:0 0 0 1px var(--line);overflow:hidden}
+.rc-head{background:var(--navy);color:#fff;padding:16px 20px 13px;display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}
+.rc-head h3{color:#fff;font:800 21px/1.15 var(--sans)}
+.rc-head .mono{font-size:12px;color:#C9D0EC}
+.rc-list{margin:0;padding:6px 20px 4px}
+.rc-row{display:grid;grid-template-columns:150px 1fr;gap:16px;padding:12px 0;border-top:1px solid rgba(36,52,138,.1)}
+.rc-row:first-child{border-top:0}
+.rc-row dt{font-weight:800;color:var(--navy);font-size:15px}
+.rc-row dd{margin:0;font-size:15.5px;line-height:1.45}
+.rc-row dd .mono{font-size:14.5px;color:var(--navy)}
+.rc-actions{display:flex;flex-wrap:wrap;gap:10px;padding:6px 20px 20px}
+.result-err{padding:16px 20px;border-left:4px solid var(--red);background:#FBF0F0;border-radius:0 6px 6px 0;font-size:15.5px}
+.mini-wrap{position:relative}
+.mini{position:relative;height:620px;border-radius:6px;box-shadow:0 0 0 1px var(--line);overflow:hidden;background:var(--paper)}
+.mini-cap{margin-top:10px;font-size:13px;color:var(--muted)}
+
+/* join route */
+.route{position:relative;list-style:none;margin:56px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px}
+.stop:not(:last-child)::after{content:"";position:absolute;left:58px;right:-28px;top:31px;height:4px;background:var(--forest)}
+.stop:nth-child(3)::after{height:0;top:32px;background:none;border-top:3px dashed var(--forest)}
+.stop{position:relative}
+.post{position:relative;z-index:1;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:58px;height:66px;background:var(--forest);color:#fff;border-radius:6px;border:3px solid #fff;box-shadow:0 0 0 1.5px var(--forest)}
+.post small{font:700 10px/1 var(--sans);letter-spacing:.06em;opacity:.95}
+.post b{font:900 30px/1 var(--sans);margin-top:2px}
+.stop.opt .post{background:#fff;color:var(--forest);border-color:#fff}
+.stop h3{margin-top:18px;font:800 23px/1.1 var(--sans)}
+.stop h3 .tag{display:inline-block;vertical-align:4px;margin-left:6px;font:700 12px/1 var(--sans);color:var(--forest);border:1.5px solid var(--forest);border-radius:3px;padding:4px 6px 2px}
+.stop p{margin-top:10px;font-size:16px;line-height:1.5}
+.stop ul{margin:10px 0 0;padding:0 0 0 18px;font-size:15.5px;line-height:1.5}
+.stop li{margin-top:3px}
+.stop .links{margin-top:12px;font-size:15px;font-weight:700;display:flex;flex-direction:column;gap:6px}
+.join-lower{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;margin-top:64px}
+.panel{background:#fff;border-radius:6px;box-shadow:0 0 0 1px var(--line);padding:30px 32px}
+.panel h3{font:900 26px/1.1 var(--sans)}
+.panel > p{margin-top:10px;color:var(--muted)}
+.unl{list-style:none;margin:20px 0 0;padding:0;counter-reset:u}
+.unl li{counter-increment:u;display:grid;grid-template-columns:30px 1fr;gap:12px;padding:12px 0;border-top:1px solid rgba(36,52,138,.1)}
+.unl li::before{content:counter(u,lower-alpha);display:grid;place-items:center;width:28px;height:28px;border-radius:50%;border:2px solid var(--forest);color:var(--forest);font:800 14px/1 var(--sans);padding-top:2px}
+.unl b{color:var(--navy)}
+.unl p{font-size:15.5px;line-height:1.5}
+.signup{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;margin-top:20px}
+.signup .full{grid-column:1/-1}
+.signup label{display:block;font-weight:700;font-size:14.5px;color:var(--navy);margin-bottom:5px}
+.signup input,.signup select{width:100%;height:48px;padding:12px 12px 9px;font:500 16px/1 var(--sans);color:var(--ink);background:var(--paper);border:2px solid #9FA6B8;border-radius:4px}
+.signup input:focus,.signup select:focus{outline:3px solid var(--navy);outline-offset:1px;border-color:var(--navy)}
+.signup fieldset{border:0;margin:0;padding:0}
+.signup legend{font-weight:700;font-size:14.5px;color:var(--navy);margin-bottom:6px;padding:0}
+.radios{display:flex;flex-wrap:wrap;gap:8px}
+.radios label{display:flex;align-items:center;gap:8px;margin:0;font-weight:600;color:var(--ink);background:var(--paper);border:1.5px solid #C4C9D6;border-radius:4px;padding:10px 12px 8px;cursor:pointer}
+.radios input{width:18px;height:18px;margin:0;accent-color:var(--navy)}
+.form-note{font-size:13.5px;color:var(--muted)}
+.form-done{margin-top:16px;padding:14px 16px;border-left:4px solid var(--forest);background:#EEF4EF;border-radius:0 4px 4px 0;font-size:15.5px}
+
+/* calendar + members */
+.cal{background:#fff;border-top:1px solid var(--line)}
+.cal-top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.cal-actions{display:flex;gap:12px;align-items:center}
+.strip-nav{display:flex;gap:6px}
+.strip-nav button{width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(36,52,138,.35);background:#fff;color:var(--navy);display:grid;place-items:center;cursor:pointer}
+.strip-nav button:hover{background:#EEF1F8}
+.strip-nav svg{width:16px;height:16px}
+.strip-wrap{position:relative}
+.strip-wrap::after{content:"";position:absolute;right:0;top:2px;bottom:14px;width:72px;background:linear-gradient(90deg,rgba(255,255,255,0),#fff);pointer-events:none}
+.strip{margin-top:36px;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(212px,1fr);gap:0;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:14px;border-top:2px solid var(--navy)}
+.strip::-webkit-scrollbar{height:8px}
+.strip::-webkit-scrollbar-thumb{background:#C3C8D6;border-radius:8px}
+.day{scroll-snap-align:start;position:relative;padding:18px 20px 16px 0;margin-right:20px;min-width:0}
+.day::before{content:"";position:absolute;left:0;top:-7px;width:12px;height:12px;border-radius:50%;background:#fff;border:2px solid var(--navy)}
+.day.net::before{background:var(--navy)}
+.day.dem::before{background:var(--red);border-color:var(--red)}
+.day .when{display:flex;align-items:baseline;gap:8px;margin-top:10px}
+.day .dn{font:900 38px/1 var(--sans);color:var(--navy);letter-spacing:-.02em}
+.day .dm{font:700 14px/1.2 var(--sans);color:var(--muted)}
+.day h3{margin-top:8px;font:800 17px/1.2 var(--sans);color:var(--ink)}
+.day p{margin-top:5px;font-size:14.5px;line-height:1.45;color:var(--muted)}
+.day .nc{font-family:var(--mono);font-size:13px;color:var(--navy)}
+.day .at{margin-top:8px;display:inline-flex;align-items:center;gap:5px;font:700 13.5px/1 var(--sans);color:var(--red-deep);background:none;border:0;padding:4px 0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.day .at svg{width:11px;height:14px}
+.cal-lower{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:28px;margin-top:56px}
+.listen{background:var(--navy);color:#E6E9F5;border-radius:6px;padding:30px 32px}
+.listen h3{color:#fff;font:900 26px/1.1 var(--sans)}
+.listen .freq{margin-top:18px;font:600 46px/1 var(--mono);color:#fff;letter-spacing:-.04em}
+.listen .freq-sub{margin-top:10px;font:400 14px/1.4 var(--mono);color:#C9D0EC}
+.listen dl{margin:20px 0 0;display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:15.5px}
+.listen dt{font-weight:700;color:#fff}
+.listen dd{margin:0}
+.listen p{margin-top:18px;font-size:15.5px;line-height:1.5}
+.listen .v{font:600 11.5px/1 var(--mono);color:#fff;background:rgba(255,255,255,.14);padding:3px 5px 2px;border-radius:3px}
+.members{background:var(--paper);border-radius:6px;box-shadow:0 0 0 1px var(--line);padding:30px 32px}
+.members-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+.members h3{font:900 26px/1.1 var(--sans)}
+.roster{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+.roster span{display:inline-flex;flex-direction:column;gap:3px;padding:8px 11px 6px;background:#fff;border-radius:4px;box-shadow:0 0 0 1px var(--line);font:600 13px/1.1 var(--mono);color:var(--navy)}
+.roster span small{font:600 12px/1 var(--sans);color:var(--muted)}
+.roster span.open{box-shadow:0 0 0 1.5px var(--red);color:var(--red-deep)}
+.roster-note{margin-top:10px;font-size:14.5px;color:var(--muted)}
+.qlinks{margin:22px 0 0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+.qlinks li{border-top:1px solid rgba(36,52,138,.12)}
+.qlinks a{display:flex;justify-content:space-between;gap:10px;padding:11px 0 9px;font-weight:700;font-size:15.5px;text-decoration:none;color:var(--navy)}
+.qlinks a span{font-weight:500;font-size:13px;color:var(--muted);white-space:nowrap}
+.qlinks a:hover{color:var(--river-ink);text-decoration:underline}
+
+/* partners */
+.partners-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;margin-top:44px}
+.aff{display:grid;grid-template-columns:96px 1fr;gap:22px;align-items:center;background:#fff;border-radius:6px;box-shadow:0 0 0 1px var(--line);padding:24px 26px}
+.aff img{width:96px;height:96px;object-fit:contain}
+.aff h3{font:800 21px/1.15 var(--sans)}
+.aff p{margin-top:6px;font-size:15.5px}
+.aff small{display:block;margin-top:8px;font-size:12.5px;color:var(--muted)}
+.plist{list-style:none;margin:36px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 36px}
+.plist li{padding:18px 0 20px;border-top:1px solid #DAD6CB}
+.plist h3{font:800 18px/1.2 var(--sans)}
+.plist p{margin-top:5px;font-size:15px;color:var(--muted);line-height:1.45}
+.partners-quote{margin-top:48px;display:flex;gap:18px;align-items:baseline;flex-wrap:wrap;font:700 22px/1.35 var(--sans);color:var(--navy)}
+.partners-quote cite{font:400 14px/1.4 var(--sans);color:var(--muted);font-style:normal}
+
+/* footer */
+.foot{background:var(--navy-deep);color:#D5DAEE;padding:64px 0 36px;font-size:15px}
+.foot a{color:#fff}
+.foot :focus-visible{outline-color:#fff}
+.foot-grid{display:grid;grid-template-columns:minmax(0,1.7fr) repeat(3,minmax(0,1fr));gap:36px}
+.foot-brand{display:flex;gap:14px;align-items:flex-start}
+.foot-brand img{width:72px;height:72px;background:#fff;border-radius:50%;padding:3px}
+.foot-brand b{display:block;color:#fff;font:800 19px/1.15 var(--sans)}
+.foot-brand p{margin-top:8px;line-height:1.5}
+.foot h2{color:#fff;font:800 15px/1.2 var(--sans);margin-bottom:10px}
+.foot ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.foot address{font-style:normal;line-height:1.5}
+.foot-base{margin-top:48px;padding-top:20px;border-top:1px solid rgba(255,255,255,.16);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:13.5px;color:#AEB6D6}
+.foot-base nav{display:flex;gap:18px}
+.concept-tag{font-family:var(--mono);font-size:12px;color:#AEB6D6}
+
+/* ---------- responsive ---------- */
+@media (max-height:800px) and (min-width:901px){
+  .hero-card{padding:24px 26px 22px}
+  .hero-card h1{font-size:clamp(38px,3.6vw,50px)}
+  .lede{font-size:17px;margin-top:12px}
+  .cta-row{margin-top:16px}
+  .layers{grid-template-columns:1fr 1fr;column-gap:14px}
+  .layer .note{display:none}
+  .layers li:nth-child(2) .layer{border-top:0}
+  .lock-msg{margin-left:0}
+}
+@media (max-width:1180px){
+  .nav ul{gap:0}
+  .nav a{padding:10px 8px 8px;font-size:15px}
+}
+@media (max-width:1060px){
+  .menu-btn{display:block}
+  .nav{position:relative}
+  .nav ul{display:none;position:absolute;right:0;top:calc(100% + 10px);flex-direction:column;background:#fff;border-radius:6px;box-shadow:0 0 0 1px var(--line),0 12px 30px -10px rgba(26,37,102,.35);padding:8px;min-width:200px;z-index:60}
+  .nav ul.open{display:flex}
+  .hero-col{width:400px}
+  .pin-card{width:340px}
+  .who-grid{grid-template-columns:1fr;gap:32px}
+  .stack{max-width:460px}
+  .reach-grid{grid-template-columns:1fr}
+  .mini{height:520px}
+  .route{grid-template-columns:1fr 1fr;row-gap:44px}
+  .stop::after{display:none}
+  .join-lower,.cal-lower,.partners-top{grid-template-columns:1fr}
+  .plist{grid-template-columns:1fr 1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:900px){
+  :root{--netbar-h:auto}
+  .site-header{position:relative;padding:10px 16px;gap:12px}
+  .hero{height:auto;min-height:0;overflow:visible;display:flex;flex-direction:column}
+  .hero .map{order:1}
+  .hero .hero-col{order:2}
+  .map{position:relative;height:clamp(440px,64svh,600px)}
+  .hero-col{position:relative;left:auto;top:auto;width:auto;max-height:none;margin:-40px 16px 0}
+  .map-ui{right:12px;bottom:52px;gap:8px}
+  .titleblock{position:absolute;z-index:14;top:128px;right:24px;width:250px;text-align:right;font-size:12.5px;line-height:1.4;color:var(--muted);text-shadow:0 0 3px var(--paper),0 0 3px var(--paper),0 0 6px var(--paper)}
+.titleblock b{display:block;font:800 15px/1.2 var(--sans);color:var(--navy);margin-bottom:3px}
+.pin-open .titleblock{display:none}
+.titleblock{display:none}
+  .readout .coords{display:none}
+  .pin-thumb{display:none}
+  .pin-card{position:fixed;left:0;right:0;bottom:0;top:auto;width:auto;max-height:60svh;border-radius:14px 14px 0 0;z-index:80;padding:22px 20px 24px}
+  .pc-photo{margin:14px -20px 0}
+  .pc-photo figcaption{padding:6px 20px 0}
+  .key-list{grid-template-columns:1fr}
+  .collar{padding:48px 28px 40px}
+}
+@media (max-width:640px){
+  body{font-size:16.5px}
+  .wrap{padding:0 16px}
+  .netbar{font-size:13px}
+  .netbar .wrap{gap:12px}
+  .brand img{width:40px;height:40px}
+  .brand span{font-size:17px}
+  .brand small{font-size:12px}
+  .site-header .btn-red{display:none}
+  .hero-card{padding:24px 20px 20px}
+  .hero-card h1{font-size:40px}
+  .lede{font-size:17px}
+  .cta-row .btn{flex:1 1 auto}
+  .legend{padding:12px 14px 10px}
+  .layers{grid-template-columns:1fr}
+  .sec{padding:72px 0}
+  .sec-head p{font-size:17.5px}
+  .who-quote{grid-template-columns:1fr;gap:24px}
+  .collar{background:
+    repeating-linear-gradient(90deg,var(--navy) 0 40px,#fff 40px 80px) top left/100% 5px no-repeat,
+    repeating-linear-gradient(90deg,var(--navy) 0 40px,#fff 40px 80px) bottom left/100% 5px no-repeat,
+    repeating-linear-gradient(180deg,var(--navy) 0 40px,#fff 40px 80px) top left/5px 100% no-repeat,
+    repeating-linear-gradient(180deg,var(--navy) 0 40px,#fff 40px 80px) top right/5px 100% no-repeat,#fff;padding:40px 20px 30px}
+  .collar::after{inset:5px}
+  .corner.tr,.corner.bl{display:none}
+  .key-item{grid-template-columns:36px 1fr;gap:14px}
+  .key-item svg.k{width:28px;height:36px}
+  .rc-row{grid-template-columns:1fr;gap:4px}
+  .mini{height:440px}
+  .route{grid-template-columns:1fr;row-gap:36px}
+  .stop{display:grid;grid-template-columns:58px 1fr;column-gap:18px}
+  .stop h3{margin-top:4px}
+  .stop > *:not(.post){grid-column:2}
+  .stop .post{grid-row:1 / span 6}
+  .panel,.listen,.members{padding:24px 20px}
+  .signup{grid-template-columns:1fr}
+  .listen .freq{font-size:36px}
+  .qlinks{grid-template-columns:1fr}
+  .plist{grid-template-columns:1fr}
+  .aff{grid-template-columns:72px 1fr;padding:20px}
+  .aff img{width:72px;height:72px}
+  .foot-grid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .geo .draw{stroke-dashoffset:0}
+}
+</style>
+</head>
+<body id="top">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="netbar" role="region" aria-label="Weekly net">
+  <div class="wrap">
+    <p><span class="onair" aria-hidden="true"></span><strong>Tuesday net, 8:00 PM</strong> on W7GBU <span class="mono">147.300 MHz</span><span class="hide-sm"> (+600 kHz, 100 Hz tone)</span>. Next net Sep 29, net control NZ2S, simplex week.</p>
+    <a href="#members">Members</a>
+  </div>
+</div>
+
+<div class="stage">
+<header class="site-header">
+  <a class="brand" href="#top">
+    <img src="../../assets/Spokane_County_ARES-ACS_logo_slightly_smaller_550x550.png" alt="" width="46" height="46">
+    <span>Spokane County ARES-ACS<small>Amateur radio emergency communications</small></span>
+  </a>
+  <nav class="nav" aria-label="Main">
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="navlist">Menu</button>
+    <ul id="navlist">
+      <li><a href="#who">About</a></li>
+      <li><a href="#key">What we do</a></li>
+      <li><a href="#join">Join</a></li>
+      <li><a href="#calendar">Calendar</a></li>
+      <li><a href="#members">Members</a></li>
+    </ul>
+  </nav>
+  <a class="btn btn-red btn-sm" href="#join">Join the team</a>
+</header>
+
+<main id="main">
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-col">
+    <div class="hero-card">
+      <h1 id="hero-title"><span>Your county.</span> <span>Your neighbors.</span> <span>On the air.</span></h1>
+      <p class="lede">Licensed amateur radio volunteers supporting Spokane County Emergency Management, the National Weather Service, local hospitals and community events.</p>
+      <div class="cta-row">
+        <a class="btn btn-red" href="#join">Join the team</a>
+        <a class="btn btn-line" href="#net">Listen Tuesday</a>
+      </div>
+      <p class="hero-more"><a href="#who">Learn how the team works</a>, or <a href="#reach">check whether your home is in reach</a>.</p>
+    </div>
+
+    <fieldset class="legend" id="legend">
+      <legend>Map layers <small>Tap a pin for details</small></legend>
+      <ul class="layers">
+        <li><label class="layer"><input type="checkbox" data-layer="meet" checked><svg class="sym" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 21s-7-7.5-7-12a7 7 0 0 1 14 0c0 4.5-7 12-7 12z" fill="#D0202A"/><circle cx="11" cy="9" r="2.6" fill="#fff"/></svg><span>Where we meet</span><span class="note">1121 W Gardner</span></label></li>
+        <li><label class="layer"><input type="checkbox" data-layer="hospitals" checked><svg class="sym" viewBox="0 0 22 22" aria-hidden="true"><defs><pattern id="lh" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="1.4" height="4" fill="#24348A"/></pattern></defs><circle cx="11" cy="11" r="8.5" fill="url(#lh)" stroke="#24348A" stroke-width="1.3" stroke-dasharray="3 2"/></svg><span>Hospitals we support</span><span class="note">general area</span></label></li>
+        <li><label class="layer"><input type="checkbox" data-layer="events" checked><svg class="sym" viewBox="0 0 22 22" aria-hidden="true"><path d="M3 17c4-1 3-8 8-8s4 6 8 3" fill="none" stroke="#24348A" stroke-width="3" stroke-linecap="round"/><path d="M3 8c3 0 5 2 8 1" fill="none" stroke="#D0202A" stroke-width="2.4" stroke-dasharray="3 2.5" stroke-linecap="round"/></svg><span>Public events</span><span class="note">Bloomsday, Torchlight</span></label></li>
+        <li><label class="layer"><input type="checkbox" data-layer="repeater" checked><svg class="sym" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 2.5c5 0 8.5 3.5 8 8.5-.6 5-4 8.5-8.5 8.5S2.5 16 3 11s3-8.5 8-8.5z" fill="rgba(46,125,175,.22)" stroke="#2E7DAF" stroke-width="1.4" stroke-dasharray="3 2"/></svg><span>Repeater W7GBU</span><span class="note v">illustrative</span></label></li>
+        <li><label class="layer"><input type="checkbox" data-layer="nws" checked><svg class="sym" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 21s-7-7.5-7-12a7 7 0 0 1 14 0c0 4.5-7 12-7 12z" fill="#D0202A"/><path d="M8 11h6a2 2 0 0 0 0-4 3 3 0 0 0-5.6-.4A2.1 2.1 0 0 0 8 11z" fill="#fff"/></svg><span>NWS Spokane</span><span class="note">SKYWARN</span></label></li>
+        <li><label class="layer"><input type="checkbox" data-layer="field" checked><svg class="sym" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 21s-7-7.5-7-12a7 7 0 0 1 14 0c0 4.5-7 12-7 12z" fill="#D0202A"/><rect x="7.5" y="8.5" width="7" height="4" fill="#fff"/><path d="M12.5 8.5V4.5" stroke="#fff" stroke-width="1.4"/></svg><span>Field stations</span><span class="note">example</span></label></li>
+        <li><button type="button" class="layer lock" id="lockBtn" aria-expanded="false" aria-controls="lockMsg"><svg class="lk" viewBox="0 0 16 16" aria-hidden="true" style="grid-column:1"><rect x="2.5" y="7" width="11" height="8" rx="1.5" fill="currentColor"/><path d="M5 7V5a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg><span style="grid-column:2 / 4">Staging and deployment sites</span><span class="note">members only</span></button>
+          <p class="lock-msg" id="lockMsg" hidden>These sites stay off the public map. Members can <a href="#members">sign in</a> to see them.</p></li>
+      </ul>
+    </fieldset>
+  </div>
+
+  <div class="map" id="heroMap" role="region" aria-label="Map of Spokane County showing where the team works. Use the pins to open details.">
+    <div class="titleblock" id="titleblock"><b>Spokane County, Washington</b><span>Illustrative map. Pin locations are approximate, and sensitive sites are never shown publicly.</span></div>
+    <div class="map-ui">
+      <div class="readout" aria-hidden="true">
+        <span class="coords" id="coords">47.666° N, 117.428° W</span>
+        <span class="scalebar"><i id="sbar" style="width:80px"></i><span id="slabel">5 mi</span></span>
+      </div>
+      <svg class="north" viewBox="0 0 30 40" aria-hidden="true"><path d="M15 3 L23 30 L15 24 L7 30Z" fill="#24348A"/><path d="M15 3 L15 24 L7 30Z" fill="#fff" stroke="#24348A" stroke-width="1.2"/><text x="15" y="39" text-anchor="middle" font-family="Overpass" font-weight="800" font-size="10" fill="#24348A">N</text></svg>
+      <div class="zoom" role="group" aria-label="Map zoom">
+        <button type="button" id="zin" aria-label="Zoom in">+</button>
+        <button type="button" id="zout" aria-label="Zoom out">&minus;</button>
+        <button type="button" id="zfit" aria-label="Show the whole county"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M2 6V2h4M12 2h4v4M16 12v4h-4M6 16H2v-4" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <aside class="pin-card" id="pinCard" hidden aria-labelledby="pcTitle">
+    <button class="pc-close" type="button" id="pcClose" aria-label="Close details"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 3l12 12M15 3L3 15" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+    <div id="pcBody"></div>
+  </aside>
+</section>
+
+<!-- WHO -->
+<section class="sec who" id="who" aria-labelledby="who-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="who-title">One team, two ways to serve</h2>
+      <p>Spokane County ARES-ACS is one team of licensed amateur radio (“ham”) operators who volunteer to provide backup communications when normal systems are overloaded or down.</p>
+    </div>
+    <div class="who-grid">
+      <div class="stack" aria-hidden="true">
+        <svg viewBox="0 0 470 430" id="stackSvg"></svg>
+      </div>
+      <div class="who-list">
+        <div class="who-item">
+          <span class="sw" style="background:rgba(36,52,138,.28);box-shadow:inset 0 0 0 1.5px #24348A"></span>
+          <div>
+            <h3>ACS <span>Auxiliary Communications</span></h3>
+            <p>Spokane County Emergency Management’s own volunteer communications unit. It carries on the county’s RACES program (Radio Amateur Civil Emergency Service, the FCC provision that lets hams operate for government during emergencies). ACS members pass a county background check, so the county can activate them to work inside emergency operations centers, incident command posts, hospitals and shelters.</p>
+          </div>
+        </div>
+        <div class="who-item">
+          <span class="sw" style="background:rgba(46,125,175,.22);box-shadow:inset 0 0 0 1.5px #2E7DAF"></span>
+          <div>
+            <h3>ARES <span>Amateur Radio Emergency Service</span></h3>
+            <p>A national ARRL program open to any licensed ham. ARES members support community events, the National Weather Service and the Red Cross without an emergency being declared.</p>
+          </div>
+        </div>
+        <div class="who-item">
+          <span class="sw" style="background:#F4F6F8;box-shadow:inset 0 0 0 1.5px #B8B09F"></span>
+          <div>
+            <h3>Spokane County <span>the ground both sides stand on</span></h3>
+            <p>The two sides train and operate together on the same nets. You can join ARES only, or both. Formerly known as Spokane County ARES/RACES.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="who-quote">
+      <blockquote>“Even [if] you don’t or can’t qualify for ACS, our ARES group welcomes you, and you can still volunteer for many events.”<cite>From the group’s how-to-join page</cite></blockquote>
+      <blockquote>“Amateur radio can be particularly helpful because it can function even if other modes of communication cannot.”<cite>Eastern Washington Standing Order 1b</cite></blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- KEY -->
+<section class="sec key" id="key" aria-labelledby="key-title" style="padding-top:40px">
+  <div class="wrap">
+    <div class="collar">
+      <span class="corner tl" aria-hidden="true">48°03′ N 117°49′ W</span>
+      <span class="corner tr" aria-hidden="true">48°03′ N 117°02′ W</span>
+      <span class="corner bl" aria-hidden="true">47°16′ N 117°49′ W</span>
+      <span class="corner br" aria-hidden="true">47°16′ N 117°02′ W</span>
+      <div class="sec-head">
+        <h2 id="key-title">What happens at each pin</h2>
+        <p>Six kinds of places on the map, the work volunteers do at each one, and the role it needs.</p>
+      </div>
+      <ul class="key-list">
+        <li class="key-item">
+          <svg class="k" viewBox="0 0 32 40" aria-hidden="true" data-glyph="meet"></svg>
+          <div>
+            <h3>Where we meet</h3>
+            <p class="key-place">Spokane County DEM building, 1121 W. Gardner Ave, Spokane</p>
+            <p class="kb">Training meetings on Third Thursdays, hands-on workshops on Second Saturdays from 9 AM to noon, and New Member Orientation on the 4th Tuesday. Members also staff the county’s radio communications room and comm trailer.</p>
+            <p class="key-role"><b>Role it needs:</b> everyone starts here, at orientation.</p>
+            <button class="show-map" type="button" data-show="meet"><svg viewBox="0 0 14 17" aria-hidden="true"><path d="M7 16.5S1 10 1 6.5a6 6 0 0 1 12 0C13 10 7 16.5 7 16.5z" fill="#D0202A"/></svg>Show on map</button>
+          </div>
+        </li>
+        <li class="key-item">
+          <svg class="k" viewBox="0 0 32 40" aria-hidden="true" data-glyph="events"></svg>
+          <div>
+            <h3>Public events</h3>
+            <p class="key-place">Bloomsday and the Lilac Torchlight Parade, downtown Spokane</p>
+            <p class="kb">Primary or backup communications for Bloomsday, the Lilac Torchlight Parade, fun runs and bicycle races. Operators hold posts along the route and pass what they see to net control.</p>
+            <p class="key-role"><b>Role it needs:</b> event operator. Open to any licensed ARES member.</p>
+            <button class="show-map" type="button" data-show="events"><svg viewBox="0 0 14 17" aria-hidden="true"><path d="M7 16.5S1 10 1 6.5a6 6 0 0 1 12 0C13 10 7 16.5 7 16.5z" fill="#D0202A"/></svg>Show on map</button>
+          </div>
+        </li>
+        <li class="key-item">
+          <svg class="k" viewBox="0 0 32 40" aria-hidden="true" data-glyph="hosp"></svg>
+          <div>
+            <h3>Hospitals we support</h3>
+            <p class="key-place">Greater Spokane area hospitals (shown as a general area)</p>
+            <p class="kb">A Hospital Coordinator works with area hospitals to keep backup radio and computer equipment in place and working. A Hospital Net follows the regular Tuesday net on some weeks.</p>
+            <p class="key-role"><b>Role it needs:</b> hospital team, for ACS members with HIPAA training.</p>
+            <button class="show-map" type="button" data-show="hosp"><svg viewBox="0 0 14 17" aria-hidden="true"><path d="M7 16.5S1 10 1 6.5a6 6 0 0 1 12 0C13 10 7 16.5 7 16.5z" fill="#D0202A"/></svg>Show on map</button>
+          </div>
+        </li>
+        <li class="key-item">
+          <svg class="k" viewBox="0 0 32 40" aria-hidden="true" data-glyph="rpt"></svg>
+          <div>
+            <h3>Repeater W7GBU</h3>
+            <p class="key-place"><span class="mono">147.300 MHz</span>, +600 kHz offset, 100 Hz tone</p>
+            <p class="kb">Home of the Tuesday 8 PM net, where members take turns as net control. The call sign is a memorial to Ira “Dean” Bula, who started the morning round table still known as the 0730 Bunch.</p>
+            <p class="key-role"><b>Role it needs:</b> net control station. The Net Manager coaches new net controls.</p>
+            <button class="show-map" type="button" data-show="rpt"><svg viewBox="0 0 14 17" aria-hidden="true"><path d="M7 16.5S1 10 1 6.5a6 6 0 0 1 12 0C13 10 7 16.5 7 16.5z" fill="#D0202A"/></svg>Show on map</button>
+          </div>
+        </li>
+        <li class="key-item">
+          <svg class="k" viewBox="0 0 32 40" aria-hidden="true" data-glyph="nws"></svg>
+          <div>
+            <h3>NWS Spokane</h3>
+            <p class="key-place">SKYWARN weather spotting</p>
+            <p class="kb">Many members are trained SKYWARN spotters for the National Weather Service Spokane office, and nets are activated in severe weather. Spotting is encouraged, not required.</p>
+            <p class="key-role"><b>Role it needs:</b> weather spotter. You can take the training before you are licensed.</p>
+            <button class="show-map" type="button" data-show="nws"><svg viewBox="0 0 14 17" aria-hidden="true"><path d="M7 16.5S1 10 1 6.5a6 6 0 0 1 12 0C13 10 7 16.5 7 16.5z" fill="#D0202A"/></svg>Show on map</button>
+          </div>
+        </li>
+        <li class="key-item">
+          <svg class="k" viewBox="0 0 32 40" aria-hidden="true" data-glyph="field"></svg>
+          <div>
+            <h3>Field stations</h3>
+            <p class="key-place">Wherever an exercise or event needs one</p>
+            <p class="kb">Members bring their own go-kits: a station that can run for at least 72 hours on 2 m and 70 cm, and often HF and Winlink for digital messages through the group’s W7GBU-10 gateway.</p>
+            <p class="key-role"><b>Role it needs:</b> field or Winlink operator.</p>
+            <button class="show-map" type="button" data-show="field"><svg viewBox="0 0 14 17" aria-hidden="true"><path d="M7 16.5S1 10 1 6.5a6 6 0 0 1 12 0C13 10 7 16.5 7 16.5z" fill="#D0202A"/></svg>Show on map</button>
+          </div>
+        </li>
+      </ul>
+      <p class="key-foot"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="7" width="11" height="8" rx="1.5" fill="currentColor"/><path d="M5 7V5a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg><span>Hospital stations, equipment caches and staging sites are not on the public map. Members see them after signing in.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- REACH -->
+<section class="sec reach" id="reach" aria-labelledby="reach-title">
+  <div class="wrap reach-grid">
+    <div>
+      <div class="sec-head">
+        <h2 id="reach-title">Is my home in reach?</h2>
+        <p>Enter your ZIP code or town. We’ll show your meeting place, your net, the events near you and a role that fits where you live.</p>
+      </div>
+      <form class="zipform" id="zipForm" novalidate>
+        <label for="zipIn">ZIP code or town in Spokane County</label>
+        <input id="zipIn" name="zip" type="text" inputmode="text" autocomplete="postal-code" placeholder="99004 or Cheney" list="townList" aria-describedby="zipHint">
+        <datalist id="townList"></datalist>
+        <button class="btn btn-red" type="submit">Show my neighborhood</button>
+      </form>
+      <div class="chips" id="zipHint"><span>Try</span>
+        <button type="button" data-q="99006">Deer Park</button>
+        <button type="button" data-q="99004">Cheney</button>
+        <button type="button" data-q="99019">Liberty Lake</button>
+        <button type="button" data-q="99203">South Hill</button>
+        <button type="button" data-q="99030">Rockford</button>
+      </div>
+      <div class="result" id="result" aria-live="polite">
+        <p class="result-empty">Your result appears here, and the map draws a line from your neighborhood to the DEM building.</p>
+      </div>
+    </div>
+    <div class="mini-wrap">
+      <div class="mini" id="miniMap" role="img" aria-label="Map of Spokane County with your neighborhood and the meeting place"></div>
+      <p class="mini-cap">Distances are straight-line estimates. Coverage shading is illustrative.</p>
+    </div>
+  </div>
+</section>
+
+<!-- JOIN -->
+<section class="sec join" id="join" aria-labelledby="join-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="join-title">Your route onto the team</h2>
+      <p>Three steps get you on the air with us. A fourth, optional step lets the county call on you. Not licensed yet? Start at zero.</p>
+    </div>
+    <ol class="route">
+      <li class="stop">
+        <span class="post" aria-hidden="true"><small>STEP</small><b>0</b></span>
+        <h3>Get licensed</h3>
+        <p>You need an FCC Technician license or higher. Local classes run through the year, and exams are offered locally and online.</p>
+        <p class="links"><a href="#unlicensed">Not licensed yet? Start here</a></p>
+      </li>
+      <li class="stop">
+        <span class="post" aria-hidden="true"><small>STEP</small><b>1</b></span>
+        <h3>Join ARES</h3>
+        <p>Fill out the Spokane County ARES registration form and bring it to a meeting or email it in. ARRL membership is not required.</p>
+        <p class="links"><a href="https://www.spokares.org/index.php/downloads/forms-and-information">Download the registration form</a><a href="http://www.arrl.org/ares">Get the ARRL ARES Task Book</a></p>
+      </li>
+      <li class="stop">
+        <span class="post" aria-hidden="true"><small>STEP</small><b>2</b></span>
+        <h3>Get connected</h3>
+        <p>Subscribe to the Groups.io list, check into the Tuesday net, and come to a Third Thursday meeting or a Second Saturday workshop.</p>
+        <p class="links"><a href="https://spokaneares-acs.groups.io/">Subscribe on Groups.io</a><a href="#net">How to check in Tuesday</a></p>
+      </li>
+      <li class="stop opt">
+        <span class="post" aria-hidden="true"><small>STEP</small><b>3</b></span>
+        <h3>Qualify for ACS <span class="tag">Optional</span></h3>
+        <ul>
+          <li>Apply as a county Volunteer Emergency Worker</li>
+          <li>Pass the background check and get a volunteer number</li>
+          <li>Attend New Member Orientation (4th Tuesday)</li>
+          <li>Complete IS-100, IS-200, IS-700, IS-800 and ARRL Basic EmComm</li>
+        </ul>
+        <p class="links"><a href="https://www.spokanecounty.org/FormCenter/Emergency-Management-31/Volunteer-Emergency-Worker-Application-276">County volunteer application</a></p>
+      </li>
+    </ol>
+
+    <div class="join-lower">
+      <div class="panel" id="unlicensed">
+        <h3>Not licensed yet?</h3>
+        <p>You can start before you hold a license. Here’s the path people in Spokane County take.</p>
+        <ol class="unl">
+          <li><p><b>Listen in.</b> Tune to the Tuesday 8 PM net on 147.300 MHz, or come to a Third Thursday meeting or Second Saturday workshop.</p></li>
+          <li><p><b>Take a license class.</b> Classes run periodically through the year, sponsored by Spokane County Emergency Management, the VHF Club and local ARES-RACES.</p></li>
+          <li><p><b>Take the exam.</b> Local volunteer examiner sessions, or online through GLAARG on HamStudy. The FCC charges a $35 application fee.</p></li>
+          <li><p><b>Try SKYWARN meanwhile.</b> NWS spotter training is online or in person, and needs no license. <a href="https://www.weather.gov/otx/Current_Spotter_Training">Spotter training</a></p></li>
+        </ol>
+      </div>
+      <div class="panel">
+        <h3>Tell us you’re interested</h3>
+        <p>Someone from the team will reply with the next orientation date and help you get started.</p>
+        <form class="signup" id="signup">
+          <div><label for="su-name">Name</label><input id="su-name" name="name" autocomplete="name" required></div>
+          <div><label for="su-email">Email</label><input id="su-email" name="email" type="email" autocomplete="email" required></div>
+          <div><label for="su-zip">ZIP code</label><input id="su-zip" name="zip" inputmode="numeric" autocomplete="postal-code"></div>
+          <div><label for="su-call">Call sign, if you have one</label><input id="su-call" name="call" autocapitalize="characters"></div>
+          <fieldset class="full"><legend>Where are you on the route?</legend>
+            <div class="radios">
+              <label><input type="radio" name="stage" value="0" checked>Not licensed yet</label>
+              <label><input type="radio" name="stage" value="1">Licensed, new to ARES</label>
+              <label><input type="radio" name="stage" value="3">Ready for ACS</label>
+            </div>
+          </fieldset>
+          <div class="full"><button class="btn btn-red" type="submit">Send my details</button></div>
+          <p class="full form-note">We use your details only to contact you about joining.</p>
+        </form>
+        <div id="signupDone" class="form-done" hidden tabindex="-1">Details sent. Watch your inbox for the next orientation date. (Mockup: this form is not connected.)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CALENDAR -->
+<section class="sec cal" id="calendar" aria-labelledby="cal-title">
+  <div class="wrap">
+    <div class="cal-top">
+      <div class="sec-head">
+        <h2 id="cal-title">On the calendar</h2>
+        <p>Nets every Tuesday, training every month, and exercises through the fall.</p>
+      </div>
+      <div class="cal-actions">
+        <div class="strip-nav" role="group" aria-label="Scroll the calendar"><button type="button" id="calPrev" aria-label="Earlier dates"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg></button><button type="button" id="calNext" aria-label="Later dates"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg></button></div>
+        <a class="btn btn-line btn-sm" href="https://spokaneares-acs.groups.io/g/main/calendar">Full calendar on Groups.io</a>
+      </div>
+    </div>
+    <div class="strip-wrap"><div class="strip" id="strip" tabindex="0" role="region" aria-label="Upcoming events, scroll sideways">
+      <article class="day"><div class="when"><span class="dn">26–27</span><span class="dm">Sat–Sun<br>Sep</span></div><h3>ARES-ACS and WSDOT exercise</h3><p>Joint exercise with the Washington State Department of Transportation.</p></article>
+      <article class="day net"><div class="when"><span class="dn">29</span><span class="dm">Tue Sep<br>8:00 PM</span></div><h3>Tuesday net, simplex week</h3><p>Net control <span class="nc">NZ2S</span>. Frequency in the simplex net script.</p></article>
+      <article class="day"><div class="when"><span class="dn">3</span><span class="dm">Sat<br>Oct</span></div><h3>Simulated Emergency Test</h3><p>The annual SET, the year’s biggest practice activation.</p></article>
+      <article class="day net"><div class="when"><span class="dn">6</span><span class="dm">Tue Oct<br>8:00 PM</span></div><h3>Tuesday net, then Hospital Net</h3><p>Net control open. Volunteer on Groups.io.</p></article>
+      <article class="day dem"><div class="when"><span class="dn">10</span><span class="dm">Sat Oct<br>9 AM–noon</span></div><h3>Second Saturday Workshop</h3><p>Hands-on skills and gear.</p><button class="at" type="button" data-show="meet"><svg viewBox="0 0 14 17" aria-hidden="true"><path d="M7 16.5S1 10 1 6.5a6 6 0 0 1 12 0C13 10 7 16.5 7 16.5z" fill="#D0202A"/></svg>DEM building</button></article>
+      <article class="day net"><div class="when"><span class="dn">13</span><span class="dm">Tue Oct<br>8:00 PM</span></div><h3>Tuesday net</h3><p>Net control <span class="nc">AE7RJ</span>.</p></article>
+      <article class="day dem"><div class="when"><span class="dn">15</span><span class="dm">Thu<br>Oct</span></div><h3>Third Thursday training meeting</h3><p>Start time being confirmed. Also the Great ShakeOut “Did You Feel It” message.</p><button class="at" type="button" data-show="meet"><svg viewBox="0 0 14 17" aria-hidden="true"><path d="M7 16.5S1 10 1 6.5a6 6 0 0 1 12 0C13 10 7 16.5 7 16.5z" fill="#D0202A"/></svg>DEM building</button></article>
+      <article class="day"><div class="when"><span class="dn">17</span><span class="dm">Sat<br>Oct</span></div><h3>SHARES training meeting</h3><p>Training for the federal SHARES program.</p></article>
+      <article class="day net"><div class="when"><span class="dn">20</span><span class="dm">Tue Oct<br>8:00 PM</span></div><h3>Tuesday net</h3><p>Net control <span class="nc">WA7LNC</span>.</p></article>
+      <article class="day"><div class="when"><span class="dn">24</span><span class="dm">Sat<br>Oct</span></div><h3>State COMMEX</h3><p>Statewide communications exercise.</p></article>
+      <article class="day dem"><div class="when"><span class="dn">27</span><span class="dm">Tue Oct<br>6:00 PM</span></div><h3>New Member Orientation</h3><p>Followed by a comm room tour and the 8 PM net.</p><button class="at" type="button" data-show="meet"><svg viewBox="0 0 14 17" aria-hidden="true"><path d="M7 16.5S1 10 1 6.5a6 6 0 0 1 12 0C13 10 7 16.5 7 16.5z" fill="#D0202A"/></svg>DEM building</button></article>
+    </div></div>
+
+    <div class="cal-lower">
+      <div class="listen" id="net">
+        <h3>Listen on Tuesday</h3>
+        <p class="freq">147.300 MHz</p>
+        <p class="freq-sub">W7GBU repeater, +600 kHz offset, 100 Hz tone</p>
+        <dl>
+          <dt>When</dt><dd>Every Tuesday at 8:00 PM</dd>
+          <dt>Mornings</dt><dd>The 0730 Bunch, weekdays at 7:30 AM, same repeater <span class="v">VERIFY</span></dd>
+          <dt>Statewide</dt><dd>WSEN on HF, <span class="mono">3.985 MHz</span> LSB, Monday evenings and Saturdays at 9 AM</dd>
+        </dl>
+        <p>Anyone with a scanner or ham radio can listen. Licensed visitors are welcome to check in when net control calls for visitors, after members and before simplex stations.</p>
+      </div>
+      <div class="members" id="members">
+        <div class="members-head">
+          <h3>Members</h3>
+          <a class="btn btn-line btn-sm" href="#">Member sign in</a>
+        </div>
+        <div class="roster" aria-label="Net control roster">
+          <span><small>Sep 29</small>NZ2S</span>
+          <span class="open"><small>Oct 6</small>Open</span>
+          <span><small>Oct 13</small>AE7RJ</span>
+          <span><small>Oct 20</small>WA7LNC</span>
+          <span class="open"><small>Oct 27</small>Open</span>
+        </div>
+        <p class="roster-note">Net control is open on Oct 6 and Oct 27. Claim a week on Groups.io.</p>
+        <ul class="qlinks">
+          <li><a href="#">Net preamble and script <span>.docx</span></a></li>
+          <li><a href="#">Net roster <span>PDF, Aug 2026</span></a></li>
+          <li><a href="#">Simplex and GMRS net scripts</a></li>
+          <li><a href="#">ICS forms <span>213, 213RR, 214, 309</span></a></li>
+          <li><a href="#">ARRL Radiogram form</a></li>
+          <li><a href="#">Alert levels and status codes</a></li>
+          <li><a href="#">ACS Task Book <span>2024-08-09</span></a></li>
+          <li><a href="#">Go-kit equipment lists</a></li>
+          <li><a href="#">Winlink assignments</a></li>
+          <li><a href="https://spokaneares-acs.groups.io/">Groups.io</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section class="sec partners" id="partners" aria-labelledby="partners-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="partners-title">Who we serve</h2>
+      <p>The agencies and organizations the team trains with and supports, and what each relationship involves.</p>
+    </div>
+    <div class="partners-top">
+      <div class="aff">
+        <img src="../../assets/SCDEM_Logo.png" alt="Spokane County Emergency Management seal">
+        <div>
+          <h3>Spokane County Emergency Management</h3>
+          <p>Primary served agency. The county activates ACS, runs the background check and issues volunteer IDs.</p>
+          <small>Seal shown as an affiliation mark, pending the county’s permission.</small>
+        </div>
+      </div>
+      <div class="aff">
+        <img src="../../assets/ARES_logo.png" alt="ARRL Amateur Radio Emergency Service emblem">
+        <div>
+          <h3>ARRL, the national association for amateur radio</h3>
+          <p>ARES is an ARRL program, and the group is ARRL-affiliated.</p>
+          <small>Emblem is ARRL’s trademark, shown pending permission.</small>
+        </div>
+      </div>
+    </div>
+    <ul class="plist">
+      <li><h3>National Weather Service, Spokane</h3><p>SKYWARN weather spotting and severe-weather nets.</p></li>
+      <li><h3>Greater Spokane area hospitals</h3><p>Backup radio and computer equipment, and the Hospital Net.</p></li>
+      <li><h3>American Red Cross</h3><p>Service under the ARRL and Red Cross agreement, and shelter training.</p></li>
+      <li><h3>Inland Empire VHF Radio Amateurs</h3><p>A formal agreement covering the 146.88 backup repeater and packet and Winlink nodes.</p></li>
+      <li><h3>Spokane County Sheriff’s Office</h3><p>Helicopter safety training and volunteer ID.</p></li>
+      <li><h3>Washington State Emergency Management</h3><p>State nets, including WSEN on 3.985 MHz, and mission numbers.</p></li>
+      <li><h3>WSDOT</h3><p>Joint exercise, September 2026.</p></li>
+      <li><h3>FEMA</h3><p>ICS and NIMS training that every ACS member completes.</p></li>
+      <li><h3>Event organizers</h3><p>Bloomsday and the Lilac Torchlight Parade.</p></li>
+    </ul>
+    <p class="partners-quote">“An emergency is a poor time to be handing out business cards.” <cite>From the new member orientation</cite></p>
+  </div>
+</section>
+</main>
+</div>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <img src="../../assets/Spokane_County_ARES-ACS_logo_slightly_smaller_550x550.png" alt="Spokane County ARES-ACS seal">
+        <div>
+          <b>Spokane County ARES-ACS</b>
+          <p>“He was a person who made a difference in Spokane by making others feel like they could make a difference themselves.” On Ira “Dean” Bula, W7GBU.</p>
+        </div>
+      </div>
+      <div>
+        <h2>Where we meet</h2>
+        <address>Spokane County DEM building<br>1121 W. Gardner Ave<br>Spokane, WA 99260</address>
+      </div>
+      <div>
+        <h2>Stay in touch</h2>
+        <ul>
+          <li><a href="https://spokaneares-acs.groups.io/">Groups.io list</a></li>
+          <li><a href="#">Contact form</a></li>
+          <li><a href="#join">Join the team</a></li>
+          <li><a href="#members">Member sign in</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Affiliations</h2>
+        <ul>
+          <li><a href="http://www.arrl.org/ares">ARRL ARES</a></li>
+          <li><a href="https://www.spokanecounty.org/">Spokane County Emergency Management</a></li>
+          <li><a href="https://www.weather.gov/otx/">NWS Spokane</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span>Formerly Spokane County ARES/RACES. Amateur radio volunteers; not first responders.</span>
+      <nav aria-label="Legal"><a href="#">Privacy</a><a href="#">Terms</a></nav>
+      <span class="concept-tag">Concept 11 — Coverage</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ================= projection ================= */
+var LON0=-118.9, LON1=-116.0, LAT0=46.85, LAT1=48.45;
+var COS=Math.cos(47.65*Math.PI/180);
+function UX(lon){return (lon-LON0)*1000*COS}
+function UY(lat){return (LAT1-lat)*1000}
+function toLon(x){return x/(1000*COS)+LON0}
+function toLat(y){return LAT1-y/1000}
+var WU=UX(LON1), HU=UY(LAT0);
+var UPK=1000/111; // units per km
+function f1(n){return Math.round(n*10)/10}
+function pts(list,close){
+  var s='';for(var i=0;i<list.length;i++){s+=(i?'L':'M')+f1(UX(list[i][0]))+' '+f1(UY(list[i][1]))}
+  return s+(close?'Z':'');
+}
+
+/* ================= geography ================= */
+var COUNTY=[[-117.82,47.26],[-117.04,47.26],[-117.04,48.05],[-117.535,48.05],[-117.535,47.792],[-117.57,47.80],[-117.62,47.815],[-117.69,47.833],[-117.76,47.845],[-117.82,47.842]];
+// rivers: lon, lat, water level (ft), valley half-width (km)
+var R_SPOKANE=[[-116.0,47.72,2150,4],[-116.55,47.71,2150,4],[-116.78,47.70,2130,5],[-116.95,47.71,2100,6],[-117.04,47.698,2050,6],[-117.12,47.68,2020,6],[-117.20,47.68,2000,5.5],[-117.28,47.683,1950,4.5],[-117.33,47.686,1920,3],[-117.39,47.668,1900,2],[-117.425,47.662,1800,1.6],[-117.445,47.657,1720,1.4],[-117.458,47.662,1710,1.4],[-117.468,47.685,1700,1.6],[-117.495,47.697,1690,1.6],[-117.51,47.725,1670,1.6],[-117.53,47.748,1650,1.6],[-117.545,47.775,1600,1.5],[-117.57,47.80,1545,1.6],[-117.62,47.815,1540,1.8],[-117.69,47.833,1540,1.8],[-117.76,47.845,1540,1.8],[-117.84,47.836,1500,1.6],[-117.95,47.845,1450,2],[-118.10,47.87,1350,2.5],[-118.30,47.90,1300,3],[-118.9,47.95,1290,4]];
+var R_LITTLE=[[-117.30,48.45,2100,1.5],[-117.30,48.20,2050,1.5],[-117.30,48.10,2000,1.8],[-117.28,48.02,1950,2],[-117.33,47.94,1900,2],[-117.36,47.89,1850,2],[-117.385,47.84,1800,2],[-117.42,47.795,1750,1.8],[-117.48,47.78,1650,1.5],[-117.557,47.789,1560,1.2]];
+var R_HANGMAN=[[-116.90,47.10,2550,2],[-116.98,47.20,2500,2],[-117.07,47.25,2400,2],[-117.15,47.285,2350,2],[-117.24,47.34,2300,2],[-117.32,47.42,2200,2],[-117.38,47.50,2100,2],[-117.42,47.58,1950,1.8],[-117.44,47.62,1850,1.5],[-117.455,47.655,1715,1.3]];
+var LAKE_SPOKANE=R_SPOKANE.slice(18,23);
+var URBAN=[[-117.53,47.70],[-117.47,47.765],[-117.38,47.785],[-117.30,47.745],[-117.20,47.725],[-117.10,47.705],[-117.065,47.662],[-117.15,47.632],[-117.25,47.618],[-117.33,47.598],[-117.42,47.598],[-117.50,47.618],[-117.62,47.628],[-117.63,47.662],[-117.56,47.672]];
+var ROADS_I=[[[-116.0,47.70],[-116.55,47.70],[-116.78,47.695],[-116.95,47.705],[-117.04,47.697],[-117.12,47.672],[-117.24,47.668],[-117.33,47.662],[-117.40,47.652],[-117.44,47.648],[-117.50,47.625],[-117.56,47.585],[-117.62,47.545],[-117.72,47.47],[-117.85,47.38],[-118.0,47.30],[-118.9,46.95]]];
+var ROADS=[
+  [[-117.41,47.665],[-117.41,47.72],[-117.40,47.78],[-117.43,47.85],[-117.47,47.95],[-117.55,48.05],[-117.70,48.30],[-117.78,48.45]],
+  [[-117.43,47.64],[-117.44,47.60],[-117.40,47.52],[-117.38,47.43],[-117.37,47.30],[-117.36,47.10],[-117.35,46.85]],
+  [[-117.42,47.66],[-117.50,47.652],[-117.60,47.645],[-117.75,47.64],[-118.0,47.62],[-118.9,47.64]],
+  [[-117.40,47.72],[-117.36,47.80],[-117.35,47.90],[-117.30,48.0],[-117.22,48.20],[-117.10,48.45]],
+  [[-117.24,47.668],[-117.22,47.55],[-117.17,47.45],[-117.15,47.385],[-117.12,47.25],[-117.05,47.10]]
+];
+var LAKES=[[-117.690,47.566,.45,1.7,-15],[-117.092,47.772,1.3,1.6,0],[-117.083,47.640,.8,1.1,0],[-117.372,48.020,.6,1.3,10],[-117.628,47.538,.6,.9,0],[-117.662,47.528,.45,.9,0],[-116.748,47.785,1.1,3.2,20],[-117.54,47.45,.4,.7,0]];
+var CDA=[[-116.80,47.68],[-116.755,47.63],[-116.80,47.58],[-116.84,47.53],[-116.86,47.45],[-116.83,47.38],[-116.79,47.40],[-116.78,47.47],[-116.74,47.52],[-116.70,47.57],[-116.72,47.63],[-116.76,47.67]];
+
+/* ================= terrain ================= */
+function kx(lon){return (lon+117.4)*111*COS}
+function ky(lat){return (lat-47.65)*111}
+var BUMPS=[[-117.113,47.922,3300,6,6.5],[-117.05,48.10,1900,12,10],[-117.28,48.17,1400,14,8],[-116.85,47.98,1500,14,14],[-117.45,48.02,500,12,8],[-117.40,47.975,650,9,5],[-117.19,47.98,900,8,6],[-117.33,47.692,380,2.2,1.8],[-117.18,47.60,600,5,5],[-117.56,47.93,700,6,6],[-117.28,47.83,450,5,4],[-117.45,47.735,300,3,2.5],[-117.40,47.622,320,4,2.2],[-117.27,47.60,1100,6,4],[-117.09,47.535,2700,6,7],[-116.60,47.55,2600,16,20],[-116.70,47.82,1200,12,12],[-116.88,47.80,-300,10,8],[-117.12,47.47,450,8,8],[-117.82,48.07,1400,14,12],[-117.62,48.16,1600,10,10],[-118.25,47.60,-250,25,25],[-117.70,47.45,-150,15,12],[-117.98,48.33,1500,18,14],[-116.35,47.15,1900,20,20],[-116.30,48.20,1800,20,20]]
+  .map(function(b){return {x:kx(b[0]),y:ky(b[1]),a:b[2],sx:b[3],sy:b[4]}});
+function riverKm(r){
+  var p=r.map(function(v){return {x:kx(v[0]),y:ky(v[1]),l:v[2],s:v[3]}});
+  var bx0=1e9,by0=1e9,bx1=-1e9,by1=-1e9,sm=0;
+  p.forEach(function(q){bx0=Math.min(bx0,q.x);by0=Math.min(by0,q.y);bx1=Math.max(bx1,q.x);by1=Math.max(by1,q.y);sm=Math.max(sm,q.s)});
+  var m=sm*4;return {p:p,b:[bx0-m,by0-m,bx1+m,by1+m]};
+}
+var RIVK=[riverKm(R_SPOKANE),riverKm(R_LITTLE),riverKm(R_HANGMAN)];
+function h2(i,j){var h=(Math.imul(i,374761393)+Math.imul(j,668265263))|0;h=Math.imul(h^(h>>>13),1274126177);h=h^(h>>>16);return (h>>>0)/4294967296}
+function vn(x,y){var i=Math.floor(x),j=Math.floor(y),fx=x-i,fy=y-j,u=fx*fx*(3-2*fx),v=fy*fy*(3-2*fy);var a=h2(i,j),b=h2(i+1,j),c=h2(i,j+1),d=h2(i+1,j+1);return a+(b-a)*u+(c-a)*v+(a-b-c+d)*u*v}
+function ridge(x,y){var n=1-Math.abs(2*vn(x,y)-1);return n*n}
+function sstep(a,b,x){var t=Math.min(1,Math.max(0,(x-a)/(b-a)));return t*t*(3-2*t)}
+function elev(lon,lat){
+  var X=kx(lon),Y=ky(lat),e=2350,i,f,dx,dy,q;
+  for(i=0;i<BUMPS.length;i++){f=BUMPS[i];dx=(X-f.x)/f.sx;dy=(Y-f.y)/f.sy;q=dx*dx+dy*dy;if(q<18)e+=f.a*Math.exp(-q/2)}
+  e+=(vn(X/9,Y/9)-.5)*190+(vn(X/3.3+50,Y/3.3+50)-.5)*110+(vn(X/1.25+9,Y/1.25+9)-.5)*46;
+  var mt=sstep(2500,3900,e);
+  if(mt>0)e+=mt*((ridge(X/4.2+3,Y/4.2+7)-.55)*820+(ridge(X/1.7+11,Y/1.7+2)-.5)*260);
+  var pw=sstep(47.52,47.36,lat);
+  if(pw>0)e+=pw*Math.sin(X/1.9+Math.sin(Y/2.3)*1.6)*Math.cos(Y/1.7+X*.13)*120;
+  for(i=0;i<RIVK.length;i++){
+    var r=RIVK[i],b=r.b;if(X<b[0]||X>b[2]||Y<b[1]||Y>b[3])continue;
+    var best=1e18,bl=0,bs=1,p=r.p;
+    for(var k=0;k<p.length-1;k++){
+      var a=p[k],c=p[k+1],vx=c.x-a.x,vy=c.y-a.y,wx=X-a.x,wy=Y-a.y,L=vx*vx+vy*vy,t=L?Math.max(0,Math.min(1,(wx*vx+wy*vy)/L)):0;
+      var ex=wx-t*vx,ey=wy-t*vy,d2=ex*ex+ey*ey;
+      if(d2<best){best=d2;bl=a.l+(c.l-a.l)*t;bs=a.s+(c.s-a.s)*t}
+    }
+    if(best<16*bs*bs){var w=Math.exp(-best/(2*bs*bs));e=e*(1-w)+bl*w}
+  }
+  return e;
+}
+var CELL=4;
+var GW=Math.ceil(WU/CELL)+1, GH=Math.ceil(HU/CELL)+1;
+function buildTerrain(){
+  var G=new Float32Array(GW*GH),i,j;
+  for(j=0;j<GH;j++){var lat=toLat(j*CELL);for(i=0;i<GW;i++){G[j*GW+i]=elev(toLon(i*CELL),lat)}}
+  // hillshade
+  var cv=document.createElement('canvas');cv.width=GW;cv.height=GH;
+  var ctx=cv.getContext('2d'),img=ctx.createImageData(GW,GH),D=img.data;
+  var cellFt=CELL/UPK*3280.84, ex=4;
+  for(j=0;j<GH;j++){for(i=0;i<GW;i++){
+    var e=G[j*GW+i];
+    var el=G[j*GW+Math.max(0,i-1)],er=G[j*GW+Math.min(GW-1,i+1)],eu=G[Math.max(0,j-1)*GW+i],ed=G[Math.min(GH-1,j+1)*GW+i];
+    var dzx=(er-el)/(2*cellFt)*ex, dzy=(ed-eu)/(2*cellFt)*ex;
+    var len=Math.sqrt(dzx*dzx+dzy*dzy+1);
+    var sh=(dzx*.5+dzy*.5+.7071)/len/.7071;
+    var lat=toLat(j*CELL);
+    var r=244,g=246,b=248,t;
+    t=sstep(2700,4300,e)*.9; r+=(206-r)*t;g+=(222-g)*t;b+=(206-b)*t;
+    t=sstep(2080,1650,e)*.9; r+=(229-r)*t;g+=(237-g)*t;b+=(243-b)*t;
+    t=sstep(47.52,47.36,lat)*(1-sstep(2700,3300,e))*.75; r+=(241-r)*t;g+=(237-g)*t;b+=(227-b)*t;
+    var k=1+(sh-1)*.62;
+    var o=(j*GW+i)*4;D[o]=Math.min(255,r*k);D[o+1]=Math.min(255,g*k);D[o+2]=Math.min(255,b*k);D[o+3]=255;
+  }}
+  ctx.putImageData(img,0,0);
+  var url=cv.toDataURL('image/jpeg',.9);
+  // contours (marching squares, chained)
+  var norm='',idx='';
+  for(var lv=1400;lv<=6400;lv+=(lv<3000?100:200)){
+    var d=contour(G,lv);
+    if(lv%500===0)idx+=d;else norm+=d;
+  }
+  return {img:url,ct:norm,cti:idx};
+}
+var CASES=[[],[[3,2]],[[2,1]],[[3,1]],[[0,1]],[[3,0],[2,1]],[[0,2]],[[3,0]],[[3,0]],[[0,2]],[[3,2],[0,1]],[[0,1]],[[3,1]],[[2,1]],[[3,2]],[]];
+function contour(G,L){
+  var N=GW*GH, nb=new Map(), pos=new Map();
+  function eid(i,j,side){ // 0 top,1 right,2 bottom,3 left
+    if(side===0)return j*GW+i; if(side===2)return (j+1)*GW+i; if(side===3)return N+j*GW+i; return N+j*GW+i+1;
+  }
+  function ept(id){
+    if(pos.has(id))return;var x,y,a,b,t;
+    if(id<N){var j=Math.floor(id/GW),i=id-j*GW;a=G[id];b=G[id+1];t=(L-a)/(b-a);x=(i+t)*CELL;y=j*CELL}
+    else{var k=id-N,j2=Math.floor(k/GW),i2=k-j2*GW;a=G[k];b=G[k+GW];t=(L-a)/(b-a);x=i2*CELL;y=(j2+t)*CELL}
+    pos.set(id,[x,y]);
+  }
+  function link(a,b){var l=nb.get(a);if(!l){l=[];nb.set(a,l)}l.push(b)}
+  for(var j=0;j<GH-1;j++){for(var i=0;i<GW-1;i++){
+    var o=j*GW+i,a=G[o],b=G[o+1],c=G[o+GW+1],d=G[o+GW];
+    var cs=(a>L?8:0)|(b>L?4:0)|(c>L?2:0)|(d>L?1:0);
+    if(cs===0||cs===15)continue;
+    var segs=CASES[cs];
+    for(var s=0;s<segs.length;s++){var e1=eid(i,j,segs[s][0]),e2=eid(i,j,segs[s][1]);ept(e1);ept(e2);link(e1,e2);link(e2,e1)}
+  }}
+  var seen=new Set(),out='';
+  nb.forEach(function(_,start){
+    if(seen.has(start))return;
+    var a=start,pa=-1,guard=0;
+    while(guard++<100000){var n=nb.get(a),nx=-1;for(var q=0;q<n.length;q++){if(n[q]!==pa){nx=n[q];break}}if(n.length<2||nx<0||nx===start)break;pa=a;a=nx}
+    var line=[a];seen.add(a);var prev=-1,cur=a;
+    while(true){var n2=nb.get(cur),nx2=-1;for(var r=0;r<n2.length;r++){if(n2[r]!==prev&&!seen.has(n2[r])){nx2=n2[r];break}}if(nx2<0)break;line.push(nx2);seen.add(nx2);prev=cur;cur=nx2}
+    if(line.length<3)return;
+    var closed=nb.get(cur).indexOf(a)>=0&&line.length>3;
+    var P=line.map(function(id){return pos.get(id)});
+    // one Chaikin pass
+    var S=[P[0]];
+    for(var m=0;m<P.length-1;m++){var p0=P[m],p1=P[m+1];S.push([p0[0]*.75+p1[0]*.25,p0[1]*.75+p1[1]*.25],[p0[0]*.25+p1[0]*.75,p0[1]*.25+p1[1]*.75])}
+    if(!closed)S.push(P[P.length-1]);
+    var str='M'+f1(S[0][0])+' '+f1(S[0][1]);
+    for(var z=1;z<S.length;z++)str+='L'+f1(S[z][0])+' '+f1(S[z][1]);
+    out+=str+(closed?'Z':'');
+  });
+  return out;
+}
+
+/* ================= coverage (illustrative) ================= */
+var COV_C=[-117.37,47.69];
+var COV=(function(){
+  var cx=UX(COV_C[0]),cy=UY(COV_C[1]),r0=27*UPK,out=[];
+  for(var k=0;k<96;k++){var th=k/96*Math.PI*2;
+    var r=r0*(1+.14*Math.sin(3*th+.5)+.08*Math.cos(5*th+1.2)+.05*Math.sin(9*th)-.2*Math.max(0,Math.cos(th-(-0.7))));
+    out.push([cx+Math.cos(th)*r,cy+Math.sin(th)*r])}
+  return out;
+})();
+function covPath(){return 'M'+COV.map(function(p){return f1(p[0])+' '+f1(p[1])}).join('L')+'Z'}
+function inPoly(x,y,P){var c=false;for(var i=0,j=P.length-1;i<P.length;j=i++){var a=P[i],b=P[j];if(((a[1]>y)!==(b[1]>y))&&(x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0]))c=!c}return c}
+function covRatio(lon,lat){ // distance from centre relative to polygon radius in that direction
+  var cx=UX(COV_C[0]),cy=UY(COV_C[1]),x=UX(lon),y=UY(lat),th=Math.atan2(y-cy,x-cx);if(th<0)th+=Math.PI*2;
+  var k=Math.round(th/(Math.PI*2)*96)%96,p=COV[k];var rr=Math.hypot(p[0]-cx,p[1]-cy);return Math.hypot(x-cx,y-cy)/rr;
+}
+var covBadge=(function(){var p=COV[Math.round(96*3.78/(Math.PI*2))];return [toLon(p[0]),toLat(p[1])]})();
+
+/* ================= routes (illustrative) ================= */
+var BLOOM=[[-117.426,47.6585],[-117.44,47.657],[-117.452,47.655],[-117.463,47.658],[-117.472,47.664],[-117.476,47.672],[-117.470,47.679],[-117.458,47.676],[-117.447,47.672],[-117.438,47.667],[-117.431,47.6635],[-117.425,47.6605]];
+var TORCH=[[-117.433,47.6588],[-117.418,47.6590],[-117.405,47.6587],[-117.404,47.6556],[-117.418,47.6553],[-117.433,47.6556],[-117.433,47.6588]];
+var DEM=[-117.428,47.6655];
+var HOSP=[-117.412,47.650];
+
+/* ================= glyphs ================= */
+var GLY={
+  meet:'<path d="M9.5 22.5v-8l6.5-4 6.5 4v8z" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M14.5 22.5v-4h3v4" fill="none" stroke="#fff" stroke-width="1.6"/>',
+  hosp:'<path d="M11.5 10v11M20.5 10v11M11.5 15.5h9" fill="none" stroke="#fff" stroke-width="2.6"/>',
+  events:'<path d="M11 22.5V9.5M11 10.2h9.5l-2.4 3 2.4 3H11" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/>',
+  rpt:'<circle cx="16" cy="16" r="1.9" fill="#fff"/><path d="M12.6 12.6a4.8 4.8 0 0 0 0 6.8M19.4 12.6a4.8 4.8 0 0 1 0 6.8M10 10a8.5 8.5 0 0 0 0 12M22 10a8.5 8.5 0 0 1 0 12" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>',
+  nws:'<path d="M11.3 17.5h9a3 3 0 0 0 .2-6 4.4 4.4 0 0 0-8.4-.8 3.4 3.4 0 0 0-.8 6.8z" fill="none" stroke="#fff" stroke-width="1.7" stroke-linejoin="round"/><path d="M16.5 18.5l-2 3h3l-1.8 3" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>',
+  field:'<rect x="9.5" y="15" width="13" height="7.5" rx="1" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M12.5 18.8h4M19.5 15V8.5M17.6 10.2l1.9-1.9 1.9 1.9" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
+  you:'<circle cx="16" cy="15.5" r="4.2" fill="#fff"/>'
+};
+var PINBODY='<path class="body" d="M16 38.5C16 38.5 3 24.5 3 15.5a13 13 0 0 1 26 0c0 9-13 23-13 23z"/>';
+function pinSvg(g,w,h){return '<svg class="pin-head" viewBox="0 0 32 40" width="'+(w||32)+'" height="'+(h||40)+'" aria-hidden="true">'+PINBODY+GLY[g]+'</svg>'}
+document.querySelectorAll('svg[data-glyph]').forEach(function(s){s.innerHTML='<path d="M16 38.5C16 38.5 3 24.5 3 15.5a13 13 0 0 1 26 0c0 9-13 23-13 23z" fill="#D0202A" stroke="#fff" stroke-width="2"/>'+GLY[s.getAttribute('data-glyph')]});
+
+/* ================= pins + cards ================= */
+var IMG_FIELD='../../assets/IMG_6574.jpg';
+var PINS=[
+  {id:'meet',layer:'meet',ll:DEM,label:'Where we meet',major:true,co:[0,0],span:5},
+  {id:'hosp',layer:'hospitals',ll:HOSP,label:'Hospitals we support',co:[70,70],span:14},
+  {id:'events',layer:'events',ll:[-117.452,47.6552],label:'Public events',co:[-6,104],left:true,span:5},
+  {id:'rpt',layer:'repeater',ll:covBadge,label:'W7GBU coverage',co:[0,0],left:true,span:70},
+  {id:'nws',layer:'nws',ll:[-117.627,47.681],label:'NWS Spokane',co:[0,0],left:true,span:26},
+  {id:'field',layer:'field',ll:[-117.205,47.805],label:'Field station, example',thumb:true,co:[0,0],span:34}
+];
+var CARDS={
+  meet:{coord:'47.666° N, 117.428° W',title:'Where we meet',place:'Spokane County DEM building, 1121 W. Gardner Ave, Spokane, next to the County Courthouse',
+    body:'Training meetings on Third Thursdays, hands-on workshops on Second Saturdays from 9 AM to noon, and New Member Orientation on the 4th Tuesday at 6 PM, followed by a tour of the county’s radio communications room and the 8 PM net.',
+    role:'Everyone starts here. New members begin at orientation, then take turns in the radio room and on net control.',
+    note:'The Third Thursday start time is being confirmed. <b>VERIFY</b>'},
+  hosp:{coord:'Greater Spokane area',title:'Hospitals we support',place:'Shown as a general area only',
+    body:'A Hospital Coordinator works with Greater Spokane area hospitals to keep backup radio and computer equipment in place and working. A Hospital Net follows the regular Tuesday net on some weeks, such as October 6.',
+    role:'Hospital team. For ACS members, with HIPAA training covered at orientation.',
+    note:'Hospital stations are never shown on the public map.'},
+  events:{coord:'Downtown Spokane',title:'Public events',place:'Bloomsday and the Lilac Torchlight Parade',
+    body:'Primary or backup communications for Bloomsday, the Lilac Torchlight Parade, fun runs and bicycle races. Operators hold posts along the route and pass what they see to net control.',
+    role:'Event operator. Open to any licensed ARES member, with no background check needed. A good first assignment.',
+    note:'Routes on the map are illustrative: solid blue for Bloomsday, dashed red for the parade.'},
+  rpt:{coord:'W7GBU',title:'Repeater W7GBU',freq:true,
+    body:'The Tuesday 8 PM net runs here, and so does the informal 0730 Bunch on weekday mornings. The call sign is a memorial to Ira “Dean” Bula, who started the morning round table.',
+    quote:'He was a person who made a difference in Spokane by making others feel like they could make a difference themselves.',
+    role:'Net control station. Members take turns, and the Net Manager coaches new net controls.',
+    note:'Coverage shading is illustrative and has not been verified. <b>VERIFY</b> The honest test is to listen on Tuesday at 8 PM.'},
+  nws:{coord:'West Plains, approximate',title:'NWS Spokane',place:'SKYWARN weather spotting',
+    body:'Many members are trained SKYWARN spotters for the National Weather Service Spokane office, and nets are activated in severe weather. Spotting is encouraged but not required.',
+    role:'Weather spotter. Training is online or at a public session, and you can take it before you are licensed.',
+    link:['https://www.weather.gov/otx/Current_Spotter_Training','Find spotter training'],
+    note:'Pin location is approximate.'},
+  field:{coord:'Location illustrative',title:'Field station',place:'Wherever an exercise or event needs one',photo:true,
+    body:'Members bring their own go-kits: a station that can run for at least 72 hours on 2 m and 70 cm, and often HF and Winlink for digital messages through the group’s W7GBU-10 gateway. The Simulated Emergency Test on October 3 puts these stations on the air.',
+    role:'Field or Winlink operator. Members also complete Winlink practice assignments every two weeks.',
+    note:'The pin’s position is illustrative.'}
+};
+function cardHTML(id){
+  var c=CARDS[id],h='<p class="pc-coord">'+c.coord+'</p><h2 id="pcTitle" tabindex="-1">'+c.title+'</h2>';
+  if(c.freq)h+='<p class="pc-freq">147.300 MHz<small>+600 kHz offset, 100 Hz tone, every Tuesday at 8:00 PM</small></p>';
+  else h+='<p class="pc-place">'+c.place+'</p>';
+  if(c.photo)h+='<figure class="pc-photo"><img src="'+IMG_FIELD+'" alt="A portable radio station in rack cases on a pickup tailgate, with a laptop and binders, overlooking a forested valley." loading="lazy"><figcaption>A member’s go-kit on a tailgate at an overlook.</figcaption></figure>';
+  h+='<h3>What volunteers do here</h3><p class="pc-body">'+c.body+'</p>';
+  if(c.quote)h+='<blockquote class="pc-quote">“'+c.quote+'”<cite>On Dean Bula, W7GBU</cite></blockquote>';
+  h+='<div class="pc-role"><h3>Role it needs</h3><p>'+c.role+'</p></div>';
+  if(c.note)h+='<p class="pc-note">'+c.note+'</p>';
+  h+='<div class="pc-actions"><a class="btn btn-red btn-sm" href="#join">Join the team</a>';
+  if(c.link)h+='<a class="btn btn-line btn-sm" href="'+c.link[0]+'">'+c.link[1]+'</a>';
+  else h+='<a class="btn btn-line btn-sm" href="#net">Listen Tuesday</a>';
+  return h+'</div>';
+}
+
+/* ================= labels ================= */
+var LABELS=[
+  {t:'Spokane',ll:[-117.44,47.648],c:'t1',a:'r',max:2.6},
+  {t:'Downtown Spokane',ll:[-117.412,47.6605],c:'t2',a:'c',min:4,noDot:true},
+  {t:'Spokane Valley',ll:[-117.24,47.66],c:'t2',a:'l',max:4,dy:6},
+  {t:'Liberty Lake',ll:[-117.10,47.676],c:'t3',a:'l',max:4,dy:-10},
+  {t:'Cheney',ll:[-117.576,47.487],c:'t2',a:'l'},
+  {t:'Airway Heights',ll:[-117.593,47.645],c:'t3',a:'r',dy:12},
+  {t:'Medical Lake',ll:[-117.70,47.573],c:'t3',a:'r'},
+  {t:'Deer Park',ll:[-117.477,47.955],c:'t2',a:'l'},
+  {t:'Mead',ll:[-117.355,47.767],c:'t3',a:'l'},
+  {t:'Chattaroy',ll:[-117.357,47.891],c:'t3',a:'l'},
+  {t:'Rockford',ll:[-117.13,47.451],c:'t3',a:'l'},
+  {t:'Fairfield',ll:[-117.172,47.385],c:'t3',a:'l'},
+  {t:'Spangle',ll:[-117.38,47.429],c:'t3',a:'l'},
+  {t:'Latah',ll:[-117.155,47.28],c:'t3',a:'l'},
+  {t:'Mount Spokane',ll:[-117.113,47.922],c:'peak',a:'r'},
+  {t:'Spokane River',ll:[-117.17,47.698],c:'water',a:'c',noDot:true,min:1.5,max:5},
+  {t:'Lake Spokane',ll:[-117.715,47.818],c:'water',a:'c',noDot:true},
+  {t:'Little Spokane River',ll:[-117.335,47.86],c:'water minor',a:'l',noDot:true,dx:8},
+  {t:'Hangman Creek',ll:[-117.29,47.40],c:'water minor',a:'l',noDot:true,dx:6},
+  {t:'Stevens County',ll:[-117.80,47.99],c:'cty',a:'c',noDot:true,max:2.2},
+  {t:'Pend Oreille County',ll:[-117.25,48.12],c:'cty',a:'c',noDot:true,max:2.2},
+  {t:'Lincoln County',ll:[-118.08,47.55],c:'cty',a:'c',noDot:true,max:2.2},
+  {t:'Whitman County',ll:[-117.43,47.19],c:'cty',a:'c',noDot:true,max:2.2},
+  {t:'Idaho',ll:[-116.86,47.90],c:'cty',a:'c',noDot:true,max:2.2},
+  {t:'Coeur d’Alene Lake',ll:[-116.93,47.47],c:'water minor',a:'c',noDot:true,max:3}
+];
+
+/* ================= map class ================= */
+var TERRAIN=null;
+function GeoMap(el,opt){
+  this.el=el;this.opt=opt;this.id=opt.id;this.layers={meet:1,hospitals:1,events:1,repeater:1,nws:1,field:1};
+  if(opt.layers)this.layers=opt.layers;
+  this.v=null;this.pins={};this.active=null;this.you=null;this.userMoved=false;
+  this.build();
+}
+GeoMap.prototype.svgMarkup=function(){
+  var id=this.id,T=TERRAIN,o=this.opt;
+  var cpath=pts(COUNTY,true);
+  var s='<svg class="geo" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true" focusable="false">';
+  s+='<defs><linearGradient id="'+id+'fl" x1="0" x2="1"><stop offset="0" stop-color="#F4F6F8"/><stop offset="1" stop-color="#F4F6F8" stop-opacity="0"/></linearGradient>'+
+     '<linearGradient id="'+id+'fr" x1="1" x2="0"><stop offset="0" stop-color="#F4F6F8"/><stop offset="1" stop-color="#F4F6F8" stop-opacity="0"/></linearGradient>'+
+     '<linearGradient id="'+id+'ft" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#F4F6F8"/><stop offset="1" stop-color="#F4F6F8" stop-opacity="0"/></linearGradient>'+
+     '<linearGradient id="'+id+'fb" x1="0" x2="0" y1="1" y2="0"><stop offset="0" stop-color="#F4F6F8"/><stop offset="1" stop-color="#F4F6F8" stop-opacity="0"/></linearGradient>'+
+     '<pattern id="'+id+'hatch" class="hatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)"><rect width="1.6" height="8" fill="#24348A" opacity=".45"/></pattern>'+
+     '<radialGradient id="'+id+'cov" gradientUnits="userSpaceOnUse" cx="'+f1(UX(COV_C[0]))+'" cy="'+f1(UY(COV_C[1]))+'" r="'+f1(30*UPK)+'"><stop offset="0" stop-color="#2E7DAF" stop-opacity=".26"/><stop offset=".75" stop-color="#2E7DAF" stop-opacity=".12"/><stop offset="1" stop-color="#2E7DAF" stop-opacity=".05"/></radialGradient></defs>';
+  s+='<rect x="-6000" y="-6000" width="14000" height="14000" fill="#F4F6F8"/>';
+  s+='<image href="'+T.img+'" x="-2" y="-2" width="'+(GW*CELL)+'" height="'+(GH*CELL)+'" preserveAspectRatio="none"/>';
+  s+='<path class="ct" vector-effect="non-scaling-stroke" d="'+T.ct+'"/><path class="cti" vector-effect="non-scaling-stroke" d="'+T.cti+'"/>';
+  s+='<path class="urban" d="'+pts(URBAN,true)+'"/>';
+  s+='<g>';
+  ROADS_I.concat(ROADS).forEach(function(r){s+='<path class="road-c" vector-effect="non-scaling-stroke" d="'+pts(r)+'"/>'});
+  ROADS.forEach(function(r){s+='<path class="road" vector-effect="non-scaling-stroke" d="'+pts(r)+'"/>'});
+  ROADS_I.forEach(function(r){s+='<path class="road road-i" vector-effect="non-scaling-stroke" d="'+pts(r)+'"/>'});
+  s+='</g><g>';
+  s+='<path class="lake" vector-effect="non-scaling-stroke" d="'+pts(CDA,true)+'"/>';
+  LAKES.forEach(function(l){s+='<ellipse class="lake" vector-effect="non-scaling-stroke" cx="'+f1(UX(l[0]))+'" cy="'+f1(UY(l[1]))+'" rx="'+f1(l[2]*UPK)+'" ry="'+f1(l[3]*UPK)+'" transform="rotate('+l[4]+' '+f1(UX(l[0]))+' '+f1(UY(l[1]))+')"/>'});
+  s+='<path class="river" vector-effect="non-scaling-stroke" d="'+pts(R_SPOKANE)+'"/>';
+  s+='<path class="lakeline" vector-effect="non-scaling-stroke" d="'+pts(LAKE_SPOKANE)+'"/>';
+  s+='<path class="creek" vector-effect="non-scaling-stroke" d="'+pts(R_LITTLE)+'"/><path class="creek" vector-effect="non-scaling-stroke" d="'+pts(R_HANGMAN)+'"/>';
+  s+='</g>';
+  // edge fades
+  var fw=260;
+  s+='<rect x="-2" y="-2" width="'+fw+'" height="'+(HU+4)+'" fill="url(#'+id+'fl)"/><rect x="'+(WU-fw+2)+'" y="-2" width="'+fw+'" height="'+(HU+4)+'" fill="url(#'+id+'fr)"/>'+
+     '<rect x="-2" y="-2" width="'+(WU+4)+'" height="'+fw+'" fill="url(#'+id+'ft)"/><rect x="-2" y="'+(HU-fw+2)+'" width="'+(WU+4)+'" height="'+fw+'" fill="url(#'+id+'fb)"/>';
+  s+='<path class="veil" fill-rule="evenodd" d="M-6000 -6000H8000V8000H-6000Z'+cpath+'"/>';
+  s+='<path class="state" vector-effect="non-scaling-stroke" d="'+pts([[-117.04,46.85],[-117.04,48.45]])+'"/>';
+  s+='<path class="county-halo" vector-effect="non-scaling-stroke" d="'+cpath+'"/>';
+  s+='<path class="county'+(o.draw&&!reduce?' draw':'')+'" vector-effect="non-scaling-stroke" d="'+cpath+'"/>';
+  s+='<g data-layer="repeater"><path class="cov" vector-effect="non-scaling-stroke" fill="url(#'+id+'cov)" d="'+covPath()+'"/></g>';
+  if(!o.mini){
+    s+='<g data-layer="hospitals"><circle class="hosp" vector-effect="non-scaling-stroke" fill="url(#'+id+'hatch)" cx="'+f1(UX(HOSP[0]))+'" cy="'+f1(UY(HOSP[1]))+'" r="'+f1(4.2*UPK)+'"/></g>';
+    s+='<g data-layer="events"><path class="route route-c" vector-effect="non-scaling-stroke" d="'+pts(BLOOM)+'"/><path class="route route-b" vector-effect="non-scaling-stroke" d="'+pts(BLOOM)+'"/>'+
+       '<path class="route route-c" vector-effect="non-scaling-stroke" style="stroke-width:6" d="'+pts(TORCH)+'"/><path class="route route-t" vector-effect="non-scaling-stroke" d="'+pts(TORCH)+'"/></g>';
+  }
+  s+='<g class="yougrp"></g>';
+  return s+'</svg>';
+};
+GeoMap.prototype.build=function(){
+  var self=this,el=this.el,o=this.opt;
+  el.insertAdjacentHTML('afterbegin',this.svgMarkup());
+  this.svg=el.querySelector('svg.geo');
+  this.hatch=this.svg.querySelector('.hatch');
+  var ov=document.createElement('div');ov.className='ov';
+  ov.innerHTML='<svg class="leaders" aria-hidden="true"></svg>';
+  el.insertBefore(ov,this.svg.nextSibling);
+  this.ov=ov;this.lead=ov.querySelector('.leaders');
+  // labels
+  this.lbls=(o.mini?LABELS.filter(function(l){return l.c!=='water'||l.t==='Lake Spokane'}):LABELS).map(function(L){
+    var s=document.createElement('span');s.className='lbl '+L.c+' a-'+L.a;s.setAttribute('aria-hidden','true');
+    s.innerHTML=(L.c==='peak'?'<i class="tri"></i>':(L.noDot?'':'<i class="dot"></i>'))+'<span>'+L.t+'</span>';
+    ov.appendChild(s);return {L:L,el:s,x:UX(L.ll[0]),y:UY(L.ll[1])};
+  });
+  // pins
+  var list=o.mini?PINS.filter(function(p){return p.id==='meet'}):PINS;
+  list.forEach(function(p){
+    var b=document.createElement(o.mini?'span':'button');
+    if(!o.mini){b.type='button';b.setAttribute('aria-label',p.label+'. Show details');b.setAttribute('aria-controls','pinCard');}
+    b.className='pin'+(p.major?' major':'')+(p.left?' left':'');
+    b.innerHTML=pinSvg(p.id,p.major?38:32,p.major?47.5:40)+'<span class="pin-side"><span class="pin-tag">'+p.label+'</span>'+(p.thumb&&!o.mini?'<span class="pin-thumb"><img src="'+IMG_FIELD+'" alt=""></span>':'')+'</span>';
+    if(!o.mini)b.addEventListener('click',function(){self.openPin(p.id,true)});
+    ov.appendChild(b);
+    var ln=document.createElementNS('http://www.w3.org/2000/svg','line'),dt=document.createElementNS('http://www.w3.org/2000/svg','circle');dt.setAttribute('r','3.5');
+    self.lead.appendChild(ln);self.lead.appendChild(dt);
+    self.pins[p.id]={p:p,el:b,x:UX(p.ll[0]),y:UY(p.ll[1]),ln:ln,dt:dt};
+  });
+  if(o.pulse){this.pulse=document.createElement('span');this.pulse.className='pulse'+(reduce?'':' go');ov.appendChild(this.pulse)}
+  // resize
+  this.measure();
+  this.fitCounty(false);
+  var ro=new ResizeObserver(function(){var c=self.center();self.measure();if(!self.userMoved&&!self.active){self.fitCounty(false)}else{self.v=self.viewAt(c[0],c[1],self.v.s)}self.render()});
+  ro.observe(el);
+  if(o.interactive)this.bindInteraction();
+};
+GeoMap.prototype.measure=function(){this.W=this.el.clientWidth;this.H=this.el.clientHeight;this.el.classList.toggle('narrow',this.W<560)};
+GeoMap.prototype.free=function(){
+  var W=this.W,H=this.H;
+  if(this.opt.mini)return {x:28,y:28,w:W-56,h:H-56};
+  if(window.innerWidth<=900){
+    if(this.active){var pr=document.getElementById('pinCard').getBoundingClientRect(),mr=this.el.getBoundingClientRect(),vis=Math.min(H,pr.top-mr.top)-16;if(vis>140)return {x:16,y:24,w:W-32,h:vis-24}}
+    return {x:16,y:20,w:W-32,h:H-100};
+  }
+  var col=document.querySelector('.hero-col');var left=col.offsetLeft+col.offsetWidth+28;
+  var right=W-24-(W>1200?200:0);if(this.active){var pc=document.getElementById('pinCard');right=W-pc.offsetWidth-48}
+  var top=92,bottom=H-64;
+  return {x:left,y:top,w:Math.max(200,right-left),h:bottom-top};
+};
+GeoMap.prototype.viewAt=function(ux,uy,s){var f=this.free();return {x:ux-(f.x+f.w/2)/s,y:uy-(f.y+f.h/2)/s,s:s}};
+GeoMap.prototype.center=function(){var f=this.free(),v=this.v;return [v.x+(f.x+f.w/2)/v.s,v.y+(f.y+f.h/2)/v.s]};
+GeoMap.prototype.countyView=function(){
+  var x0=UX(-117.82),x1=UX(-117.04),y0=UY(48.05),y1=UY(47.26),pad=18,f=this.free();
+  var s=Math.min((f.w)/(x1-x0+pad*2),(f.h)/(y1-y0+pad*2));
+  return this.viewAt((x0+x1)/2,(y0+y1)/2,s);
+};
+GeoMap.prototype.fitCounty=function(anim){this.userMoved=false;var t=this.countyView();if(anim)this.fly(t);else{this.v=t;this.render()}};
+GeoMap.prototype.fly=function(t,dur){
+  var self=this;if(this.raf)cancelAnimationFrame(this.raf);
+  dur=reduce?0:(dur||850);
+  if(!this.v||dur===0){this.v=t;this.render();return}
+  var f=this.free(),fx=f.x+f.w/2,fy=f.y+f.h/2;
+  var c0=[this.v.x+fx/this.v.s,this.v.y+fy/this.v.s],c1=[t.x+fx/t.s,t.y+fy/t.s],l0=Math.log(this.v.s),l1=Math.log(t.s),st=performance.now();
+  function step(now){
+    var k=Math.min(1,(now-st)/dur),e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
+    var s=Math.exp(l0+(l1-l0)*e),cx=c0[0]+(c1[0]-c0[0])*e,cy=c0[1]+(c1[1]-c0[1])*e;
+    self.v={x:cx-fx/s,y:cy-fy/s,s:s};self.render();
+    if(k<1)self.raf=requestAnimationFrame(step);
+  }
+  this.raf=requestAnimationFrame(step);
+};
+GeoMap.prototype.render=function(){
+  var v=this.v,W=this.W,H=this.H,s=v.s,self=this;
+  this.svg.setAttribute('viewBox',v.x.toFixed(2)+' '+v.y.toFixed(2)+' '+(W/s).toFixed(2)+' '+(H/s).toFixed(2));
+  if(this.hatch){var hw=(7/s).toFixed(2);this.hatch.setAttribute('width',hw);this.hatch.setAttribute('height',hw);this.hatch.firstChild.setAttribute('height',hw);this.hatch.firstChild.setAttribute('width',(1.6/s).toFixed(2))}
+  function P(x,y){return [(x-v.x)*s,(y-v.y)*s]}
+  this.lbls.forEach(function(o){
+    var L=o.L,vis=(!L.min||s>=L.min)&&(!L.max||s<=L.max);
+    o.el.classList.toggle('hide',!vis);if(!vis)return;
+    var p=P(o.x,o.y);o.el.style.transform='translate('+(p[0]+(L.dx||0)).toFixed(1)+'px,'+(p[1]+(L.dy||0)).toFixed(1)+'px)';
+  });
+  var fco=Math.max(0,Math.min(1,(2.6-s)/1.4))*(this.W<560?.55:1);
+  Object.keys(this.pins).forEach(function(k){
+    var q=self.pins[k],p=P(q.x,q.y),on=self.layers[q.p.layer]!==0;
+    q.el.classList.toggle('hide',!on);
+    var ox=p[0]+q.p.co[0]*fco,oy=p[1]+q.p.co[1]*fco;
+    q.el.style.transform='translate('+ox.toFixed(1)+'px,'+oy.toFixed(1)+'px)';
+    var lead=on&&fco>.02&&(q.p.co[0]||q.p.co[1]);
+    q.ln.style.display=q.dt.style.display=lead?'':'none';
+    if(lead){q.ln.setAttribute('x1',p[0]);q.ln.setAttribute('y1',p[1]);q.ln.setAttribute('x2',ox);q.ln.setAttribute('y2',oy-4);q.dt.setAttribute('cx',p[0]);q.dt.setAttribute('cy',p[1])}
+  });
+  if(this.you){var yp=P(this.you.x,this.you.y);this.you.el.style.transform='translate('+yp[0].toFixed(1)+'px,'+yp[1].toFixed(1)+'px)';
+    if(this.you.dist){var dp=P((this.you.x+UX(DEM[0]))/2,(this.you.y+UY(DEM[1]))/2);this.you.dist.style.transform='translate('+dp[0].toFixed(1)+'px,'+dp[1].toFixed(1)+'px)'}}
+  if(this.pulse){var pp=P(UX(DEM[0]),UY(DEM[1]));this.pulse.style.transform='translate('+pp[0].toFixed(1)+'px,'+pp[1].toFixed(1)+'px)'}
+  if(this.opt.scale)this.updateScale();
+};
+GeoMap.prototype.updateScale=function(){
+  var pxPerMi=this.v.s*UPK*1.609344,nice=[.25,.5,1,2,5,10,20],mi=nice[0];
+  for(var i=0;i<nice.length;i++){if(nice[i]*pxPerMi<=130)mi=nice[i]}
+  document.getElementById('sbar').style.width=Math.round(mi*pxPerMi)+'px';
+  document.getElementById('slabel').textContent=(mi<1?(mi===.5?'½':'¼'):mi)+' mi';
+};
+GeoMap.prototype.setLayer=function(name,on){
+  this.layers[name]=on?1:0;
+  this.svg.querySelectorAll('[data-layer="'+name+'"]').forEach(function(g){g.classList.toggle('off',!on)});
+  if(!on&&this.active&&this.pins[this.active].p.layer===name)this.closePin();
+  this.render();
+};
+GeoMap.prototype.openPin=function(id,focus,instant){
+  var q=this.pins[id];if(!q)return;
+  if(this.layers[q.p.layer]===0){var cb=document.querySelector('input[data-layer="'+q.p.layer+'"]');if(cb){cb.checked=true}this.setLayer(q.p.layer,true)}
+  if(this.active&&this.pins[this.active])this.pins[this.active].el.classList.remove('active');
+  this.active=id;q.el.classList.add('active');
+  var pc=document.getElementById('pinCard');document.getElementById('pcBody').innerHTML=cardHTML(id);pc.hidden=false;this.el.parentNode.classList.add('pin-open');
+  this.lastPin=q.el;
+  var f=this.free(),s=Math.min(f.w,f.h)/(q.p.span*UPK);
+  var ux=q.x,uy=q.y;
+  if(id==='events'){ux=UX(-117.448);uy=UY(47.666)}
+  if(id==='rpt'){ux=UX(COV_C[0]);uy=UY(COV_C[1])}
+  var tv=this.viewAt(ux,uy,s);if(instant){this.v=tv;this.render()}else this.fly(tv);
+  if(focus){var t=document.getElementById('pcTitle');t&&t.focus({preventScroll:true})}
+};
+GeoMap.prototype.closePin=function(){
+  if(!this.active)return;var q=this.pins[this.active];q.el.classList.remove('active');
+  this.active=null;document.getElementById('pinCard').hidden=true;this.el.parentNode.classList.remove('pin-open');
+  this.fitCounty(true);
+  if(this.lastPin&&document.activeElement&&document.getElementById('pinCard').contains(document.activeElement)===false){}
+};
+GeoMap.prototype.setYou=function(z){
+  var ov=this.ov;
+  if(this.you){this.you.el.remove();if(this.you.dist)this.you.dist.remove()}
+  var g=this.svg.querySelector('.yougrp');g.innerHTML='';
+  if(!z){this.you=null;this.render();return}
+  var b=document.createElement('span');b.className='pin you';b.setAttribute('aria-hidden','true');
+  b.innerHTML=pinSvg('you')+'<span class="pin-side"><span class="pin-tag">You: '+z.name+'</span></span>';
+  ov.appendChild(b);
+  var x=UX(z.lon),y=UY(z.lat);
+  g.innerHTML='<path class="youline" vector-effect="non-scaling-stroke" d="M'+f1(x)+' '+f1(y)+'L'+f1(UX(DEM[0]))+' '+f1(UY(DEM[1]))+'"/>';
+  var d=null;
+  if(this.opt.mini&&z.mi>0.6){d=document.createElement('span');d.className='lbl dist a-c';d.textContent='≈ '+z.mi.toFixed(z.mi<10?1:0)+' mi';ov.appendChild(d)}
+  this.you={el:b,x:x,y:y,dist:d};
+  this.render();
+};
+GeoMap.prototype.bindInteraction=function(){
+  var self=this,el=this.el,drag=null;
+  var coords=document.getElementById('coords');
+  el.addEventListener('pointermove',function(e){
+    if(e.pointerType==='mouse'){var r=el.getBoundingClientRect(),x=self.v.x+(e.clientX-r.left)/self.v.s,y=self.v.y+(e.clientY-r.top)/self.v.s;
+      coords.textContent=toLat(y).toFixed(3)+'° N, '+Math.abs(toLon(x)).toFixed(3)+'° W'}
+    if(drag){var dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>3)drag.moved=true;
+      self.v={x:drag.v.x-dx/self.v.s,y:drag.v.y-dy/self.v.s,s:self.v.s};self.userMoved=true;self.render()}
+  });
+  el.addEventListener('pointerdown',function(e){
+    if(e.pointerType!=='mouse'||e.button!==0)return;
+    if(e.target.closest('.pin,.map-ui,button,a'))return;
+    drag={x:e.clientX,y:e.clientY,v:self.v};el.classList.add('dragging');el.setPointerCapture(e.pointerId);
+  });
+  function end(){drag=null;el.classList.remove('dragging')}
+  el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end);
+  function zoom(k){var c=self.center(),s=Math.max(.35,Math.min(40,self.v.s*k));self.userMoved=true;self.fly(self.viewAt(c[0],c[1],s),400)}
+  document.getElementById('zin').addEventListener('click',function(){zoom(1.7)});
+  document.getElementById('zout').addEventListener('click',function(){zoom(1/1.7)});
+  document.getElementById('zfit').addEventListener('click',function(){if(self.active){self.closePin()}else self.fitCounty(true)});
+  document.getElementById('pcClose').addEventListener('click',function(){var lp=self.lastPin;self.closePin();lp&&lp.focus()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&self.active){var lp=self.lastPin;self.closePin();lp&&lp.focus()}});
+  document.querySelectorAll('input[data-layer]').forEach(function(cb){cb.addEventListener('change',function(){self.setLayer(cb.getAttribute('data-layer'),cb.checked)})});
+};
+
+/* ================= iso stack diagram ================= */
+function buildStack(){
+  var svg=document.getElementById('stackSvg');if(!svg)return;
+  var S=230,a=.866,b=.5;
+  function layer(y,fill,stroke,inner,op){
+    return '<g transform="translate(235 '+y+') matrix('+a+' '+b+' '+(-a)+' '+b+' 0 0)">'+
+      '<rect x="0" y="0" width="'+S+'" height="'+S+'" rx="4" fill="'+fill+'" stroke="'+stroke+'" stroke-width="1.5" opacity="'+(op||1)+'"/>'+inner+'</g>';
+  }
+  // county outline normalized into the square
+  var x0=UX(-117.82),x1=UX(-117.04),y0=UY(48.05),y1=UY(47.26),k=(S-40)/(y1-y0),ox=(S-(x1-x0)*k)/2;
+  var cty='M'+COUNTY.map(function(p){return f1(ox+(UX(p[0])-x0)*k)+' '+f1(20+(UY(p[1])-y0)*k)}).join('L')+'Z';
+  var riv='M'+R_SPOKANE.slice(4,23).map(function(p){return f1(ox+(UX(p[0])-x0)*k)+' '+f1(20+(UY(p[1])-y0)*k)}).join('L');
+  var contours='';for(var r=1;r<6;r++){contours+='<ellipse cx="'+(ox+(UX(-117.113)-x0)*k)+'" cy="'+(20+(UY(47.922)-y0)*k)+'" rx="'+(r*9)+'" ry="'+(r*8)+'" fill="none" stroke="#B8B09F" stroke-width="1"/>'}
+  var base=layer(190,'#F4F6F8','#B8B09F',contours+'<path d="'+riv+'" fill="none" stroke="#2E7DAF" stroke-width="2"/><path d="'+cty+'" fill="none" stroke="#24348A" stroke-width="2.2"/>');
+  var dots='';[[60,70],[150,60],[110,140],[170,160],[70,170],[130,95]].forEach(function(p,i){dots+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="7" fill="#fff" stroke="#2E7DAF" stroke-width="2"/>'});
+  var ares=layer(105,'rgba(46,125,175,.16)','#2E7DAF',dots);
+  var sq='';[[88,88],[140,120],[100,150],[150,70]].forEach(function(p){sq+='<rect x="'+(p[0]-9)+'" y="'+(p[1]-9)+'" width="18" height="18" rx="2" fill="#24348A" stroke="#fff" stroke-width="2"/>'});
+  var acs=layer(20,'rgba(36,52,138,.16)','#24348A',sq);
+  var drop='';[[235,20],[235+S*a,20+S*b],[235-S*a,20+S*b]].forEach(function(p){drop+='<line x1="'+p[0]+'" y1="'+(p[1]+4)+'" x2="'+p[0]+'" y2="'+(p[1]+170)+'" stroke="#24348A" stroke-width="1" stroke-dasharray="2 4" opacity=".5"/>'});
+  svg.innerHTML=drop+base+ares+acs+
+    '<text x="12" y="80" font-family="Overpass" font-weight="800" font-size="15" fill="#24348A">ACS</text>'+
+    '<text x="12" y="166" font-family="Overpass" font-weight="800" font-size="15" fill="#1F6694">ARES</text>'+
+    '<text x="12" y="252" font-family="Overpass" font-weight="800" font-size="15" fill="#766F5F">County</text>';
+}
+
+/* ================= ZIP lookup ================= */
+var ZIPS=[["99001","Airway Heights",-117.593,47.645],["99003","Chattaroy",-117.357,47.891],["99004","Cheney",-117.576,47.487],["99005","Colbert",-117.38,47.83],["99006","Deer Park",-117.477,47.955],["99009","Elk",-117.28,48.015],["99011","Fairchild AFB",-117.655,47.615],["99012","Fairfield",-117.172,47.385],["99014","Four Lakes",-117.59,47.56],["99016","Greenacres",-117.15,47.66],["99018","Latah",-117.155,47.28],["99019","Liberty Lake",-117.10,47.675],["99020","Marshall",-117.47,47.56],["99021","Mead",-117.355,47.767],["99022","Medical Lake",-117.682,47.573],["99023","Mica",-117.19,47.59],["99025","Newman Lake",-117.10,47.75],["99026","Nine Mile Falls",-117.57,47.80],["99027","Otis Orchards",-117.11,47.70],["99030","Rockford",-117.13,47.451],["99031","Spangle",-117.38,47.429],["99036","Valleyford",-117.26,47.53],["99037","Veradale",-117.20,47.645],["99039","Waverly",-117.23,47.335],["99201","Downtown Spokane",-117.43,47.66],["99202","East Central Spokane",-117.38,47.655],["99203","South Hill",-117.405,47.63],["99204","Lower South Hill",-117.425,47.648],["99205","Northwest Spokane",-117.45,47.695],["99206","Spokane Valley",-117.26,47.635],["99207","Hillyard",-117.38,47.69],["99208","North Spokane",-117.44,47.75],["99212","Millwood",-117.30,47.67],["99216","North Spokane Valley",-117.21,47.69],["99217","Northeast Spokane",-117.33,47.73],["99218","North Spokane",-117.41,47.755],["99223","Moran Prairie",-117.36,47.61],["99224","West Plains",-117.53,47.63],["99260","Spokane County campus",-117.428,47.6655]];
+function miles(a,b){var R=3958.8,t=Math.PI/180,dl=(b[1]-a[1])*t,dn=(b[0]-a[0])*t,x=Math.sin(dl/2)*Math.sin(dl/2)+Math.cos(a[1]*t)*Math.cos(b[1]*t)*Math.sin(dn/2)*Math.sin(dn/2);return 2*R*Math.asin(Math.sqrt(x))}
+function findZip(q){
+  q=(q||'').trim().toLowerCase();if(!q)return null;
+  if(/^\d{5}$/.test(q)){var z=ZIPS.find(function(r){return r[0]===q});return z?z:{outside:true,q:q}}
+  if(q==='spokane')q='downtown spokane';
+  var m=ZIPS.find(function(r){return r[1].toLowerCase()===q})||ZIPS.find(function(r){return r[1].toLowerCase().indexOf(q)===0})||ZIPS.find(function(r){return r[1].toLowerCase().indexOf(q)>=0});
+  return m||{unknown:true,q:q};
+}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+var hero,mini;
+function runLookup(q){
+  var out=document.getElementById('result'),r=findZip(q);
+  if(!r){out.innerHTML='<p class="result-err">Enter a 5-digit ZIP code, like 99004, or a town name, like Cheney.</p>';return}
+  if(r.outside){out.innerHTML='<p class="result-err">'+esc(r.q)+' isn’t a Spokane County ZIP code in this list. If you live nearby, you’re still welcome at meetings and on the Tuesday net. Try a Spokane County ZIP, like 99004.</p>';mini.setYou(null);hero.setYou(null);return}
+  if(r.unknown){out.innerHTML='<p class="result-err">No Spokane County town matches “'+esc(r.q)+'”. Check the spelling, or try a 5-digit ZIP code like 99004.</p>';return}
+  var ll=[r[2],r[3]],mi=miles(ll,DEM),evm=miles(ll,[-117.43,47.658]),cr=covRatio(r[2],r[3]);
+  var reach=cr<.72?'Inside the illustrative coverage area.':cr<1.02?'Near the edge of the illustrative coverage area. An outdoor antenna helps.':'Outside the illustrative coverage area. Ask about simplex and Winlink options.';
+  var role;
+  if(r[0]==='99260'||mi<4.5)role='<b>Radio room operator or net control.</b> You’re close to the county’s radio communications room.';
+  else if(r[2]>-117.34&&r[3]>47.6&&r[3]<47.76&&mi<16)role='<b>Public event operator.</b> Bloomsday and the Lilac Torchlight Parade need operators along the route.';
+  else if(mi>11)role='<b>SKYWARN weather spotter.</b> Reports from across the county help NWS Spokane in severe weather.';
+  else role='<b>Field or Winlink operator.</b> A home or go-kit station can pass messages if other systems are down.';
+  var place=r[1]+' ('+r[0]+')';
+  var near=mi<.6?'You’re already there.':'About '+mi.toFixed(mi<10?1:0)+' miles away, straight line.';
+  out.innerHTML='<div class="result-card"><div class="rc-head"><h3>'+esc(place)+'</h3><span class="mono">'+r[3].toFixed(3)+'° N, '+Math.abs(r[2]).toFixed(3)+'° W</span></div><dl class="rc-list">'+
+    '<div class="rc-row"><dt>Where we meet</dt><dd>DEM building, 1121 W. Gardner Ave. '+near+'</dd></div>'+
+    '<div class="rc-row"><dt>Your net</dt><dd>Tuesdays at 8:00 PM on W7GBU <span class="mono">147.300 MHz</span> (+600 kHz, 100 Hz tone).</dd></div>'+
+    '<div class="rc-row"><dt>In reach?</dt><dd>'+reach+' The honest test: listen on Tuesday at 8. If you can hear net control, you’re in reach.</dd></div>'+
+    '<div class="rc-row"><dt>Events near you</dt><dd>Bloomsday and the Lilac Torchlight Parade, downtown Spokane, about '+Math.max(1,Math.round(evm))+' mi.</dd></div>'+
+    '<div class="rc-row"><dt>A role that fits</dt><dd>'+role+'</dd></div>'+
+    '</dl><div class="rc-actions"><a class="btn btn-red btn-sm" href="#join">Join the team</a><a class="btn btn-line btn-sm" href="#net">Listen Tuesday</a></div></div>';
+  var z={name:r[1],lon:r[2],lat:r[3],mi:mi};
+  mini.setYou(z);hero.setYou(z);
+}
+
+/* ================= init ================= */
+function init(){
+  TERRAIN=buildTerrain();
+  hero=new GeoMap(document.getElementById('heroMap'),{id:'h',interactive:true,scale:true,draw:true,pulse:true});
+  mini=new GeoMap(document.getElementById('miniMap'),{id:'m',mini:true,layers:{meet:1,repeater:1}});
+  buildStack();
+  // datalist
+  var dl=document.getElementById('townList');dl.innerHTML=ZIPS.map(function(z){return '<option value="'+z[1]+'">'+z[0]+'</option>'}).join('');
+  document.getElementById('zipForm').addEventListener('submit',function(e){e.preventDefault();runLookup(document.getElementById('zipIn').value)});
+  document.querySelectorAll('.chips button').forEach(function(b){b.addEventListener('click',function(){document.getElementById('zipIn').value=b.getAttribute('data-q');runLookup(b.getAttribute('data-q'))})});
+  document.querySelectorAll('[data-show]').forEach(function(b){b.addEventListener('click',function(){
+    document.getElementById('heroMap').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+    setTimeout(function(){hero.openPin(b.getAttribute('data-show'),true)},reduce?0:350);
+  })});
+  var st=document.getElementById('strip');
+  document.getElementById('calPrev').addEventListener('click',function(){st.scrollBy({left:-st.clientWidth*.8,behavior:reduce?'auto':'smooth'})});
+  document.getElementById('calNext').addEventListener('click',function(){st.scrollBy({left:st.clientWidth*.8,behavior:reduce?'auto':'smooth'})});
+  // lock layer
+  var lb=document.getElementById('lockBtn'),lm=document.getElementById('lockMsg');
+  lb.addEventListener('click',function(){var o=lb.getAttribute('aria-expanded')==='true';lb.setAttribute('aria-expanded',String(!o));lm.hidden=o});
+  // menu
+  var mb=document.querySelector('.menu-btn'),nl=document.getElementById('navlist');
+  mb.addEventListener('click',function(){var o=mb.getAttribute('aria-expanded')==='true';mb.setAttribute('aria-expanded',String(!o));nl.classList.toggle('open',!o)});
+  nl.addEventListener('click',function(e){if(e.target.closest('a')){mb.setAttribute('aria-expanded','false');nl.classList.remove('open')}});
+  // signup
+  document.getElementById('signup').addEventListener('submit',function(e){e.preventDefault();var f=e.target;if(!f.checkValidity()){f.reportValidity();return}f.hidden=true;var d=document.getElementById('signupDone');d.hidden=false;d.focus()});
+  // deep links for review: #zip=99004 or #pin=meet
+  var m=location.hash.match(/zip=([\w ]+)/);if(m){document.getElementById('zipIn').value=decodeURIComponent(m[1]);runLookup(decodeURIComponent(m[1]))}
+  var p=location.hash.match(/pin=(\w+)/);if(p){hero.openPin(p[1],false,true)}
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+</body>
+</html>

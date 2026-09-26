@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARES-ACS concept review</title>
+<meta name="description" content="Twelve homepage concepts for the Spokane County ARES-ACS site redesign, ranked by four judges.">
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f5f5f3;
+  --surface: #ffffff;
+  --surface-2: #efefec;
+  --ink: #18191c;
+  --muted: #5b5e66;
+  --line: #deded9;
+  --accent: #2f55b5;
+  --accent-rgb: 47 85 181;
+  --accent-ink: #ffffff;
+  --track: #e6e6e2;
+  --shadow: 0 1px 2px rgb(0 0 0 / .06), 0 8px 24px rgb(0 0 0 / .06);
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111214;
+    --surface: #1a1b1e;
+    --surface-2: #222327;
+    --ink: #ebebe8;
+    --muted: #a3a6ad;
+    --line: #2e3035;
+    --accent: #8eaaf3;
+    --accent-rgb: 142 170 243;
+    --accent-ink: #0d1330;
+    --track: #2c2e33;
+    --shadow: 0 1px 2px rgb(0 0 0 / .4), 0 8px 24px rgb(0 0 0 / .35);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111214; --surface: #1a1b1e; --surface-2: #222327; --ink: #ebebe8; --muted: #a3a6ad;
+  --line: #2e3035; --accent: #8eaaf3; --accent-rgb: 142 170 243; --accent-ink: #0d1330; --track: #2c2e33;
+  --shadow: 0 1px 2px rgb(0 0 0 / .4), 0 8px 24px rgb(0 0 0 / .35);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 16px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible, summary:focus-visible, .table-wrap:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+code { font: .9em ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--surface-2); padding: .05em .35em; border-radius: 4px; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* Top bar */
+.topbar { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.topbar .wrap { display: flex; align-items: center; gap: 20px; height: 52px; }
+.topbar .name { font-weight: 650; font-size: 15px; margin-right: auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.topbar nav { display: flex; gap: 18px; font-size: 14px; }
+.topbar nav a { color: var(--muted); text-decoration: none; }
+.topbar nav a:hover { color: var(--ink); }
+.topbar button { font: inherit; font-size: 13px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; cursor: pointer; white-space: nowrap; }
+
+/* Intro */
+.intro { padding: 56px 0 8px; }
+.intro h1 { font-size: clamp(30px, 4vw, 44px); line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 16px; font-weight: 700; max-width: 30ch; }
+.intro .lede { font-size: 18px; color: var(--muted); max-width: 70ch; margin: 0 0 28px; }
+.intro .lede strong { color: var(--ink); font-weight: 600; }
+.lenses { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 0 0 20px; padding: 0; list-style: none; }
+.lenses li { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; font-size: 14px; color: var(--muted); }
+.lenses b { display: block; color: var(--ink); font-size: 15px; margin-bottom: 4px; }
+.lenses .tp { display: block; margin-top: 8px; font-size: 13px; }
+.method { font-size: 14px; color: var(--muted); max-width: 90ch; margin: 0; }
+
+/* Comparison table */
+.section-h { font-size: 22px; letter-spacing: -0.01em; margin: 48px 0 14px; }
+.table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+table.compare { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 820px; }
+.compare caption { caption-side: bottom; text-align: left; font-size: 13px; color: var(--muted); padding: 10px 16px 12px; }
+.compare th, .compare td { padding: 8px 12px; text-align: center; border-bottom: 1px solid var(--line); }
+.compare thead th { font-size: 12.5px; font-weight: 600; color: var(--muted); background: var(--surface-2); }
+.compare tbody tr:last-child > * { border-bottom: 0; }
+.compare th[scope=row] { text-align: left; font-weight: 600; white-space: nowrap; }
+.compare thead th:nth-child(2) { text-align: left; }
+.compare th[scope=row] a { color: var(--ink); text-decoration: none; }
+.compare th[scope=row] a:hover { color: var(--accent); text-decoration: underline; }
+.compare td { background: rgb(var(--accent-rgb) / var(--h, 0)); }
+.compare td.r { color: var(--muted); background: none; width: 56px; }
+.compare td.best { font-weight: 700; }
+.compare .comp { font-weight: 650; background: var(--surface-2); }
+.compare td.comp.best { font-weight: 800; }
+.compare tbody tr:hover > * { box-shadow: inset 0 0 0 9999px rgb(127 127 127 / .06); }
+.pick-dot { display: inline-block; margin-left: 8px; font-size: 11.5px; font-weight: 600; color: var(--accent); border: 1px solid rgb(var(--accent-rgb) / .45); border-radius: 999px; padding: 0 7px; vertical-align: 1px; }
+
+/* Concept cards */
+.concepts { display: grid; gap: 28px; margin-top: 8px; }
+.concept { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 24px 24px 8px; }
+.c-head { display: grid; grid-template-columns: auto 1fr auto; gap: 20px; align-items: start; margin-bottom: 18px; }
+.rank { font-size: 44px; font-weight: 750; line-height: 1; letter-spacing: -0.03em; min-width: 1.4ch; color: var(--ink); }
+.c-title h2 { margin: 2px 0 6px; font-size: 26px; line-height: 1.15; letter-spacing: -0.015em; }
+.c-meta { margin: 0; font-size: 14px; color: var(--muted); max-width: 72ch; }
+.badge { display: inline-block; margin: 10px 0 0; font-size: 12.5px; font-weight: 600; color: var(--accent); background: rgb(var(--accent-rgb) / .1); border-radius: 999px; padding: 3px 10px; }
+.c-score { text-align: right; }
+.comp-num { font-size: 34px; font-weight: 750; line-height: 1; letter-spacing: -0.02em; }
+.comp-label { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
+.jscores { list-style: none; margin: 10px 0 0; padding: 0; display: flex; gap: 6px; justify-content: flex-end; }
+.jscores li { font-size: 11.5px; color: var(--muted); border: 1px solid var(--line); border-radius: 6px; padding: 2px 6px; display: flex; gap: 5px; }
+.jscores b { color: var(--ink); font-weight: 650; }
+
+.shots { display: grid; grid-template-columns: minmax(0, 3.46fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.shot { display: block; text-decoration: none; color: var(--muted); }
+.shot img { display: block; width: 100%; height: auto; }
+.shot-desktop img { aspect-ratio: 1440 / 900; object-fit: cover; object-position: top; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-2); transition: transform .2s ease, box-shadow .2s ease; }
+.shot-desktop:hover img { box-shadow: 0 6px 24px rgb(0 0 0 / .14); transform: translateY(-2px); }
+.phone { display: block; aspect-ratio: 390 / 844; overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: var(--surface-2); }
+.phone img { height: auto; }
+.shot-mobile:hover .phone { box-shadow: 0 6px 24px rgb(0 0 0 / .14); }
+.shot-cap { display: block; font-size: 12.5px; margin-top: 8px; }
+@media (prefers-reduced-motion: reduce) { .shot-desktop img { transition: none; } .shot-desktop:hover img { transform: none; } }
+
+.c-body { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 32px; margin: 22px 0 6px; align-items: start; }
+.thesis { font-size: 17px; line-height: 1.55; margin: 0 0 16px; max-width: 62ch; }
+.actions { margin: 0 0 12px; }
+.btn { display: inline-block; background: var(--accent); color: var(--accent-ink); text-decoration: none; font-weight: 600; font-size: 15px; padding: 9px 16px; border-radius: 8px; }
+.btn:hover { filter: brightness(1.08); }
+.more-shots { font-size: 13.5px; margin: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.bars { display: grid; gap: 9px; padding-top: 2px; }
+.bar { display: grid; grid-template-columns: 96px 1fr 34px; gap: 12px; align-items: center; font-size: 13.5px; }
+.bar-label { color: var(--muted); }
+.bar-track { height: 8px; background: var(--track); border-radius: 999px; overflow: hidden; }
+.bar-fill { display: block; height: 100%; background: var(--accent); border-radius: 999px; }
+.bar-val { text-align: right; font-weight: 650; }
+
+.notes { border-top: 1px solid var(--line); margin: 18px -24px 0; }
+.notes summary { cursor: pointer; padding: 14px 24px; font-weight: 600; font-size: 15px; list-style: none; display: flex; align-items: center; gap: 10px; }
+.notes summary::-webkit-details-marker { display: none; }
+.notes summary::before { content: ""; width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(-45deg); transition: transform .15s; margin-left: 2px; }
+.notes[open] summary::before { transform: rotate(45deg); }
+.judges { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 0 24px 22px; }
+.judge { background: var(--surface-2); border-radius: var(--radius); padding: 16px 18px; }
+.judge h4 { margin: 0 0 8px; font-size: 15px; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.jscore { font-size: 13px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+.judge h5 { margin: 12px 0 4px; font-size: 12.5px; color: var(--muted); font-weight: 650; }
+.judge p { margin: 0; font-size: 14px; line-height: 1.55; }
+
+/* Recommendation */
+.reco { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 28px; margin: 48px 0 0; box-shadow: var(--shadow); }
+.reco h2 { margin: 0 0 10px; font-size: 24px; letter-spacing: -0.01em; }
+.reco h3 { font-size: 17px; margin: 28px 0 10px; }
+.reco .lede { margin: 0; color: var(--muted); max-width: 80ch; }
+.reco-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 20px; }
+.reco-card { background: var(--surface-2); border-radius: var(--radius); padding: 16px 18px; }
+.reco-card h3 { margin: 0 0 8px; font-size: 16px; line-height: 1.3; }
+.reco-card h3 a { color: var(--ink); }
+.reco-card p { margin: 0; font-size: 14px; }
+.grafts { margin: 0; padding-left: 20px; font-size: 15px; max-width: 95ch; }
+.grafts li { margin: 6px 0; }
+
+.skip { position: absolute; left: -9999px; top: 8px; z-index: 30; background: var(--surface); color: var(--ink); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); }
+.skip:focus { left: 16px; }
+footer { color: var(--muted); font-size: 13px; padding: 36px 0 56px; }
+
+@media (max-width: 900px) {
+  .lenses { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .c-body { grid-template-columns: 1fr; gap: 20px; }
+  .reco-grid { grid-template-columns: 1fr; }
+  .judges { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .wrap { padding: 0 16px; }
+  .topbar nav { display: none; }
+  .intro { padding-top: 32px; }
+  .lenses { grid-template-columns: 1fr; }
+  .concept { padding: 18px 16px 4px; }
+  .notes { margin: 14px -16px 0; }
+  .notes summary { padding: 14px 16px; }
+  .judges { padding: 0 16px 18px; }
+  .c-head { grid-template-columns: auto 1fr; gap: 12px 14px; }
+  .c-score { grid-column: 1 / -1; text-align: left; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .comp-num { font-size: 26px; }
+  .jscores { margin: 0 0 0 auto; }
+  .rank { font-size: 34px; }
+  .c-title h2 { font-size: 22px; }
+  .shots { grid-template-columns: minmax(0, 1fr) minmax(0, 0.42fr); gap: 12px; }
+  .phone { border-radius: 12px; }
+  .bar { grid-template-columns: 88px 1fr 30px; }
+  .reco { padding: 20px 16px; }
+}
+</style>
+</head>
+<body>
+<a href="#compare" class="skip">Skip to comparison</a>
+<div class="topbar">
+  <div class="wrap">
+    <span class="name">Spokane County ARES-ACS: homepage concepts</span>
+    <nav aria-label="Page sections">
+      <a href="#compare">Comparison</a>
+      <a href="#concepts">Concepts</a>
+      <a href="#recommendation">Recommendation</a>
+    </nav>
+    <button type="button" id="toggle-notes" aria-pressed="false">Expand all notes</button>
+  </div>
+</div>
+
+<main class="wrap">
+  <section class="intro">
+    <h1>Twelve homepage concepts, ranked</h1>
+    <p class="lede">These are working homepage mock-ups for a full redesign of spokares.org. Each one tries a different idea for getting a visitor to <strong>learn more and then sign up</strong>, while staying professional and easy to use. They ignore the current site's look and structure. Four judges reviewed every concept, each through a different lens. Click any desktop screenshot to open the live concept in a new tab.</p>
+    <ul class="lenses">
+      <li><b>Prospective volunteer</b>Newly licensed and unlicensed. Would I learn more, and would I sign up?<span class="tp">Top pick: <a href="#field-guide">Field Guide</a></span></li>
+      <li><b>Served-agency partner</b>County EM, hospitals, Red Cross. Is this credible enough to link to?<span class="tp">Top pick: <a href="#county-standard">County Standard</a></span></li>
+      <li><b>UX and maintainability</b>Task speed for all four audiences, accessibility, and whether volunteers can keep it current.<span class="tp">Top pick: <a href="#open-door">Open Door</a></span></li>
+      <li><b>Art director</b>Craft, distinctiveness, memorability, and fit for an emergency-services group.<span class="tp">Top pick: <a href="#lines-down">When the Lines Go Down</a></span></li>
+    </ul>
+    <p class="method">Scoring: each judge rated every concept from 1 to 10 on six criteria (professional, engaging, ease of use, makes you want to learn more, makes you want to sign up, and overall). Each criterion score shown here is the mean of the four judges, rounded to one decimal. The composite is the mean of the six criterion means, and the ranking follows it.</p>
+  </section>
+
+  <h2 class="section-h" id="compare">Comparison</h2>
+  
+<div class="table-wrap" role="region" aria-label="Scores by concept and criterion" tabindex="0">
+<table class="compare">
+  <caption>Mean of four judges per criterion, 1 to 10. Composite is the mean of the six criteria. The highest score in each column is in bold.</caption>
+  <thead><tr><th scope="col" class="r">Rank</th><th scope="col">Concept</th><th scope="col">Professional</th><th scope="col">Engaging</th><th scope="col">Ease of use</th><th scope="col">Learn more</th><th scope="col">Sign up</th><th scope="col">Overall</th><th scope="col" class="comp">Composite</th></tr></thead>
+  <tbody>
+  <tr><td class="r">1</td><th scope="row"><a href="#field-guide">Field Guide</a><span class="pick-dot" title="Top pick of the prospective volunteer judge">Prospect pick</span></th><td style="--h:0.209">7.0</td><td style="--h:0.303">8.8</td><td style="--h:0.288">8.5</td><td style="--h:0.314">9.0</td><td style="--h:0.277">8.3</td><td style="--h:0.251" class="best">7.8</td><td class="comp best">8.21</td></tr><tr><td class="r">2</td><th scope="row"><a href="#lines-down">When the Lines Go Down</a><span class="pick-dot" title="Top pick of the art director judge">Art pick</span></th><td style="--h:0.262">8.0</td><td style="--h:0.330" class="best">9.3</td><td style="--h:0.157">6.0</td><td style="--h:0.330" class="best">9.3</td><td style="--h:0.225">7.3</td><td style="--h:0.251" class="best">7.8</td><td class="comp">7.92</td></tr><tr><td class="r">3</td><th scope="row"><a href="#open-door">Open Door</a><span class="pick-dot" title="Top pick of the ux and maintainability judge">UX pick</span></th><td style="--h:0.225">7.3</td><td style="--h:0.235">7.5</td><td style="--h:0.303">8.8</td><td style="--h:0.235">7.5</td><td style="--h:0.277">8.3</td><td style="--h:0.251" class="best">7.8</td><td class="comp">7.83</td></tr><tr><td class="r">4</td><th scope="row"><a href="#coverage">Coverage</a></th><td style="--h:0.288">8.5</td><td style="--h:0.277">8.3</td><td style="--h:0.199">6.8</td><td style="--h:0.262">8.0</td><td style="--h:0.199">6.8</td><td style="--h:0.209">7.0</td><td class="comp">7.54</td></tr><tr><td class="r">5</td><th scope="row"><a href="#in-the-field">In the Field</a></th><td style="--h:0.262">8.0</td><td style="--h:0.262">8.0</td><td style="--h:0.183">6.5</td><td style="--h:0.277">8.3</td><td style="--h:0.225">7.3</td><td style="--h:0.183">6.5</td><td class="comp">7.42</td></tr><tr><td class="r">6</td><th scope="row"><a href="#hi-vis">Hi-Vis</a></th><td style="--h:0.157">6.0</td><td style="--h:0.314">9.0</td><td style="--h:0.225">7.3</td><td style="--h:0.183">6.5</td><td style="--h:0.303" class="best">8.8</td><td style="--h:0.183">6.5</td><td class="comp">7.33</td></tr><tr><td class="r">7</td><th scope="row"><a href="#county-standard">County Standard</a><span class="pick-dot" title="Top pick of the served-agency partner judge">Agency pick</span></th><td style="--h:0.314" class="best">9.0</td><td style="--h:0.094">4.8</td><td style="--h:0.303">8.8</td><td style="--h:0.173">6.3</td><td style="--h:0.199">6.8</td><td style="--h:0.225">7.3</td><td class="comp">7.13</td></tr><tr><td class="r">8</td><th scope="row"><a href="#tuesday-2000">Tuesday, 2000 Hours</a></th><td style="--h:0.251">7.8</td><td style="--h:0.225">7.3</td><td style="--h:0.251">7.8</td><td style="--h:0.173">6.3</td><td style="--h:0.209">7.0</td><td style="--h:0.183">6.5</td><td class="comp">7.08</td></tr><tr><td class="r">9</td><th scope="row"><a href="#plain-signal">Plain Signal</a></th><td style="--h:0.277">8.3</td><td style="--h:0.026">3.5</td><td style="--h:0.330" class="best">9.3</td><td style="--h:0.105">5.0</td><td style="--h:0.235">7.5</td><td style="--h:0.173">6.3</td><td class="comp">6.63</td></tr><tr><td class="r">10</td><th scope="row"><a href="#the-relay">The Relay</a></th><td style="--h:0.262">8.0</td><td style="--h:0.157">6.0</td><td style="--h:0.131">5.5</td><td style="--h:0.277">8.3</td><td style="--h:0.120">5.3</td><td style="--h:0.173">6.3</td><td class="comp">6.54</td></tr><tr><td class="r">11</td><th scope="row"><a href="#confirmed-contact">Confirmed Contact</a></th><td style="--h:0.131">5.5</td><td style="--h:0.262">8.0</td><td style="--h:0.157">6.0</td><td style="--h:0.157">6.0</td><td style="--h:0.199">6.8</td><td style="--h:0.131">5.5</td><td class="comp">6.29</td></tr><tr><td class="r">12</td><th scope="row"><a href="#ops-board">Ops Board</a></th><td style="--h:0.262">8.0</td><td style="--h:0.105">5.0</td><td style="--h:0.146">5.8</td><td style="--h:0.120">5.3</td><td style="--h:0.157">6.0</td><td style="--h:0.131">5.5</td><td class="comp">5.92</td></tr>
+  </tbody>
+</table>
+</div>
+
+
+  <h2 class="section-h" id="concepts">Concepts in ranked order</h2>
+  <div class="concepts">
+    
+<article class="concept" id="field-guide" aria-labelledby="field-guide-name">
+  <header class="c-head">
+    <div class="rank" aria-label="Rank 1">1</div>
+    <div class="c-title">
+      <h2 id="field-guide-name">Field Guide</h2>
+      <p class="c-meta">Concept 09. Illustrated; bento grid; set in Lexend with Caveat annotations. Funnel: quiz pathfinder.</p>
+      <p class="badge">Top pick of the prospective volunteer judge</p>
+    </div>
+    <div class="c-score">
+      <div class="comp-num">8.21</div>
+      <div class="comp-label">composite</div>
+      <ul class="jscores" aria-label="Each judge's overall score"><li><span>Prospect</span><b>9</b></li><li><span>Agency</span><b>7</b></li><li><span>UX</span><b>7</b></li><li><span>Art</span><b>8</b></li></ul>
+    </div>
+  </header>
+
+  <div class="shots">
+    <a class="shot shot-desktop" href="09-field-guide/index.html" target="_blank" rel="noopener" title="Open the live concept in a new tab">
+      <img src="09-field-guide/shot-desktop-fold.png" width="1440" height="900" loading="lazy" alt="Field Guide: first screen at 1440 px wide">
+      <span class="shot-cap">Desktop, first screen. Click to open the live page.</span>
+    </a>
+    <a class="shot shot-mobile" href="09-field-guide/shot-mobile.png" target="_blank" rel="noopener" title="Open the full mobile screenshot">
+      <span class="phone"><img src="09-field-guide/shot-mobile.png" width="390" height="3000" loading="lazy" alt="Field Guide: top of the page at 390 px wide"></span>
+      <span class="shot-cap">Mobile, 390 px</span>
+    </a>
+  </div>
+
+  <div class="c-body">
+    <div class="c-text">
+      <p class="thesis">Most people have no mental picture of emergency radio. Friendly technical illustrations and a two-minute &#x27;Is this for me?&#x27; quiz give them one, then route each person, especially the unlicensed, to the right first step.</p>
+      <p class="actions">
+        <a class="btn" href="09-field-guide/index.html" target="_blank" rel="noopener">Open full concept</a>
+      </p>
+      <p class="more-shots"><a href="09-field-guide/shot-desktop-full.png" target="_blank" rel="noopener">Long desktop screenshot</a> <a href="09-field-guide/shot-mobile.png" target="_blank" rel="noopener">Long mobile screenshot</a></p>
+    </div>
+    <div class="bars" role="list" aria-label="Criterion scores, mean of four judges">
+      <div role="listitem"><div class="bar"><span class="bar-label">Professional</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:70%"></span></span><span class="bar-val">7.0</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Engaging</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:88%"></span></span><span class="bar-val">8.8</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Ease of use</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:85%"></span></span><span class="bar-val">8.5</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Learn more</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:90%"></span></span><span class="bar-val">9.0</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Sign up</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:83%"></span></span><span class="bar-val">8.3</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Overall</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:78%"></span></span><span class="bar-val">7.8</span></div></div>
+    </div>
+  </div>
+
+  <details class="notes">
+    <summary>Judges' notes</summary>
+    <div class="judges"><section class="judge"><h4>Prospective volunteer <span class="jscore">9/10 overall</span></h4><h5>Strengths</h5><p>The hero illustration (Fig. 1) shows in one picture how a message still gets through when phones are down: a volunteer with a handheld, the W7GBU repeater, then the county EOC. A newcomer who has never pictured emergency radio can see it. A three-panel column beside the hero gives three ways in at once: the quiz, the Tuesday net (8:00 PM, 147.300, visitors welcome) and &#x27;Not licensed yet?&#x27;. The 5-question &#x27;Is this for me?&#x27; quiz works; I clicked through it. Each answer gets a sketch, the trail markers fill in, and it sends you to one route (license, ARES, ACS or SKYWARN) with &#x27;email me my path&#x27;. &#x27;Licensing in plain English&#x27; (the exam is like a driver&#x27;s written test, every question is published, where to test, $35 fee) serves the unlicensed resident best of all 12 concepts. &#x27;The trail to joining&#x27; (0-3) says there are no dues and that members provide their own radios. Illustrations of the work are mixed with real member photos, there is a Members&#x27; shelf of forms for current members, and the page closes with the W7GBU story. The mobile layout holds up.</p><h5>Weaknesses</h5><p>The rounded, friendly illustrations and handwritten captions lean edtech or kid-friendly, so served agencies may find it less authoritative than County Standard or Coverage. The quiz appears twice (the hero card and the full section), and many sections compete for attention. There are fewer real faces than in In the Field or Lines Down. The hero illustration is cropped on mobile. Tone is the risk: the page could read as a hobby explainer rather than a county emergency unit.</p></section><section class="judge"><h4>Served-agency partner <span class="jscore">7/10 overall</span></h4><h5>Strengths</h5><p>&#x27;Fig. 1: How a message gets through when phones are down&#x27; shows volunteer, then repeater, then county EOC. It is the fastest plain-language capability explanation in the set and one I&#x27;d happily show a commissioner. The &#x27;Is this for me?&#x27; quiz and &#x27;Licensing in plain English&#x27; (driver&#x27;s-test analogy, local exam sites, $35 fee) are excellent at routing the unlicensed. The illustrated service tiles (county comm trailer, hospitals, SKYWARN, events) are clear and inclusive. It is polished, with no visible placeholders.</p><h5>Weaknesses</h5><p>The rounded cards, handwritten captions and cartoon figures lean consumer-app or children&#x27;s museum. It is friendly but slightly soft for a unit that works inside EOCs, and gravity and a sense of trained professionals are missing. There are few real photos, so it proves less that the team actually exists. There is no dedicated agency contact path.</p></section><section class="judge"><h4>UX and maintainability <span class="jscore">7/10 overall</span></h4><h5>Strengths</h5><p>The best concept for the unlicensed audience. The hero diagram (Fig. 1: handheld, W7GBU repeater, county EOC) gives an instant mental model of what emergency radio is. The side rail stacks three clear doors: &#x27;Is this for me?&#x27; quiz, a Tuesday net card with the frequency, and &#x27;Not licensed yet?&#x27;. The five-question quiz with trail-blaze progress routes each person to one next step. &#x27;Licensing in plain English&#x27; (the driver&#x27;s-test analogy, the $35 fee, real exam locations) removes the biggest barrier. The &#x27;Field marks&#x27; bullets for ARES vs ACS are a charming, useful device. On mobile, the diagram&#x27;s labels thoughtfully move into a numbered list under the figure. Lexend body text is readable, and CTAs are big, rounded and obvious.</p><h5>Weaknesses</h5><p>Custom illustrations (about 32 KB of inline SVG) are hard for volunteers to extend or update, since every new topic needs a new drawing. Caveat handwriting annotations are hard to read at small sizes and for low-vision users. The pastel, rounded, playful tone may undercut seriousness for served agencies judging credibility. Member tasks are thin: the net card is there, but forms, scripts and roster are not surfaced on the homepage. The quiz logic is one more piece of JS to maintain, and a gated quiz can feel like friction for people who already know they want to join.</p></section><section class="judge"><h4>Art director <span class="jscore">8/10 overall</span></h4><h5>Strengths</h5><p>The best concept for unlicensed newcomers. The bento-style hero pairs &#x27;When phones go quiet, radio still gets the message through&#x27; with an illustrated Fig. 1 (volunteer, repeater on the ridge, county EOC) that explains the system in five seconds. The illustration set is consistent and well drawn: comm trailer, hospital, SKYWARN storm, and a car-versus-handheld &#x27;driver&#x27;s test&#x27; licensing analogy. The &#x27;Is this for me?&#x27; quiz fills in trail-blaze progress markers as you answer and routes each person to one clear first step. The trail-to-joining signposts, the Tuesday net card and the green Members&#x27; shelf are clear and easy to scan.</p><h5>Weaknesses</h5><p>Caveat handwriting, trail signposts and &#x27;Field marks&#x27; lean toward edtech or scout camp. The whimsy lowers the gravitas that served agencies and experienced hams expect from an emergency unit. The flat-vector look is common (Notion/Headspace territory), not ownable. Real photos shrink to small taped polaroids, so the actual team is nearly invisible. Four competing cards in the hero crowd the first screen.</p></section></div>
+  </details>
+</article>
+
+<article class="concept" id="lines-down" aria-labelledby="lines-down-name">
+  <header class="c-head">
+    <div class="rank" aria-label="Rank 2">2</div>
+    <div class="c-title">
+      <h2 id="lines-down-name">When the Lines Go Down</h2>
+      <p class="c-meta">Concept 12. Scrollytelling; sticky-diagram narrative; set in Crimson Pro and Schibsted Grotesk. Funnel: scenario-led.</p>
+      <p class="badge">Top pick of the art director judge</p>
+    </div>
+    <div class="c-score">
+      <div class="comp-num">7.92</div>
+      <div class="comp-label">composite</div>
+      <ul class="jscores" aria-label="Each judge's overall score"><li><span>Prospect</span><b>8</b></li><li><span>Agency</span><b>8</b></li><li><span>UX</span><b>6</b></li><li><span>Art</span><b>9</b></li></ul>
+    </div>
+  </header>
+
+  <div class="shots">
+    <a class="shot shot-desktop" href="12-lines-down/index.html" target="_blank" rel="noopener" title="Open the live concept in a new tab">
+      <img src="12-lines-down/shot-desktop-fold.png" width="1440" height="900" loading="lazy" alt="When the Lines Go Down: first screen at 1440 px wide">
+      <span class="shot-cap">Desktop, first screen. Click to open the live page.</span>
+    </a>
+    <a class="shot shot-mobile" href="12-lines-down/shot-mobile.png" target="_blank" rel="noopener" title="Open the full mobile screenshot">
+      <span class="phone"><img src="12-lines-down/shot-mobile.png" width="390" height="3000" loading="lazy" alt="When the Lines Go Down: top of the page at 390 px wide"></span>
+      <span class="shot-cap">Mobile, 390 px</span>
+    </a>
+  </div>
+
+  <div class="c-body">
+    <div class="c-text">
+      <p class="thesis">Most people never picture the failure. Walk them through one plausible bad night, an ice storm that takes out power and cell service, and show step by step how a message still gets from a shelter to the EOC by radio. Then reveal that the people who make it work practice every Tuesday, and the reader could be one of them.</p>
+      <p class="actions">
+        <a class="btn" href="12-lines-down/index.html" target="_blank" rel="noopener">Open full concept</a>
+      </p>
+      <p class="more-shots"><a href="12-lines-down/shot-desktop-full.png" target="_blank" rel="noopener">Long desktop screenshot</a> <a href="12-lines-down/shot-mobile.png" target="_blank" rel="noopener">Long mobile screenshot</a> <a href="12-lines-down/shot-desktop-story-send.png" target="_blank" rel="noopener">Story frame: message sent</a> <a href="12-lines-down/shot-desktop-story-relay.png" target="_blank" rel="noopener">Story frame: relay</a> <a href="12-lines-down/shot-mobile-story-relay.png" target="_blank" rel="noopener">Story frame, mobile</a> <a href="12-lines-down/shot-desktop-reduced-motion.png" target="_blank" rel="noopener">Reduced-motion version</a></p>
+    </div>
+    <div class="bars" role="list" aria-label="Criterion scores, mean of four judges">
+      <div role="listitem"><div class="bar"><span class="bar-label">Professional</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:80%"></span></span><span class="bar-val">8.0</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Engaging</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:93%"></span></span><span class="bar-val">9.3</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Ease of use</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:60%"></span></span><span class="bar-val">6.0</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Learn more</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:93%"></span></span><span class="bar-val">9.3</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Sign up</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:73%"></span></span><span class="bar-val">7.3</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Overall</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:78%"></span></span><span class="bar-val">7.8</span></div></div>
+    </div>
+  </div>
+
+  <details class="notes">
+    <summary>Judges' notes</summary>
+    <div class="judges"><section class="judge"><h4>Prospective volunteer <span class="jscore">8/10 overall</span></h4><h5>Strengths</h5><p>It has the strongest emotional hook: &#x27;It&#x27;s 2 AM. The power&#x27;s out, and so is cell service.&#x27; The scroll-driven diagram works; I checked it at several scroll positions. A red path carries an ICS-213 (&#x27;Resident needs oxygen&#x27;) from the shelter radio operator to net control on W7GBU, the EOC radio room and the hospital net, and each hop is named as a volunteer role. This makes &#x27;what would I actually do&#x27; clearer than any other concept. It then turns to &#x27;Radio still works. Because people practice.&#x27; and &#x27;Most of the year looks like this&#x27; (Bloomsday, SKYWARN, hospitals, Winlink), which balances the drama. &#x27;Could you be the one on the radio?&#x27; gives a 1-4 path, a registration button, a not-licensed route and a &#x27;Listen this Tuesday&#x27; panel. A &#x27;Skip the story&#x27; link serves members. The serif type is handsome and the sunrise colour shift is well done.</p><h5>Weaknesses</h5><p>The join path starts about 6,000px down, so anyone who does not scroll the whole story never reaches the ask. The page has long, empty dark stretches between story steps. The crisis framing could feel alarmist to served agencies, although it is labelled &#x27;A scenario&#x27;. Net details for members live in the footer. The story depends on scroll animation, which has to degrade well.</p></section><section class="judge"><h4>Served-agency partner <span class="jscore">8/10 overall</span></h4><h5>Strengths</h5><p>The best demonstration of value in ICS terms. A warming-shelter ICS-213 to EOC Logistics goes out over W7GBU and is logged on an ICS-309 in the county radio room, then relayed to the hospital net, all clearly badged &#x27;A scenario. Not a real event.&#x27; Most sections explain why agencies need this, and it is the page I&#x27;d send to commissioners. &#x27;When the county calls&#x27; covers the alert ladder, with a clear &#x27;Spokane County Emergency Management activates the team&#x27; statement and marks noted as pending permission. Elegant serif typography, restrained.</p><h5>Weaknesses</h5><p>The fear-first opening (&#x27;It&#x27;s 2 AM. The power&#x27;s out, and so is cell service.&#x27;) needs a PIO check. Shared out of context, a screenshot could circulate as a real alert, and the scenario must match county shelter and EOC plans. The long scroll with large dark gaps makes members click &#x27;Skip the story&#x27; every visit. The murky night-sky hero photo is low-information. Sign-up comes only at the end of the story.</p></section><section class="judge"><h4>UX and maintainability <span class="jscore">6/10 overall</span></h4><h5>Strengths</h5><p>The most persuasive &#x27;why&#x27;. A plausible ice-storm scenario at 2 AM follows one ICS-213 message about a resident on home oxygen from a shelter, through net control on W7GBU, to the EOC radio room and on to the hospital net. A sticky diagram draws each hop with numbered roles, so readers understand how the system works and see themselves in a role. The Crimson Pro headlines are dignified and the tone is serious, not alarmist. It is clearly labeled &#x27;A scenario&#x27;, has a &#x27;Skip the story&#x27; link, and has a reduced-motion variant. On mobile, the sticky figure plus text works. Once built, the story content is mostly static.</p><h5>Weaknesses</h5><p>Slow to the point. The full page shows huge empty dark gaps between steps (min-height about 92vh each), so reaching the CTA takes a lot of scrolling. Member tasks are buried under &#x27;Member tools&#x27; with nothing on the homepage. The page is long and dark end to end. On mobile, the sticky figure takes about half the viewport while you read. Scrollytelling (sticky positioning plus step triggers) is brittle to edit for a non-developer, and changing the story means redrawing the SVG path states. Returning members and agencies get no quick facts at the top.</p></section><section class="judge"><h4>Art director <span class="jscore">9/10 overall</span></h4><h5>Strengths</h5><p>The best-directed piece in the set. It opens with &#x27;It&#x27;s 2 AM. The power&#x27;s out, and so is cell service.&#x27; set in large Crimson Pro over a dusk sky, which reads like a film title card. A sticky SVG panel draws the message&#x27;s route in red: shelter, then the W7GBU repeater, then the County EOC, then the hospital. An ICS-213 card appears in the story, so newcomers see the mechanism and agencies see real procedure (ICS-213, ICS-309, the hospital net). Its strongest moment is the scroll from night into a peach dawn, where &#x27;By morning, the message has been handled.&#x27; leads to &#x27;Radio still works. Because people practice.&#x27; That turns the story straight into the Tuesday-net pitch. It stays responsible for an emergency-services group: a &#x27;A scenario&#x27; tag appears throughout, and a &#x27;Skip the story&#x27; link serves members. The mobile story frames hold up.</p><h5>Weaknesses</h5><p>The page is long (about 10.5k px), and in a static or full-page capture the story leaves big empty stretches of dark background, because it depends on the sticky graphic. Leading with a failure scenario could read as alarmist if the copy isn&#x27;t kept this measured. After the dawn section, the practical half (steps, alert levels, who we serve) falls back to a looser, more generic layout, and the energy drops. Real photography is scarce: two field photos appear only after the story. The SVG landscape illustration is serviceable, not rich.</p></section></div>
+  </details>
+</article>
+
+<article class="concept" id="open-door" aria-labelledby="open-door-name">
+  <header class="c-head">
+    <div class="rank" aria-label="Rank 3">3</div>
+    <div class="c-title">
+      <h2 id="open-door-name">Open Door</h2>
+      <p class="c-meta">Concept 04. Warm community; split-screen hero and an agenda; set in Bricolage Grotesque and Atkinson Hyperlegible. Funnel: visit first, then RSVP.</p>
+      <p class="badge">Top pick of the ux and maintainability judge</p>
+    </div>
+    <div class="c-score">
+      <div class="comp-num">7.83</div>
+      <div class="comp-label">composite</div>
+      <ul class="jscores" aria-label="Each judge's overall score"><li><span>Prospect</span><b>8</b></li><li><span>Agency</span><b>6</b></li><li><span>UX</span><b>9</b></li><li><span>Art</span><b>8</b></li></ul>
+    </div>
+  </header>
+
+  <div class="shots">
+    <a class="shot shot-desktop" href="04-open-door/index.html" target="_blank" rel="noopener" title="Open the live concept in a new tab">
+      <img src="04-open-door/shot-desktop-fold.png" width="1440" height="900" loading="lazy" alt="Open Door: first screen at 1440 px wide">
+      <span class="shot-cap">Desktop, first screen. Click to open the live page.</span>
+    </a>
+    <a class="shot shot-mobile" href="04-open-door/shot-mobile.png" target="_blank" rel="noopener" title="Open the full mobile screenshot">
+      <span class="phone"><img src="04-open-door/shot-mobile.png" width="390" height="3000" loading="lazy" alt="Open Door: top of the page at 390 px wide"></span>
+      <span class="shot-cap">Mobile, 390 px</span>
+    </a>
+  </div>
+
+  <div class="c-body">
+    <div class="c-text">
+      <p class="thesis">The easiest yes is &#x27;come visit&#x27;. Lead with the three open doors that need no commitment: listen to Tuesday&#x27;s net, drop into a meeting, or join a Saturday workshop. Make the first visit feel planned and welcoming, and membership follows belonging.</p>
+      <p class="actions">
+        <a class="btn" href="04-open-door/index.html" target="_blank" rel="noopener">Open full concept</a>
+      </p>
+      <p class="more-shots"><a href="04-open-door/shot-desktop-full.png" target="_blank" rel="noopener">Long desktop screenshot</a> <a href="04-open-door/shot-mobile.png" target="_blank" rel="noopener">Long mobile screenshot</a></p>
+    </div>
+    <div class="bars" role="list" aria-label="Criterion scores, mean of four judges">
+      <div role="listitem"><div class="bar"><span class="bar-label">Professional</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:73%"></span></span><span class="bar-val">7.3</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Engaging</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:75%"></span></span><span class="bar-val">7.5</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Ease of use</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:88%"></span></span><span class="bar-val">8.8</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Learn more</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:75%"></span></span><span class="bar-val">7.5</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Sign up</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:83%"></span></span><span class="bar-val">8.3</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Overall</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:78%"></span></span><span class="bar-val">7.8</span></div></div>
+    </div>
+  </div>
+
+  <details class="notes">
+    <summary>Judges' notes</summary>
+    <div class="judges"><section class="judge"><h4>Prospective volunteer <span class="jscore">8/10 overall</span></h4><h5>Strengths</h5><p>It makes the lowest-friction ask of the set: &#x27;Come say hello on Tuesday night&#x27;, with &#x27;Plan your first visit&#x27; as the main button and &#x27;Join the team&#x27; second. A &#x27;This week&#x27; card shows the net, net control, simplex status and the next three events. &#x27;Three ways to visit&#x27; uses tabs (Listen, Meeting, Workshop) with a date picker. It walks through the net minute by minute (7:55 tune in, officials, members by suffix, &#x27;Visitors: licensed? This is your moment. Not licensed? Keep listening&#x27;) and says how long it takes, where it is, what to bring and whether you need a license. It also offers Add to calendar and an optional &#x27;Tell us you&#x27;re coming&#x27; RSVP. A newcomer knows exactly what the first evening feels like. Other strong parts: &#x27;Questions newcomers ask&#x27;, &#x27;Your first month after joining&#x27;, real photos of members, and quick links for current members.</p><h5>Weaknesses</h5><p>The peach &#x27;This week&#x27; card and pill buttons look a bit dated and consumer-grade, and the visual identity is the least distinctive of the strong concepts. &#x27;Verify&#x27; and &#x27;to confirm&#x27; placeholder chips clutter the most important card. The stakes (&#x27;when normal systems are overloaded or down&#x27;) are only told in text, never shown, so the page is welcoming but low on drama. It is long, about 10,800px.</p></section><section class="judge"><h4>Served-agency partner <span class="jscore">6/10 overall</span></h4><h5>Strengths</h5><p>Warm, low-pressure entry: &#x27;Come say hello on Tuesday night&#x27;, a Plan-your-first-visit tab set, a step-by-step net timeline and an optional RSVP form. The &#x27;Who we serve&#x27; strip puts the DEM seal first as primary served agency. The &#x27;Training with partners this fall&#x27; row (WSDOT exercise, SET, ShakeOut, SHARES, State COMMEX) is great credibility evidence for a partner. There is a clear note that the backup repeater is shared under agreement with IEVHF.</p><h5>Weaknesses</h5><p>The hero is about socializing, not capability. An emergency manager lands on a hobby-club greeting and a headset photo. The salmon/peach &#x27;This week&#x27; card is off-brand and looks unfinished next to the navy. There are more visible review chips than in any other concept (&#x27;frequency: verify&#x27;, &#x27;time: verify&#x27;, &#x27;to confirm&#x27;), and a slashed-zero font in the frequency reads oddly. The &#x27;Condition Green: normal&#x27; badge sits in the hero, where the public could read it as county status.</p></section><section class="judge"><h4>UX and maintainability <span class="jscore">9/10 overall</span></h4><h5>Strengths</h5><p>Best balance in the set. The hero &#x27;This week&#x27; card works for every audience at once: net time, frequency, offset and tone, net control, the next three events, and member quick links (net script, roster, ICS forms, Groups.io). A member finds this week&#x27;s net or a form in about one second, and a newcomer sees an active unit. The primary CTA &#x27;Plan your first visit&#x27; is a low-commitment yes, and &#x27;Join the team&#x27; stays one click away in the header. &#x27;Three ways to visit&#x27; (Listen, Meeting, Workshop) is excellent UX: a date picker, a timestamped walk-through of what happens on the net, an at-a-glance box (how long, where, what to bring, license needed?), add-to-calendar and an optional RSVP. The body font is Atkinson Hyperlegible, a real accessibility choice, and text contrast is high throughout. SCDEM is named in the hero and shown with its logo under &#x27;Who we serve&#x27;, which agency partners will want. The mobile order is right: headline, two full-width CTAs, then the This-week card with member links. A skip link, aria-expanded menu and aria-live regions are in place.</p><h5>Weaknesses</h5><p>The weekly data is the maintenance risk: net control, simplex weeks, per-date visit variants and &#x27;verify&#x27; chips all need hand edits every week. It needs one data file (JSON or a PHP include) or a Groups.io calendar feed, or it goes stale fast. The peach This-week panel reads slightly soft and off-brand next to the navy. The folder-tab visit widget carries about 230 lines of JS. The RSVP form needs a PHP mail handler and spam protection. &#x27;Plan your first visit&#x27; and &#x27;Join the team&#x27; compete at equal visual weight in the hero. The page is long, and the ARES/ACS explainer sits below the fold.</p></section><section class="judge"><h4>Art director <span class="jscore">8/10 overall</span></h4><h5>Strengths</h5><p>The most humane conversion design. &#x27;Come say hello on Tuesday night.&#x27; in tight Bricolage Grotesque, with Atkinson Hyperlegible body text, sets a warm, low-stakes tone. The photo of a member at the mic, overlapped by a peach &#x27;This week&#x27; card, is a nice editorial touch. &#x27;Three ways to visit&#x27; is the standout module: folder tabs for Listen, Meeting and Workshop, a date picker, a minute-by-minute run of show for the net, an &#x27;At a glance&#x27; box and an RSVP form. It removes first-visit anxiety better than anything else here. &#x27;Questions newcomers ask&#x27; and the &#x27;Your first month after joining&#x27; calendar make membership concrete. It ends with a drawn locator map and tidy member quick links.</p><h5>Weaknesses</h5><p>The hero is a fairly standard two-column layout, less iconic than the top three. The peach, navy and red palette feels friendly but a bit community-center, and short on authority. At about 10.8k px it is long, with some repetition (several &#x27;Not licensed&#x27; blocks, two &#x27;Who we serve&#x27; passes). &#x27;Plan your first visit&#x27; as the primary CTA may delay actual registrations. The photo strip (&#x27;Scenes from the team&#x27;) is small and underused.</p></section></div>
+  </details>
+</article>
+
+<article class="concept" id="coverage" aria-labelledby="coverage-name">
+  <header class="c-head">
+    <div class="rank" aria-label="Rank 4">4</div>
+    <div class="c-title">
+      <h2 id="coverage-name">Coverage</h2>
+      <p class="c-meta">Concept 11. Map-first; full-viewport map with an overlay; set in Overpass and Overpass Mono. Funnel: place-led with a ZIP lookup.</p>
+      
+    </div>
+    <div class="c-score">
+      <div class="comp-num">7.54</div>
+      <div class="comp-label">composite</div>
+      <ul class="jscores" aria-label="Each judge's overall score"><li><span>Prospect</span><b>7</b></li><li><span>Agency</span><b>8</b></li><li><span>UX</span><b>4</b></li><li><span>Art</span><b>9</b></li></ul>
+    </div>
+  </header>
+
+  <div class="shots">
+    <a class="shot shot-desktop" href="11-coverage/index.html" target="_blank" rel="noopener" title="Open the live concept in a new tab">
+      <img src="11-coverage/shot-desktop-fold.png" width="1440" height="900" loading="lazy" alt="Coverage: first screen at 1440 px wide">
+      <span class="shot-cap">Desktop, first screen. Click to open the live page.</span>
+    </a>
+    <a class="shot shot-mobile" href="11-coverage/shot-mobile.png" target="_blank" rel="noopener" title="Open the full mobile screenshot">
+      <span class="phone"><img src="11-coverage/shot-mobile.png" width="390" height="3000" loading="lazy" alt="Coverage: top of the page at 390 px wide"></span>
+      <span class="shot-cap">Mobile, 390 px</span>
+    </a>
+  </div>
+
+  <div class="c-body">
+    <div class="c-text">
+      <p class="thesis">Local is the hook. Put Spokane County itself on the homepage as a calm interactive map of where the team works: the DEM building, the hospitals it supports, event routes and the repeater&#x27;s reach. Visitors see their own county and neighbors, and agencies see the footprint.</p>
+      <p class="actions">
+        <a class="btn" href="11-coverage/index.html" target="_blank" rel="noopener">Open full concept</a>
+      </p>
+      <p class="more-shots"><a href="11-coverage/shot-desktop-full.png" target="_blank" rel="noopener">Long desktop screenshot</a> <a href="11-coverage/shot-mobile.png" target="_blank" rel="noopener">Long mobile screenshot</a> <a href="11-coverage/shot-desktop-pin.png" target="_blank" rel="noopener">Map pin panel open</a></p>
+    </div>
+    <div class="bars" role="list" aria-label="Criterion scores, mean of four judges">
+      <div role="listitem"><div class="bar"><span class="bar-label">Professional</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:85%"></span></span><span class="bar-val">8.5</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Engaging</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:83%"></span></span><span class="bar-val">8.3</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Ease of use</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:68%"></span></span><span class="bar-val">6.8</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Learn more</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:80%"></span></span><span class="bar-val">8.0</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Sign up</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:68%"></span></span><span class="bar-val">6.8</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Overall</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:70%"></span></span><span class="bar-val">7.0</span></div></div>
+    </div>
+  </div>
+
+  <details class="notes">
+    <summary>Judges' notes</summary>
+    <div class="judges"><section class="judge"><h4>Prospective volunteer <span class="jscore">7/10 overall</span></h4><h5>Strengths</h5><p>It is the most polished and credible-looking page. The topographic map hero (&#x27;Your county. Your neighbors. On the air.&#x27;) with toggleable layers shows agencies the team&#x27;s footprint and makes the site feel local. &#x27;What happens at each pin&#x27; ties places to the role each one needs. An isometric diagram of the ARES, ACS and County layers explains the two sides well. &#x27;Your route onto the team&#x27; (0-3) sits next to a not-licensed list and a short &#x27;Tell us you&#x27;re interested&#x27; form whose radio buttons ask where you are on the route. There is also a calendar strip, a Tuesday listening panel, a members&#x27; net-control grid and a clear &#x27;Who we serve&#x27;.</p><h5>Weaknesses</h5><p>Above the fold there are places and pins, not people, so it proves reach more than belonging. The coverage shading is illustrative, which makes the &#x27;Is my home in reach?&#x27; ZIP lookup a bit of a gimmick. Repeater reach means little to an unlicensed visitor. The map interaction is fiddly on a phone, and the map will be costly to build and keep accurate.</p></section><section class="judge"><h4>Served-agency partner <span class="jscore">8/10 overall</span></h4><h5>Strengths</h5><p>The cartographic hero looks like a county GIS product and instantly shows the operational footprint across Spokane County. It includes the DEM building, NWS and event routes, with repeater reach shown as illustrative. OPSEC is handled thoughtfully: hospitals appear only as a hatched general area, staging and deployment sites are &#x27;members only&#x27;, and a note says &#x27;sensitive sites are never shown publicly&#x27;. The layered ACS/ARES/County diagram and &#x27;What happens at each pin: role it needs&#x27; explain capability clearly. It is one of the most credible concepts for partners.</p><h5>Weaknesses</h5><p>&#x27;Is my home in reach?&#x27; is meant for recruits, but residents could misread it as ARES serving individual households in an emergency. The wording needs care. The map must be accurate and well maintained, or it quickly looks amateur. On mobile the map pushes the headline below the fold. The join CTA competes with map interaction. There is no dedicated agency contact.</p></section><section class="judge"><h4>UX and maintainability <span class="jscore">4/10 overall</span></h4><h5>Strengths</h5><p>Genuinely local and memorable: a topo-style Spokane County map with layer toggles, pins for where we meet, hospitals (shown only as a general area), public events, NWS and field stations, and a side panel for each pin with &#x27;Role it needs&#x27; plus Join/Listen CTAs. It shows agencies the footprint. It is careful about sensitive sites: staging is &#x27;members only&#x27;, and hospitals are hatched regions, not pins. A top strip gives net info. &#x27;What happens at each pin&#x27; repeats the content as accessible static text, a good fallback.</p><h5>Weaknesses</h5><p>The hardest concept to maintain. The terrain and map are generated procedurally in about 580 lines of JS, and pins sit at hand-set coordinates, so no volunteer could add a pin or change a layer safely. &#x27;Illustrative&#x27; and &#x27;approximate&#x27; disclaimers throughout weaken the authority the map is meant to project. &#x27;Is my home in reach?&#x27; implies a repeater-coverage prediction the group can&#x27;t stand behind. On mobile, the map takes the whole first screen and pushes the headline and CTAs below it, and small pin targets plus zoom controls are awkward on touch and keyboard. Members get little beyond the top strip.</p></section><section class="judge"><h4>Art director <span class="jscore">9/10 overall</span></h4><h5>Strengths</h5><p>The most distinctive and locally grounded concept. The hero is a hillshade topographic map of Spokane County, rendered well: contours, rivers, Deer Park, Cheney and Mount Spokane labels, a scale bar, and coordinates. It carries red pins for where the team meets, hospitals, public events, NWS and field stations, and each pin opens a side panel with a photo, what volunteers do there, the role it needs, and Join and Listen buttons. That turns curiosity into roles directly. The headline, &#x27;Your county. Your neighbors. On the air.&#x27;, set in heavy Overpass (a typeface with a road-sign feel), suits the idea. The isometric County/ARES/ACS layer diagram is the clearest explanation of the two-program structure anywhere in the set. &#x27;Is my home in reach?&#x27; ZIP lookup, the on-page interest form and the calendar strip all work. It is also the strongest credibility signal for agency partners.</p><h5>Weaknesses</h5><p>On mobile the map fills the first screen before the headline and CTAs. On desktop the headline card and layers panel cover about a third of the map. Building and maintaining it is heavy: about 580 lines of JS plus geography and pin data. Many &#x27;illustrative&#x27; and &#x27;example&#x27; labels show that the content isn&#x27;t real yet. Human photography only appears inside pin panels, and below the map the page becomes a competent but conventional navy-and-red site.</p></section></div>
+  </details>
+</article>
+
+<article class="concept" id="in-the-field" aria-labelledby="in-the-field-name">
+  <header class="c-head">
+    <div class="rank" aria-label="Rank 5">5</div>
+    <div class="c-title">
+      <h2 id="in-the-field-name">In the Field</h2>
+      <p class="c-meta">Concept 07. Documentary; full-bleed photo stack in scenes; set in Libre Franklin and Source Serif. Funnel: proof, then a role.</p>
+      
+    </div>
+    <div class="c-score">
+      <div class="comp-num">7.42</div>
+      <div class="comp-label">composite</div>
+      <ul class="jscores" aria-label="Each judge's overall score"><li><span>Prospect</span><b>7</b></li><li><span>Agency</span><b>7</b></li><li><span>UX</span><b>5</b></li><li><span>Art</span><b>7</b></li></ul>
+    </div>
+  </header>
+
+  <div class="shots">
+    <a class="shot shot-desktop" href="07-in-the-field/index.html" target="_blank" rel="noopener" title="Open the live concept in a new tab">
+      <img src="07-in-the-field/shot-desktop-fold.png" width="1440" height="900" loading="lazy" alt="In the Field: first screen at 1440 px wide">
+      <span class="shot-cap">Desktop, first screen. Click to open the live page.</span>
+    </a>
+    <a class="shot shot-mobile" href="07-in-the-field/shot-mobile.png" target="_blank" rel="noopener" title="Open the full mobile screenshot">
+      <span class="phone"><img src="07-in-the-field/shot-mobile.png" width="390" height="3000" loading="lazy" alt="In the Field: top of the page at 390 px wide"></span>
+      <span class="shot-cap">Mobile, 390 px</span>
+    </a>
+  </div>
+
+  <div class="c-body">
+    <div class="c-text">
+      <p class="thesis">Show the work, not the gear. A photo-led sequence of real members in real conditions (fog, parades, the comm trailer) proves the team is active and lets visitors picture themselves in the frame. Every scene links to the role they would play there.</p>
+      <p class="actions">
+        <a class="btn" href="07-in-the-field/index.html" target="_blank" rel="noopener">Open full concept</a>
+      </p>
+      <p class="more-shots"><a href="07-in-the-field/shot-desktop-full.png" target="_blank" rel="noopener">Long desktop screenshot</a> <a href="07-in-the-field/shot-mobile.png" target="_blank" rel="noopener">Long mobile screenshot</a></p>
+    </div>
+    <div class="bars" role="list" aria-label="Criterion scores, mean of four judges">
+      <div role="listitem"><div class="bar"><span class="bar-label">Professional</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:80%"></span></span><span class="bar-val">8.0</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Engaging</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:80%"></span></span><span class="bar-val">8.0</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Ease of use</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:65%"></span></span><span class="bar-val">6.5</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Learn more</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:83%"></span></span><span class="bar-val">8.3</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Sign up</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:73%"></span></span><span class="bar-val">7.3</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Overall</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:65%"></span></span><span class="bar-val">6.5</span></div></div>
+    </div>
+  </div>
+
+  <details class="notes">
+    <summary>Judges' notes</summary>
+    <div class="judges"><section class="judge"><h4>Prospective volunteer <span class="jscore">7/10 overall</span></h4><h5>Strengths</h5><p>The documentary black-and-white photos put real members first (&#x27;Behind every message is a volunteer with a radio&#x27;). &#x27;Five scenes from the work&#x27; uses &#x27;Find yourself in the frame&#x27; hotspots to tie each photo to a named role and its training. &#x27;Seven places you could stand&#x27; is the best answer in the set to &#x27;what would I actually do&#x27;: for each role it lists the job, who can do it, the training and a &#x27;Start with this role&#x27; link. The 0-3 path &#x27;From curious to on the air&#x27; says there are no dues. The closing &#x27;There&#x27;s room in the frame&#x27; form asks only for name, email, whether you are licensed and which role, so signing up is easy.</p><h5>Weaknesses</h5><p>It depends on photography the group doesn&#x27;t have. &#x27;Photo to commission&#x27; placeholders (Bloomsday, SKYWARN, hospital) show on the page, and the 659px source photos are blown up full-width. The grayscale treatment feels somber and heavy rather than welcoming. At about 11,700px it is the longest page in the set, with big black sections, and the scenes run long on mobile.</p></section><section class="judge"><h4>Served-agency partner <span class="jscore">7/10 overall</span></h4><h5>Strengths</h5><p>Documentary-quality black-and-white photography with a strong line: &#x27;Behind every message is a volunteer with a radio.&#x27; The &#x27;Five scenes from the work&#x27; with &#x27;Find yourself in the frame&#x27; hotspots ties each photo to a named role and its training, which proves the unit is real and active. The &#x27;On the calendar this fall&#x27; exercise strip and the ARES/ACS explainer are both solid for partners.</p><h5>Weaknesses</h5><p>The whole concept depends on a photo shoot that hasn&#x27;t happened. Grey &#x27;Photo to commission: Bloomsday&#x27; placeholder boxes are visible, and the existing photos are low-res and dated. The black-and-red, all-B&amp;W palette is moody and somber, closer to a memorial or documentary than an EM partner site. Photos of hospital or EOC scenes would need releases and HIPAA/OPSEC review. There is no agency contact door.</p></section><section class="judge"><h4>UX and maintainability <span class="jscore">5/10 overall</span></h4><h5>Strengths</h5><p>A powerful, human hero: a black-and-white photo of members raising a mast in freezing fog with &#x27;Behind every message is a volunteer with a radio.&#x27; in heavy Libre Franklin, a newsroom-grade look. &#x27;Five scenes from the work&#x27; with &#x27;Find yourself in the frame&#x27; hotspots ties each photo to a role and its training, which is a smart bridge from inspiration to action. The ARES/ACS explainer is clean. The Source Serif body is readable, and a thin red rule gives restrained accents.</p><h5>Weaknesses</h5><p>It depends on photography the group doesn&#x27;t have: 5 &#x27;Photo to commission&#x27; slots, and the existing hero photo is low-resolution and soft when enlarged. The concept collapses without a photo shoot. Hotspots have to be hand-positioned on every image, and repositioned whenever a photo changes. White text over the photo relies on a gradient scrim, which is fragile with new images. Member tasks are nearly absent: no net info above the fold and no forms or schedule on the homepage. Desaturated B&amp;W throughout feels somber for a recruiting site.</p></section><section class="judge"><h4>Art director <span class="jscore">7/10 overall</span></h4><h5>Strengths</h5><p>The strongest photography-led art direction. The full-bleed black-and-white fog photo with heavy Libre Franklin (&#x27;Behind every message is a volunteer with a radio.&#x27;) and a Source Serif caption feels like documentary photojournalism, with dignity and seriousness. &#x27;Find yourself in the frame&#x27; places numbered hotspots on each photo that map to named roles and their training, a smart link between image and action. The &#x27;Seven places you could stand&#x27; role table and the closing &#x27;There&#x27;s room in the frame&#x27; join form carry the metaphor through the page.</p><h5>Weaknesses</h5><p>The concept rests on photography the group doesn&#x27;t have. The 659x372 source images are blown up to full-bleed and look visibly soft. Three of the five scenes, plus roles in the table, are grey &#x27;Photo to commission&#x27; placeholders, so a photo shoot is a prerequisite. The all-black ground and desaturation feel somber, and they remove the hi-vis color that signals an active team. At about 11.7k px it is the longest page. Members&#x27; quick info (net, forms) is weak.</p></section></div>
+  </details>
+</article>
+
+<article class="concept" id="hi-vis" aria-labelledby="hi-vis-name">
+  <header class="c-head">
+    <div class="rank" aria-label="Rank 6">6</div>
+    <div class="c-title">
+      <h2 id="hi-vis-name">Hi-Vis</h2>
+      <p class="c-meta">Concept 03. Bold recruitment; full-bleed duotone poster with a horizontal stepper; set in Big Shoulders and Barlow. Funnel: challenge stepper with an ID reward.</p>
+      
+    </div>
+    <div class="c-score">
+      <div class="comp-num">7.33</div>
+      <div class="comp-label">composite</div>
+      <ul class="jscores" aria-label="Each judge's overall score"><li><span>Prospect</span><b>8</b></li><li><span>Agency</span><b>5</b></li><li><span>UX</span><b>5</b></li><li><span>Art</span><b>8</b></li></ul>
+    </div>
+  </header>
+
+  <div class="shots">
+    <a class="shot shot-desktop" href="03-hi-vis/index.html" target="_blank" rel="noopener" title="Open the live concept in a new tab">
+      <img src="03-hi-vis/shot-desktop-fold.png" width="1440" height="900" loading="lazy" alt="Hi-Vis: first screen at 1440 px wide">
+      <span class="shot-cap">Desktop, first screen. Click to open the live page.</span>
+    </a>
+    <a class="shot shot-mobile" href="03-hi-vis/shot-mobile.png" target="_blank" rel="noopener" title="Open the full mobile screenshot">
+      <span class="phone"><img src="03-hi-vis/shot-mobile.png" width="390" height="3000" loading="lazy" alt="Hi-Vis: top of the page at 390 px wide"></span>
+      <span class="shot-cap">Mobile, 390 px</span>
+    </a>
+  </div>
+
+  <div class="c-body">
+    <div class="c-text">
+      <p class="thesis">Treat joining as a challenge worth taking. Bold, direct recruiting copy and an honest, numbered commitment turn &#x27;maybe someday&#x27; into a concrete goal: earn your county volunteer ID.</p>
+      <p class="actions">
+        <a class="btn" href="03-hi-vis/index.html" target="_blank" rel="noopener">Open full concept</a>
+      </p>
+      <p class="more-shots"><a href="03-hi-vis/shot-desktop-full.png" target="_blank" rel="noopener">Long desktop screenshot</a> <a href="03-hi-vis/shot-mobile.png" target="_blank" rel="noopener">Long mobile screenshot</a></p>
+    </div>
+    <div class="bars" role="list" aria-label="Criterion scores, mean of four judges">
+      <div role="listitem"><div class="bar"><span class="bar-label">Professional</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:60%"></span></span><span class="bar-val">6.0</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Engaging</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:90%"></span></span><span class="bar-val">9.0</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Ease of use</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:73%"></span></span><span class="bar-val">7.3</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Learn more</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:65%"></span></span><span class="bar-val">6.5</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Sign up</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:88%"></span></span><span class="bar-val">8.8</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Overall</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:65%"></span></span><span class="bar-val">6.5</span></div></div>
+    </div>
+  </div>
+
+  <details class="notes">
+    <summary>Judges' notes</summary>
+    <div class="judges"><section class="judge"><h4>Prospective volunteer <span class="jscore">8/10 overall</span></h4><h5>Strengths</h5><p>It has the most motivating recruiting voice (&#x27;MAKE A DIFFERENCE WITH A RADIO IN YOUR HAND.&#x27;) and the most honest commitment block. &#x27;Here&#x27;s what it takes&#x27; sets out 1 net check-in a month, 1 meeting a quarter, 1 field operation a year and a 72-hour go-kit. &#x27;Pick your post&#x27; lists 7 roles (net control, field and shelter operator, comm room and EOC, hospital, Winlink, public events, SKYWARN), each with an eligibility tag (Any member, ACS, No license needed). That directly answers &#x27;what would I do&#x27;. &#x27;Four steps to your county volunteer ID&#x27; has &#x27;I have this&#x27; checkboxes and a sample ID card, so joining becomes a concrete goal. &#x27;Not licensed yet? Get on the air&#x27; starts people with SKYWARN, and the page closes with &#x27;Start with one evening&#x27; and a &#x27;Rather ask first?&#x27; option.</p><h5>Weaknesses</h5><p>The condensed all-caps type and saturated safety-yellow feel like a gym or sports recruiting ad. That may hurt credibility with served agencies and put off older hams. The halftone duotone treatment hides members&#x27; faces. Red &#x27;Verify&#x27; tags are scattered through the page. Big yellow blocks are heavy on mobile. It shouts where some visitors want reassurance.</p></section><section class="judge"><h4>Served-agency partner <span class="jscore">5/10 overall</span></h4><h5>Strengths</h5><p>The strongest recruiting energy in the set. The &#x27;Here&#x27;s what it takes: 1 net check-in a month / 1 meeting a quarter / 1 field op a year / 72hr go-kit&#x27; block is honest and concrete. &#x27;Pick your post&#x27; maps roles to requirements (ACS, HIPAA training, no license needed for SKYWARN), which quietly shows a structured unit. The &#x27;Auxiliary support&#x27; callout quotes the SEC (&#x27;backing up the professionals, not replacing them&#x27;), which is good scope discipline.</p><h5>Weaknesses</h5><p>The condensed all-caps, halftone yellow-on-navy poster style reads like a campaign or protest flyer, not an emergency-management partner. It is loud next to a county page. The hero slogan &#x27;Make a difference with a radio in your hand&#x27; is generic. The hero quote is an insider memorial to Ira &#x27;Dean&#x27; Bula, which means nothing to an agency visitor or newcomer. The halftone treatment makes the real members unrecognizable, which undercuts authenticity. A red &#x27;Verify&#x27; badge is visible in the rendered UI.</p></section><section class="judge"><h4>UX and maintainability <span class="jscore">5/10 overall</span></h4><h5>Strengths</h5><p>The strongest pure recruiting energy. The yellow-and-navy halftone poster with &#x27;MAKE A DIFFERENCE WITH A RADIO IN YOUR HAND.&#x27; is memorable. &#x27;Here&#x27;s what it takes&#x27; (1 net check-in a month, 1 meeting a quarter, 1 field op a year, 72-hour go-kit) is an honest, concrete commitment that lowers anxiety about joining. &#x27;Pick your post&#x27; lists real roles with eligibility tags (Any member, ACS, HIPAA training, No license needed to train) and a legend. Every section closes with a clear CTA. It is mostly static and easy to edit.</p><h5>Weaknesses</h5><p>All-caps condensed Big Shoulders display type is hard to read for multi-line role names and long headings. The halftone treatment hides the actual people, and on mobile the hero crop is mostly yellow dots. It reads as a recruiting ad, which undercuts credibility with served agencies. The hero memorial quote about Dean Bula is confusing to newcomers who don&#x27;t know who he is. &#x27;Members&#x27; in the nav is greyed out at lower contrast, and there is no net time or frequency above the fold, so member task speed is poor. A red &#x27;Verify&#x27; chip is left in the copy. New photos need halftone processing to match.</p></section><section class="judge"><h4>Art director <span class="jscore">8/10 overall</span></h4><h5>Strengths</h5><p>The most poster-like and memorable of the conventional layouts. The navy and safety-yellow halftone duotone of the fog mast-raising photo, set against huge Big Shoulders caps (&#x27;MAKE A DIFFERENCE WITH A RADIO IN YOUR HAND.&#x27;), ties the palette to the hi-vis vests. &#x27;HERE&#x27;S WHAT IT TAKES&#x27; uses giant 1 / 1 / 1 / 72hr numerals to state the commitment honestly and quickly. &#x27;PICK YOUR POST&#x27; reads like a job board with eligibility tags. The four steps to a county volunteer ID have &#x27;I have this&#x27; checkboxes that update a sample ID card, a real conversion device. &#x27;TUESDAY IS PRACTICE&#x27; and &#x27;START WITH ONE EVENING&#x27; close strongly. It has the strongest sign-up push in the set.</p><h5>Weaknesses</h5><p>Condensed caps on almost every heading, including agency names in &#x27;Who we serve&#x27;, shouts and tires the eye over a 9k px page. The tone leans toward a sports-team or military recruiting poster and could put off served agencies or older hams. The halftone flattens members&#x27; faces into graphics, so you lose the real people. The soft quote about Dean Bula sits awkwardly under the aggressive headline. Red &#x27;Verify&#x27; tags are scattered through the content.</p></section></div>
+  </details>
+</article>
+
+<article class="concept" id="county-standard" aria-labelledby="county-standard-name">
+  <header class="c-head">
+    <div class="rank" aria-label="Rank 7">7</div>
+    <div class="c-title">
+      <h2 id="county-standard-name">County Standard</h2>
+      <p class="c-meta">Concept 01. Civic-institutional; photo hero with an overlap block and a router bar; set in Public Sans. Funnel: persona router.</p>
+      <p class="badge">Top pick of the served-agency partner judge</p>
+    </div>
+    <div class="c-score">
+      <div class="comp-num">7.13</div>
+      <div class="comp-label">composite</div>
+      <ul class="jscores" aria-label="Each judge's overall score"><li><span>Prospect</span><b>6</b></li><li><span>Agency</span><b>9</b></li><li><span>UX</span><b>8</b></li><li><span>Art</span><b>6</b></li></ul>
+    </div>
+  </header>
+
+  <div class="shots">
+    <a class="shot shot-desktop" href="01-county-standard/index.html" target="_blank" rel="noopener" title="Open the live concept in a new tab">
+      <img src="01-county-standard/shot-desktop-fold.png" width="1440" height="900" loading="lazy" alt="County Standard: first screen at 1440 px wide">
+      <span class="shot-cap">Desktop, first screen. Click to open the live page.</span>
+    </a>
+    <a class="shot shot-mobile" href="01-county-standard/shot-mobile.png" target="_blank" rel="noopener" title="Open the full mobile screenshot">
+      <span class="phone"><img src="01-county-standard/shot-mobile.png" width="390" height="3000" loading="lazy" alt="County Standard: top of the page at 390 px wide"></span>
+      <span class="shot-cap">Mobile, 390 px</span>
+    </a>
+  </div>
+
+  <div class="c-body">
+    <div class="c-text">
+      <p class="thesis">Credibility is what converts. If the site reads like a well-run public service, with plain words, Spokane County Emergency Management named in the first line and a clear door for each audience, agencies trust it and newcomers feel safe taking a first step.</p>
+      <p class="actions">
+        <a class="btn" href="01-county-standard/index.html" target="_blank" rel="noopener">Open full concept</a>
+      </p>
+      <p class="more-shots"><a href="01-county-standard/shot-desktop-full.png" target="_blank" rel="noopener">Long desktop screenshot</a> <a href="01-county-standard/shot-mobile.png" target="_blank" rel="noopener">Long mobile screenshot</a></p>
+    </div>
+    <div class="bars" role="list" aria-label="Criterion scores, mean of four judges">
+      <div role="listitem"><div class="bar"><span class="bar-label">Professional</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:90%"></span></span><span class="bar-val">9.0</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Engaging</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:48%"></span></span><span class="bar-val">4.8</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Ease of use</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:88%"></span></span><span class="bar-val">8.8</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Learn more</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:63%"></span></span><span class="bar-val">6.3</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Sign up</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:68%"></span></span><span class="bar-val">6.8</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Overall</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:73%"></span></span><span class="bar-val">7.3</span></div></div>
+    </div>
+  </div>
+
+  <details class="notes">
+    <summary>Judges' notes</summary>
+    <div class="judges"><section class="judge"><h4>Prospective volunteer <span class="jscore">6/10 overall</span></h4><h5>Strengths</h5><p>It is the most credible public-service look. Spokane County Emergency Management is named in the utility bar and the hero, and the hero photo shows real members in hi-vis vests. A &#x27;Which describes you?&#x27; picker offers four audience doors. Its ARES vs ACS table (who runs it, who can join, what you can do, what it takes) is the clearest explanation of the two sides in the set. &#x27;How a call-out works&#x27; covers the four conditions. The 0-3 joining path sits beside a &#x27;What ACS members keep up&#x27; box, and there is a coming-up list with the net-control roster. The footer is organised by audience (New to radio, Licensed hams, Members, Agency partners). The mobile layout is clean.</p><h5>Weaknesses</h5><p>It looks like a county government template, with navy and red blocks and repeated tab-shaped bullet icons. The headline (&#x27;Trained volunteers. Backup communications. Ready when it counts.&#x27;) is generic. There are no stories or voices and little feeling, so it earns trust but not excitement. &#x27;Join the team&#x27; leads to a list of forms, with no quick way to say &#x27;I&#x27;m interested&#x27;, and the page is long and text-heavy.</p></section><section class="judge"><h4>Served-agency partner <span class="jscore">9/10 overall</span></h4><h5>Strengths</h5><p>Reads like a well-run public-service unit. The first line names Spokane County Emergency Management, and the hero says &#x27;Trained volunteers. Backup communications. Ready when it counts.&#x27; with real members in hi-vis vests. The ARES vs ACS comparison table (who runs it, who activates you, state mission number, RCW 38.52) is exactly what an emergency manager needs to see before linking. It is the only concept with an explicit &#x27;I represent an agency&#x27; door, plus an Agency partners footer, Agreements, and &#x27;Contact the emergency coordinator&#x27;. &#x27;Who we serve&#x27; quotes the ARES/RACES Plan mission statement and lists Red Cross, NWS, hospitals and the IEVHF repeater agreement. The &#x27;How a call-out works&#x27; Green-to-Red ladder shows it is organized. Mobile is clean, with a sticky Join and a hamburger.</p><h5>Weaknesses</h5><p>Visually safe. The navy/red block and the yellow tab ornament look like a generic civic template, and nothing about it is memorable. The top strip copies the USWDS &#x27;official government website&#x27; banner pattern. The wording is honest (&#x27;a volunteer unit supporting...&#x27;), but I&#x27;d want it to read less like an official county site. A public &#x27;Current level&#x27; badge on Condition Green could be mistaken for the county&#x27;s status if it goes stale. The hero photo is low-res and dated. There are several &#x27;to be confirmed&#x27; and &#x27;verify&#x27; strings.</p></section><section class="judge"><h4>UX and maintainability <span class="jscore">8/10 overall</span></h4><h5>Strengths</h5><p>The most credible and most maintainable concept. The utility bar (&#x27;A volunteer communications unit supporting Spokane County Emergency Management&#x27;) plus a lock-icon Members link says exactly what this is to agencies. It uses a USWDS-like public-service vocabulary: Public Sans, white on navy, a red Join CTA, and a real photo of members in hi-vis. &#x27;Listen in on Tuesday&#x27; puts time, repeater and 147.300 MHz above the fold. The &#x27;Which describes you?&#x27; four-door picker (licensed ham, not licensed, member, agency) gives clear information scent for all four audiences. The ARES vs ACS comparison table is the clearest explanation of the two-sided org in the set and restacks cleanly into labeled rows on mobile. The condition-level cards and the numbered 0-3 joining path with accordions are practical. It is mostly static HTML with one small localStorage persona script (59 lines of JS), so a volunteer can edit it on shared PHP hosting.</p><h5>Weaknesses</h5><p>Visually generic: it reads as a government template and gives little emotional pull toward signing up. The orange tab shape above the hero box looks like an artifact. Member task speed is only moderate: forms and scripts sit behind the Members link or the persona picker, with no quick-link row on the homepage. The page is long and uniform, with section after section on the same pale-blue and white rhythm. The persona choice persisting in localStorage could confuse someone on a shared computer. It doesn&#x27;t show that the team is active: no upcoming events list on the homepage.</p></section><section class="judge"><h4>Art director <span class="jscore">6/10 overall</span></h4><h5>Strengths</h5><p>Reads immediately as a well-run public service, which will reassure agencies. It uses a gov-style layout (Public Sans, navy and red), &#x27;A volunteer communications unit supporting Spokane County Emergency Management&#x27; in the utility bar, a &#x27;Which describes you?&#x27; four-audience selector, and a footer organized by audience. The ARES-versus-ACS comparison table (who runs it, who can join, what you can do, who activates you) is the best explanation of the two programs for agency partners. The call-out conditions strip and the net-control roster make it quietly useful for members.</p><h5>Weaknesses</h5><p>The least distinctive concept. It looks like a USWDS county template, and the orange tab is the only brand gesture. The three-line hero headline (&#x27;Trained volunteers. Backup communications. Ready when it counts.&#x27;) is boilerplate. The fog photo is soft at full width, and photography is barely used below the hero. Little here would make a newcomer feel anything or remember the site.</p></section></div>
+  </details>
+</article>
+
+<article class="concept" id="tuesday-2000" aria-labelledby="tuesday-2000-name">
+  <header class="c-head">
+    <div class="rank" aria-label="Rank 8">8</div>
+    <div class="c-title">
+      <h2 id="tuesday-2000-name">Tuesday, 2000 Hours</h2>
+      <p class="c-meta">Concept 05. Tactical ops, dark; console dashboard hero; set in IBM Plex Condensed and Mono. Funnel: listen tonight.</p>
+      
+    </div>
+    <div class="c-score">
+      <div class="comp-num">7.08</div>
+      <div class="comp-label">composite</div>
+      <ul class="jscores" aria-label="Each judge's overall score"><li><span>Prospect</span><b>7</b></li><li><span>Agency</span><b>6</b></li><li><span>UX</span><b>7</b></li><li><span>Art</span><b>6</b></li></ul>
+    </div>
+  </header>
+
+  <div class="shots">
+    <a class="shot shot-desktop" href="05-tuesday-2000/index.html" target="_blank" rel="noopener" title="Open the live concept in a new tab">
+      <img src="05-tuesday-2000/shot-desktop-fold.png" width="1440" height="900" loading="lazy" alt="Tuesday, 2000 Hours: first screen at 1440 px wide">
+      <span class="shot-cap">Desktop, first screen. Click to open the live page.</span>
+    </a>
+    <a class="shot shot-mobile" href="05-tuesday-2000/shot-mobile.png" target="_blank" rel="noopener" title="Open the full mobile screenshot">
+      <span class="phone"><img src="05-tuesday-2000/shot-mobile.png" width="390" height="3000" loading="lazy" alt="Tuesday, 2000 Hours: top of the page at 390 px wide"></span>
+      <span class="shot-cap">Mobile, 390 px</span>
+    </a>
+  </div>
+
+  <div class="c-body">
+    <div class="c-text">
+      <p class="thesis">The Tuesday net is the heartbeat and the best recruiting tool, so make the live schedule the hero. A countdown to 8 PM and one-tap radio settings let a curious ham listen tonight, and members get their weekly essentials at a glance.</p>
+      <p class="actions">
+        <a class="btn" href="05-tuesday-2000/index.html" target="_blank" rel="noopener">Open full concept</a>
+      </p>
+      <p class="more-shots"><a href="05-tuesday-2000/shot-desktop-full.png" target="_blank" rel="noopener">Long desktop screenshot</a> <a href="05-tuesday-2000/shot-mobile.png" target="_blank" rel="noopener">Long mobile screenshot</a> <a href="05-tuesday-2000/shot-desktop-complete.png" target="_blank" rel="noopener">Whole page, desktop</a></p>
+    </div>
+    <div class="bars" role="list" aria-label="Criterion scores, mean of four judges">
+      <div role="listitem"><div class="bar"><span class="bar-label">Professional</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:78%"></span></span><span class="bar-val">7.8</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Engaging</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:73%"></span></span><span class="bar-val">7.3</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Ease of use</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:78%"></span></span><span class="bar-val">7.8</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Learn more</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:63%"></span></span><span class="bar-val">6.3</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Sign up</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:70%"></span></span><span class="bar-val">7.0</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Overall</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:65%"></span></span><span class="bar-val">6.5</span></div></div>
+    </div>
+  </div>
+
+  <details class="notes">
+    <summary>Judges' notes</summary>
+    <div class="judges"><section class="judge"><h4>Prospective volunteer <span class="jscore">7/10 overall</span></h4><h5>Strengths</h5><p>A newly licensed ham can act tonight. The page has a live countdown, a grid of radio settings (W7GBU, 147.300, +600, 100 Hz) with a &#x27;Copy radio settings&#x27; button and &#x27;No license needed to listen&#x27;. &#x27;How to check in as a visitor&#x27; explains the check-in order and flags &#x27;Visitors: your turn&#x27;. &#x27;From first listen to the county roster&#x27; is a table where each step (listen, check in, orientation, join ARES, ACS) has its own button: Add to calendar, Check in as a visitor, Get directions, Registration form. It is the most actionable join path in the set. The four alert conditions and the members&#x27; desk (roster, other nets, forms) are well organised.</p><h5>Weaknesses</h5><p>The dark control-room look and monospace numbers read as insider and technical, and an unlicensed resident meets offsets and tone frequencies in the hero. There are few photos of people and the &#x27;why&#x27; is thin. The page is navy from top to bottom, so sections blur together. A countdown three days out has little urgency.</p></section><section class="judge"><h4>Served-agency partner <span class="jscore">6/10 overall</span></h4><h5>Strengths</h5><p>The headline &#x27;When other systems go down, Spokane County still has a voice&#x27; is excellent. The net panel (repeater, offset, tone, net control, copy settings), the check-in order and the member kit make it genuinely useful weekly. &#x27;Who we support&#x27; is the broadest partner list in the set: DEM, NWS, hospitals, Red Cross, ARRL, IEVHF, Sheriff, WA EMD, WSDOT and FEMA. It notes that marks are shown &#x27;pending permission&#x27;, which shows respect for agency branding.</p><h5>Weaknesses</h5><p>The amber digital countdown clock and dark &#x27;console&#x27; aesthetic feel like hobbyist tech or an EOC costume rather than a public-service site. It is gimmicky for a weekly practice net. The persistent top bar reads &#x27;Condition Green: normal operations&#x27; on every page. If a volunteer webmaster doesn&#x27;t flip it during a real incident, the public sees &#x27;normal operations&#x27; while the county EOC is activated, which conflicts with official messaging. Dense for first-time visitors. &#x27;freq. verify&#x27; chips are visible.</p></section><section class="judge"><h4>UX and maintainability <span class="jscore">7/10 overall</span></h4><h5>Strengths</h5><p>The strongest &#x27;active unit&#x27; signal paired with fast member tasks. The Next-net console gives a countdown, a repeater/frequency/offset/tone/net-control grid, &#x27;Copy radio settings&#x27; and &#x27;What do these settings mean?&#x27;. Next to it are &#x27;No license needed to listen&#x27; with three check-in steps, &#x27;Check in as a visitor&#x27; and &#x27;Add to calendar&#x27;, plus a coming-up list and a member-kit link row, all in the first screen. The countdown is computed from the recurring Tuesday 20:00 schedule, so it maintains itself, and it is marked up correctly (role=timer, aria-live off, with a separate polite summary). The rest of the page is thorough: a visitor check-in walk-through, a &#x27;Who we support&#x27; grid, four conditions, a joining table with an action button on every step, and a Members&#x27; desk with roster and other nets. The mobile stack keeps the console usable.</p><h5>Weaknesses</h5><p>An all-dark navy theme across a very long page tires the eye in long-form reading and feels insider and techy to non-hams and agency staff. The countdown mostly shows &#x27;03 days&#x27; and only builds urgency on Tuesday, so it reads as a gimmick. Monospace for dates and numbers everywhere adds visual noise. Roster, simplex-week flags, &#x27;verify&#x27; chips and the coming-up list still need weekly hand edits. The hero headline and the console compete for attention. It is dense: newcomers get a lot of operational detail before the &#x27;why&#x27;.</p></section><section class="judge"><h4>Art director <span class="jscore">6/10 overall</span></h4><h5>Strengths</h5><p>The most practical homepage for licensed hams and members. An amber monospace countdown to 20:00 Pacific, a repeater, frequency, offset and tone grid, &#x27;Copy radio settings&#x27;, an &#x27;Add to calendar&#x27; button and a visitor check-in explainer all sit above the fold. &#x27;Check in as a visitor&#x27; is the right call to action for a curious ham. The dark navy &#x27;radio room at night&#x27; mood is consistent across the IBM Plex Sans, Condensed and Mono family. The &#x27;From first listen to the county roster&#x27; table and the Members&#x27; desk are well organized.</p><h5>Weaknesses</h5><p>It looks like a tech or crypto dashboard, one of the more generic looks in the set. The background photo is darkened almost to nothing, so no people show. Unlicensed visitors meet offset, tone and &#x27;simplex&#x27; jargon before any emotional case. A countdown reading &#x27;03 days&#x27; is a gimmick that only pays off on Tuesday evening. The headline duplicates Plain Signal&#x27;s. Dark UI for a whole recruiting site feels cold.</p></section></div>
+  </details>
+</article>
+
+<article class="concept" id="plain-signal" aria-labelledby="plain-signal-name">
+  <header class="c-head">
+    <div class="rank" aria-label="Rank 9">9</div>
+    <div class="c-title">
+      <h2 id="plain-signal-name">Plain Signal</h2>
+      <p class="c-meta">Concept 06. Swiss minimal; typographic stepper page; set in Archivo. Funnel: where-are-you stepper.</p>
+      
+    </div>
+    <div class="c-score">
+      <div class="comp-num">6.63</div>
+      <div class="comp-label">composite</div>
+      <ul class="jscores" aria-label="Each judge's overall score"><li><span>Prospect</span><b>5</b></li><li><span>Agency</span><b>7</b></li><li><span>UX</span><b>7</b></li><li><span>Art</span><b>6</b></li></ul>
+    </div>
+  </header>
+
+  <div class="shots">
+    <a class="shot shot-desktop" href="06-plain-signal/index.html" target="_blank" rel="noopener" title="Open the live concept in a new tab">
+      <img src="06-plain-signal/shot-desktop-fold.png" width="1440" height="900" loading="lazy" alt="Plain Signal: first screen at 1440 px wide">
+      <span class="shot-cap">Desktop, first screen. Click to open the live page.</span>
+    </a>
+    <a class="shot shot-mobile" href="06-plain-signal/shot-mobile.png" target="_blank" rel="noopener" title="Open the full mobile screenshot">
+      <span class="phone"><img src="06-plain-signal/shot-mobile.png" width="390" height="3000" loading="lazy" alt="Plain Signal: top of the page at 390 px wide"></span>
+      <span class="shot-cap">Mobile, 390 px</span>
+    </a>
+  </div>
+
+  <div class="c-body">
+    <div class="c-text">
+      <p class="thesis">The fastest route to sign-up is a path you can see all at once. Make the homepage itself the joining sequence, 0 to 3, in the International Typographic Style: nothing decorative, every element a step or a fact.</p>
+      <p class="actions">
+        <a class="btn" href="06-plain-signal/index.html" target="_blank" rel="noopener">Open full concept</a>
+      </p>
+      <p class="more-shots"><a href="06-plain-signal/shot-desktop-full.png" target="_blank" rel="noopener">Long desktop screenshot</a> <a href="06-plain-signal/shot-mobile.png" target="_blank" rel="noopener">Long mobile screenshot</a> <a href="06-plain-signal/shot-desktop-licensed.png" target="_blank" rel="noopener">“Licensed” path selected</a></p>
+    </div>
+    <div class="bars" role="list" aria-label="Criterion scores, mean of four judges">
+      <div role="listitem"><div class="bar"><span class="bar-label">Professional</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:83%"></span></span><span class="bar-val">8.3</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Engaging</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:35%"></span></span><span class="bar-val">3.5</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Ease of use</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:93%"></span></span><span class="bar-val">9.3</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Learn more</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:50%"></span></span><span class="bar-val">5.0</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Sign up</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:75%"></span></span><span class="bar-val">7.5</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Overall</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:63%"></span></span><span class="bar-val">6.3</span></div></div>
+    </div>
+  </div>
+
+  <details class="notes">
+    <summary>Judges' notes</summary>
+    <div class="judges"><section class="judge"><h4>Prospective volunteer <span class="jscore">5/10 overall</span></h4><h5>Strengths</h5><p>It is the fastest page to scan and the shortest (about 5,400px). A &#x27;Where are you starting from?&#x27; control (Not licensed, Licensed, ARES member, ACS member) moves your next step to the top. Big red 0-3 numerals each come with &#x27;How long&#x27; and &#x27;You need&#x27;, the clearest commitment facts in the set. Net, meeting and location details are laid out as a clean table, and the mobile version is excellent.</p><h5>Weaknesses</h5><p>There is almost no imagery (one photo), no logo in the header and no people. The stark black-and-white Swiss style feels cold and bureaucratic. It tells me the steps but never makes me want to take them: there is no mission, no community and no story, so interest in learning more is weak. It would not stand out.</p></section><section class="judge"><h4>Served-agency partner <span class="jscore">7/10 overall</span></h4><h5>Strengths</h5><p>The clearest information design in the set. The 0-1-2-3 joining sequence lists &#x27;How long&#x27; and &#x27;You need&#x27; for each step, including FEMA IS-100/IS-700 for ACS. Net and meetings are in one scannable block with the DEM address. It is fast and accessible, and I&#x27;d have zero risk concerns linking to it from a county page. It is honest about scope, stating that ACS &#x27;can activate you to work in emergency operations centers&#x27;.</p><h5>Weaknesses</h5><p>There is no logo or seal in the header and almost no imagery, so it reads like a stub or a text-only fallback rather than an established unit. It conveys no sense of people, activity or pride, and it is least likely to move an undecided visitor. Capability is limited to a small grid below the fold. There is no agency-specific contact path. Several &#x27;[to be confirmed]&#x27; strings are visible.</p></section><section class="judge"><h4>UX and maintainability <span class="jscore">7/10 overall</span></h4><h5>Strengths</h5><p>The purest usability and accessibility in the set. The type is black on white with one red accent at very high contrast, sits on a disciplined grid, and has nothing decorative to break. The &#x27;Where are you starting from?&#x27; segmented control reorders the steps and gives a shareable URL (?from=licensed) that someone can read out on the net, a clever tie-in to how the org actually recruits. Giant red 0-3 numerals with &#x27;How long&#x27; and &#x27;You need&#x27; columns make the whole commitment scannable in seconds. The &#x27;Net and meetings&#x27; section has the weekly net, meetings, the DEM address with a map link, the coming-up table and a tidy &#x27;For members&#x27; link list. Member task speed is good. At 46 KB with only 3 images it is the easiest to keep up, and the mobile layout is exemplary: a 2x2 segmented grid and numerals that stay legible.</p><h5>Weaknesses</h5><p>Austere to the point of cold: no logo in the header, no people above the fold and only one photo on the whole page. That costs recognition with partner agencies and emotional motivation for newcomers. The line naming the served agencies (SCDEM, NWS, hospitals) is set in muted gray, so the key credibility fact looks secondary. It can read as unfinished or a &#x27;template&#x27; to non-designers. The swapped-step state is invisible until you click, and there is little to pull a casual visitor into learning more.</p></section><section class="judge"><h4>Art director <span class="jscore">6/10 overall</span></h4><h5>Strengths</h5><p>The clearest, fastest page in the set. A well-executed Swiss layout: Archivo at heavy weight, black, white and one red, and a left label column (&#x27;How to join&#x27;, &#x27;Net and meetings&#x27;, &#x27;For members&#x27;). The &#x27;Where are you starting from?&#x27; segmented control reorders the steps and produces a ?from= link &#x27;you can read out on the net&#x27;, a smart, specific detail. Giant red 0 to 3 numerals with &#x27;How long&#x27; and &#x27;You need&#x27; columns make the commitment unambiguous. It is the shortest page (about 5.4k px), has excellent accessibility, and the confident restraint reads as credible.</p><h5>Weaknesses</h5><p>Emotionally flat. There is no photograph above the fold and only one in the whole page, and the case for why emergency radio matters gets a single sentence. It could pass for a well-set typographic template for any organization. It is the weakest concept at making people want to learn more. The red-numeral system is strong, but nothing else is memorable.</p></section></div>
+  </details>
+</article>
+
+<article class="concept" id="the-relay" aria-labelledby="the-relay-name">
+  <header class="c-head">
+    <div class="rank" aria-label="Rank 10">10</div>
+    <div class="c-title">
+      <h2 id="the-relay-name">The Relay</h2>
+      <p class="c-meta">Concept 02. Editorial magazine; single column with a sidenote rail; set in Newsreader and Hanken Grotesk. Funnel: mission-led reading.</p>
+      
+    </div>
+    <div class="c-score">
+      <div class="comp-num">6.54</div>
+      <div class="comp-label">composite</div>
+      <ul class="jscores" aria-label="Each judge's overall score"><li><span>Prospect</span><b>5</b></li><li><span>Agency</span><b>7</b></li><li><span>UX</span><b>6</b></li><li><span>Art</span><b>7</b></li></ul>
+    </div>
+  </header>
+
+  <div class="shots">
+    <a class="shot shot-desktop" href="02-the-relay/index.html" target="_blank" rel="noopener" title="Open the live concept in a new tab">
+      <img src="02-the-relay/shot-desktop-fold.png" width="1440" height="900" loading="lazy" alt="The Relay: first screen at 1440 px wide">
+      <span class="shot-cap">Desktop, first screen. Click to open the live page.</span>
+    </a>
+    <a class="shot shot-mobile" href="02-the-relay/shot-mobile.png" target="_blank" rel="noopener" title="Open the full mobile screenshot">
+      <span class="phone"><img src="02-the-relay/shot-mobile.png" width="390" height="3000" loading="lazy" alt="The Relay: top of the page at 390 px wide"></span>
+      <span class="shot-cap">Mobile, 390 px</span>
+    </a>
+  </div>
+
+  <div class="c-body">
+    <div class="c-text">
+      <p class="thesis">People sign up for a story they believe in. Make the case for emergency radio in Spokane as a well-edited magazine feature and explain every acronym in the margin, so a curious newcomer reads to the end and finds the next step waiting.</p>
+      <p class="actions">
+        <a class="btn" href="02-the-relay/index.html" target="_blank" rel="noopener">Open full concept</a>
+      </p>
+      <p class="more-shots"><a href="02-the-relay/shot-desktop-full.png" target="_blank" rel="noopener">Long desktop screenshot</a> <a href="02-the-relay/shot-mobile.png" target="_blank" rel="noopener">Long mobile screenshot</a></p>
+    </div>
+    <div class="bars" role="list" aria-label="Criterion scores, mean of four judges">
+      <div role="listitem"><div class="bar"><span class="bar-label">Professional</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:80%"></span></span><span class="bar-val">8.0</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Engaging</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:60%"></span></span><span class="bar-val">6.0</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Ease of use</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:55%"></span></span><span class="bar-val">5.5</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Learn more</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:83%"></span></span><span class="bar-val">8.3</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Sign up</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:53%"></span></span><span class="bar-val">5.3</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Overall</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:63%"></span></span><span class="bar-val">6.3</span></div></div>
+    </div>
+  </div>
+
+  <details class="notes">
+    <summary>Judges' notes</summary>
+    <div class="judges"><section class="judge"><h4>Prospective volunteer <span class="jscore">5/10 overall</span></h4><h5>Strengths</h5><p>&#x27;From Bloomsday to blackouts, we keep Spokane County connected&#x27; is a great headline. The margin glossary defines ham, ARES, ACS, RACES, W7GBU, net control, Winlink, ICS-213, RCW 38.52 and Technician license beside the text where each term appears (tap-to-define on mobile), which teaches a newcomer more than any other concept. The serif typography is elegant. &#x27;Your next step&#x27; is sized by commitment (listen, come to a meeting, register), and there is a &#x27;Not licensed yet? Here&#x27;s the path&#x27; section and a &#x27;Questions before you commit?&#x27; box.</p><h5>Weaknesses</h5><p>The core is a three-minute essay that most prospective volunteers won&#x27;t read, and the join path sits about 7,000px down. The hero image is a pickup tailgate full of gear, not people. &#x27;[Photo credit TBD]&#x27; and &#x27;[Confirm current class schedule]&#x27; placeholders show on the page. Visual energy is low, and on mobile the page becomes one long column of text.</p></section><section class="judge"><h4>Served-agency partner <span class="jscore">7/10 overall</span></h4><h5>Strengths</h5><p>Dignified editorial typography. &#x27;From Bloomsday to blackouts, we keep Spokane County connected&#x27; is a strong, non-alarmist line. The margin glossary defines ICS-213, RACES, RCW 38.52 and net control in plain English, which shows the group understands the ICS framework. The essay quotes the Eastern Washington standing order and states &#x27;nobody here becomes a first responder&#x27; and &#x27;ARES is an auxiliary support function&#x27;, which is precisely the scope statement a served agency wants. I&#x27;d link to it without hesitation.</p><h5>Weaknesses</h5><p>Capability is buried in prose. An emergency manager scanning for what they do, who activates them and whom to contact has to read a three-minute essay. There is no agency contact path above the fold, and &#x27;Who we serve&#x27; comes very late. One Join button with a single text link is thin for conversion. &#x27;[Photo credit TBD]&#x27; is visible on both images. The purple-navy serif look feels more like a literary nonprofit than emergency management.</p></section><section class="judge"><h4>UX and maintainability <span class="jscore">6/10 overall</span></h4><h5>Strengths</h5><p>The best job in the set of explaining jargon. Every acronym (ham, ARES, ACS, RACES, W7GBU, net control, Winlink, ICS-213, SKYWARN, RCW 38.52) gets a margin gloss on desktop and becomes a tap-to-define toggle on mobile with proper aria-expanded. That is a real comprehension and accessibility win for audience 2. The editorial voice is warm and specific (Bloomsday, the Lilac Torchlight Parade, &#x27;An emergency is a poor time to be handing out business cards&#x27;). A persistent top strip gives net time, frequency, offset and tone on every page, which helps members. The sidebar cards (&#x27;Not licensed yet?&#x27;, &#x27;Ready?&#x27;) catch readers at the end. It is mostly prose, so it is easy to edit.</p><h5>Weaknesses</h5><p>It assumes people will read a three-minute essay, and most visitors won&#x27;t. There is almost nothing for members (audience 3) beyond the top strip and a &#x27;Skip to this week&#x27;s nets&#x27; link. The light-weight Newsreader display serif is elegant but thin at large sizes, and long serif body text on a pale gray-blue ground is less legible on mobile. There is only one Join CTA near the top, and the sign-up path is not visible until the end. Agencies may find it literary rather than operational. It has &#x27;Photo credit TBD&#x27; placeholders.</p></section><section class="judge"><h4>Art director <span class="jscore">7/10 overall</span></h4><h5>Strengths</h5><p>The most refined typography in the set. Light Newsreader at display size with aubergine ink and the best headline of all twelve (&#x27;From Bloomsday to blackouts, we keep Spokane County connected.&#x27;). A drop-cap essay carries margin sidenotes that define ham, ARES, ACS, RACES, W7GBU, net control, Winlink, ICS-213 and RCW 38.52, a real solution to the acronym problem. The purple-toned tower-at-sunset photo, a large italic Dean Bula pull quote and an &#x27;In this issue&#x27; index make it read like a well-edited magazine. &#x27;Your next step&#x27; has three cards whose visual weight grows with the commitment: Listen, then Come to a meeting, then a dark &#x27;Register for ARES&#x27; card.</p><h5>Weaknesses</h5><p>Low energy for a recruiting site. No image above the fold, a light-weight headline and small CTAs mean nothing pulls hard toward joining. It asks for a three-minute read before the pitch. Members&#x27; essentials (net, scripts, roster) are buried around 5,000 px down. &#x27;[Photo credit TBD]&#x27; placeholders remain. The magazine pattern itself is familiar, and only the glossary makes it distinctive.</p></section></div>
+  </details>
+</article>
+
+<article class="concept" id="confirmed-contact" aria-labelledby="confirmed-contact-name">
+  <header class="c-head">
+    <div class="rank" aria-label="Rank 11">11</div>
+    <div class="c-title">
+      <h2 id="confirmed-contact-name">Confirmed Contact</h2>
+      <p class="c-meta">Concept 08. QSL heritage; card mosaic on a desk; set in Zilla Slab and Courier Prime. Funnel: collectible cards.</p>
+      
+    </div>
+    <div class="c-score">
+      <div class="comp-num">6.29</div>
+      <div class="comp-label">composite</div>
+      <ul class="jscores" aria-label="Each judge's overall score"><li><span>Prospect</span><b>7</b></li><li><span>Agency</span><b>3</b></li><li><span>UX</span><b>5</b></li><li><span>Art</span><b>7</b></li></ul>
+    </div>
+  </header>
+
+  <div class="shots">
+    <a class="shot shot-desktop" href="08-confirmed-contact/index.html" target="_blank" rel="noopener" title="Open the live concept in a new tab">
+      <img src="08-confirmed-contact/shot-desktop-fold.png" width="1440" height="900" loading="lazy" alt="Confirmed Contact: first screen at 1440 px wide">
+      <span class="shot-cap">Desktop, first screen. Click to open the live page.</span>
+    </a>
+    <a class="shot shot-mobile" href="08-confirmed-contact/shot-mobile.png" target="_blank" rel="noopener" title="Open the full mobile screenshot">
+      <span class="phone"><img src="08-confirmed-contact/shot-mobile.png" width="390" height="3000" loading="lazy" alt="Confirmed Contact: top of the page at 390 px wide"></span>
+      <span class="shot-cap">Mobile, 390 px</span>
+    </a>
+  </div>
+
+  <div class="c-body">
+    <div class="c-text">
+      <p class="thesis">Ham radio already has a ritual for &#x27;you&#x27;re in&#x27;: the QSL card that confirms a contact. The site borrows it to celebrate the W7GBU heritage and turns each first step (listen, check in, register, ACS-ready) into a card you collect, so the path feels like joining a tradition.</p>
+      <p class="actions">
+        <a class="btn" href="08-confirmed-contact/index.html" target="_blank" rel="noopener">Open full concept</a>
+      </p>
+      <p class="more-shots"><a href="08-confirmed-contact/shot-desktop-full.png" target="_blank" rel="noopener">Long desktop screenshot</a> <a href="08-confirmed-contact/shot-mobile.png" target="_blank" rel="noopener">Long mobile screenshot</a></p>
+    </div>
+    <div class="bars" role="list" aria-label="Criterion scores, mean of four judges">
+      <div role="listitem"><div class="bar"><span class="bar-label">Professional</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:55%"></span></span><span class="bar-val">5.5</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Engaging</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:80%"></span></span><span class="bar-val">8.0</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Ease of use</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:60%"></span></span><span class="bar-val">6.0</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Learn more</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:60%"></span></span><span class="bar-val">6.0</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Sign up</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:68%"></span></span><span class="bar-val">6.8</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Overall</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:55%"></span></span><span class="bar-val">5.5</span></div></div>
+    </div>
+  </div>
+
+  <details class="notes">
+    <summary>Judges' notes</summary>
+    <div class="judges"><section class="judge"><h4>Prospective volunteer <span class="jscore">7/10 overall</span></h4><h5>Strengths</h5><p>It is the most distinctive and most ham-native idea. A big QSL card sits in the hero (&#x27;Your first contact with W7GBU is one Tuesday away&#x27;) with the real frequency, offset and tone. &#x27;Cards to collect&#x27; (Heard, Licensed, Worked, Registered, ACS-ready) comes with a &#x27;Your stack&#x27; progress tracker, which makes the path a game. &#x27;Get your card from W7GBU&#x27; builds a personalised QSL with your call sign and a first-contact date, and a newly licensed ham would love it. The Dean Bula and W7GBU story makes joining feel like joining a tradition.</p><h5>Weaknesses</h5><p>The metaphor needs you to know what a QSL card is, so unlicensed residents get novelty before substance. &#x27;What the team does&#x27; only appears after the card game. The stamps, postmarks and all-navy background read more like a hobby club than a county emergency unit, which is a risk with served agencies. The halftone tower image is abstract rather than showing people.</p></section><section class="judge"><h4>Served-agency partner <span class="jscore">3/10 overall</span></h4><h5>Strengths</h5><p>Clever and affectionate toward ham culture. The QSL card is well drawn, the W7GBU memorial story is told with care, and licensed hams will enjoy the &#x27;Cards to collect&#x27; path. The step cards spell out &#x27;When it&#x27;s real&#x27; consequences (e.g. &#x27;ACS members can be activated by the county&#x27;).</p><h5>Weaknesses</h5><p>From an agency seat this is a hobby club. The hero &#x27;Your first contact with W7GBU is one Tuesday away&#x27; is jargon to an emergency manager or unlicensed visitor, and the giant red &#x27;W7GBU&#x27; stamp dominates where capability should be. Gamified &#x27;Mark collected&#x27; checkboxes and a &#x27;Get your card&#x27; generator trivialize a readiness role. The top bar shows &#x27;[frequency TBD]&#x27;, and &#x27;verify&#x27; chips appear throughout. I would not link this from a county page as the unit&#x27;s front door.</p></section><section class="judge"><h4>UX and maintainability <span class="jscore">5/10 overall</span></h4><h5>Strengths</h5><p>The most distinctive and culturally fluent concept. The QSL-card metaphor carries real radio details (147.300, +600 kHz, 100 Hz tone, Tuesdays 2000 local, &#x27;73 de W7GBU&#x27;). The W7GBU / Dean Bula / 7:30 Bunch heritage gives the group a soul. &#x27;Cards to collect&#x27; (Heard, Licensed, Worked, Registered, ACS-ready) turns the path into small wins. The personalized &#x27;Get your card from W7GBU&#x27;, drawn to a canvas for download or share, is shareable and delightful for licensed hams. A top strip carries next-net info.</p><h5>Weaknesses</h5><p>It is an insider metaphor: the unlicensed audience doesn&#x27;t know what a QSL card is, and agencies may read it as whimsical. There is a lot of decoration (slab serif, Courier, faux stamps, postmarks, airmail borders) and a heavy navy background everywhere. About 300 lines of JS, including canvas rendering and localStorage progress, is the hardest code for a volunteer to maintain, and &#x27;Mark collected&#x27; state lost on another device will confuse people. Member forms and schedule are not surfaced. It has 15 &#x27;verify&#x27; or TBD markers, and the sign-up CTA is spread across five cards instead of one door.</p></section><section class="judge"><h4>Art director <span class="jscore">7/10 overall</span></h4><h5>Strengths</h5><p>The most culturally specific and charming concept. The hero QSL card is crafted with care: slab W7GBU in red with a blue offset shadow, a postmark reading &#x27;2000 Tuesday&#x27;, a stamp, and typewritten fields for frequency, offset and tone. Placing &#x27;In memory of Ira &quot;Dean&quot; Bula&#x27; next to a halftone antenna photo honors the group&#x27;s heritage. &#x27;Cards to collect&#x27; (Heard, Licensed, Worked, Registered, ACS-ready) plus a &#x27;Your stack&#x27; tracker makes the path to joining a game. &#x27;Get your card from W7GBU&#x27; generates a personalized, downloadable, shareable QSL, which is great word-of-mouth material. The station log and roster tables fit the ham aesthetic well.</p><h5>Weaknesses</h5><p>The metaphor only works for insiders. Unlicensed visitors and agency partners won&#x27;t know what a QSL card is. Retro slab type with offset shadows, Courier and airmail stripes reads as nostalgic hobby club rather than professional emergency communications. Navy fills nearly the whole page, which feels heavy. Collecting cards for an emergency-service commitment risks feeling trivial. On mobile the hero card falls below the fold.</p></section></div>
+  </details>
+</article>
+
+<article class="concept" id="ops-board" aria-labelledby="ops-board-name">
+  <header class="c-head">
+    <div class="rank" aria-label="Rank 12">12</div>
+    <div class="c-title">
+      <h2 id="ops-board-name">Ops Board</h2>
+      <p class="c-meta">Concept 10. Data dashboard; sidebar, widgets and a recruiting rail; set in Red Hat Display, Text and Mono. Funnel: utility as social proof.</p>
+      
+    </div>
+    <div class="c-score">
+      <div class="comp-num">5.92</div>
+      <div class="comp-label">composite</div>
+      <ul class="jscores" aria-label="Each judge's overall score"><li><span>Prospect</span><b>4</b></li><li><span>Agency</span><b>7</b></li><li><span>UX</span><b>6</b></li><li><span>Art</span><b>5</b></li></ul>
+    </div>
+  </header>
+
+  <div class="shots">
+    <a class="shot shot-desktop" href="10-ops-board/index.html" target="_blank" rel="noopener" title="Open the live concept in a new tab">
+      <img src="10-ops-board/shot-desktop-fold.png" width="1440" height="900" loading="lazy" alt="Ops Board: first screen at 1440 px wide">
+      <span class="shot-cap">Desktop, first screen. Click to open the live page.</span>
+    </a>
+    <a class="shot shot-mobile" href="10-ops-board/shot-mobile.png" target="_blank" rel="noopener" title="Open the full mobile screenshot">
+      <span class="phone"><img src="10-ops-board/shot-mobile.png" width="390" height="3000" loading="lazy" alt="Ops Board: top of the page at 390 px wide"></span>
+      <span class="shot-cap">Mobile, 390 px</span>
+    </a>
+  </div>
+
+  <div class="c-body">
+    <div class="c-text">
+      <p class="thesis">A site members open every week is a site that stays alive. Build the homepage as a light, calm operations board (schedule, roster, status, task-book progress) with a permanent recruiting rail, so visitors see an active, organized unit and members never hunt for a form.</p>
+      <p class="actions">
+        <a class="btn" href="10-ops-board/index.html" target="_blank" rel="noopener">Open full concept</a>
+      </p>
+      <p class="more-shots"><a href="10-ops-board/shot-desktop-full.png" target="_blank" rel="noopener">Long desktop screenshot</a> <a href="10-ops-board/shot-mobile.png" target="_blank" rel="noopener">Long mobile screenshot</a> <a href="10-ops-board/shot-desktop-complete.png" target="_blank" rel="noopener">Whole page, desktop</a></p>
+    </div>
+    <div class="bars" role="list" aria-label="Criterion scores, mean of four judges">
+      <div role="listitem"><div class="bar"><span class="bar-label">Professional</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:80%"></span></span><span class="bar-val">8.0</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Engaging</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:50%"></span></span><span class="bar-val">5.0</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Ease of use</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:58%"></span></span><span class="bar-val">5.8</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Learn more</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:53%"></span></span><span class="bar-val">5.3</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Sign up</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:60%"></span></span><span class="bar-val">6.0</span></div></div><div role="listitem"><div class="bar"><span class="bar-label">Overall</span><span class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:55%"></span></span><span class="bar-val">5.5</span></div></div>
+    </div>
+  </div>
+
+  <details class="notes">
+    <summary>Judges' notes</summary>
+    <div class="judges"><section class="judge"><h4>Prospective volunteer <span class="jscore">4/10 overall</span></h4><h5>Strengths</h5><p>It proves the unit is active and organised: condition status, a net-control roster with open &#x27;Take this slot&#x27; buttons, the Winlink assignment, a task-book tracker (0 of 13), a searchable document library with offline copies, and a list of other nets. A permanent &#x27;Not a member yet?&#x27; side panel carries the 0-3 steps and Join and Listen buttons, and on mobile Join and Listen stay pinned at the bottom of the screen. It is the best concept for current members.</p><h5>Weaknesses</h5><p>To a newcomer it looks like an internal app for people who are already in: a sidebar menu, a search box, and jargon (NZ2S, AG7QP, Winlink, IS-100, GMRS) at first glance. The recruiting panel competes with a dense dashboard, and there is little story or motivation. &#x27;[time]&#x27; placeholders show. A prospective volunteer feels like an outsider, not invited.</p></section><section class="judge"><h4>Served-agency partner <span class="jscore">7/10 overall</span></h4><h5>Strengths</h5><p>Shows an organized, disciplined unit better than any concept: net-control roster, alert-level ladder, Winlink assignments, and other nets and frequencies (WSEN HF, NWS WXL86). The task book lists FEMA IS-100/200/700/800, NIMS, ARRL EmComm and HIPAA, which is visible NIMS alignment an emergency manager immediately trusts. The &#x27;Keep a copy offline&#x27; toggle shows resilience thinking. The permanent &#x27;Not a member yet?&#x27; rail keeps recruiting visible.</p><h5>Weaknesses</h5><p>It looks like an internal intranet or ops tool. Newcomers and agency visitors face a sidebar, a search bar and a dense grid before they learn what the group is. Publishing the roster and live assignments on the public homepage invites confusion. The public &#x27;Condition Green, updated [time]&#x27; pill carries the same stale-status risk as other concepts, and the placeholder is visible. Hard to use on mobile beyond the rail.</p></section><section class="judge"><h4>UX and maintainability <span class="jscore">6/10 overall</span></h4><h5>Strengths</h5><p>The fastest member tasks in the set. Left-rail navigation (This week, Nets, Calendar, Forms, Task books, Go-kits, Status codes, Groups.io), search, condition status and member login are always visible. The Next-net card shows the check-in order, the net-control roster has &#x27;Take this slot&#x27;, and there are tables for other nets and frequencies, the Winlink assignment and meetings, plus an interactive ACS Task Book with a progress ring. A permanent right-hand &#x27;Not a member yet?&#x27; rail with a photo and 0-3 steps keeps recruiting in view. On mobile, the rail moves directly under the hero and a sticky bottom bar (&#x27;Join the team&#x27; / &#x27;Listen Tuesday&#x27;) is excellent. The layout is calm and light and accessible (skip links, switch role).</p><h5>Weaknesses</h5><p>The highest maintenance burden in the set: the roster, Winlink assignment, condition status (&#x27;updated [time]&#x27; placeholder visible), alert level, coming-up and task-book content all need frequent updates. A stale ops board visibly damages credibility with agencies. &#x27;Keep a copy offline&#x27; is a mock toggle with no service worker behind it, and site search needs a backend or a client-side index, both of which are real developer work. The three-column dashboard is dense and reads as an internal tool, so a first-time visitor has to work out where to look. localStorage task-book ticks are fragile and can be mistaken for official records.</p></section><section class="judge"><h4>Art director <span class="jscore">5/10 overall</span></h4><h5>Strengths</h5><p>The best member portal. It has sidebar navigation (This week, Nets, Calendar, Forms, Task books, Go-kits, Status codes), search, a Condition Green indicator, a net-control roster with &#x27;Take this slot&#x27;, a task-book progress ring, a Winlink assignment card, a document library, an offline-copy toggle, and a persistent &#x27;Not a member yet?&#x27; recruiting column with a photo and steps. On mobile, a sticky bottom &#x27;Join the team / Listen Tuesday&#x27; bar is a smart touch. It proves the unit is active and organized.</p><h5>Weaknesses</h5><p>It looks like a SaaS dashboard (Red Hat family, cards everywhere), and the brand disappears into the interface. A newcomer lands on three dense columns of frequencies, rosters and task codes with no emotional case. The recruiting column is visually secondary to the member widgets, which is backwards for a homepage whose job is to recruit. This belongs at /members, not on the homepage.</p></section></div>
+  </details>
+</article>
+
+  </div>
+
+  
+<section class="reco" id="recommendation" aria-labelledby="reco-h">
+  <h2 id="reco-h">Recommendation</h2>
+  <p class="lede">No judge's top pick matched another's, and the top three composites sit within 0.4 points of each other. The strongest path is to carry three directions into round two and graft in the best pieces from the rest. The full reasoning is in <a href="../REVIEW.md">REVIEW.md</a>.</p>
+
+  <div class="reco-grid">
+    <div class="reco-card">
+      <h3><a href="#field-guide">1. Field Guide</a> as the newcomer front door</h3>
+      <p>Keep Fig. 1 (handheld, repeater, EOC), the “Is this for me?” quiz and “Licensing in plain English”. Fix the tone for agencies: drop the Caveat handwriting, thin out the four competing hero cards, show real members at a useful size, and add an agency door.</p>
+    </div>
+    <div class="reco-card">
+      <h3><a href="#open-door">2. Open Door</a> as the structure and usability base</h3>
+      <p>Keep the “This week” card, “Three ways to visit”, member quick links and Atkinson Hyperlegible. Feed every weekly item from one data file, restyle the peach card, add a line of capability to the hero for agencies, and stop the two hero buttons competing at equal weight.</p>
+    </div>
+    <div class="reco-card">
+      <h3><a href="#lines-down">3. When the Lines Go Down</a> as the “How it works” story</h3>
+      <p>All four judges wanted its message-path diagram in the final site. Use it as a homepage section and a full “How it works” page, not as the whole homepage, and get a PIO check on the scenario copy.</p>
+    </div>
+  </div>
+
+  <h3>Worth grafting in from the other concepts</h3>
+  <ul class="grafts">
+    <li><a href="#county-standard">County Standard</a>: the ARES vs ACS comparison table, the “I represent an agency” door with “Contact the emergency coordinator”, and the footer organised by audience.</li>
+    <li><a href="#hi-vis">Hi-Vis</a>: “Here's what it takes” (1 net a month, 1 meeting a quarter, 1 field operation a year, 72-hour go-kit) and “Pick your post” with eligibility tags.</li>
+    <li><a href="#plain-signal">Plain Signal</a>: the 0 to 3 join path with “How long” and “You need”, plus the shareable <code>?from=</code> link.</li>
+    <li><a href="#coverage">Coverage</a>: a lightweight static county map for “Where we work”, keeping its handling of sensitive sites, and the short interest form. Drop the ZIP lookup.</li>
+    <li><a href="#tuesday-2000">Tuesday, 2000 Hours</a>: the self-computing next-net line, “Copy radio settings”, and an action button on every join step.</li>
+    <li><a href="#in-the-field">In the Field</a>: “Seven places you could stand”, as an alternative to Pick your post, once a photo shoot happens.</li>
+    <li><a href="#the-relay">The Relay</a>: tap-to-define glossary terms for acronyms, and the headline “From Bloomsday to blackouts”.</li>
+    <li><a href="#ops-board">Ops Board</a>: move it to /members as the member portal.</li>
+    <li><a href="#confirmed-contact">Confirmed Contact</a>: the personalised W7GBU QSL card as a reward for newly licensed hams, off the homepage.</li>
+  </ul>
+
+  <h3>Fix before any direction ships</h3>
+  <ul class="grafts">
+    <li>Remove public “Condition Green” status from headers and heroes (01, 04, 05, 10), or label it as team readiness with an expiry. A stale badge during a real incident would contradict the county.</li>
+    <li>Drive the net, net control, simplex weeks and coming-up list from one data file or calendar feed, so the site cannot quietly go stale.</li>
+    <li>Clear every “verify”, “TBD” and “Photo to commission” chip, and get written permission for the county seal and the ARRL emblem.</li>
+    <li>Schedule a photo shoot. Every concept draws on the same five or six photos, most of them low resolution. Hospital or EOC scenes need releases and an OPSEC review.</li>
+  </ul>
+</section>
+
+
+  <footer>
+    Reviewed 25 September 2026. Concept files live in this folder, one per subfolder. Specs: <a href="../concept-specs.md">concept-specs.md</a>. Full write-up: <a href="../REVIEW.md">REVIEW.md</a>.
+  </footer>
+</main>
+
+<script>
+(function () {
+  var btn = document.getElementById('toggle-notes');
+  var all = Array.prototype.slice.call(document.querySelectorAll('details.notes'));
+  function sync() {
+    var open = all.length && all.every(function (d) { return d.open; });
+    btn.textContent = open ? 'Collapse all notes' : 'Expand all notes';
+    btn.setAttribute('aria-pressed', open ? 'true' : 'false');
+  }
+  btn.addEventListener('click', function () {
+    var open = !all.every(function (d) { return d.open; });
+    all.forEach(function (d) { d.open = open; });
+    sync();
+  });
+  all.forEach(function (d) { d.addEventListener('toggle', sync); });
+})();
+</script>
+</body>
+</html>

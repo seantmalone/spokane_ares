@@ -1,0 +1,557 @@
+# Spokane County ARES-ACS: the single facts file for the spokares.org rebuild
+#
+# One editable source for the facts every page repeats (names, leadership, nets,
+# meetings, infrastructure, joining, channels, domain). history.md §10 item 2 and
+# decisions.md D9 call for this. decisions.md D13 is the human checklist; each row
+# here that answers a D13 row names it in `d13`.
+#
+# Created 2026-09-25, seeded from organization.md (§1, §4, §8-§12), decisions.md
+# D2-D4 and D13, and the re-checks made on 2026-09-25. Paths are relative to research/.
+#
+# Rules (research/README.md): cite a source for every value; never invent names,
+# callsigns, frequencies, dates or times; no personal phone numbers, home addresses
+# or personal e-mails (role + name + callsign is fine).
+#
+# Fields
+#   id               stable key (use it in templates)
+#   value            the value to render; null when unknown
+#   status           verified      re-checked against a primary source on last_verified
+#                    multi-source  two or more independent sources agree; not confirmed by the group
+#                    single-source one source only
+#                    conflict      sources disagree; see notes and the d13 row
+#                    unknown       no source
+#   publish          "yes" | "no" | after-confirmation   ("no" = never on the public site; quoted so YAML 1.1 parsers keep them as strings)
+#   sources          file paths (relative to research/) or URLs
+#   owner            the role that confirms or changes it (decisions.md "Roles used below")
+#   last_verified    date the value was last checked against its source (YYYY-MM-DD)
+#   confirmed_by_group  true only after the owner has confirmed it. Nobody has been asked yet.
+#   d13              the decisions.md D13 row it answers, if any
+#   notes            anything a verifier needs
+
+facts:
+
+  # ---------------------------------------------------------------- identity
+  - id: org.name
+    value: "Spokane County ARES-ACS"
+    status: multi-source
+    publish: after-confirmation
+    sources: [content/interim-ag7qp/spokane-county-ares-acs.md, content/live/03-ares-acs-staff.md, organization.md §1]
+    owner: EC
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: "Final name is decisions.md D6. Legacy 'ARES/RACES' only as history."
+
+  - id: org.acs_expansion
+    value: null
+    status: conflict
+    publish: after-confirmation
+    sources: [organization.md §1, "https://www.spokanecounty.gov/1813/ACS-Auxiliary-Communication-Systems", sources/government/spokane-county-CEMP-2021-03.txt]
+    owner: EC + SCEM
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: "System (ag7qp, Task Book) / Systems (county page title) / Service(s) (county application, CEMP). Seal says 'Auxiliary Communications'; use that until D6."
+
+  - id: org.legal_entity
+    value: "Spokane County ARES RACES Support Group (FCC club licensee of W7GBU)"
+    status: verified
+    publish: "yes"
+    sources: ["https://callook.info/W7GBU/json"]
+    owner: Trustee
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: "No nonprofit registration or bank account found (organization.md §1)."
+
+  # -------------------------------------------------------------- leadership
+  # Role + name + callsign only. Every row: verify before publishing (organization.md §4).
+  - id: people.ec
+    value: {role: "Emergency Coordinator; website admin", name: "Asa Jay Laughton", callsign: "W7TSC"}
+    status: single-source
+    publish: after-confirmation
+    sources: [content/live/03-ares-acs-staff.md, content/interim-ag7qp/emcomm-groups.md]
+    owner: EC
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 1
+    notes: "Staff page modified 2026-03-24. County title conflicts: 'RACES Officer' vs 'ACS Officer' (2026 scripts) vs 'EC/RO' (D13 #18)."
+
+  - id: people.ec_title
+    value: null
+    status: conflict
+    publish: after-confirmation
+    sources: [content/live/03-ares-acs-staff.md, content/interim-ag7qp/docs/net-preamble-2026-03-04.md, content/interim-ag7qp/emcomm-groups.md]
+    owner: EC + SCEM
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 18
+    notes: "No written RACES Officer appointment found (D13 #12)."
+
+  - id: people.aec_public_events
+    value: {role: "AEC, Public Events; W7GBU-10 gateway manager; Winlink coordinator", name: "Dan Croskrey", callsign: "NV2Z"}
+    status: conflict
+    publish: after-confirmation
+    sources: [content/live/03-ares-acs-staff.md, content/interim-ag7qp/home.md]
+    owner: EC
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 13
+    notes: "Surname spelled 'Croskey' on ag7qp home."
+
+  - id: people.aec_hospital
+    value: {role: "AEC, Hospital Coordinator", name: "Mary Griffith", callsign: "K7MHG"}
+    status: single-source
+    publish: after-confirmation
+    sources: [content/live/03-ares-acs-staff.md]
+    owner: EC
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 1
+    notes: null
+
+  - id: people.aec_logistics
+    value: {role: "AEC, Logistics & Comms (also 'AEC for training'); W7GBU trustee", name: "Dave Carleton", callsign: "K7DSR"}
+    status: single-source
+    publish: after-confirmation
+    sources: [content/live/03-ares-acs-staff.md, content/live/41-welcome-letter-and-member-requirements.md, "https://callook.info/W7GBU/json"]
+    owner: EC
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 1
+    notes: "Trustee role is verified (FCC); the AEC role is single-source."
+
+  - id: people.aec_net_manager
+    value: {role: "AEC, Net Manager", name: "Frank Hutchison", callsign: "AG7QP"}
+    status: single-source
+    publish: after-confirmation
+    sources: [content/live/03-ares-acs-staff.md]
+    owner: AG7QP
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 3
+    notes: "Also the EWA Section Emergency Coordinator."
+
+  - id: people.pio
+    value: "Open position"
+    status: single-source
+    publish: after-confirmation
+    sources: [content/live/03-ares-acs-staff.md]
+    owner: EC
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 1
+    notes: null
+
+  - id: people.section_manager
+    value: {role: "ARRL Eastern Washington Section Manager", name: "C. Jo Whitney", callsign: "KA7LJQ"}
+    status: conflict
+    publish: after-confirmation
+    sources: [orgs/relationships.md §5, content/interim-ag7qp/emcomm-groups.md]
+    owner: AG7QP
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 13
+    notes: "arrl.org shows KA7LJQ; ag7qp emcomm-groups misprints KJ7LJQ."
+
+  - id: people.sec
+    value: {role: "ARRL EWA Section Emergency Coordinator", name: "Frank Hutchison", callsign: "AG7QP"}
+    status: multi-source
+    publish: after-confirmation
+    sources: [orgs/relationships.md §5, content/interim-ag7qp/eastern-washington-section.md]
+    owner: AG7QP
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: null
+
+  - id: people.dec_district9
+    value: {role: "ARES District 9 District Emergency Coordinator", name: "C.M. 'Sam' Jenkins", callsign: "WA7EC"}
+    status: single-source
+    publish: after-confirmation
+    sources: [orgs/relationships.md §5]
+    owner: AG7QP
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: null
+
+  - id: people.scem_comms_specialist
+    value: null
+    status: unknown
+    publish: after-confirmation
+    sources: [sources/government/scem-comms-specialist-classspec-2024.pdf, organization.md §4.2]
+    owner: SCEM
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: "The SCEM staff owner of ACS (position created 2023). Holder not identified; every SCEM approval depends on a named contact."
+
+  - id: contact.public
+    value: null
+    status: conflict
+    publish: after-confirmation
+    sources: [content/live/03-ares-acs-staff.md, content/interim-ag7qp/spokane-county-ares-acs.md, decisions.md D11]
+    owner: EC + AG7QP
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 2
+    notes: "W7TSC (staff page) vs AG7QP (interim page). Launch with role addresses (D11); applications and contact changes currently go to personal e-mails."
+
+  # ------------------------------------------------------------ infrastructure
+  - id: w7gbu.license
+    value: {class: "CLUB", licensee: "SPOKANE COUNTY ARES RACES SUPPORT GROUP", trustee: "K7DSR", previous_call: "KC7SOT", granted: "2017-02-15", expires: "2027-02-15", last_action: "2024-03-18"}
+    status: verified
+    publish: "yes"
+    sources: ["https://callook.info/W7GBU/json"]
+    owner: Trustee
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: "Renewal: decisions.md D4."
+
+  - id: w7gbu.renewal_window
+    value: {opens: "2026-11-17", closes: "2027-02-15", fee_usd: 35}
+    status: verified
+    publish: "no"
+    sources: ["https://www.law.cornell.edu/cfr/text/47/1.949", "https://www.law.cornell.edu/cfr/text/47/97.21", "https://www.law.cornell.edu/cfr/text/47/1.1102"]
+    owner: Trustee
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: "No operation after expiry until renewed (97.21(b)). The $35 applying to this club vanity renewal is an INFERENCE from the 1.1102 table; confirm in ULS."
+
+  - id: repeater.primary
+    value: {call: "W7GBU", output_mhz: "147.300", offset: "+600 kHz", tone_hz: "100", site: "Brownes Mountain"}
+    status: multi-source
+    publish: "yes"
+    sources: [content/interim-ag7qp/nets-in-the-inland-northwest.md, content/interim-ag7qp/docs/net-preamble-2026-03-04.md, orgs/relationships.md §2]
+    owner: Trustee
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 15
+    notes: "Hardware and site ownership unknown (D13 #15). The 2026 script calls it 'the Spokane County ACS Repeater'."
+
+  - id: repeater.uhf
+    value: {call: "W7GBU", output_mhz: "443.400", offset: "+"}
+    status: single-source
+    publish: after-confirmation
+    sources: [orgs/relationships.md §2]
+    owner: Trustee
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: "Whether it is in ARES use is unknown."
+
+  - id: repeater.alternate
+    value: {owner_club: "IEVHFRA", output_mhz: "146.880", offset: "-", tone_hz: "123"}
+    status: multi-source
+    publish: "yes"
+    sources: [content/live/68-mou-with-ievhfra.md, orgs/relationships.md §9]
+    owner: EC
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 9
+    notes: "Tone from vhfclub.org via orgs/relationships.md; the MOU names 146.88 as the alternate."
+
+  - id: winlink.gateway_w7gbu_10
+    value: null
+    status: conflict
+    publish: "no"
+    sources: [orgs/relationships.md Contradiction 4]
+    owner: NV2Z
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 6
+    notes: "145.090 (old Plan, CCB) vs 145.01 via WR7VHF-3 (2016 table). Do not publish until NV2Z confirms."
+
+  - id: net.simplex_frequency
+    value: null
+    status: unknown
+    publish: "no"
+    sources: [content/interim-ag7qp/docs/net-preamble-simplex-2026-03-04.md]
+    owner: AG7QP
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 5
+    notes: "No 2026 script states it. 147.48 MHz is in the old Plan only (a lead, not a fact)."
+
+  - id: net.hospital
+    value: "A Hospital Net follows the regular net on some Tuesdays"
+    status: single-source
+    publish: "no"
+    sources: [content/interim-ag7qp/spokane-county-ares-acs.md]
+    owner: EC / K7MHG
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 7
+    notes: "Channel deliberately not recorded here: SCEM FOUO rule (decisions.md D13, 'Never publish')."
+
+  - id: gmrs.net
+    value: {repeater: "WRCY281", channel: "GMRS 7", output_mhz: "462.700", offset: "+5 MHz", tone_hz: "141.3", when: "3rd Tuesday 1930"}
+    status: single-source
+    publish: after-confirmation
+    sources: [content/interim-ag7qp/docs/net-preamble-gmrs-2025-08-19.md, content/interim-ag7qp/nets-in-the-inland-northwest.md]
+    owner: K7DSR
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: "Ask K7DSR whether the repeater may be listed publicly."
+
+  # ------------------------------------------------------------------- nets
+  - id: net.weekly
+    value: {day: "Tuesday", time_local: "2000", repeater: "W7GBU 147.300 +600 kHz 100 Hz"}
+    status: multi-source
+    publish: "yes"
+    sources: [content/interim-ag7qp/docs/net-preamble-2026-03-04.md, content/interim-ag7qp/nets-in-the-inland-northwest.md, history.md §5]
+    owner: Net Manager
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: "Never show 22:00 (three JCal entries are wrong)."
+
+  - id: net.winlink_nights
+    value: "2nd and 4th Tuesdays"
+    status: single-source
+    publish: after-confirmation
+    sources: [content/interim-ag7qp/docs/net-preamble-2026-03-04.md]
+    owner: Net Manager
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: null
+
+  - id: net.fifth_tuesday_simplex
+    value: "In months with a 5th Tuesday the net runs on simplex, then continues on the repeater"
+    status: conflict
+    publish: after-confirmation
+    sources: [content/interim-ag7qp/docs/net-preamble-2026-03-04.md, content/interim-ag7qp/docs/net-preamble-simplex-2026-03-04.md, data/calendar-events.json, content/interim-ag7qp/spokane-county-ares-acs.md]
+    owner: Net Manager
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 5
+    notes: "JCal 1613 marks 2026-09-29 'NZ2S - Simplex'; the ag7qp rota lists plain 'NZ2S'. Next 5th Tuesday: 2026-12-29."
+
+  - id: net.checkin_order
+    value: ["officials", "members (from the roster)", "visitors", "simplex, no-tone and cross-band stations", "listed traffic, then late check-ins"]
+    status: single-source
+    publish: "yes"
+    sources: [content/interim-ag7qp/docs/net-preamble-2026-03-04.md]
+    owner: Net Manager
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: "The simplex script uses five suffix groups; the GMRS script uses volunteer-number ranges; the 2018 A-F/G-M/N-Z order is superseded."
+
+  - id: net.morning_roundtable
+    value: {name: "0730 Bunch", when: "Mon-Fri 0730", repeater: "147.300"}
+    status: single-source
+    publish: after-confirmation
+    sources: [content/interim-ag7qp/nets-in-the-inland-northwest.md, content/live/05-w7gbu-call-sign.md]
+    owner: Net Manager
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: null
+
+  # --------------------------------------------------------------- meetings
+  - id: meeting.location
+    value: "Spokane County Emergency Management (the 'DEM building'), 1121 W Gardner Ave, Spokane, WA 99260"
+    status: multi-source
+    publish: "yes"
+    sources: [content/live/41-welcome-letter-and-member-requirements.md, content/interim-ag7qp/contact.md, content/interim-ag7qp/new-members-orientation.md]
+    owner: EC
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 19
+    notes: "A county building, not a residence. First-visit instructions (entrance, escort, parking, access) are unknown (D13 #19)."
+
+  - id: meeting.staff
+    value: {pattern: "1st Tuesday", time_local: "1730"}
+    status: conflict
+    publish: "no"
+    sources: [content/interim-ag7qp/home.md, content/interim-ag7qp/contact.md]
+    owner: EC
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 16
+    notes: "ag7qp lists it as 'Open to the public'; the content brief treats it as internal. Keep off public pages until the EC answers."
+
+  - id: meeting.workshop
+    value: {pattern: "2nd Saturday", time_local: "0900-1200"}
+    status: multi-source
+    publish: "yes"
+    sources: [data/calendar-events.json, content/interim-ag7qp/home.md]
+    owner: EC
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: null
+
+  - id: meeting.winlink_workshop
+    value: {pattern: "2nd Saturday, after the general workshop", time_local: "1230-1530"}
+    status: single-source
+    publish: after-confirmation
+    sources: [content/interim-ag7qp/winlink.md]
+    owner: NV2Z
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: null
+
+  - id: meeting.third_thursday
+    value: {pattern: "3rd Thursday", time_local: null}
+    status: conflict
+    publish: after-confirmation
+    sources: [content/interim-ag7qp/spokane-county-ares-acs.md, content/live/27-meeting-location-map.md, content/live/41-welcome-letter-and-member-requirements.md, data/calendar-events.json, orgs/relationships.md Contradiction 3]
+    owner: EC / Net Manager
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 4
+    notes: "1800-2000 in one 2026 source (ag7qp). 1900 in the 2024-08-10 Meeting Location page, the 2018 Welcome Letter, JCal 2018-20 and a Spokesman-Review listing for 2025-09-18. Show 'Third Thursdays' without a time until confirmed."
+
+  - id: meeting.orientation
+    value: {pattern: "usually 4th Tuesday", time_local: "1800", then: "Comm Room tour and the 2000 net"}
+    status: single-source
+    publish: after-confirmation
+    sources: [content/interim-ag7qp/new-members-orientation.md, content/interim-ag7qp/acs-task-book.md, site-functionality-analysis.md §3.1]
+    owner: EC
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 17
+    notes: "No Oct 27, 2026 session in the ag7qp list. Publish 'held regularly; contact us for the next date' until confirmed."
+
+  - id: meeting.december
+    value: "No meeting in December"
+    status: single-source
+    publish: after-confirmation
+    sources: [data/calendar-events.json]
+    owner: EC
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 10
+    notes: "Seen only for 2019."
+
+  # ----------------------------------------------------------------- joining
+  - id: join.ares_application
+    value: {name: "Spokane County ARES Membership Application", version: "2024-11-07", includes: "SCEM Emergency Communications Non-Disclosure Agreement"}
+    status: single-source
+    publish: after-confirmation
+    sources: [content/interim-ag7qp/docs/ares-membership-application-2024-11-07.md]
+    owner: AG7QP
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 2
+    notes: "A 2024-09-15 version is also linked on ag7qp. The form's return address is a personal e-mail; replace with a role address (D11)."
+
+  - id: join.county_application
+    value: {name: "Spokane County Volunteer Emergency Worker Application (FormCenter 276)", url: "https://www.spokanecounty.gov/FormCenter/Emergency-Management-31/Volunteer-Emergency-Worker-Application-276"}
+    status: multi-source
+    publish: "yes"
+    sources: [organization.md §10, "site-functionality-analysis.md §1a row 28"]
+    owner: SCEM
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: "The spokanecounty.org URL redirects to .gov; use .gov."
+
+  - id: join.background_check
+    value: "Sheriff's Office background check; the county assigns a volunteer number"
+    status: multi-source
+    publish: "yes"
+    sources: [content/live/26-how-to-join-spokane-county-ares-races-acs.md, content/live/41-welcome-letter-and-member-requirements.md, content/interim-ag7qp/new-members-orientation.md]
+    owner: SCEM
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: null
+
+  - id: join.acs_task_book
+    value: {version: "2024-08-09", levels: ["New Member (normally up to 1 year)", "RADO (ACS ID card issued)", "S-RADO", "Leadership"]}
+    status: single-source
+    publish: after-confirmation
+    sources: [content/interim-ag7qp/acs-task-book.md]
+    owner: AG7QP / EC
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 14
+    notes: "ID card on advancement to RADO (acs-task-book.md line 71). The 2018 six-month rule is superseded."
+
+  - id: join.arrl_membership
+    value: "Not required to join ARES; required by the July 2025 ARRL ARES Plan for Intermediate level and above and for EC/AEC appointments"
+    status: multi-source
+    publish: "yes"
+    sources: [content/live/02-ares-races-plan.md, orgs/relationships.md §4]
+    owner: EC
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: null
+
+  - id: alert_spokane.platform
+    value: "Regroup (since April 2026)"
+    status: verified
+    publish: "yes"
+    sources: ["https://www.spokanecounty.gov/3007/Alert-Spokane", orgs/relationships.md Contradiction 12]
+    owner: SCEM
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 14
+    notes: "The Task Book and orientation page still say 'Code Red'."
+
+  # ---------------------------------------------------------------- channels
+  - id: groupsio.group
+    value: {url: "https://spokaneares-acs.groups.io/g/main", members: 107, topics: 2882, subscription: "moderator approval", archive: "members only", wiki: "exists, members only", files: "members only (login)", owner_role_address: "main+owner@SpokaneARES-ACS.groups.io", website_link: "www.spokares.org"}
+    status: verified
+    publish: "yes"
+    sources: ["https://spokaneares-acs.groups.io/g/main (anonymous, 2026-09-25)", organization.md §12]
+    owner: groups.io owner (unknown)
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: "Publish the URL and 'apply; a moderator approves'. Member and topic counts change; don't hard-code them on the site."
+
+  - id: groupsio.calendar_public_feed
+    value: null
+    status: unknown
+    publish: after-confirmation
+    sources: ["https://spokaneares-acs.groups.io/g/main/calendar (200, no server-side events)", "https://spokaneares-acs.groups.io/g/main/ics/feed.ics (404)"]
+    owner: groups.io owner (unknown)
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: 20
+    notes: "Blocks decisions.md D9."
+
+  # ------------------------------------------------------------ domain / DNS
+  - id: domain.registration
+    value: {registrar: "GoDaddy.com, LLC", registered: "2004-03-10", transferred: "2021-11-12", last_changed: "2026-08-12", expires: "2027-03-10", account_holder: null}
+    status: verified
+    publish: "no"
+    sources: ["https://rdap.publicinterestregistry.org/rdap/domain/spokares.org"]
+    owner: EC (account holder unknown)
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: "decisions.md D2."
+
+  - id: dns.current
+    value: {ns: ["ns1.inmotionhosting.com", "ns2.inmotionhosting.com"], a: "70.39.146.166", mx: "0 spokares.org.", spf: "v=spf1 +mx +a +ip4:70.39.251.92 ~all", dkim: "present (default._domainkey, RSA)", dmarc: "absent (NXDOMAIN)"}
+    status: verified
+    publish: "no"
+    sources: ["dig @1.1.1.1 / @8.8.8.8 / @9.9.9.9 / @ns1.inmotionhosting.com, 2026-09-25", decisions.md D3]
+    owner: Technical admin
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: "Not a null MX: mail is live at InMotion. The SPF IP reverse-resolves to a host under asajay.com (INFERENCE: associated with the EC)."
+
+  - id: security.safe_browsing
+    value: "No unsafe content (spokares.org and www.spokares.org); report data dated 2026-06-14"
+    status: verified
+    publish: "no"
+    sources: ["https://transparencyreport.google.com/transparencyreport/api/v3/safebrowsing/status?site=spokares.org"]
+    owner: Technical admin
+    last_verified: 2026-09-25
+    confirmed_by_group: false
+    d13: null
+    notes: "Indexed-URL (site:) check and Search Console not done yet (decisions.md D1)."

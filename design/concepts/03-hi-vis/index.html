@@ -1,0 +1,922 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spokane County ARES-ACS</title>
+<meta name="description" content="Spokane County ARES-ACS: licensed amateur radio volunteers providing auxiliary backup communications for Spokane County Emergency Management. Concept 03, Hi-Vis.">
+<link rel="icon" href="../../assets/Spokane_County_ARES-ACS_logo_slightly_smaller_550x550.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Barlow:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --vest:#FFD000;
+  --navy:#13205C;
+  --navy-deep:#0D1745;
+  --silver:#C9CFD6;
+  --silver-lt:#E9ECEF;
+  --white:#FFFFFF;
+  --red:#D0202A;
+  --ink-2:#3B4575;
+  --focus:var(--navy);
+  --display:"Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --body:"Barlow", "Helvetica Neue", Arial, sans-serif;
+  --gut:clamp(16px, 4vw, 56px);
+  --max:1320px;
+  --tape:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.55) 0 1px, rgba(255,255,255,0) 1px 4px),
+    repeating-linear-gradient(0deg, rgba(19,32,92,.06) 0 1px, rgba(19,32,92,0) 1px 3px),
+    linear-gradient(180deg, #EEF1F4 0%, #C9CFD6 48%, #AEB6C0 100%);
+  --tape-lit:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.35) 0 1px, rgba(255,255,255,0) 1px 4px),
+    linear-gradient(180deg, #FFE45C 0%, #FFD000 55%, #F2C200 100%);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--white);color:var(--navy);font:400 18px/1.55 var(--body);overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+p{margin:0 0 1em}
+h1,h2,h3{margin:0;font-family:var(--display);font-weight:900;text-transform:uppercase;letter-spacing:.005em;line-height:.9}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gut)}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip{position:absolute;left:12px;top:-60px;z-index:100;background:var(--vest);color:var(--navy);padding:10px 16px;font-weight:700;text-decoration:none}
+.skip:focus{top:12px}
+
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;min-height:52px;padding:0 24px;border:2px solid transparent;border-radius:2px;font:700 17px/1.1 var(--body);text-decoration:none;cursor:pointer;transition:transform .12s ease, box-shadow .12s ease, background-color .12s ease}
+.btn-vest{background:var(--vest);color:var(--navy);border-color:var(--navy);box-shadow:0 5px 0 var(--navy)}
+.btn-vest:hover{transform:translateY(2px);box-shadow:0 3px 0 var(--navy)}
+.on-navy .btn-vest{border-color:var(--vest);box-shadow:0 5px 0 #070D2E}
+.on-navy .btn-vest:hover{box-shadow:0 3px 0 #070D2E}
+.btn-line{background:transparent;color:var(--navy);border-color:var(--navy)}
+.btn-line:hover{background:var(--navy);color:var(--white)}
+.on-navy .btn-line{color:var(--white);border-color:var(--white)}
+.on-navy .btn-line:hover{background:var(--white);color:var(--navy)}
+.btn-navy{background:var(--navy);color:var(--vest);border-color:var(--navy);box-shadow:0 5px 0 rgba(19,32,92,.35)}
+.btn-navy:hover{transform:translateY(2px);box-shadow:0 3px 0 rgba(19,32,92,.35)}
+.on-navy{--focus:var(--vest)}
+
+.verify{display:inline-block;vertical-align:.12em;margin-left:.35em;padding:1px 7px 2px;border-radius:2px;background:var(--red);color:var(--white);font:700 12px/1.3 var(--body);letter-spacing:.02em;white-space:nowrap;text-transform:none}
+
+/* ---------- Reflective tape ---------- */
+.tape{position:relative;height:20px;background:var(--tape);overflow:hidden}
+.tape-glint::after{content:"";position:absolute;top:0;bottom:0;left:-30%;width:28%;background:linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.95) 45%, rgba(255,250,210,.9) 55%, rgba(255,255,255,0) 100%);animation:glint 1.6s .5s cubic-bezier(.3,.1,.3,1) both}
+@keyframes glint{from{transform:translateX(0)}to{transform:translateX(480%)}}
+
+/* ---------- Header ---------- */
+.site-head{background:var(--navy);color:var(--white);position:relative;z-index:20}
+.head-row{display:flex;align-items:center;gap:24px;min-height:76px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;flex:none}
+.brand img{width:46px;height:46px}
+.brand-name{font:900 22px/0.92 var(--display);text-transform:uppercase;letter-spacing:.01em}
+.brand-name small{display:block;font:600 13px/1.2 var(--body);text-transform:none;color:var(--silver);letter-spacing:0;margin-top:3px}
+.nav{margin-left:auto}
+.nav ul{list-style:none;margin:0;padding:0;display:flex;gap:4px}
+.nav a{display:block;padding:10px 12px;font-weight:600;font-size:16px;text-decoration:none;border-bottom:3px solid transparent}
+.nav a:hover{border-bottom-color:var(--vest)}
+.nav .nav-members a{color:var(--silver)}
+.head-cta{flex:none}
+.head-cta .btn{min-height:46px;padding:0 18px}
+.cta-short{display:none}
+.menu-btn{display:none;margin-left:auto;background:none;border:2px solid var(--silver);color:var(--white);border-radius:2px;min-height:44px;padding:0 14px;font:700 16px var(--body);cursor:pointer}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;background:var(--navy);color:var(--white);overflow:hidden}
+.hero-inner{position:relative;z-index:2;min-height:min(700px, calc(100svh - 150px));display:flex;flex-direction:column;justify-content:center;padding-top:48px;padding-bottom:52px}
+.hero-copy{max-width:720px}
+.hero h1{font-size:clamp(64px, 7.8vw, 116px);line-height:.86;letter-spacing:.004em;margin-bottom:26px}
+.hero h1 span{display:block}
+.hero-quote{margin:0 0 30px;max-width:560px;border-left:6px solid var(--vest);padding:2px 0 2px 20px}
+.hero-quote p{font-style:italic;font-size:clamp(18px, 1.45vw, 21px);line-height:1.45;margin:0 0 8px}
+.hero-quote footer{font-size:15px;color:var(--silver)}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:14px 16px}
+.hero-photo{position:absolute;top:0;right:0;bottom:0;width:64%;-webkit-mask-image:linear-gradient(90deg, transparent 0%, #000 30%);mask-image:linear-gradient(90deg, transparent 0%, #000 30%)}
+.hero-foot{position:relative;z-index:2;background:var(--navy-deep);border-top:1px solid rgba(201,207,214,.25)}
+.hero-foot p{margin:0;padding:16px 0;font-size:16px;color:var(--silver);max-width:92ch}
+.hero-foot strong{color:var(--white);font-weight:600}
+
+/* halftone duotone (CSS dots + SVG navy/yellow map) */
+.ht{position:relative;width:100%;height:100%;overflow:hidden;background:#000;isolation:isolate;filter:contrast(14) url(#duo)}
+.ht img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) blur(.5px) contrast(var(--c,1.2)) brightness(var(--b,.5))}
+.ht::after{content:"";position:absolute;inset:-50%;background:radial-gradient(circle, #000 0, #808080 calc(var(--dot,9px) * .72)) 0 0/var(--dot,9px) var(--dot,9px);mix-blend-mode:plus-lighter;transform:rotate(30deg);pointer-events:none}
+
+/* ---------- Commitment band ---------- */
+.ask{background:var(--vest);position:relative;padding:clamp(76px, 8vw, 112px) 0}
+.ask-stripe{position:absolute;left:0;right:0;height:18px}
+.ask-stripe.top{top:26px}
+.ask-stripe.bot{bottom:26px}
+.ask-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:24px 56px;align-items:end;margin-bottom:clamp(32px, 4vw, 52px)}
+.ask h2{font-size:clamp(48px, 6vw, 92px)}
+.ask-head p{margin:0;font-size:18px;max-width:58ch}
+.ask-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4, minmax(0,1fr));border-top:4px solid var(--navy)}
+.ask-list li{padding:10px 24px 0 0;display:flex;flex-direction:column}
+.ask-list li + li{padding-left:24px;border-left:2px solid var(--navy)}
+.num{display:block;font:900 clamp(120px, 15vw, 224px)/.8 var(--display);letter-spacing:-.01em;margin:6px 0 10px}
+.num-unit{font-size:.36em;letter-spacing:0;margin-left:.04em}
+.ask-what{font:800 clamp(24px, 2.2vw, 32px)/1 var(--display);text-transform:uppercase;margin-bottom:10px}
+.ask-list p{font-size:16px;margin:0}
+.ask-note{margin:28px 0 0;font-size:15px}
+
+/* ---------- About (explainer) ---------- */
+.about{padding:clamp(72px, 9vw, 128px) 0}
+.about-grid{display:grid;grid-template-columns:minmax(0, 5fr) minmax(0, 7fr);gap:40px 72px}
+.about h2{font-size:clamp(48px, 6vw, 92px);margin-bottom:24px}
+.about .lead{font-size:clamp(20px, 1.7vw, 23px);line-height:1.45;max-width:34ch}
+.legacy{font-size:15px;color:var(--ink-2)}
+.sides{display:grid;grid-template-columns:1fr 1fr;border-top:4px solid var(--navy)}
+.side{padding:24px 28px 8px 0}
+.side + .side{padding-left:28px;border-left:2px solid var(--silver)}
+.side-head{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.side-head img{width:60px;height:60px;flex:none}
+.side h3{font-size:44px;line-height:.9}
+.side h3 small{display:block;font:600 15px/1.25 var(--body);text-transform:none;color:var(--ink-2);margin-top:4px}
+.side p{font-size:17px}
+.both{grid-column:1 / -1;display:grid;grid-template-columns:auto 1fr;gap:14px 20px;align-items:start;margin-top:8px;padding:22px 24px;background:var(--silver-lt);border-left:8px solid var(--navy)}
+.both p{margin:0;font-size:17px}
+.both b{font-weight:700}
+.both-mark{font:900 34px/1 var(--display);text-transform:uppercase}
+
+/* ---------- Posts (roles lineup) ---------- */
+.posts{background:var(--navy);color:var(--white);padding:clamp(72px, 9vw, 128px) 0}
+.posts-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:20px 48px;margin-bottom:36px}
+.posts h2{font-size:clamp(56px, 8vw, 128px);color:var(--vest)}
+.posts-head p{margin:0;max-width:44ch;color:var(--silver);font-size:18px}
+.lineup{list-style:none;margin:0;padding:0;border-top:3px solid var(--silver)}
+.lineup li{display:grid;grid-template-columns:minmax(0, 5fr) minmax(0, 6fr) minmax(0, 3fr);gap:8px 40px;align-items:baseline;padding:22px 0 20px;border-bottom:1px solid rgba(201,207,214,.35)}
+.lineup h3{font-size:clamp(36px, 3.8vw, 56px);line-height:.92}
+.lineup p{margin:0;font-size:17px;color:#E4E8EE}
+.who{justify-self:start;font-size:15px;font-weight:600;padding:5px 12px 6px;border-radius:2px;line-height:1.2}
+.who-any{background:var(--vest);color:var(--navy)}
+.who-acs{background:transparent;color:var(--white);border:2px solid var(--silver)}
+.who-open{background:var(--white);color:var(--navy)}
+.posts-foot{display:flex;flex-wrap:wrap;align-items:center;gap:18px 28px;margin-top:40px}
+.posts-foot p{margin:0;font:800 clamp(28px, 3vw, 40px)/1 var(--display);text-transform:uppercase}
+.key{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:22px;font-size:15px;color:var(--silver)}
+.key span{display:inline-flex;align-items:center;gap:8px}
+.key i{display:inline-block;width:16px;height:16px;border-radius:2px}
+
+/* ---------- Join stepper ---------- */
+.join{padding:clamp(72px, 9vw, 128px) 0;background:var(--white)}
+.join h2{font-size:clamp(48px, 6.4vw, 100px);max-width:15ch;margin-bottom:22px}
+.join .lead{font-size:19px;max-width:60ch;margin-bottom:40px}
+.join-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:40px;align-items:start}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4, minmax(0,1fr));gap:0 6px}
+.step{display:flex;flex-direction:column;padding-right:22px;min-width:0}
+.band{position:relative;height:22px;background:var(--tape);overflow:hidden}
+.band-fill{position:absolute;inset:0;background:var(--tape-lit);transform:scaleX(0);transform-origin:left center;transition:transform .5s cubic-bezier(.5,0,.2,1)}
+.step.done .band-fill{transform:scaleX(1)}
+.step-num{font:900 clamp(96px, 9vw, 136px)/.8 var(--display);margin:20px 0 14px}
+.step h3{font-size:clamp(30px, 2.5vw, 38px);line-height:.95;margin-bottom:12px;min-height:2.85em}
+.step-time{display:inline-block;align-self:flex-start;font-size:15px;font-weight:700;background:var(--navy);color:var(--white);padding:3px 10px 4px;border-radius:2px;margin-bottom:14px}
+.step p{font-size:16px;line-height:1.5}
+.step-links{margin-top:auto;display:flex;flex-direction:column;gap:12px;padding-top:6px}
+.step-links a{font-weight:700;font-size:16px;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px;text-decoration-color:var(--vest)}
+.step-links a:hover{text-decoration-color:var(--navy)}
+.have{display:flex;align-items:center;gap:12px;margin-top:6px;padding:12px 14px;border:2px solid var(--navy);border-radius:2px;cursor:pointer;font-weight:700;font-size:16px;user-select:none;transition:background-color .2s ease}
+.have input{appearance:none;-webkit-appearance:none;margin:0;flex:none;width:26px;height:26px;border:2px solid var(--navy);border-radius:2px;background:var(--white);display:grid;place-content:center;cursor:pointer}
+.have input::after{content:"";width:13px;height:7px;border-left:3px solid var(--navy);border-bottom:3px solid var(--navy);transform:rotate(-45deg) translate(1px,-1px);opacity:0}
+.have input:checked{background:var(--vest)}
+.have input:checked::after{opacity:1}
+.have:has(input:checked){background:var(--vest)}
+.have:has(input:focus-visible){outline:3px solid var(--navy);outline-offset:3px}
+.have input:focus-visible{outline:none}
+
+/* the illustrated ID card */
+.card-wrap{position:sticky;top:24px}
+.card-tag{font-size:14px;font-weight:600;color:var(--ink-2);margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.card-tag svg{flex:none}
+.idcard{position:relative;background:var(--white);border:2px solid var(--navy);border-radius:10px;overflow:hidden;box-shadow:10px 10px 0 var(--vest), 10px 10px 0 2px var(--navy)}
+.idcard-top{background:var(--navy);color:var(--white);display:flex;align-items:center;gap:12px;padding:14px 16px}
+.idcard-top img{width:44px;height:44px}
+.idcard-top b{display:block;font:900 22px/.9 var(--display);text-transform:uppercase}
+.idcard-top span{font-size:13px;color:var(--silver)}
+.idcard .band{height:18px}
+.idcard .band-fill{transform:scaleX(var(--p,0))}
+.idcard-body{padding:18px 18px 16px}
+.id-row{display:flex;gap:14px;align-items:center;margin-bottom:18px}
+.id-photo{width:72px;height:88px;flex:none;background:var(--silver-lt);border:2px dashed var(--silver);border-radius:4px;display:grid;place-items:center}
+.id-name{font:800 26px/.95 var(--display);text-transform:uppercase}
+.id-name small{display:block;font:600 14px/1.3 var(--body);text-transform:none;color:var(--ink-2);margin-top:4px}
+.id-next-label{font-size:14px;font-weight:700;margin:0 0 4px}
+.id-next{font:900 32px/.92 var(--display);text-transform:uppercase;margin:0 0 8px;min-height:1.84em}
+.id-next-text{font-size:15px;line-height:1.45;margin:0 0 14px;min-height:4.35em}
+.id-progress{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px;font-weight:600;border-top:2px solid var(--silver-lt);padding-top:12px;margin-bottom:14px}
+.id-pips{display:flex;gap:4px}
+.id-pips i{width:18px;height:8px;background:var(--silver);border-radius:1px}
+.id-pips i.on{background:var(--vest);box-shadow:inset 0 0 0 1px var(--navy)}
+.idcard .btn{width:100%}
+.idcard-foot{background:var(--silver-lt);font-size:13px;font-weight:600;padding:9px 16px;text-align:center;color:var(--navy)}
+.reset{margin-top:22px;background:none;border:0;padding:4px 0;font:600 15px var(--body);color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+
+/* ---------- Get licensed ---------- */
+.licensed{background:var(--navy);color:var(--white);padding:clamp(72px, 9vw, 120px) 0}
+.lic-grid{display:grid;grid-template-columns:minmax(0, 5fr) minmax(0, 7fr);gap:40px 72px}
+.licensed h2{font-size:clamp(48px, 6vw, 92px);color:var(--white);margin-bottom:22px}
+.licensed .lead{color:var(--silver);font-size:19px;max-width:40ch}
+.lic-steps{list-style:none;margin:0;padding:0;counter-reset:l}
+.lic-steps li{display:grid;grid-template-columns:64px 1fr;gap:4px 20px;padding:20px 0;border-top:1px solid rgba(201,207,214,.35)}
+.lic-steps li:first-child{border-top:3px solid var(--silver)}
+.lic-steps .n{font:900 64px/.8 var(--display);color:var(--vest)}
+.lic-steps h3{font-size:34px;margin:0 0 8px;color:var(--white)}
+.lic-steps p{margin:0;font-size:17px;color:#E4E8EE}
+.lic-steps a{color:var(--vest);font-weight:600;text-underline-offset:3px}
+.skywarn{margin-top:28px;padding:20px 22px;border:2px solid var(--vest);border-radius:2px}
+.skywarn h3{font-size:30px;color:var(--vest);margin-bottom:8px}
+.skywarn p{margin:0 0 14px;font-size:17px}
+
+/* ---------- Tuesday net ---------- */
+.net{background:var(--vest);position:relative;padding:clamp(72px, 9vw, 120px) 0 clamp(56px, 7vw, 96px)}
+.net::before{content:"";position:absolute;left:0;right:0;top:26px;height:18px;background:var(--tape)}
+.net-grid{display:grid;grid-template-columns:minmax(0, 7fr) minmax(0, 5fr);gap:40px 64px;align-items:start}
+.net h2{font-size:clamp(64px, 9vw, 150px);margin-bottom:18px}
+.net .sub{font-size:clamp(20px, 1.8vw, 24px);font-weight:600;max-width:36ch;margin-bottom:30px}
+.freq{display:grid;grid-template-columns:auto auto;justify-content:start;gap:0 36px;border-top:4px solid var(--navy);border-bottom:4px solid var(--navy);padding:18px 0 16px;margin-bottom:22px}
+.freq div{display:flex;flex-direction:column}
+.freq b{font:900 clamp(56px, 6vw, 88px)/.85 var(--display);text-transform:uppercase;white-space:nowrap}
+.freq span{font-size:16px;font-weight:600;margin-top:8px}
+.net-copy p{max-width:58ch}
+.next-net{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline;background:var(--navy);color:var(--white);padding:14px 18px;margin:6px 0 24px;border-radius:2px}
+.next-net strong{font:800 26px/1 var(--display);text-transform:uppercase;color:var(--vest)}
+.next-net span{font-size:16px}
+.net-ctas{display:flex;flex-wrap:wrap;gap:14px 16px;align-items:center}
+.net-hint{font-size:15px;margin:12px 0 0}
+.net-photo{aspect-ratio:5/4;position:relative;border:3px solid var(--navy)}
+.net-photo .ht{--dot:6px;--b:.56;--c:1.3}
+.net-photo .ht img{position:absolute;top:0;right:0;height:115%;width:auto;max-width:none;object-fit:unset}
+.net-photo figcaption{font-size:14px;margin-top:10px}
+.cal{margin-top:36px}
+.cal h3{font-size:34px;margin-bottom:10px}
+.cal ul{list-style:none;margin:0;padding:0;border-top:3px solid var(--navy)}
+.cal li{display:grid;grid-template-columns:118px 1fr;gap:4px 16px;padding:11px 0;border-bottom:1px solid rgba(19,32,92,.35);font-size:16px}
+.cal li b{font-weight:700}
+.cal .where{font-size:15px;margin:12px 0 0}
+.members{margin-top:clamp(48px, 6vw, 72px);background:var(--white);border:3px solid var(--navy);padding:22px 24px;display:grid;grid-template-columns:auto 1fr;gap:14px 32px;align-items:center}
+.members h3{font-size:34px}
+.members ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 10px}
+.members a{display:inline-block;padding:8px 14px;border:2px solid var(--navy);border-radius:2px;font-weight:600;font-size:16px;text-decoration:none}
+.members a:hover{background:var(--navy);color:var(--white)}
+.members .lock{font-size:13px;font-weight:600;color:var(--ink-2);margin-left:4px}
+
+/* ---------- Partners ---------- */
+.partners{padding:clamp(72px, 9vw, 120px) 0}
+.partners h2{font-size:clamp(48px, 6vw, 92px);margin-bottom:14px}
+.partners .lead{font-size:19px;max-width:60ch;margin-bottom:36px}
+.plist{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:0 40px;border-top:4px solid var(--navy)}
+.plist li{padding:18px 0 20px;border-bottom:1px solid var(--silver)}
+.plist li.primary{grid-column:1 / -1;display:grid;grid-template-columns:minmax(0, 7fr) minmax(0, 5fr);gap:6px 40px;align-items:baseline;padding:24px 0}
+.plist b{display:block;font:800 clamp(26px, 2.4vw, 34px)/.95 var(--display);text-transform:uppercase;margin-bottom:6px}
+.plist .primary b{font-size:clamp(40px, 4.4vw, 64px);font-weight:900}
+.plist span{font-size:16px;color:var(--ink-2)}
+.plist .primary span{font-size:18px}
+
+/* ---------- Final CTA + footer ---------- */
+.final{background:var(--navy);color:var(--white);padding:clamp(64px, 8vw, 104px) 0 clamp(56px, 6vw, 80px)}
+.final h2{font-size:clamp(56px, 8vw, 128px);color:var(--vest);max-width:12ch;margin-bottom:22px}
+.final p{font-size:19px;max-width:52ch;color:var(--silver);margin-bottom:30px}
+.final-grid{display:grid;grid-template-columns:minmax(0, 7fr) minmax(0, 4fr);gap:40px 72px;align-items:end}
+.ask-first{border-top:4px solid var(--vest);padding-top:18px}
+.ask-first h3{font-size:34px;color:var(--white);margin-bottom:10px}
+.ask-first p{font-size:17px;margin:0 0 14px;color:var(--silver)}
+.ask-first a{color:var(--vest);font-weight:700;text-underline-offset:3px}
+.foot{background:var(--navy-deep);color:var(--silver);padding:48px 0 36px;font-size:15px}
+.foot-grid{display:grid;grid-template-columns:minmax(0, 5fr) repeat(3, minmax(0, 2.4fr));gap:32px 40px}
+.foot .brand-name{color:var(--white)}
+.foot p{margin:0 0 10px}
+.foot h3{font:800 20px/1 var(--display);color:var(--white);margin-bottom:12px}
+.foot ul{list-style:none;margin:0;padding:0}
+.foot li{margin-bottom:7px}
+.foot a{color:var(--white);text-decoration:none}
+.foot a:hover{text-decoration:underline;text-underline-offset:3px}
+.foot-base{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px;margin-top:40px;padding-top:18px;border-top:1px solid rgba(201,207,214,.25);font-size:14px}
+.concept-label{color:#AEB6C0}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1180px){
+  .nav a{padding:10px 8px;font-size:15px}
+  .join-grid{grid-template-columns:1fr}
+  .card-wrap{position:static;max-width:380px}
+  .ask-list{grid-template-columns:repeat(2, minmax(0,1fr))}
+  .ask-list li:nth-child(3){padding-left:0;border-left:0}
+  .ask-list li:nth-child(n+3){border-top:2px solid var(--navy);margin-top:26px;padding-top:16px}
+}
+@media (max-width:980px){
+  .menu-btn{display:inline-flex;align-items:center}
+  .nav{position:absolute;top:100%;left:0;right:0;margin:0;background:var(--navy);border-top:1px solid rgba(201,207,214,.25);display:none;padding:8px var(--gut) 18px}
+  .nav.open{display:block}
+  .nav ul{flex-direction:column}
+  .nav a{padding:12px 0;font-size:18px;border-bottom:1px solid rgba(201,207,214,.2)}
+  .head-cta{order:2}
+  .menu-btn{order:3;margin-left:0}
+  .brand{margin-right:auto}
+  .hero-photo{width:72%;opacity:.9}
+  .about-grid,.lic-grid,.net-grid{grid-template-columns:1fr}
+  .ask-head{grid-template-columns:1fr}
+  .lineup li{grid-template-columns:1fr;gap:8px}
+  .steps{grid-template-columns:repeat(2, minmax(0,1fr));gap:40px 6px}
+  .plist{grid-template-columns:repeat(2, minmax(0,1fr))}
+  .plist li.primary{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .final-grid{grid-template-columns:1fr}
+  .net-photo{max-width:560px}
+}
+@media (max-width:640px){
+  body{font-size:17px}
+  .head-row{min-height:64px;gap:10px}
+  .brand img{width:38px;height:38px}
+  .brand-name{font-size:18px}
+  .brand-name small{display:none}
+  .head-cta .btn{min-height:42px;padding:0 14px;font-size:15px}
+  .cta-long{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .cta-short{display:inline}
+  .menu-btn{padding:0 10px;min-height:42px;font-size:15px}
+  .hero-inner{min-height:0;padding-top:0;padding-bottom:40px}
+  .hero-photo{position:relative;width:auto;height:62vw;margin:0 calc(var(--gut) * -1) -8vw;-webkit-mask-image:linear-gradient(180deg, #000 55%, transparent 100%);mask-image:linear-gradient(180deg, #000 55%, transparent 100%);opacity:1}
+  .hero h1{font-size:clamp(52px, 15vw, 72px)}
+  .hero-ctas .btn{width:100%}
+  .ask-stripe.top{top:18px}.ask-stripe.bot{bottom:18px}
+  .ask-list{grid-template-columns:1fr 1fr}
+  .ask-list li{padding-right:12px}
+  .ask-list li + li{padding-left:14px}
+  .ask-list li:nth-child(3){padding-left:0}
+  .num{font-size:112px}
+  .sides{grid-template-columns:1fr}
+  .side{padding-right:0}
+  .side + .side{padding-left:0;border-left:0;border-top:2px solid var(--silver)}
+  .both{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr;gap:44px}
+  .step{padding-right:0}
+  .step h3{min-height:0}
+  .freq{grid-template-columns:1fr;gap:18px}
+  .cal li{grid-template-columns:1fr;gap:0}
+  .members{grid-template-columns:1fr}
+  .plist{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr}
+  .net-ctas .btn,.posts-foot .btn,.final .btn{width:100%}
+  .lic-steps li{grid-template-columns:44px 1fr;gap:4px 14px}
+  .lic-steps .n{font-size:52px}
+}
+@media (max-width:380px){
+  .head-cta .btn{padding:0 10px;font-size:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .tape-glint::after{display:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- navy/yellow duotone map used by every halftone photo -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <filter id="duo" color-interpolation-filters="sRGB">
+    <feColorMatrix type="matrix" values=".2126 .7152 .0722 0 0  .2126 .7152 .0722 0 0  .2126 .7152 .0722 0 0  0 0 0 1 0"/>
+    <feComponentTransfer>
+      <feFuncR type="table" tableValues="0.0745 1"/>
+      <feFuncG type="table" tableValues="0.1255 0.8157"/>
+      <feFuncB type="table" tableValues="0.3608 0"/>
+    </feComponentTransfer>
+  </filter>
+</svg>
+
+<header class="site-head on-navy">
+  <div class="wrap head-row">
+    <a class="brand" href="#top" aria-label="Spokane County ARES-ACS, home">
+      <img src="../../assets/Spokane_County_ARES-ACS_logo_slightly_smaller_550x550.png" alt="" width="46" height="46">
+      <span class="brand-name">Spokane County<br>ARES-ACS<small>Amateur radio emergency communications</small></span>
+    </a>
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#posts">What we do</a></li>
+        <li><a href="#join">Join</a></li>
+        <li><a href="#net">Calendar</a></li>
+        <li class="nav-members"><a href="#members">Members</a></li>
+      </ul>
+    </nav>
+    <div class="head-cta"><a class="btn btn-vest" href="#join"><span class="cta-long">Start volunteering</span><span class="cta-short" aria-hidden="true">Volunteer</span></a></div>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+  </div>
+</header>
+
+<main id="main">
+  <!-- HERO -->
+  <section class="hero on-navy" id="top" aria-labelledby="hero-h">
+    <div class="hero-photo">
+      <div class="ht" style="--dot:9px;--b:.5;--c:1.2">
+        <img src="../../assets/8091bb_cfac747e80b142cf8c06b2286c1c6e0b.jpg" alt="Six volunteers, four in hi-vis vests, raise an antenna mast in a frosty, foggy field." style="object-position:58% 40%">
+      </div>
+    </div>
+    <div class="wrap hero-inner">
+      <div class="hero-copy">
+        <h1 id="hero-h"><span>Make a</span> <span>difference</span> <span>with a radio</span> <span>in your hand.</span></h1>
+        <blockquote class="hero-quote">
+          <p>“He was a person who made a difference in Spokane by making others feel like they could make a difference themselves.”</p>
+          <footer>Written of Ira “Dean” Bula, whose memorial call sign, W7GBU, the team still carries.</footer>
+        </blockquote>
+        <div class="hero-ctas">
+          <a class="btn btn-vest" href="#join">Start volunteering</a>
+          <a class="btn btn-line" href="#get-licensed">Not licensed yet? Get on the air</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-foot">
+      <div class="wrap">
+        <p><strong>Spokane County ARES-ACS</strong> trains licensed amateur radio operators to provide auxiliary backup communications for Spokane County Emergency Management, the National Weather Service, local hospitals and community events.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE ASK -->
+  <section class="ask" aria-labelledby="ask-h">
+    <div class="tape tape-glint ask-stripe top" aria-hidden="true"></div>
+    <div class="tape ask-stripe bot" aria-hidden="true"></div>
+    <div class="wrap">
+      <div class="ask-head">
+        <h2 id="ask-h">Here’s what it takes.</h2>
+        <p>These are the ongoing minimums from the team’s ACS Task Book. Weekly check-ins and monthly meetings are encouraged, and leaders can grant exemptions case by case. <span class="verify">Verify</span></p>
+      </div>
+      <ul class="ask-list">
+        <li>
+          <span class="num">1</span>
+          <span class="ask-what">Net check-in a month</span>
+          <p>Tuesdays at 8 PM, on the W7GBU repeater, from wherever your radio is.</p>
+        </li>
+        <li>
+          <span class="num">1</span>
+          <span class="ask-what">Meeting a quarter</span>
+          <p>A Third Thursday training meeting or a Second Saturday workshop.</p>
+        </li>
+        <li>
+          <span class="num">1</span>
+          <span class="ask-what">Field operation a year</span>
+          <p>An activation, an exercise, or a public-service event like Bloomsday.</p>
+        </li>
+        <li>
+          <span class="num">72<span class="num-unit">hr</span></span>
+          <span class="ask-what">Go-kit, ready to roll</span>
+          <p>A personal kit and a radio kit. 24 hours is the minimum; 72 is the goal.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about" aria-labelledby="about-h">
+    <div class="wrap about-grid">
+      <div>
+        <h2 id="about-h">What you’d be joining</h2>
+        <p class="lead">When normal systems are overloaded or down, Spokane County still has to pass messages. We’re one team of licensed amateur radio (“ham”) operators who volunteer to carry that backup traffic.</p>
+        <p class="legacy">You may know us by our older name, Spokane County ARES/RACES.</p>
+      </div>
+      <div class="sides">
+        <div class="side">
+          <div class="side-head">
+            <img src="../../assets/ARES_logo.png" alt="ARRL Amateur Radio Emergency Service emblem" width="60" height="60">
+            <h3>ARES <small>Amateur Radio Emergency Service</small></h3>
+          </div>
+          <p>A national ARRL program open to any licensed ham. ARES members support community events, the National Weather Service and the Red Cross, with no emergency declaration needed. ARRL membership isn’t required.</p>
+        </div>
+        <div class="side">
+          <div class="side-head">
+            <img src="../../assets/ACS_logo_1000x1000.png" alt="Spokane Auxiliary Communications (ACS) seal" width="60" height="60">
+            <h3>ACS <small>Auxiliary Communications</small></h3>
+          </div>
+          <p>Spokane County Emergency Management’s own volunteer radio unit, carrying on the county’s RACES program. After a county background check, ACS members can be activated by the county and work inside emergency operations centers, command posts, hospitals and shelters.</p>
+        </div>
+        <div class="both">
+          <span class="both-mark">Auxiliary support</span>
+          <p><b>Join ARES only, or both.</b> “Even [if] you don’t or can’t qualify for ACS, our ARES group welcomes you.” Either way, you’d be backing up the professionals, not replacing them. In the Section Emergency Coordinator’s words, “ARES is an auxiliary support function.”</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- POSTS -->
+  <section class="posts on-navy" id="posts" aria-labelledby="posts-h">
+    <div class="wrap">
+      <div class="posts-head">
+        <h2 id="posts-h">Pick your post</h2>
+        <p>Every post starts on the same Tuesday net. Here’s where members end up.</p>
+      </div>
+      <ul class="lineup">
+        <li>
+          <h3>Net control</h3>
+          <p>Run the Tuesday net from the script. Members take turns, and the Net Manager coaches first-timers.</p>
+          <span class="who who-any">Any member</span>
+        </li>
+        <li>
+          <h3>Field &amp; shelter operator</h3>
+          <p>Raise masts and run portable stations at exercises, incident command posts and shelters.</p>
+          <span class="who who-acs">ACS for shelters and command posts</span>
+        </li>
+        <li>
+          <h3>Comm room &amp; EOC</h3>
+          <p>Staff the county’s radio communications room and comm trailer when Emergency Management activates.</p>
+          <span class="who who-acs">ACS</span>
+        </li>
+        <li>
+          <h3>Hospital station</h3>
+          <p>Keep backup radio and computer gear working with Greater Spokane area hospitals, and check into the Hospital Net.</p>
+          <span class="who who-acs">ACS, plus HIPAA training</span>
+        </li>
+        <li>
+          <h3>Winlink &amp; digital</h3>
+          <p>Send ICS-213 messages as radio email through the team’s W7GBU-10 Winlink gateway. Practice assignments run every two weeks.</p>
+          <span class="who who-any">Any member</span>
+        </li>
+        <li>
+          <h3>Public-event comms</h3>
+          <p>Primary or backup communications for Bloomsday, the Lilac Torchlight Parade, fun runs and bike races.</p>
+          <span class="who who-any">Any member</span>
+        </li>
+        <li>
+          <h3>SKYWARN spotter</h3>
+          <p>Report severe weather to NWS Spokane. Spotter training is free, in person or online. Encouraged, never required.</p>
+          <span class="who who-open">No license needed to train</span>
+        </li>
+      </ul>
+      <div class="key" aria-label="Key">
+        <span><i style="background:var(--vest)"></i>Open to ARES and ACS members</span>
+        <span><i style="border:2px solid var(--silver)"></i>Needs the county background check</span>
+        <span><i style="background:var(--white)"></i>Open before you’re licensed</span>
+      </div>
+      <div class="posts-foot">
+        <p>Found your post?</p>
+        <a class="btn btn-vest" href="#join">Start volunteering</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOIN STEPPER -->
+  <section class="join" id="join" aria-labelledby="join-h">
+    <div class="wrap">
+      <h2 id="join-h">Four steps to your county volunteer ID</h2>
+      <p class="lead">Tick “I have this” for anything you’ve already done, and the card shows your next step. Your progress stays on this device only.</p>
+      <div class="join-grid">
+        <ol class="steps" id="steps">
+          <li class="step" data-step="0">
+            <div class="band" aria-hidden="true"><span class="band-fill"></span></div>
+            <span class="step-num" aria-hidden="true">1</span>
+            <h3><span class="sr-only">Step 1: </span>Get your license</h3>
+            <span class="step-time">Class length TBD <span class="verify">Verify</span></span>
+            <p>You need an FCC Technician class license or higher. Local classes and exam sessions run through the year.</p>
+            <div class="step-links">
+              <a href="#get-licensed">Find a class or exam</a>
+              <label class="have"><input type="checkbox" data-i="0" aria-describedby="s1-what"><span>I have this</span><span class="sr-only" id="s1-what">: an FCC license</span></label>
+            </div>
+          </li>
+          <li class="step" data-step="1">
+            <div class="band" aria-hidden="true"><span class="band-fill"></span></div>
+            <span class="step-num" aria-hidden="true">2</span>
+            <h3><span class="sr-only">Step 2: </span>Register with ARES</h3>
+            <span class="step-time">One evening</span>
+            <p>Fill out the Spokane County ARES registration form and bring it to a meeting or email it in. Then join the team’s Groups.io list.</p>
+            <div class="step-links">
+              <a href="https://www.spokares.org/index.php/downloads/forms-and-information">Get the registration form</a>
+              <a href="https://spokaneares-acs.groups.io/">Join Groups.io</a>
+              <label class="have"><input type="checkbox" data-i="1" aria-describedby="s2-what"><span>I have this</span><span class="sr-only" id="s2-what">: ARES registration</span></label>
+            </div>
+          </li>
+          <li class="step" data-step="2">
+            <div class="band" aria-hidden="true"><span class="band-fill"></span></div>
+            <span class="step-num" aria-hidden="true">3</span>
+            <h3><span class="sr-only">Step 3: </span>Apply &amp; attend orientation</h3>
+            <span class="step-time">4th Tuesday, 6 PM</span>
+            <p>Submit the county’s Volunteer Emergency Worker Application and pass a background check. Then come to New Member Orientation, a comm room tour and the 8 PM net.</p>
+            <div class="step-links">
+              <a href="https://www.spokanecounty.org/FormCenter/Emergency-Management-31/Volunteer-Emergency-Worker-Application-276">Open the county application</a>
+              <label class="have"><input type="checkbox" data-i="2" aria-describedby="s3-what"><span>I have this</span><span class="sr-only" id="s3-what">: county application and orientation</span></label>
+            </div>
+          </li>
+          <li class="step" data-step="3">
+            <div class="band" aria-hidden="true"><span class="band-fill"></span></div>
+            <span class="step-num" aria-hidden="true">4</span>
+            <h3><span class="sr-only">Step 4: </span>Train, serve, earn the ID</h3>
+            <span class="step-time">Six months</span>
+            <p>Finish FEMA IS-100 and IS-700, both free online, and stay active for six months. The county then issues your volunteer ID card.</p>
+            <div class="step-links">
+              <a href="https://cdp.dhs.gov/femasid">Get a FEMA Student ID</a>
+              <label class="have"><input type="checkbox" data-i="3" aria-describedby="s4-what"><span>I have this</span><span class="sr-only" id="s4-what">: training and six months of activity</span></label>
+            </div>
+          </li>
+        </ol>
+
+        <div class="card-wrap">
+          <p class="card-tag"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="2"/><rect x="7" y="7" width="2" height="5" fill="currentColor"/><rect x="7" y="3.6" width="2" height="2" fill="currentColor"/></svg>Illustration only. Not a real county ID.</p>
+          <div class="idcard" id="idcard" role="group" aria-label="Your progress card (illustration)">
+            <div class="idcard-top">
+              <img src="../../assets/Spokane_County_ARES-ACS_logo_slightly_smaller_550x550.png" alt="" width="44" height="44">
+              <div><b>ARES-ACS volunteer</b><span>Spokane County</span></div>
+            </div>
+            <div class="band" aria-hidden="true"><span class="band-fill" id="card-fill"></span></div>
+            <div class="idcard-body">
+              <div class="id-row">
+                <div class="id-photo" aria-hidden="true">
+                  <svg width="44" height="54" viewBox="0 0 44 54"><circle cx="22" cy="17" r="11" fill="#C9CFD6"/><path d="M2 54c0-13 9-21 20-21s20 8 20 21z" fill="#C9CFD6"/></svg>
+                </div>
+                <div class="id-name">Your name here<small>Call sign: yours soon</small></div>
+              </div>
+              <div aria-live="polite" id="next-live">
+                <p class="id-next-label">Your next step:</p>
+                <p class="id-next" id="next-title">Get your license</p>
+                <p class="id-next-text" id="next-text">Find a class or book an exam session. You can listen to the Tuesday net while you study.</p>
+              </div>
+              <div class="id-progress"><span id="prog-text">0 of 4 steps</span><span class="id-pips" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>
+              <a class="btn btn-vest" id="next-btn" href="#get-licensed">Take your next step</a>
+            </div>
+            <div class="idcard-foot">Sample card for this page</div>
+          </div>
+          <button class="reset" type="button" id="reset">Clear my ticks</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOT LICENSED -->
+  <section class="licensed on-navy" id="get-licensed" aria-labelledby="lic-h">
+    <div class="wrap lic-grid">
+      <div>
+        <h2 id="lic-h">Not licensed yet? Get on the air.</h2>
+        <p class="lead">You need an FCC license to transmit. You don’t need one to listen, to learn, or to train as a SKYWARN spotter.</p>
+        <div class="skywarn">
+          <h3>Start without a license: SKYWARN</h3>
+          <p>NWS Spokane trains weather spotters at public sessions or through an online course.</p>
+          <a class="btn btn-vest" href="https://www.weather.gov/otx/Current_Spotter_Training">See spotter training</a>
+        </div>
+      </div>
+      <ol class="lic-steps">
+        <li>
+          <span class="n" aria-hidden="true">1</span>
+          <div>
+            <h3>Listen in</h3>
+            <p>Tune a scanner or 2-meter radio to 147.300 MHz on a Tuesday at 8 PM, or visit a Third Thursday meeting or a Second Saturday workshop.</p>
+          </div>
+        </li>
+        <li>
+          <span class="n" aria-hidden="true">2</span>
+          <div>
+            <h3>Take a class <span class="verify">Verify</span></h3>
+            <p>License classes run periodically through the year, typically taught by Jack Tiley, AD7FO, and sponsored by Spokane County Emergency Management, the VHF Club and local ARES-RACES. Ask about the next one through the <a href="#contact">contact form</a>.</p>
+          </div>
+        </li>
+        <li>
+          <span class="n" aria-hidden="true">3</span>
+          <div>
+            <h3>Pass the exam <span class="verify">Verify</span></h3>
+            <p>Volunteer examiners test locally, including Washington Digital Radio Enthusiasts on third Wednesdays at 6 PM and KARS in Hayden, or online through <a href="https://hamstudy.org/sessions/glaarg">GLAARG on HamStudy</a>. Volunteers charge no fee; the FCC charges $35 to issue the license.</p>
+          </div>
+        </li>
+        <li>
+          <span class="n" aria-hidden="true">4</span>
+          <div>
+            <h3>Come back to step 2</h3>
+            <p>Licensed? <a href="#join">Register with ARES</a> and you’re on the path to the county ID.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- TUESDAY NET -->
+  <section class="net" id="net" aria-labelledby="net-h">
+    <div class="wrap">
+      <div class="net-grid">
+        <div class="net-copy">
+          <h2 id="net-h">Tuesday is practice.</h2>
+          <p class="sub">Every Tuesday night we practice. The day it’s real, we’re ready.</p>
+          <div class="freq">
+            <div><b>8:00 PM</b><span>Every Tuesday</span></div>
+            <div><b>147.300</b><span>MHz, +600 kHz offset, 100 Hz tone, W7GBU repeater</span></div>
+          </div>
+          <p>It’s a directed net that doubles as weekly emergency-operations training. Officials check in first, then members by call sign, then visitors. <strong>Visitors are invited to check in.</strong></p>
+          <div class="next-net" id="next-net">
+            <strong id="nn-date">Tue, Sept 29</strong>
+            <span id="nn-who">Net control: NZ2S. This week runs as a simplex net; the frequency is posted on Groups.io.</span>
+          </div>
+          <div class="net-ctas">
+            <button class="btn btn-navy" type="button" id="ics-btn">Listen this Tuesday</button>
+            <a class="btn btn-line" href="#members">Read the net script</a>
+          </div>
+          <p class="net-hint">“Listen this Tuesday” saves a weekly 8 PM reminder to your calendar.</p>
+        </div>
+        <div>
+          <figure class="net-photo-fig" style="margin:0">
+            <div class="net-photo">
+              <div class="ht">
+                <img src="../../assets/8091bb_6c9b42987e484f27a66a6a7748a7db9c.jpg" alt="A volunteer operator in headphones speaks into a hand microphone, with a parade route map pinned beside him.">
+              </div>
+            </div>
+            <figcaption>On the air during a parade. Public events are practice too.</figcaption>
+          </figure>
+          <div class="cal">
+            <h3>Coming up</h3>
+            <ul>
+              <li><b>Sept 26–27</b><span>ARES-ACS and WSDOT joint exercise</span></li>
+              <li><b>Sat, Oct 3</b><span>Simulated Emergency Test (SET)</span></li>
+              <li><b>Sat, Oct 10</b><span>Second Saturday workshop, 9 AM–noon</span></li>
+              <li><b>Thu, Oct 15</b><span>Third Thursday training meeting <span class="verify">Time TBD</span></span></li>
+              <li><b>Tue, Oct 27</b><span>New Member Orientation, 6 PM, then the net</span></li>
+            </ul>
+            <p class="where">Meetings are at the Spokane County Emergency Management building, 1121 W. Gardner Ave, next to the County Courthouse.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="members" id="members">
+        <h3>Members</h3>
+        <ul>
+          <li><a href="#members">Net preamble &amp; script</a></li>
+          <li><a href="#members">Net roster (Aug 2026)</a></li>
+          <li><a href="#members">ICS forms</a></li>
+          <li><a href="#members">ACS Task Book</a></li>
+          <li><a href="https://spokaneares-acs.groups.io/g/main/calendar">Groups.io calendar</a></li>
+          <li><a href="#members">Member login<span class="lock"> (sign-in)</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARTNERS -->
+  <section class="partners" id="partners" aria-labelledby="partners-h">
+    <div class="wrap">
+      <h2 id="partners-h">Who we serve</h2>
+      <p class="lead">An ARRL-affiliated ARES group and the county’s auxiliary communications unit, working alongside these agencies and events.</p>
+      <ul class="plist">
+        <li class="primary"><b>Spokane County Emergency Management</b><span>Our primary served agency. It activates ACS, runs background checks and issues volunteer IDs.</span></li>
+        <li><b>National Weather Service, Spokane</b><span>SKYWARN spotting and severe-weather nets</span></li>
+        <li><b>Greater Spokane area hospitals</b><span>Backup radio stations and the Hospital Net</span></li>
+        <li><b>American Red Cross</b><span>Shelter support under the ARRL–Red Cross agreement</span></li>
+        <li><b>ARRL</b><span>The national association for amateur radio, which runs ARES</span></li>
+        <li><b>Inland Empire VHF Radio Amateurs</b><span>Formal agreement for a backup repeater and packet and Winlink nodes</span></li>
+        <li><b>Spokane County Sheriff’s Office</b><span>Helicopter safety training</span></li>
+        <li><b>Washington State Emergency Management</b><span>State nets and mission numbers</span></li>
+        <li><b>WSDOT</b><span>Joint exercise, September 2026</span></li>
+        <li><b>Bloomsday, Lilac Torchlight Parade, Valleyfest</b><span>Public-service communications</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final on-navy" aria-labelledby="final-h">
+    <div class="wrap final-grid">
+      <div>
+        <h2 id="final-h">Start with one evening.</h2>
+        <p>Register with ARES, check in on Tuesday, and see which post fits. The county ID comes after.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-vest" href="#join">Start volunteering</a>
+          <a class="btn btn-line" href="#net">Listen this Tuesday</a>
+        </div>
+      </div>
+      <div class="ask-first">
+        <h3>Rather ask first?</h3>
+        <p>Come to New Member Orientation on the 4th Tuesday at 6 PM, at 1121 W. Gardner Ave. You’ll tour the comm room and sit in on the 8 PM net.</p>
+        <p>Or send a question through the <a href="#contact">contact form</a>.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="tape" aria-hidden="true"></div>
+<footer class="foot on-navy" id="contact">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="#top" style="margin-bottom:16px">
+          <img src="../../assets/Spokane_County_ARES-ACS_logo_slightly_smaller_550x550.png" alt="" width="46" height="46">
+          <span class="brand-name">Spokane County<br>ARES-ACS</span>
+        </a>
+        <p>Auxiliary amateur radio communications for Spokane County. Call sign W7GBU. Formerly Spokane County ARES/RACES.</p>
+      </div>
+      <div>
+        <h3>Meet us</h3>
+        <p>Spokane County Emergency Management<br>1121 W. Gardner Ave<br>Spokane, WA 99260</p>
+      </div>
+      <div>
+        <h3>Get involved</h3>
+        <ul>
+          <li><a href="#join">Start volunteering</a></li>
+          <li><a href="#get-licensed">Get licensed</a></li>
+          <li><a href="#net">Tuesday net</a></li>
+          <li><a href="https://spokaneares-acs.groups.io/">Groups.io</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>The site</h3>
+        <ul>
+          <li><a href="#contact">Contact form</a></li>
+          <li><a href="#members">Members</a></li>
+          <li><a href="#contact">Privacy</a></li>
+          <li><a href="#contact">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span>An ARRL Amateur Radio Emergency Service group, supporting Spokane County Emergency Management.</span>
+      <span class="concept-label">Concept 03 — Hi-Vis</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* mobile menu */
+  var menuBtn=document.querySelector('.menu-btn'), nav=document.getElementById('site-nav');
+  if(menuBtn&&nav){
+    menuBtn.addEventListener('click',function(){
+      var open=nav.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded',open?'true':'false');
+      menuBtn.textContent=open?'Close':'Menu';
+    });
+    nav.addEventListener('click',function(e){
+      if(e.target.tagName==='A'&&nav.classList.contains('open')){nav.classList.remove('open');menuBtn.setAttribute('aria-expanded','false');menuBtn.textContent='Menu';}
+    });
+  }
+
+  /* reflective-stripe stepper */
+  var KEY='spokares-hivis-steps';
+  var boxes=[].slice.call(document.querySelectorAll('#steps input[type=checkbox]'));
+  var steps=[].slice.call(document.querySelectorAll('#steps .step'));
+  var NEXT=[
+    {t:'Get your license',x:'Find a class or book an exam session. You can listen to the Tuesday net while you study.',h:'#get-licensed',b:'Find a class or exam'},
+    {t:'Register with ARES',x:'One evening: fill out the registration form, then join Groups.io for meetings and events.',h:'https://www.spokares.org/index.php/downloads/forms-and-information',b:'Get the registration form'},
+    {t:'Apply & attend orientation',x:'Send the county application, then come to orientation on the 4th Tuesday at 6 PM.',h:'https://www.spokanecounty.org/FormCenter/Emergency-Management-31/Volunteer-Emergency-Worker-Application-276',b:'Open the county application'},
+    {t:'Train & log six months',x:'Finish IS-100 and IS-700 online, then stay active for six months.',h:'https://cdp.dhs.gov/femasid',b:'Get a FEMA Student ID'}
+  ];
+  var DONE={t:'Keep checking in',x:'All four steps ticked. Keep your go-kit ready and we’ll hear you on Tuesday.',h:'#net',b:'See this week’s net'};
+  var state=[false,false,false,false];
+  try{var saved=JSON.parse(localStorage.getItem(KEY)||'null');if(Array.isArray(saved)&&saved.length===4){state=saved.map(Boolean);}}catch(e){}
+
+  function render(){
+    var n=0,next=-1;
+    state.forEach(function(v,i){
+      boxes[i].checked=v;
+      steps[i].classList.toggle('done',v);
+      if(v)n++; else if(next<0)next=i;
+    });
+    var c=next<0?DONE:NEXT[next];
+    document.getElementById('next-title').textContent=c.t;
+    document.getElementById('next-text').textContent=c.x;
+    var btn=document.getElementById('next-btn');
+    btn.href=c.h; btn.textContent=c.b;
+    document.getElementById('prog-text').textContent=n+' of 4 steps';
+    document.getElementById('card-fill').style.setProperty('--p',n/4);
+    [].slice.call(document.querySelectorAll('.id-pips i')).forEach(function(p,i){p.classList.toggle('on',state[i]);});
+  }
+  boxes.forEach(function(b){
+    b.addEventListener('change',function(){
+      state[+b.getAttribute('data-i')]=b.checked;
+      try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}
+      render();
+    });
+  });
+  document.getElementById('reset').addEventListener('click',function(){
+    state=[false,false,false,false];
+    try{localStorage.removeItem(KEY);}catch(e){}
+    render();
+  });
+  render();
+
+  /* next Tuesday net, from the AG7QP 2026 roster */
+  var ROSTER={'2026-09-22':{nc:'KE7RAP'},'2026-09-29':{nc:'NZ2S',simplex:true},'2026-10-06':{nc:null},'2026-10-13':{nc:'AE7RJ'},'2026-10-20':{nc:'WA7LNC'},'2026-10-27':{nc:null}};
+  var MON=['Jan','Feb','March','April','May','June','July','Aug','Sept','Oct','Nov','Dec'];
+  function pad(n){return (n<10?'0':'')+n;}
+  function nextNet(now){
+    var d=new Date(now.getTime());
+    var add=(2-d.getDay()+7)%7;
+    if(add===0&&d.getHours()>=21)add=7;
+    d.setDate(d.getDate()+add);d.setHours(20,0,0,0);return d;
+  }
+  var now=new Date(), nn=nextNet(now);
+  var key=nn.getFullYear()+'-'+pad(nn.getMonth()+1)+'-'+pad(nn.getDate());
+  var isToday=nn.toDateString()===now.toDateString();
+  var r=ROSTER[key];
+  document.getElementById('nn-date').textContent=(isToday?'Tonight':'Tue, '+MON[nn.getMonth()]+' '+nn.getDate())+', 8 PM';
+  var who;
+  if(!r){who='Net control: see the roster on Groups.io.';}
+  else if(!r.nc){who='Net control: open slot. Members can claim it on Groups.io.';}
+  else{who='Net control: '+r.nc+'.'+(r.simplex?' This week runs as a simplex net; the frequency is posted on Groups.io.':'');}
+  document.getElementById('nn-who').textContent=who;
+
+  /* "Listen this Tuesday": weekly calendar reminder (.ics) */
+  document.getElementById('ics-btn').addEventListener('click',function(){
+    var ds=nn.getFullYear()+pad(nn.getMonth()+1)+pad(nn.getDate());
+    var st=new Date();
+    var stamp=st.getUTCFullYear()+pad(st.getUTCMonth()+1)+pad(st.getUTCDate())+'T'+pad(st.getUTCHours())+pad(st.getUTCMinutes())+'00Z';
+    var ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Spokane County ARES-ACS//Tuesday net//EN','BEGIN:VEVENT',
+      'UID:tuesday-net-'+ds+'@spokares.org','DTSTAMP:'+stamp,'DTSTART:'+ds+'T200000','DTEND:'+ds+'T210000','RRULE:FREQ=WEEKLY;BYDAY=TU',
+      'SUMMARY:Tuesday net (Spokane County ARES-ACS)','LOCATION:W7GBU repeater 147.300 MHz\\, +600 kHz\\, 100 Hz tone',
+      'DESCRIPTION:Directed net and weekly training. Visitors are invited to check in after members. Some weeks run as a simplex net; check Groups.io.',
+      'END:VEVENT','END:VCALENDAR'].join('\r\n');
+    var url=URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));
+    var a=document.createElement('a');a.href=url;a.download='spokane-ares-acs-tuesday-net.ics';document.body.appendChild(a);a.click();
+    setTimeout(function(){URL.revokeObjectURL(url);a.remove();},500);
+  });
+})();
+</script>
+</body>
+</html>

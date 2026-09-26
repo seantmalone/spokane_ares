@@ -1,0 +1,255 @@
+Spokane Emergency Management 
+Emergency Support Function (ESF) #2 
+Communications, Information Systems & Warning 
+ 
+ 
+ Emergency Coordination Center
+Primary: 
+• Jurisdiction Communication 
+Departments 
+Support: 
+• Departments/Agencies, All. 
+ Spokane Emergency Management 
+Likely Tasks: 
+• Maintain a 24-hour primary warning point for the 
+receipt of warning information. 
+• Develop and maintain a system to disseminate 
+emergency alerts and warnings to the public. 
+• Develop public education programs outlining the 
+proper use of the warning systems and the 
+meanings of the warnings issued through those 
+systems. 
+•  Disseminate emergency warning information 
+from state and federal agencies. 
+•  Disseminate warnings initiated at local 
+government level. 
+• Warning disseminate methods can include: 
+Mobile public address (PA) systems; Mobile 
+sirens; Outdoor Sirens; “Runners” e.g. door to 
+door notifications; Use of media; Emergency 
+Alert System (EAS); City/County communication 
+systems; Telephone; Fax; Amateur Radio. 
+ 
+ 
+LEAD AGENCIES: 
+Communication Departments 
+ 
+SUPPORT AGENCIES: 
+National Weather Service 
+Department of Emergency Management 
+Law Enforcement Dispatch Centers 
+ARES/RACES 
+Wireless/Hard Line Communications 
+County Information Systems 
+City Information Management Services 
+Local Media 
+Combined Communication Center 
+HEAR Radio 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+INTRODUCTION: 
+A. Purpose: 
+1. Communications:  To structure a communications system for the efficient flow of 
+information during a major emergency or disaster. 
+2. Warning:  To provide rapid alerting and warning to key officials and the public of an 
+impending or occurring major emergency or disaster. 
+ 
+B.  Scope: 
+This ESF applies to the communication and warning assets of all county organizations 
+including radio, voice, and data links, telephone and cellular systems, text, National 
+Warning System, Emergency Alert System, and amateur radio. 
+ 
+POLICIES: 
+A. It is the policy of Spokane City/County Communications Departments to provide a 
+hazard warning system, using both public and private resources, in coordination with 
+state and federal agencies.    The extent of effort depends on the nature of the hazard, 
+timeliness of the report to emergency management officials, the quality and quantity of 
+information available, communications and warning resources available, media attention, 
+and other situation dependent factors and all FCC regulations are adhered to. 
+ 
+  
+ 
+SITUATION: 
+A. Emergency/Disaster Conditions and Hazards: 
+See Hazard Identification and Analysis (HIVA) 
+B. Planning Assumptions: 
+1. The communications infrastructure may or may not be damaged during a disaster, but 
+a diminished capacity is likely to exist. 
+2. Established modes of communication will continue to be utilized to the degree they 
+survive the disaster.   
+3. Alternative means of communications may be required. 
+4. Local government will request state assistance when necessary through emergency 
+management communication systems. 
+5. Emergency or disaster warnings may originate from any level of government. 
+6. Most disaster forecasting resources are located within the federal government. 
+7. Notification of a threatening situation may come through multiple sources. 
+8. Spokane Cities/County (who) will focus on coordinating lifesaving activities and 
+reestablishing communications and control in the disaster area. 
+9. Initial reports of damage will provide an incomplete picture of the extent of damage 
+to telecommunication facilities. 
+10. Weather, damage to roads and bridges, and other factors will restrict the entry of 
+emergency communications into the area. 
+11. Tests of the EAS will be conducted periodically to familiarize the government and the 
+public with the system. 
+12. In the event that the public instructions need to be translated, the provision of 
+interpreters will be coordinated through the ECC. 
+13. Nighttime warnings will be difficult to impossible. 
+14. Reliable communication capabilities are necessary at all levels of government for 
+day-to-day communication, warning of impending disasters, disaster response and 
+recovery operations, search and rescue operations, and coordination between the 
+state, local governments and response agencies. 
+15. Media responsibilities will be FCC compliant regarding information dissemination for 
+the visual impaired, hard of hearing and DEAF and in accordance with the Inland Northwest 
+Emergency Alert System Plan 
+CONCEPT OF OPERATIONS: 
+A. General 
+1. Communications 
+a. The Spokane County Sheriff Communication Center is located in the Combined 
+Communications building in Spokane, Washington.  The center houses the countywide 9-1-
+1 Public Safety Answering Point (PSAP).  The center includes dispatch services for various 
+law enforcement agencies and fire departments throughout the county and serves as the 
+initial communications, alert, and warning point for emergency operations.   
+b. The Emergency Alert System (EAS) will be used to disseminate emergency 
+information and instructions to the public using local radio, television, and cable 
+stations. 
+c. The Washington State Emergency Management Office operates the Washington 
+State Warning Point 24 hours a day; Spokane City/County’s NAWAS receiving 
+point is the sheriff’s office communication center, a 24-hour facility. 
+d. The County Sheriff, Deputy Director of Emergency Management or a designee 
+may activate the EAS.  (See INLAND NORTHWEST EMERGENCY ALERT 
+SYSTEM PLAN for details.) 
+ 
+   
+2. Warning: 
+a. When Spokane Cities/County Emergency Management officials are alerted to the 
+threat or occurrence of an emergency/disaster situation, the Emergency 
+Operations Center will be activated at the appropriate level and the situation 
+monitored.   
+b. Monitoring could be a prolonged activity or result in the immediate activation of 
+the local warning system. 
+c. Relevant information will be evaluated for use in public information advisories, 
+and for advising and alerting response agencies and organizations of the situation. 
+d. The EAS will be activated when the public must take some action to prepare or 
+protect itself 
+e. Warning could take the form of one or more of the following:  
+1. Activation of the Emergency Alert System to disseminate life saving information;  
+2. Activation of safety advisories;  
+3. Fire district and law enforcement vehicles that could provide warnings along specific 
+routes using public address systems and sirens;  
+4. Activate a call response center in the ECC;  
+5. Provide local warning information to regional television and radio stations, or other 
+mechanisms, as appropriate. 
+6. C.O.P.S./S.C.O.P.E Stations, Neighborhood Centers, Block Watch members, 
+Community Emergency Response Teams and other volunteer organizations to canvas 
+areas. 
+f. Warnings will continue until the hazard had subsided or as necessary.  EAS 
+warnings will be updated at least once an hour with a termination broadcast issued 
+at the end of the event. 
+ 
+ B. Organization: 
+See Comprehensive Emergency Management Plan and ECC Guidelines. 
+ 
+ C. Mitigation Activities: 
+1. Test communication and warning systems. 
+2. Develop interagency communications and procedures between fire, law enforcement, 
+and other city/county agencies, to include the ECC. 
+ 
+D. Preparedness Activities: 
+1. Conduct weekly and monthly test of EAS. 
+2. Train city and county personnel in the proper use of EAS and other communication 
+systems. 
+3. Continue to develop and improve EAS. 
+ 
+E. Recovery Activities: 
+1. Repair damaged communications or warning systems. 
+ 
+RESPONSIBILITIES: 
+A. Communications Departments: 
+1. Develop and continually update procedures to ensure, the integrity of appropriate 
+communications system hardware. 
+2. Develop and continually update procedures to furnish disaster-related information 
+with the ECC, when activated. 
+3. Assist with the dissemination of information and warnings as requested by the ECC. 
+4. In coordination with DEM, conduct tests and exercises of communication and 
+warning systems. 
+5. Install hardware and software, train employees and conduct periodic tests of the 
+Emergency Alert System (EAS). 
+ 
+B. Department of Emergency Management: 
+1. Collect, record, analyze, display, and distribute information. 
+2. Coordinate public information and warning. 
+3. Coordinate governmental and emergency activities. 
+4. Support first responders by aiding management and distribution of scarce resources 
+and the restoration of services. 
+5. Conduct appropriate liaison and coordination activities with all levels of government, 
+public utilities, volunteer and civic organizations, private industry, and the public. 
+6. Develop ECC procedures for activating the warning system, including appropriate 
+notification lists.  Include consideration of special populations. 
+7. Coordinate related public information through the ECC Public Information Officer 
+and/or the Joint Information Center. 
+ 
+ 
+C. Fire Agencies: 
+1. In coordination with DEM, develop and maintain procedures to provide 
+communications and warning support and services when requested from the ECC. 
+2. In coordination with DEM, train personnel in proper warning methods. 
+ 
+D. Law Enforcement Agencies: 
+1. In coordination with DEM, develop and maintain procedures to provide 
+communications and warning support and services when requested from the ECC. 
+2. In coordination with DEM, train personnel in proper warning methods. 
+3. When requested, as feasible and without jeopardizing their mission, make Search and 
+Rescue units and volunteers available to the ECC to assist in the warning effort. 
+ 
+E. Cities and Towns: 
+1. In coordination with DEM, develop and maintain procedures to provide 
+communications and warning support and services when requested from the ECC. 
+2. Train personnel in proper warning methods. 
+F. ARES/RACES 
+1. Activated through Spokane City/County D.E.M. to compliment, augment, or 
+temporarily replace existing communications systems. 
+RESOURCES:  
+See Comprehensive Emergency Management Plan 
+The communication capabilities presently available are: 
+ 9-1-1 Public Safety Answering Point (PSAP) 
+ Commercial Telephone (wire line, cellular, and wireless telephone) 
+ Two-way radio; School District radio system, Avista Corp., 
+Ambulance, etc. 
+ National Warning System (NAWAS); landline voice, intrastate 
+landline voice, located in Spokane County Sheriff Dispatch Center 
+and National Weather Service. 
+ Emergency Alert System (EAS) 
+ CEMNET state radio direction and control 
+ Amateur Radio Emergency Service (ARES) and Radio Amateur 
+Civil Emergency Service (RACES), 2-way voice and/or digital 
+radio systems via the amateur service.  
+ NOAA Weather Radio 
+ OSCCR mobile-to-mobile VHF interoperability channel 
+ RedNet channel 
+ SAR channel 
+ Combined Communications Bldg. (C.C.B.) 
+ Spokane Police Department 
+ Washington State Patrol Communications Center 
+ HEAR Radio (Hospital Emergency Alert Radio) 
+ Red Cross 
+ Military Resources 
+ Media 
+REFERENCES 
+A. Spokane City/County Comprehensive Emergency Management Plan 
+B. Washington State Comprehensive Emergency Management Plan 
+C. Federal Communications Commission Rules and Regulations, Section 97-107, 
+Emergency Operations 
+D. Spokane County Field Operations Guide (ICS-FOG) 
+E. ECC Guidelines 
+F. ARES/RACES Plan (Spokane County) 
+G. INLAND NORTHWEST EMERGENCY ALERT SYSTEM PLAN 
+H. Multi-Casualty Plan (MCI) Communication Flow chart 
+I. Special Request Resource List 
+J. Washington State OSCCR interoperability plan 
+ 

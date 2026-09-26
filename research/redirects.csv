@@ -1,0 +1,1192 @@
+old_path,status,target,rule,hits,first_seen,sources,note
+host:mail.spokares.org,301,https://www.spokares.org/$path,host,,2024-09-10,cdx,duplicate vhost served the whole site in 2024; drop it (D3 step 9) or 301 everything to the canonical host
+host:spokares.org / http://,301,https://www.spokares.org/$path,host,,,cdx+crawl,one canonical host over HTTPS; www vs apex is a D15 detail
+host:webmail. cpanel. webdisk. autodiscover. cpcalendars. cpcontacts.,none,,host,,2023-08,cdx,InMotion cPanel service names; they end with the InMotion account (D3). Do not recreate as web redirects
+/AE7RJ-Email.html,410,,static-2004-2015,,2008-01-28,cdx,individual's e-mail image page
+/Downloads/ARES%20NET%20ROSTER%20FEB09.doc,410,,static-2004-2015,,2010-09-28,cdx,"MEMBER ROSTER: 410 Gone, never redirect (documents-inventory.md §6 Step 7)"
+/Instructions.html,410,,static-2004-2015,,2004-04-17,cdx,instructions for the member phone tree
+/Memberlist.pdf,410,,static-2004-2015,,2015-02-25,cdx,"MEMBER LIST: 410 Gone, never redirect (documents-inventory.md §6 Step 7)"
+/MentorPrograms.html,410,,static-2004-2015,,2015-02-24,cdx,see article 25
+/Tree.html,410,,static-2004-2015,,2004-04-16,cdx,member phone tree (member list)
+/aa7rt.html,410,,static-person-page,,2008-11-20,cdx,2004-08 individual staff page (held personal e-mail)
+/index.php/19-test-loading-photo,410,,news-post,,2019-07-24,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/2-uncategorised/1-under-construction,410,,uncategorised-article,7126,,crawl,Under Construction placeholder
+/index.php/2-uncategorised/25-mentor-programs,410,,uncategorised-article,8685,,crawl,Mentor programs: 301 to /library/ only if the Traffic Handler files are recovered (D1)
+/index.php/2-uncategorised/61-ham-radio-forms-a-planet-sized-space-weather-sensor-network,410,,uncategorised-article,5917,,crawl,news stub
+/index.php/28-welcome-to-the-new-spokane-county-ares-races-web-site,410,,news-post,,2019-07-24,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/29-date-change-october-digital-workshop,410,,news-post,,2019-07-24,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/31-qrp-day-on-the-noontime-net,410,,news-post,,2019-07-24,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/32-skywarn-2017-recap,410,,news-post,,2019-07-24,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/33-december-meeting-cancelled,410,,news-post,,2019-07-24,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/34-2018-january-update,410,,news-post,,2019-07-24,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/35-2018-01-13-digital-workshop,410,,news-post,,2019-07-24,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/36-go-kit-night,410,,news-post,,2019-07-24,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/38-hawaii-ares-races-hams-to-the-rescue,410,,news-post,,2019-08-26,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/40-helicopter-training,410,,news-post,,2019-07-24,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/44-2018-march-31-5th-saturday-exercise,410,,news-post,,2019-07-24,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/45-ares-amateur-workshop-digital-training-and-more,410,,news-post,,2019-09-17,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/46-2018-communications-academy,410,,news-post,,2019-08-26,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/47-may-17-2018-meeting-location,410,,news-post,,2019-07-24,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/47-may-17-2018-meeting-location?tmpl=component&print=1&layout=default,410,,news-post,,2019-11-18,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/51-2018-03-30-5th-saturday-exercise,410,,news-post,,2019-08-26,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/51-2018-03-30-5th-saturday-exercise?tmpl=component&print=1&layout=default,410,,news-post,,2019-11-18,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/52-recap-march-2019-exercise,410,,news-post,,2019-08-26,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/53-auxcomm-training-idaho-june-2019,410,,news-post,,2019-07-24,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/53-auxcomm-training-idaho-june-2019?tmpl=component&print=1&layout=default,410,,news-post,,2019-11-18,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/54-attention-weather-spotters-2019,410,,news-post,,2019-07-24,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/54-attention-weather-spotters-2019?tmpl=component&print=1&layout=default,410,,news-post,,2019-11-18,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/55-new-2019-arrl-ares-and-spokane-county-acs-requirements,410,,news-post,,2019-10-21,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/55-new-2019-arrl-ares-and-spokane-county-acs-requirements?tmpl=component&print=1&layout=default,410,,news-post,,2019-11-18,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/56-2019-december-ssaw,410,,news-post,,2019-12-12,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/57-2019-skywarn-recognition-day,410,,news-post,,2019-12-12,cdx,2017-2019 news post; content kept in research/content/archive/ (or 301 to /about/history/ if republished)
+/index.php/about/amateur-code/2-uncategorised/25-mentor-programs,410,,uncategorised-article,8685,,crawl,Mentor programs: 301 to /library/ only if the Traffic Handler files are recovered (D1)
+/index.php/about/amateur-code/2-uncategorised/61-ham-radio-forms-a-planet-sized-space-weather-sensor-network,410,,uncategorised-article,5917,,crawl,news stub
+/index.php/about/ares-races-leadership/2-uncategorised/25-mentor-programs,410,,uncategorised-article,8685,,crawl,Mentor programs: 301 to /library/ only if the Traffic Handler files are recovered (D1)
+/index.php/about/ares-races-leadership/2-uncategorised/61-ham-radio-forms-a-planet-sized-space-weather-sensor-network,410,,uncategorised-article,5917,,crawl,news stub
+/index.php/about/meeting-location/2-uncategorised/25-mentor-programs,410,,uncategorised-article,8685,,crawl,Mentor programs: 301 to /library/ only if the Traffic Handler files are recovered (D1)
+/index.php/about/meeting-location/2-uncategorised/61-ham-radio-forms-a-planet-sized-space-weather-sensor-network,410,,uncategorised-article,5917,,crawl,news stub
+/index.php/about/w7gbu-history/2-uncategorised/25-mentor-programs,410,,uncategorised-article,8685,,crawl,Mentor programs: 301 to /library/ only if the Traffic Handler files are recovered (D1)
+/index.php/about/w7gbu-history/2-uncategorised/61-ham-radio-forms-a-planet-sized-space-weather-sensor-network,410,,uncategorised-article,5917,,crawl,news stub
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers,410,,jcal-event,,2019-08-26,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/1016-ag7qp,410,,jcal-event,,2019-08-26,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/1017-w7hee,410,,jcal-event,,2019-08-26,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/1018-n7mcb,410,,jcal-event,,2019-08-26,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/1019-n7mcb,410,,jcal-event,,2019-09-17,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/1020-staff,410,,jcal-event,,2019-09-17,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/1021-ke7rap,410,,jcal-event,,2019-09-17,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/1022-nv2z,410,,jcal-event,,2019-09-17,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/1025-nv2z,410,,jcal-event,,2019-10-21,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/1026-ke7rap,410,,jcal-event,,2019-10-21,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/1027-w7hee,410,,jcal-event,,2019-10-22,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/1036-ag7qp,410,,jcal-event,,2019-11-18,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/1037-nv2z,410,,jcal-event,,2019-11-18,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/1038-w7hee,410,,jcal-event,,2019-11-18,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/1043-staff-from-dem,410,,jcal-event,,2019-12-12,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/1044-nv2z,410,,jcal-event,,2019-12-12,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/1045-ke7iat,410,,jcal-event,,2019-12-12,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/1046-tbd,410,,jcal-event,,2019-12-12,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/1047-tbd,410,,jcal-event,,2019-12-12,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/636-ke7iat,410,,jcal-event,,2019-12-10,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/805-ke7iat,410,,jcal-event,,2019-08-26,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/808-ke7rap,410,,jcal-event,,2019-08-26,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/808-ke7rap?format=ical&date=2019-01-01,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/808-ke7rap?tmpl=component&print=1&date=2019-01-01,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/811-ke7rap,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/812-nv2z,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/823-ke7rap,410,,jcal-event,,2019-08-26,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/824-ki7qpj,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/825-w7hee,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/945-ke7rap,410,,jcal-event,,2019-09-17,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/946-ki7qpj,410,,jcal-event,,2019-09-17,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/947-staff,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/948-ke7rap,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/27-weekly-net-controllers/949-w7hee,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/28-upcoming-exercises,410,,jcal-event,,2019-08-26,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/28-upcoming-exercises/1009-kootenai-county-exercise,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/28-upcoming-exercises/1010-quarterly-exercise-all-members,410,,jcal-event,,2019-10-18,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/28-upcoming-exercises/1011-quarterly-exercise-hazard-city-deployment,410,,jcal-event,,2019-12-12,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/29-qualifications-training,410,,jcal-event,,2019-08-26,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training,410,,jcal-event,,2019-08-26,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/316-ares-net,410,,jcal-event,,2019-08-26,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/322-ares-net,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/323-ares-net,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/324-ares-net,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/325-ares-net,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/335-ares-net,410,,jcal-event,,2019-08-26,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/336-ares-net,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/337-ares-net,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/338-ares-net,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/339-ares-net,410,,jcal-event,,2019-09-17,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/340-ares-net,410,,jcal-event,,2019-09-17,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/341-ares-net,410,,jcal-event,,2019-09-17,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/342-ares-net,410,,jcal-event,,2019-08-26,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/343-ares-net,410,,jcal-event,,2019-08-26,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/344-ares-net,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/345-ares-net,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/346-ares-net,410,,jcal-event,,2019-08-20,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/347-ares-net,410,,jcal-event,,2019-08-20,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/348-ares-net,410,,jcal-event,,2019-08-26,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/349-ares-net,410,,jcal-event,,2019-08-26,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/350-ares-net,410,,jcal-event,,2019-08-26,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/351-ares-net,410,,jcal-event,,2019-08-26,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/352-ares-net,410,,jcal-event,,2019-09-17,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/353-ares-net,410,,jcal-event,,2019-09-17,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/354-ares-net,410,,jcal-event,,2019-09-17,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/355-ares-net,410,,jcal-event,,2019-10-18,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/356-ares-net,410,,jcal-event,,2019-10-18,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/357-ares-net,410,,jcal-event,,2019-10-21,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/358-ares-net,410,,jcal-event,,2019-10-21,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/359-ares-net,410,,jcal-event,,2019-10-21,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/360-ares-net,410,,jcal-event,,2019-11-17,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/361-ares-net,410,,jcal-event,,2019-11-17,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/362-ares-net,410,,jcal-event,,2019-12-10,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/364-ares-net,410,,jcal-event,,2019-12-12,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/365-ares-net,410,,jcal-event,,2019-12-12,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/366-ares-net,410,,jcal-event,,2019-12-12,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/580-ares-races-meeting?id=61,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/583-ares-races-meeting?id=61,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/61-ares-races-meeting,410,,jcal-event,,2019-12-10,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/738-digital-training?id=1,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/886-ares-races-meeting,410,,jcal-event,,2019-12-10,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/906-ares-races-meeting,410,,jcal-event,,2019-09-17,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/907-ares-races-meeting,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/908-ares-races-meeting,410,,jcal-event,,2019-08-26,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/909-ares-races-meeting,410,,jcal-event,,2019-09-17,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/910-ares-races-meeting,410,,jcal-event,,2019-10-21,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/911-ares-races-meeting,410,,jcal-event,,2019-12-10,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/950-digital-training,410,,jcal-event,,2019-12-10,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/951-digital-training,410,,jcal-event,,2019-12-10,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/972-digital-training,410,,jcal-event,,2019-07-24,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/973-digital-training,410,,jcal-event,,2019-08-20,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/974-digital-training,410,,jcal-event,,2019-09-17,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/975-digital-training,410,,jcal-event,,2019-10-21,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training/976-digital-training,410,,jcal-event,,2019-11-17,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training?start=380,410,,jcal-event,,2019-12-10,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/30-regular-meetings-training?start=80,410,,jcal-event,,2019-12-10,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/31-other-events,410,,jcal-event,,2019-08-26,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/31-other-events/1012-skywarn-recognition-day,410,,jcal-event,,2019-12-12,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/31-other-events/1013-spokane-hamfest-university-high-school,410,,jcal-event,,2019-08-20,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/31-other-events/1013-spokane-hamfest-university-high-school?format=ical&date=2019-07-01,410,,jcal-event,,2019-09-17,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/31-other-events/1013-spokane-hamfest-university-high-school?tmpl=component&print=1&date=2019-07-01,410,,jcal-event,,2019-09-17,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/31-other-events/1014-valleyfest,410,,jcal-event,,2019-09-17,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/41-wsen-monday-night-net-control,410,,jcal-event,,2019-12-10,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/41-wsen-monday-night-net-control/1029-spokane-tbd,410,,jcal-event,,2019-11-18,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/41-wsen-monday-night-net-control/1030-tbd,410,,jcal-event,,2019-11-18,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/41-wsen-monday-night-net-control/1031-walla-walla-tbd,410,,jcal-event,,2019-11-18,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/41-wsen-monday-night-net-control/1032-spokane-tbd,410,,jcal-event,,2019-11-18,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/42-wsen-district-9-net-control,410,,jcal-event,,2019-12-10,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/42-wsen-district-9-net-control/1039-stevens-county-wd7k,410,,jcal-event,,2019-12-12,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/42-wsen-district-9-net-control/1041-spokane-w7tsc,410,,jcal-event,,2019-12-10,cdx,individual past event
+/index.php/calendars/calendar-jcalpro/42-wsen-district-9-net-control/1042-stevens-tbd,410,,jcal-event,,2019-12-10,cdx,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1015-staff,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1017-w7hee,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1018-n7mcb,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1019-n7mcb,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1020-staff,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1021-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1022-nv2z,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1023-staff,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1024-kj7fhf,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1025-nv2z,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1026-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1027-w7hee,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1035-staff-member,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1036-ag7qp,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1037-nv2z,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1038-w7hee,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1043-staff-from-dem,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1046-tbd,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1522-w7uwc?Itemid=101,410,,jcal-event,,2024-09-13,cdx,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1524-ae7rj?Itemid=101,410,,jcal-event,,2024-09-11,cdx,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1609-ae7rj,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1610-wa7lnc,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1611-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1612-kk7sab,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1613-nz2s-simplex,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1613-nz2s-simplex?Itemid=101,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1613-nz2s-simplex?Itemid=104,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1613-nz2s-simplex?Itemid=111,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1613-nz2s-simplex?Itemid=112,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1613-nz2s-simplex?Itemid=117,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1613-nz2s-simplex?Itemid=124,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1613-nz2s-simplex?Itemid=154,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1613-nz2s-simplex?Itemid=155,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1613-nz2s-simplex?Itemid=162,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1613-nz2s-simplex?Itemid=164,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1613-nz2s-simplex?Itemid=256,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1613-nz2s-simplex?Itemid=354,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1613-nz2s-simplex?Itemid=382,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1613-nz2s-simplex?Itemid=383,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1613-nz2s-simplex?Itemid=418,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1613-nz2s-simplex?Itemid=419,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1613-nz2s-simplex?Itemid=420,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1613-nz2s-simplex?Itemid=487,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/1613-nz2s-simplex?Itemid=488,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/180-wa7dgi,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/240-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/241-w7tsc,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/242-kg7gfq,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/622-ag7ig,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/623-w7tsc,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/624-w7hee,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/625-wa7aqh,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/626-k7dsr,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/627-ki7dqb,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/628-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/629-ag7ig,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/630-ke7iat,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/632-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/633-ag7ig,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/634-n7mcb,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/635-ke7iat,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/636-ke7iat,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/637-ad7dd,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/639-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/640-w7hee,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/641-ag7ig,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/642-w7tsc,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/643-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/644-need-volunteer,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/645-w7hee,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/646-n7mcb,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/647-kg7rrg,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/648-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/649-ag7ig,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/652-n7mcb,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/653-ad7dd,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/656-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/657-kg7rrg,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/776-kg7rrg,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/777-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/778-open,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/781-n7mcb,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/782-wa7aqh,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/783-k7efr,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/784-w7hee,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/785-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/786-ag7ig,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/787-k7efr,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/788-n7mcb,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/789-k7efr,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/790-nv2z,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/791-w7hee,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/792-ares-staff-member,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/793-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/794-nv2z,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/796-k7efr,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/797-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/798-nv2z,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/799-w7hee,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/800-tbd,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/801-k7rta,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/802-w7gtj,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/803-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/804-nv2z,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/805-ke7iat,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/806-ares-staff-member,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/807-nv2z,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/808-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/809-k7efr,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/810-n7mcb,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/811-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/812-nv2z,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/813-k7efr,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/814-staff,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/815-n7mcb,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/816-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/817-ki7qpj,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/818-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/819-w7hee,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/821-ag7ig,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/822-ki7qpj,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/823-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/824-ki7qpj,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/825-w7hee,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/944-n7mcb,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/945-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/946-ki7qpj,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/947-staff,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/948-ke7rap,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers/949-w7hee,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers?start=0,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers?start=20,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers?start=40,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers?start=60,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/27-weekly-net-controllers?start=80,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/28-upcoming-exercises,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/28-upcoming-exercises/1009-kootenai-county-exercise,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/28-upcoming-exercises/1010-quarterly-exercise-all-members,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/28-upcoming-exercises/1011-quarterly-exercise-hazard-city-deployment,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/28-upcoming-exercises/1341-stimulated-exercise-test-set,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/28-upcoming-exercises/1389-rockford-exercise,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/28-upcoming-exercises/638-5th-saturday-exercise-2018-march-31,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/28-upcoming-exercises/820-eoc-to-eoc-5th-saturday-exercise-march-2019,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/29-qualifications-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/29-qualifications-training/650-helicopter-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1056-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1057-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1058-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1059-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1060-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1061-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1062-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1063-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1064-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1065-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1066-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1067-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1068-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1069-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1070-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1071-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1072-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1073-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1074-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1075-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1076-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1077-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1078-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1079-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1080-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1081-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1082-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1083-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1084-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1085-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1086-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1087-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1088-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1089-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1090-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1091-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1092-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1093-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1094-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1095-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1096-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1097-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1098-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1231-ares-races-meeting,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1232-ares-races-meeting,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1233-ares-races-meeting,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1234-ares-races-meeting,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1235-ares-races-meeting,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1236-ares-races-meeting,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1237-ares-races-meeting,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1238-ares-races-meeting,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1239-ares-races-meeting,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1476-new-member-orientation-class?Itemid=101,410,,jcal-event,,2024-09-12,cdx,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1477-new-member-orientation-class?Itemid=101,410,,jcal-event,,2024-09-11,cdx,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1478-new-member-orientation-class?Itemid=101,410,,jcal-event,,2024-09-11,cdx,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1479-new-member-orientation-class?Itemid=101,410,,jcal-event,,2024-09-10,cdx,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/1480-new-member-orientation-class?Itemid=101,410,,jcal-event,,2024-09-13,cdx,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/243-ares-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/509-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/567-ares-races-meeting,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/61-ares-races-meeting,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/907-ares-races-meeting,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/908-ares-races-meeting,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/909-ares-races-meeting,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/910-ares-races-meeting,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/911-ares-races-meeting,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/912-ares-races-meeting,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/950-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/951-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/952-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/953-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/954-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/955-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/956-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/957-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/958-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/959-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/960-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/961-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/962-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/963-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/964-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/965-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/966-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/967-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/968-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/969-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/970-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/971-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/972-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/973-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/974-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/975-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/976-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/978-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/979-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/980-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/981-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/982-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/983-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/984-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/985-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/986-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training/987-digital-training,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training?start=0,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training?start=20,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training?start=40,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training?start=60,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/30-regular-meetings-training?start=80,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/31-other-events,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/31-other-events/1012-skywarn-recognition-day,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/31-other-events/1013-spokane-hamfest-university-high-school,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/31-other-events/1014-valleyfest,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/31-other-events/631-qrp-day-on-the-noontime-net,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/31-other-events/651-field-day-2018,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/41-wsen-monday-night-net-control,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/41-wsen-monday-night-net-control/1028-w7hee,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/41-wsen-monday-night-net-control/1029-spokane-tbd,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/41-wsen-monday-night-net-control/1030-tbd,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/41-wsen-monday-night-net-control/1031-walla-walla-tbd,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/41-wsen-monday-night-net-control/1032-spokane-tbd,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/41-wsen-monday-night-net-control/1033-w7hee,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/42-wsen-district-9-net-control,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/42-wsen-district-9-net-control/1039-stevens-county-wd7k,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/42-wsen-district-9-net-control/1040-tbd,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/42-wsen-district-9-net-control/1041-spokane-w7tsc,410,,jcal-event,,,crawl,individual past event
+/index.php/component/jcalpro/42-wsen-district-9-net-control/1042-stevens-tbd,410,,jcal-event,,,crawl,individual past event
+/index.php/component/mailto/?tmpl=component&template=js_wright&link=2f9ad8d6739e680357aa0810b9a56808b3150ef2,410,,joomla-mailto,,2019-11-18,cdx,'e-mail this link' popup (spam vector)
+/index.php/component/mailto/?tmpl=component&template=js_wright&link=326c2540711c6b3e93406cb98fa53a45add04afd,410,,joomla-mailto,,2019-09-17,cdx,'e-mail this link' popup (spam vector)
+/index.php/component/mailto/?tmpl=component&template=js_wright&link=3359bb9ccb33da915328e3fefa7e8ed9c1c0ed55,410,,joomla-mailto,,2019-11-18,cdx,'e-mail this link' popup (spam vector)
+/index.php/component/mailto/?tmpl=component&template=js_wright&link=5ace16b76fd5c20ca43c28e91e406458c6e8c31a,410,,joomla-mailto,,2019-11-18,cdx,'e-mail this link' popup (spam vector)
+/index.php/component/mailto/?tmpl=component&template=js_wright&link=66099d4fa4b7379be53969fa4b607a759185c131,410,,joomla-mailto,,2019-08-26,cdx,'e-mail this link' popup (spam vector)
+/index.php/component/mailto/?tmpl=component&template=js_wright&link=a27de07f7b5bbaad28f5f4697b0246cc45ef42fe,410,,joomla-mailto,,2019-10-18,cdx,'e-mail this link' popup (spam vector)
+/index.php/component/mailto/?tmpl=component&template=js_wright&link=a2b774383e6a6e577b6cc5dc261f58c93f2fe7c7,410,,joomla-mailto,,2019-11-18,cdx,'e-mail this link' popup (spam vector)
+/index.php/component/mailto/?tmpl=component&template=js_wright&link=bedc1dde21ee290dcf3a91a49529fb32dea9dca4,410,,joomla-mailto,,2019-12-10,cdx,'e-mail this link' popup (spam vector)
+/index.php/component/mailto/?tmpl=component&template=js_wright&link=c05c4b19c19c99a5fdff01abd875df9503a40256,410,,joomla-mailto,,2019-10-18,cdx,'e-mail this link' popup (spam vector)
+/index.php/component/mailto/?tmpl=component&template=js_wright&link=d46e80775294a693e95b6b319eee7a296cb06bba,410,,joomla-mailto,,2019-11-18,cdx,'e-mail this link' popup (spam vector)
+/index.php/component/mailto/?tmpl=component&template=js_wright&link=e78296d030436571d71963695046acddb67c0245,410,,joomla-mailto,,2019-11-18,cdx,'e-mail this link' popup (spam vector)
+/index.php/contact/join-ares-races/2-uncategorised/25-mentor-programs,410,,uncategorised-article,8685,,crawl,Mentor programs: 301 to /library/ only if the Traffic Handler files are recovered (D1)
+/index.php/contact/join-ares-races/2-uncategorised/61-ham-radio-forms-a-planet-sized-space-weather-sensor-network,410,,uncategorised-article,5917,,crawl,news stub
+/index.php/contact/welcome-letter/2-uncategorised/25-mentor-programs,410,,uncategorised-article,8685,,crawl,Mentor programs: 301 to /library/ only if the Traffic Handler files are recovered (D1)
+/index.php/contact/welcome-letter/2-uncategorised/61-ham-radio-forms-a-planet-sized-space-weather-sensor-network,410,,uncategorised-article,5917,,crawl,news stub
+/index.php/downloads/mentoring,410,,osdownloads-category,,2019-07-23,cdx,category deleted by 2024; 301 to /library/ if files recovered
+/index.php/forum,410,,menu-path,,2019-07-24,cdx,abandoned Kunena forum
+/index.php/membership/amateur-training/2-uncategorised/25-mentor-programs,410,,uncategorised-article,8685,,crawl,Mentor programs: 301 to /library/ only if the Traffic Handler files are recovered (D1)
+/index.php/membership/amateur-training/2-uncategorised/61-ham-radio-forms-a-planet-sized-space-weather-sensor-network,410,,uncategorised-article,5917,,crawl,news stub
+/index.php/membership/ham-radio-links/2-uncategorised/25-mentor-programs,410,,uncategorised-article,8685,,crawl,Mentor programs: 301 to /library/ only if the Traffic Handler files are recovered (D1)
+/index.php/membership/ham-radio-links/2-uncategorised/61-ham-radio-forms-a-planet-sized-space-weather-sensor-network,410,,uncategorised-article,5917,,crawl,news stub
+/index.php/operations/incident-command-system/2-uncategorised/25-mentor-programs,410,,uncategorised-article,8685,,crawl,Mentor programs: 301 to /library/ only if the Traffic Handler files are recovered (D1)
+/index.php/operations/incident-command-system/2-uncategorised/61-ham-radio-forms-a-planet-sized-space-weather-sensor-network,410,,uncategorised-article,5917,,crawl,news stub
+/index.php/operations/maps-testing,410,,menu-path,,2019-08-20,cdx,abandoned FocalPoint test
+/index.php/operations/shelter-in-place,410,,menu-path,,2019-07-23,cdx,2018 GSEM video post
+/index.php/operations/shelter-in-place?tmpl=component&print=1,410,,menu-path,,2019-10-18,cdx,2018 GSEM video post
+/index.php/operations/skywarn-weather-spotting/2-uncategorised/25-mentor-programs,410,,uncategorised-article,8685,,crawl,Mentor programs: 301 to /library/ only if the Traffic Handler files are recovered (D1)
+/index.php/operations/skywarn-weather-spotting/2-uncategorised/61-ham-radio-forms-a-planet-sized-space-weather-sensor-network,410,,uncategorised-article,5917,,crawl,news stub
+/index.php/operations/status-codes/2-uncategorised/25-mentor-programs,410,,uncategorised-article,8685,,crawl,Mentor programs: 301 to /library/ only if the Traffic Handler files are recovered (D1)
+/index.php/operations/status-codes/2-uncategorised/61-ham-radio-forms-a-planet-sized-space-weather-sensor-network,410,,uncategorised-article,5917,,crawl,news stub
+/index.php/photos,410,,menu-path,,2019-07-23,cdx,abandoned gallery
+/index.php?filter_tag[0]=&format=feed&type=atom,410,,joomla-feed,,2018-06-05,cdx,RSS/Atom feed of the news blog
+/index.php?filter_tag[0]=&format=feed&type=rss,410,,joomla-feed,,2018-06-05,cdx,RSS/Atom feed of the news blog
+/ka7csp.html,410,,static-person-page,,2004-09-25,cdx,2004-08 individual staff page (held personal e-mail)
+/kb7hdx.html,410,,static-person-page,,2005-01-23,cdx,2004-08 individual staff page (held personal e-mail)
+/kd7amv.html,410,,static-person-page,,2004-09-26,cdx,2004-08 individual staff page (held personal e-mail)
+/w7uwc.html,410,,static-person-page,,2008-11-20,cdx,2004-08 individual staff page (held personal e-mail)
+/wa7lnc.html,410,,static-person-page,,2004-09-29,cdx,2004-08 individual staff page (held personal e-mail)
+/index,301,/,static-2004-2015,,,crawl,
+/index.html,301,/,static-2004-2015,,2004-08-04,cdx,
+/index.php,301,/,joomla-index,,2019-07-23,cdx+crawl,
+/index.php/2-uncategorised,301,/,menu-path,,,crawl,Joomla category listing
+/index.php/2-uncategorised?start=12,301,/,menu-path,,,crawl,Joomla category listing
+/index.php/2-uncategorised?start=18,301,/,menu-path,,,crawl,Joomla category listing
+/index.php/2-uncategorised?start=24,301,/,menu-path,,,crawl,Joomla category listing
+/index.php/2-uncategorised?start=6,301,/,menu-path,,,crawl,Joomla category listing
+/index.php?filter_tag%5B0%5D=&start=12,301,/,joomla-index,,2019-08-26,cdx,
+/index.php?filter_tag%5B0%5D=&start=18,301,/,joomla-index,,2019-07-24,cdx,
+/index.php?filter_tag%5B0%5D=&start=6,301,/,joomla-index,,2019-07-24,cdx,
+/index.php/4-about-spokane-county-ares-races,301,/about/,sef-article-id,7875,2024-02-17,cdx+crawl,
+/index.php/4-about-spokane-county-ares-races?layout=default&print=1&tmpl=component,301,/about/,sef-article-id,7875,2024-09-13,cdx,
+/index.php/4-about-spokane-county-ares-races?tmpl=component&print=1&layout=default,301,/about/,sef-article-id,7875,2024-02-17,cdx,
+/Field%20Day%202013.jpg,301,/about/history/,static-2004-2015,,2013-12-06,cdx,
+/Field%20Day%202013.pdf,301,/about/history/,static-2004-2015,,2013-12-06,cdx,Field Day record
+/FieldDay2012.pdf,301,/about/history/,static-2004-2015,,2013-05-02,cdx,Field Day record
+/Pactor.html,301,/about/history/,static-2004-2015,,2004-04-16,cdx,Pactor gateway off air since 2006
+/Pictures.html,301,/about/history/,static-2004-2015,,2008-01-28,cdx,
+/TheCode.html,301,/about/history/#amateur-code,static-2004-2015,,2004-04-16,cdx,
+/index.php/about/amateur-code,301,/about/history/#amateur-code,menu-path,5907,2019-07-23,cdx+crawl,
+/index.php/about/amateur-code/2-uncategorised,301,/about/history/#amateur-code,menu-path,5907,,crawl,
+/ARESPlan25Aug09.html,301,/about/history/#plan,static-2004-2015,,2012-02-07,cdx,
+/ARES_Plan_Master-8.09.html,301,/about/history/#plan,static-2004-2015,,2013-04-27,cdx,
+/ARES_Plan_Master_7.13.html,301,/about/history/#plan,static-2004-2015,,2015-02-24,cdx,
+/ThePlan.html,301,/about/history/#plan,static-2004-2015,,2004-04-16,cdx,
+/index.php/2-uncategorised/2-ares-races-plan,301,/about/history/#plan,uncategorised-article,5126,,crawl,ARES/RACES Plan: historical PDF only after the EC decides (D13 #8)
+/AECs.html,301,/about/leadership/,static-2004-2015,,2004-09-22,cdx,2004 staff page
+/Staff.html,301,/about/leadership/,static-2004-2015,,2004-08-04,cdx,
+/StaffFirst.html,301,/about/leadership/,static-2004-2015,,2004-04-17,cdx,
+/StaffList.html,301,/about/leadership/,static-2004-2015,,2004-09-19,cdx,still linked from other sites (orgs/relationships.md)
+/index.php/about/ares-races-leadership,301,/about/leadership/,menu-path,9114,2019-07-23,cdx+crawl,
+/index.php/about/ares-races-leadership/2-uncategorised,301,/about/leadership/,menu-path,9114,,crawl,
+/index.php/about/mou-with-ievhfra,301,/about/partners/#agreements,menu-path,2724,2024-03-01,cdx+crawl,IEVHFRA MOU
+/index.php/about/w7gbu-history,301,/about/w7gbu/,menu-path,5503,2019-07-23,cdx+crawl,
+/index.php/about/w7gbu-history/2-uncategorised,301,/about/w7gbu/,menu-path,5503,,crawl,
+/index.php/about/w7gbu-history?tmpl=component&print=1,301,/about/w7gbu/,menu-path,5503,2019-09-17,cdx,
+/w7gbu.html,301,/about/w7gbu/,static-2004-2015,,2004-04-16,cdx,
+/index.php/about/what-we-do,301,/about/what-we-do/,menu-path,,2019-07-23,cdx,2019 page
+/StatusCode.pdf,301,/about/what-we-do/#alert-levels,static-2004-2015,,2015-02-24,cdx,
+/index.php/operations/status-codes,301,/about/what-we-do/#alert-levels,menu-path,4503,2019-07-23,cdx+crawl,
+/index.php/operations/status-codes/2-uncategorised,301,/about/what-we-do/#alert-levels,menu-path,4503,,crawl,
+/index.php/operations/skywarn-weather-spotting,301,/about/what-we-do/#skywarn,menu-path,5549,2019-07-23,cdx+crawl,
+/index.php/operations/skywarn-weather-spotting/2-uncategorised,301,/about/what-we-do/#skywarn,menu-path,5549,,crawl,
+/index.php/contact/contact-form,301,/contact/,menu-path,,2019-07-23,cdx,ALFContact (HTTP 500 today)
+/index.php/contact/contact-form?view=alfcontact,301,/contact/,menu-path,,2019-07-23,cdx,ALFContact (HTTP 500 today)
+/RegCards.html,301,/join/,static-2004-2015,,2009-01-05,cdx,
+/index.php/contact/join-ares-races,301,/join/,menu-path,9874,2024-09-10,cdx+crawl,
+/index.php/contact/join-ares-races/2-uncategorised,301,/join/,menu-path,9874,,crawl,
+/index.php/membership/join-ares-races,301,/join/,menu-path,9874,2019-07-23,cdx,
+/index.php/contact/ares-races-app-form,301,/join/#apply,menu-path,,2019-07-23,cdx,2019 BreezingForms application (stored PII on the host); no form on the new site
+/index.php/contact/ares-races-app-form/view/form,301,/join/#apply,menu-path,,2019-08-20,cdx,as above
+/index.php/contact/rsform-ares-app,301,/join/#apply,menu-path,,2024-02-22,cdx,2024 RSForm application; no form on the new site
+/index.php/downloads/forms-and-information/file/forms-and-information/ares-races-membership-appplication,301,/join/#apply,osdownloads-file,280,2019-09-20,cdx,most-downloaded file; A-26 links it
+/index.php/downloads/forms-and-information/routedownload/forms-and-information/ares-races-membership-appplication,301,/join/#apply,osdownloads-file,280,2019-09-20,cdx,most-downloaded file; A-26 links it
+/EmailList.html,301,/join/#get-connected,static-2004-2015,,2004-04-16,cdx,
+/index.php/2-uncategorised/23-the-ares-races-email-list,301,/join/#get-connected,uncategorised-article,5290,,crawl,groups.io list
+/index.php/about/email-list,301,/join/#get-connected,menu-path,5290,2019-07-23,cdx,groups.io list
+/TestingSchedule.html,301,/join/get-licensed/,static-2004-2015,,2004-04-16,cdx,
+/index.php/2-uncategorised/11-amateur-radio-license-test-sessions,301,/join/get-licensed/,uncategorised-article,2839,,crawl,
+/index.php/membership/amateur-training,301,/join/get-licensed/,menu-path,5266,2019-07-23,cdx+crawl,
+/index.php/membership/amateur-training/2-uncategorised,301,/join/get-licensed/,menu-path,5266,,crawl,
+/index.php/membership/elmer-resources-mentoring,301,/join/get-licensed/,menu-path,,2019-07-23,cdx,
+/index.php/membership/testing-schedule,301,/join/get-licensed/,menu-path,2839,2019-07-23,cdx,
+/index.php?option=com_content&view=article&id=11,301,/join/get-licensed/,non-sef-article,2839,,refs,
+/IncidentCommand.html,301,/join/requirements/,static-2004-2015,,2004-04-16,cdx,
+/index.php/contact/welcome-letter,301,/join/requirements/,menu-path,12821,2019-07-23,cdx+crawl,Welcome Letter (2018) superseded by the ACS Task Book
+/index.php/contact/welcome-letter/2-uncategorised,301,/join/requirements/,menu-path,12821,,crawl,Welcome Letter (2018) superseded by the ACS Task Book
+/index.php/downloads/forms-and-information/file/forms-and-information/welcome-letter,301,/join/requirements/,osdownloads-file,119,2019-09-20,cdx,superseded by the ACS Task Book
+/index.php/downloads/forms-and-information/routedownload/forms-and-information/welcome-letter,301,/join/requirements/,osdownloads-file,119,2019-09-20,cdx,superseded by the ACS Task Book
+/index.php/operations/incident-command-system,301,/join/requirements/,menu-path,7206,2019-07-23,cdx+crawl,1994 ICS module dropped; FEMA IS-100 link lives on the requirements page
+/index.php/operations/incident-command-system/2-uncategorised,301,/join/requirements/,menu-path,7206,,crawl,1994 ICS module dropped; FEMA IS-100 link lives on the requirements page
+/index.php/operations/training-courses,301,/join/requirements/,menu-path,,2019-07-23,cdx+crawl,FEMA course links
+/index.php/downloads/forms-and-information/file/forms-and-information/auxcomm-flyer-june-2019,301,/library/,osdownloads-file,17,2019-07-24,cdx,retire or archive
+/index.php/downloads/forms-and-information/routedownload/forms-and-information/auxcomm-flyer-june-2019,301,/library/,osdownloads-file,17,2019-09-20,cdx,retire or archive
+/index.php/downloads/digital-traffic-information-and-files,301,/library/#digital,osdownloads-category,,2019-07-23,cdx,OSDownloads (HTTP 500 today)
+/index.php/downloads/ics-forms,301,/library/#forms,osdownloads-category,,2019-07-23,cdx,OSDownloads (HTTP 500 today)
+/index.php/downloads/ics-forms/category,301,/library/#forms,osdownloads-category,,2019-08-20,cdx,OSDownloads (HTTP 500 today)
+/index.php/downloads/ics-forms/file/ics-forms/ics-201-incident-briefing,301,/library/#forms,osdownloads-file,,2019-08-20,cdx,LINK to FEMA
+/index.php/downloads/ics-forms/file/ics-forms/ics-205-incident-radio-communications-plan,301,/library/#forms,osdownloads-file,,2019-08-20,cdx,LINK to FEMA (v3.1)
+/index.php/downloads/ics-forms/file/ics-forms/ics-213-general-message-form,301,/library/#forms,osdownloads-file,,2019-08-20,cdx,LINK to FEMA
+/index.php/downloads/ics-forms/file/ics-forms/ics-214-activity-log,301,/library/#forms,osdownloads-file,,2019-08-20,cdx,LINK to FEMA (v3.1)
+/index.php/downloads/ics-forms/routedownload/ics-forms/ics-201-incident-briefing,301,/library/#forms,osdownloads-file,,2019-08-20,cdx,LINK to FEMA
+/index.php/downloads/ics-forms/routedownload/ics-forms/ics-205-incident-radio-communications-plan,301,/library/#forms,osdownloads-file,,2019-08-20,cdx,LINK to FEMA (v3.1)
+/index.php/downloads/ics-forms/routedownload/ics-forms/ics-213-general-message-form,301,/library/#forms,osdownloads-file,,2019-08-20,cdx,LINK to FEMA
+/index.php/downloads/ics-forms/routedownload/ics-forms/ics-214-activity-log,301,/library/#forms,osdownloads-file,,2019-08-20,cdx,LINK to FEMA (v3.1)
+/index.php/operations/forms,301,/library/#forms,menu-path,,2019-07-23,cdx+crawl,
+/index.php/downloads/general,301,/library/#general,osdownloads-category,,2019-07-23,cdx,OSDownloads (HTTP 500 today)
+/index.php/downloads/forms-and-information,301,/library/#membership,osdownloads-category,,2019-07-23,cdx,OSDownloads (HTTP 500 today)
+/index.php/downloads/forms-and-information/category,301,/library/#membership,osdownloads-category,,2019-09-20,cdx,OSDownloads (HTTP 500 today)
+/index.php/downloads/net-preambles-and-scripts,301,/library/#net-scripts,osdownloads-category,,2019-07-23,cdx,OSDownloads (HTTP 500 today)
+/index.php/downloads/presentations,301,/library/#presentations,osdownloads-category,,2019-07-23,cdx,OSDownloads (HTTP 500 today)
+/index.php/downloads/presentations/category,301,/library/#presentations,osdownloads-category,,2019-07-24,cdx,OSDownloads (HTTP 500 today)
+/index.php/downloads/presentations/category/presentations,301,/library/#presentations,osdownloads-category,,2019-07-24,cdx,OSDownloads (HTTP 500 today)
+/index.php/downloads/presentations/file/presentations/lilac-festival-armed-forces-torchlight-parade-briefing,301,/library/#presentations,osdownloads-file,,2019-08-26,cdx,"sensitivity call pending (OSD-18, D10)"
+/index.php/downloads/presentations/routedownload/presentations/cross-band-repeaters-2017,301,/library/#presentations,osdownloads-file,,2021-05-05,cdx,
+/index.php/downloads/presentations/routedownload/presentations/lilac-festival-armed-forces-torchlight-parade-briefing,301,/library/#presentations,osdownloads-file,,2019-08-26,cdx,"sensitivity call pending (OSD-18, D10)"
+/EquipmentLists.html,301,/library/go-kits/,static-2004-2015,,2004-04-16,cdx,
+/index.php/2-uncategorised/21-equipment-lists,301,/library/go-kits/,uncategorised-article,3737,,crawl,
+/index.php/operations/equipment-lists,301,/library/go-kits/,menu-path,3737,2019-07-23,cdx,
+/Links.html,301,/library/resources/,static-2004-2015,,2004-04-16,cdx,
+/index.php/membership/ham-radio-links,301,/library/resources/,menu-path,5679,2019-07-23,cdx+crawl,
+/index.php/membership/ham-radio-links/2-uncategorised,301,/library/resources/,menu-path,5679,,crawl,
+/index.php/digital-messaging,301,/library/resources/#digital,menu-path,,2019-07-23,cdx,digital messaging link lists
+/index.php/digital-messaging/amateur-equipment-supplies,301,/library/resources/#digital,menu-path,,2019-07-23,cdx,digital messaging link lists
+/index.php/digital-messaging/cables-and-drivers,301,/library/resources/#digital,menu-path,,2019-07-23,cdx,digital messaging link lists
+/index.php/digital-messaging/digital-messaging/cables-and-drivers,301,/library/resources/#digital,menu-path,,2024-09-13,cdx+crawl,digital messaging link lists
+/index.php/digital-messaging/digital-messaging/digital-tncs-and-modems,301,/library/resources/#digital,menu-path,,2024-09-13,cdx+crawl,digital messaging link lists
+/index.php/digital-messaging/digital-messaging/packet-radio-resources,301,/library/resources/#digital,menu-path,,2024-09-12,cdx+crawl,digital messaging link lists
+/index.php/digital-messaging/digital-messaging/software,301,/library/resources/#digital,menu-path,,2024-09-12,cdx+crawl,digital messaging link lists
+/index.php/digital-messaging/digital-tncs-and-modems,301,/library/resources/#digital,menu-path,,2019-07-23,cdx,digital messaging link lists
+/index.php/digital-messaging/packet-radio-resources,301,/library/resources/#digital,menu-path,,2019-08-20,cdx,digital messaging link lists
+/index.php/digital-messaging/software,301,/library/resources/#digital,menu-path,,2019-08-20,cdx,digital messaging link lists
+/index.php/digital-messaging/rfi-resources/mel-ming-rfi-resources,301,/library/resources/#rfi,menu-path,5361,2024-09-11,cdx+crawl,
+/index.php/membership/member-login,301,/members/,menu-path,,2019-07-23,cdx+crawl,no site accounts (D8); /members/ links into groups.io
+/index.php/membership/member-login?view=remind,301,/members/,menu-path,,2019-08-20,cdx,no site accounts (D8); /members/ links into groups.io
+/index.php/membership/member-login?view=reset,301,/members/,menu-path,,2019-08-20,cdx,no site accounts (D8); /members/ links into groups.io
+/Calendar.html,301,/nets/,static-2004-2015,,2004-04-16,cdx,2004 static calendar
+/CalendarHead.html,301,/nets/,static-2004-2015,,2004-04-17,cdx,2004 static calendar frame
+/Calendars.html,301,/nets/,static-2004-2015,,2004-04-17,cdx,2004 static calendar list
+/index.php/calendars/calendar-jcalpro,301,/nets/,jcal-view,,2019-08-20,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/categories,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-01-22,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-02-05,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-02-12,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-02-19,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-02-21,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-02-26,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-05-07,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-05-11,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-05-13,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-05-14,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-05-14&format=ical,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-05-14&tmpl=component&print=1,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-05-15,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-05-16,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-05-21,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-05-28,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-06-04,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-06-08,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-06-11,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-06-18,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-06-20,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-06-25,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-07-02,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-07-09,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-07-13,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-07-16,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-07-17,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-07-18,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-07-23,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-07-28,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-07-30,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-08-06,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-08-10,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-08-13,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-08-15,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-08-20,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-08-27,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-09-03,301,/nets/,jcal-view,,2019-09-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-09-10,301,/nets/,jcal-view,,2019-09-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-09-14,301,/nets/,jcal-view,,2019-09-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-09-17,301,/nets/,jcal-view,,2019-09-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-09-19,301,/nets/,jcal-view,,2019-09-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-09-20,301,/nets/,jcal-view,,2019-11-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-09-20&format=ical,301,/nets/,jcal-view,,2019-12-10,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-09-21,301,/nets/,jcal-view,,2019-09-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-09-22,301,/nets/,jcal-view,,2019-09-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-09-24,301,/nets/,jcal-view,,2019-09-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-10-01,301,/nets/,jcal-view,,2019-10-21,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-10-05,301,/nets/,jcal-view,,2019-11-18,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-10-08,301,/nets/,jcal-view,,2019-10-21,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-10-12,301,/nets/,jcal-view,,2019-10-21,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-10-15,301,/nets/,jcal-view,,2019-10-21,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-10-17,301,/nets/,jcal-view,,2019-10-21,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-10-22,301,/nets/,jcal-view,,2019-10-21,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-10-29,301,/nets/,jcal-view,,2019-10-21,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-11-04,301,/nets/,jcal-view,,2019-11-18,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-11-05,301,/nets/,jcal-view,,2019-11-18,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-11-09,301,/nets/,jcal-view,,2019-11-18,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-11-11,301,/nets/,jcal-view,,2019-11-18,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-11-12,301,/nets/,jcal-view,,2019-11-18,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-11-16,301,/nets/,jcal-view,,2019-12-10,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-11-18,301,/nets/,jcal-view,,2019-11-18,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-11-19,301,/nets/,jcal-view,,2019-11-18,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-11-21,301,/nets/,jcal-view,,2019-11-18,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-11-23,301,/nets/,jcal-view,,2019-11-18,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-11-25,301,/nets/,jcal-view,,2019-11-18,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-11-26,301,/nets/,jcal-view,,2019-11-18,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-11-30,301,/nets/,jcal-view,,2019-12-10,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-12-03,301,/nets/,jcal-view,,2019-12-12,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-12-06,301,/nets/,jcal-view,,2019-12-12,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-12-07,301,/nets/,jcal-view,,2019-12-12,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-12-08,301,/nets/,jcal-view,,2019-12-12,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-12-10,301,/nets/,jcal-view,,2019-12-12,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-12-17,301,/nets/,jcal-view,,2019-12-12,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-12-19,301,/nets/,jcal-view,,2019-12-12,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-12-24,301,/nets/,jcal-view,,2019-12-12,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/day?date=2019-12-31,301,/nets/,jcal-view,,2019-12-12,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/flat,301,/nets/,jcal-view,,2019-12-10,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/flat?date=2019-01-01,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/flat?date=2019-05-01,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/flat?date=2019-07-01,301,/nets/,jcal-view,,2019-09-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/flat?date=2019-09-01,301,/nets/,jcal-view,,2019-11-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/flat?date=2019-10-01,301,/nets/,jcal-view,,2019-12-10,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/flat?date=2019-11-01,301,/nets/,jcal-view,,2019-12-10,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/location/1-spokane-fire-training-center,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/week,301,/nets/,jcal-view,,2019-12-10,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/week?date=2019-01-20,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/week?date=2019-05-12,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/week?date=2019-07-28,301,/nets/,jcal-view,,2019-09-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/week?date=2019-09-01,301,/nets/,jcal-view,,2019-12-10,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/week?date=2019-09-08,301,/nets/,jcal-view,,2019-12-10,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/week?date=2019-09-15,301,/nets/,jcal-view,,2019-11-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/week?date=2019-09-22,301,/nets/,jcal-view,,2019-12-10,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/week?date=2019-10-20,301,/nets/,jcal-view,,2019-12-10,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro/week?date=2019-10-27,301,/nets/,jcal-view,,2019-12-10,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-01-01,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-02-12,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-05-01,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-05-14,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-05-15,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-05-19,301,/nets/,jcal-view,,2019-09-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-05-23,301,/nets/,jcal-view,,2019-09-20,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-06-12,301,/nets/,jcal-view,,2019-09-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-06-25,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-07-01,301,/nets/,jcal-view,,2019-09-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-07-11,301,/nets/,jcal-view,,2019-07-24,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-07-23,301,/nets/,jcal-view,,2019-08-20,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-08-01,301,/nets/,jcal-view,,2019-11-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-08-13,301,/nets/,jcal-view,,2019-08-26,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-08-25,301,/nets/,jcal-view,,2019-09-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-09-01,301,/nets/,jcal-view,,2019-11-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-09-01&format=ical,301,/nets/,jcal-view,,2019-11-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-09-01&tmpl=component&print=1,301,/nets/,jcal-view,,2019-11-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-09-03,301,/nets/,jcal-view,,2019-11-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-09-10,301,/nets/,jcal-view,,2019-11-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-09-11,301,/nets/,jcal-view,,2019-09-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-09-14,301,/nets/,jcal-view,,2019-11-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-09-17,301,/nets/,jcal-view,,2019-11-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-09-19,301,/nets/,jcal-view,,2019-11-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-09-20,301,/nets/,jcal-view,,2019-10-18,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-09-21,301,/nets/,jcal-view,,2019-11-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-09-22,301,/nets/,jcal-view,,2019-11-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-09-24,301,/nets/,jcal-view,,2019-11-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-10-01,301,/nets/,jcal-view,,2019-11-17,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-10-09,301,/nets/,jcal-view,,2019-10-21,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-10-21,301,/nets/,jcal-view,,2019-11-18,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-11-01,301,/nets/,jcal-view,,2019-12-10,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-11-08,301,/nets/,jcal-view,,2019-11-18,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-11-16,301,/nets/,jcal-view,,2019-12-10,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-11-17,301,/nets/,jcal-view,,2019-12-12,cdx,calendar view/category; events now come from the D9 feed
+/index.php/calendars/calendar-jcalpro?date=2019-12-02,301,/nets/,jcal-view,,2019-12-12,cdx,calendar view/category; events now come from the D9 feed
+/index.php/component/jcalpro/categories,301,/nets/,jcal-view,,,crawl,calendar view/category; events now come from the D9 feed
+/index.php/component/jcalpro/events/day,301,/nets/,jcal-view,,,crawl,calendar view/category; events now come from the D9 feed
+/index.php/component/jcalpro/events/flat,301,/nets/,jcal-view,,,crawl,calendar view/category; events now come from the D9 feed
+/index.php/component/jcalpro/events/month,301,/nets/,jcal-view,,,crawl,calendar view/category; events now come from the D9 feed
+/index.php/component/jcalpro/events/week,301,/nets/,jcal-view,,,crawl,calendar view/category; events now come from the D9 feed
+/index.php/component/jcalpro/location/1-spokane-fire-training-center,301,/nets/,jcal-view,,,crawl,calendar view/category; events now come from the D9 feed
+/index.php/component/jcalpro/location/2-spokane-county-sheriffs-training-center,301,/nets/,jcal-view,,,crawl,calendar view/category; events now come from the D9 feed
+/index.php?option=com_jcalpro&view=events&layout=month&Itemid=214,301,/nets/,jcal-view,,2019-09-17,cdx,non-SEF calendar view
+/index.php/about/meeting-location,301,/nets/#where-we-meet,menu-path,7342,2019-07-23,cdx+crawl,
+/index.php/about/meeting-location/2-uncategorised,301,/nets/#where-we-meet,menu-path,7342,,crawl,
+/index.php/calendar-jcalpro/location/3-spokane-county-dem-building,301,/nets/#where-we-meet,jcal-location,,2019-08-26,cdx,DEM building
+/index.php/calendars/calendar-jcalpro/location/3-spokane-county-dem-building,301,/nets/#where-we-meet,jcal-location,,2019-07-24,cdx,DEM building
+/index.php/component/jcalpro/location/3-spokane-county-dem-building,301,/nets/#where-we-meet,jcal-location,,,crawl,DEM building
+/Net%20Preamble%203-2009.pdf,301,/nets/net-control/,static-2004-2015,,2010-09-28,cdx,
+/Net%20Preamble%209.1.2007.html,301,/nets/net-control/,static-2004-2015,,2008-01-28,cdx,
+/NetControl.html,301,/nets/net-control/,static-2004-2015,,2004-04-16,cdx,
+/NetPreamble.html,301,/nets/net-control/,static-2004-2015,,2008-04-09,cdx,requested as late as 2024 (history.md §10 item 4)
+/Preamble.html,301,/nets/net-control/,static-2004-2015,,2004-04-16,cdx,
+/index.php/2-uncategorised/8-net-preamble-script,301,/nets/net-control/,uncategorised-article,3388,,crawl,preamble
+/index.php/2-uncategorised/9-principles-of-a-net-control-station,301,/nets/net-control/,uncategorised-article,2774,,crawl,NCS principles
+/index.php/operations/net-control-station,301,/nets/net-control/,menu-path,2774,2019-07-23,cdx,NCS principles
+/index.php/operations/net-preamble,301,/nets/net-control/,menu-path,3388,2019-07-23,cdx,preamble
+/RepeaterEtiquette.html,301,/nets/repeaters/,static-2004-2015,,2004-08-04,cdx,
+/index.php/2-uncategorised/7-repeater-etiquette,301,/nets/repeaters/,uncategorised-article,3379,,crawl,
+/index.php/operations/repeater-etiquette,301,/nets/repeaters/,menu-path,3379,2019-07-23,cdx,
+/index.php/operations/repeater-etiquette?tmpl=component&print=1,301,/nets/repeaters/,menu-path,3379,2019-08-26,cdx,
+/index.php?option=com_content&view=article&id=7,301,/nets/repeaters/,non-sef-article,3379,,refs,
+/index.php/2-uncategorised/12-terms-and-conditions,301,/privacy/,uncategorised-article,25927,2019-07-23,cdx+crawl,Terms page dropped; short disclaimer on /privacy/ and in the footer
+/index.php/2-uncategorised/13-privacy-policy,301,/privacy/,uncategorised-article,27334,2019-07-23,cdx+crawl,
+/index.php/about/amateur-code/2-uncategorised/12-terms-and-conditions,301,/privacy/,uncategorised-article,25927,,crawl,Terms page dropped; short disclaimer on /privacy/ and in the footer
+/index.php/about/amateur-code/2-uncategorised/13-privacy-policy,301,/privacy/,uncategorised-article,27334,,crawl,
+/index.php/about/ares-races-leadership/2-uncategorised/12-terms-and-conditions,301,/privacy/,uncategorised-article,25927,,crawl,Terms page dropped; short disclaimer on /privacy/ and in the footer
+/index.php/about/ares-races-leadership/2-uncategorised/13-privacy-policy,301,/privacy/,uncategorised-article,27334,,crawl,
+/index.php/about/meeting-location/2-uncategorised/12-terms-and-conditions,301,/privacy/,uncategorised-article,25927,,crawl,Terms page dropped; short disclaimer on /privacy/ and in the footer
+/index.php/about/meeting-location/2-uncategorised/13-privacy-policy,301,/privacy/,uncategorised-article,27334,,crawl,
+/index.php/about/mou-with-ievhfra/2-uncategorised/12-terms-and-conditions,301,/privacy/,uncategorised-article,25927,,crawl,Terms page dropped; short disclaimer on /privacy/ and in the footer
+/index.php/about/mou-with-ievhfra/2-uncategorised/13-privacy-policy,301,/privacy/,uncategorised-article,27334,,crawl,
+/index.php/about/w7gbu-history/2-uncategorised/12-terms-and-conditions,301,/privacy/,uncategorised-article,25927,2019-09-17,cdx+crawl,Terms page dropped; short disclaimer on /privacy/ and in the footer
+/index.php/about/w7gbu-history/2-uncategorised/13-privacy-policy,301,/privacy/,uncategorised-article,27334,2019-09-17,cdx+crawl,
+/index.php/contact/join-ares-races/2-uncategorised/12-terms-and-conditions,301,/privacy/,uncategorised-article,25927,,crawl,Terms page dropped; short disclaimer on /privacy/ and in the footer
+/index.php/contact/join-ares-races/2-uncategorised/13-privacy-policy,301,/privacy/,uncategorised-article,27334,,crawl,
+/index.php/contact/welcome-letter/2-uncategorised/12-terms-and-conditions,301,/privacy/,uncategorised-article,25927,,crawl,Terms page dropped; short disclaimer on /privacy/ and in the footer
+/index.php/contact/welcome-letter/2-uncategorised/13-privacy-policy,301,/privacy/,uncategorised-article,27334,,crawl,
+/index.php/digital-messaging/rfi-resources/mel-ming-rfi-resources/2-uncategorised/12-terms-and-conditions,301,/privacy/,uncategorised-article,25927,,crawl,Terms page dropped; short disclaimer on /privacy/ and in the footer
+/index.php/digital-messaging/rfi-resources/mel-ming-rfi-resources/2-uncategorised/13-privacy-policy,301,/privacy/,uncategorised-article,27334,,crawl,
+/index.php/membership/amateur-training/2-uncategorised/12-terms-and-conditions,301,/privacy/,uncategorised-article,25927,,crawl,Terms page dropped; short disclaimer on /privacy/ and in the footer
+/index.php/membership/amateur-training/2-uncategorised/13-privacy-policy,301,/privacy/,uncategorised-article,27334,,crawl,
+/index.php/membership/ham-radio-links/2-uncategorised/12-terms-and-conditions,301,/privacy/,uncategorised-article,25927,,crawl,Terms page dropped; short disclaimer on /privacy/ and in the footer
+/index.php/membership/ham-radio-links/2-uncategorised/13-privacy-policy,301,/privacy/,uncategorised-article,27334,,crawl,
+/index.php/operations/incident-command-system/2-uncategorised/12-terms-and-conditions,301,/privacy/,uncategorised-article,25927,,crawl,Terms page dropped; short disclaimer on /privacy/ and in the footer
+/index.php/operations/incident-command-system/2-uncategorised/13-privacy-policy,301,/privacy/,uncategorised-article,27334,,crawl,
+/index.php/operations/repeater-etiquette/2-uncategorised/12-terms-and-conditions,301,/privacy/,uncategorised-article,25927,2019-08-26,cdx,Terms page dropped; short disclaimer on /privacy/ and in the footer
+/index.php/operations/repeater-etiquette/2-uncategorised/13-privacy-policy,301,/privacy/,uncategorised-article,27334,2019-08-26,cdx,
+/index.php/operations/shelter-in-place/2-uncategorised/12-terms-and-conditions,301,/privacy/,uncategorised-article,25927,2019-10-18,cdx,Terms page dropped; short disclaimer on /privacy/ and in the footer
+/index.php/operations/shelter-in-place/2-uncategorised/13-privacy-policy,301,/privacy/,uncategorised-article,27334,2019-10-18,cdx,
+/index.php/operations/skywarn-weather-spotting/2-uncategorised/12-terms-and-conditions,301,/privacy/,uncategorised-article,25927,,crawl,Terms page dropped; short disclaimer on /privacy/ and in the footer
+/index.php/operations/skywarn-weather-spotting/2-uncategorised/13-privacy-policy,301,/privacy/,uncategorised-article,27334,,crawl,
+/index.php/operations/status-codes/2-uncategorised/12-terms-and-conditions,301,/privacy/,uncategorised-article,25927,,crawl,Terms page dropped; short disclaimer on /privacy/ and in the footer
+/index.php/operations/status-codes/2-uncategorised/13-privacy-policy,301,/privacy/,uncategorised-article,27334,,crawl,
+/,keep,/,home,,2004-04-16,cdx+crawl,
+/.well-known/ai-plugin.json,none,,probe-or-server-file,,2024-02-17,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/.well-known/assetlinks.json,none,,probe-or-server-file,,2024-02-17,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/.well-known/dnt-policy.txt,none,,probe-or-server-file,,2024-02-24,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/.well-known/gpc.json,none,,probe-or-server-file,,2024-03-04,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/.well-known/nodeinfo,none,,probe-or-server-file,,2024-02-28,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/.well-known/openid-configuration,none,,probe-or-server-file,,2024-02-17,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/.well-known/security.txt,none,,probe-or-server-file,,2024-02-17,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/.well-known/trust.txt,none,,probe-or-server-file,,2024-02-17,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/ARES.gif,none,,asset,,2005-02-04,cdx,old image/stylesheet/template asset
+/ARES_Plan_Master-8.09_files/colorschememapping.xml,none,,asset,,2014-03-03,cdx,old image/stylesheet/template asset
+/ARES_Plan_Master-8.09_files/editdata.mso,none,,asset,,2014-03-03,cdx,old image/stylesheet/template asset
+/ARES_Plan_Master-8.09_files/filelist.xml,none,,asset,,2014-03-03,cdx,old image/stylesheet/template asset
+/ARES_Plan_Master-8.09_files/header.html,none,,asset,,2014-03-03,cdx,old image/stylesheet/template asset
+/ARES_Plan_Master-8.09_files/image002.jpg,none,,asset,,2014-03-03,cdx,old image/stylesheet/template asset
+/ARES_Plan_Master-8.09_files/themedata.thmx,none,,asset,,2014-03-03,cdx,old image/stylesheet/template asset
+/Graphics/2017%20Field%20Day.png,none,,asset,,2017-06-11,cdx,old image/stylesheet/template asset
+/Graphics/ARES%20Logo.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/EOC2EOCAug2013/Small-200130831_01.jpg,none,,asset,,2014-03-03,cdx,old image/stylesheet/template asset
+/Graphics/EOC2EOCAug2013/Small-200130831_02_KE7DQC.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/EOC2EOCAug2013/Small-200130831_03_KD7GHZ_KG5AO_NV2Z.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/EOC2EOCAug2013/Small-200130831_05.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/EOC2EOCMay09/KD7GHZandW7UWC-2small.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/EOC2EOCMay09/KD7GHZandW7UWCsmall.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/EOC2EOCMay09/KD7GHZsmall.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/EOC2EOCMay09/KG5AOandW7UWCandKD7GHZ-2small.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/EOC2EOCMay09/KG8ZKandKE7JAMsmall.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/EOC2EOCMay09/KG8ZKsmall.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/EOC2EOCMay09/ViewOfFieldStationssmall.jpg,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/Graphics/EOC2EOCMay09/WA7LNCandKD7GHZsmall.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/FieldDay2006pics/FieldDay2006.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/Graphics/FieldDay2006pics/Small%20Bob%20Working%2020.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/FieldDay2006pics/Small%20Changing%20Bands.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/FieldDay2006pics/Small%20Don%20on%20WL2K.jpg,none,,asset,,2014-03-03,cdx,old image/stylesheet/template asset
+/Graphics/FieldDay2006pics/Small%20New%20Members%20Taking%20Notice.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/FieldDay2006pics/Small%20Rag%20Chewing.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/FieldDay2006pics/Small%20Youth%20in%20Action.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/FieldDay2006pics/Youth%20in%20Action,none,,asset,,2008-04-01,cdx,old image/stylesheet/template asset
+/Graphics/FieldDay2009/Chatting%20under%20the%20awning-Small.jpg,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/Graphics/FieldDay2009/GOTA%20Station%201-Small.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/FieldDay2009/GOTA%20Station%202-Small.jpg,none,,asset,,2014-03-03,cdx,old image/stylesheet/template asset
+/Graphics/FieldDay2009/Jack%20Chatting-Small.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+"/Graphics/FieldDay2009/Joe,%20Flow%20and%20Bill-Small.jpg",none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/FieldDay2009/K7VRE%20&%20KD7GHZ-Small.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/FieldDay2009/KD7GHZ%20at%20Winlink%20Station-Small.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/FieldDay2009/KE7JAM%20and%20PSK31-Small.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+"/Graphics/FieldDay2009/KE7RAP,%20AD7FO%20&%20Damion-Small.jpg",none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/FieldDay2009/Tent%20camping-Small.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/FieldDay2009/Testing%20out%20that%20antenna-Small.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/FieldDay2009/W7OE%20at%20the%20Key-Small.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/PuyallupHamFest/SmallBob_and_Jack.jpg,none,,asset,,2013-12-06,cdx,old image/stylesheet/template asset
+/Graphics/PuyallupHamFest/SmallBob_and_Mike.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/PuyallupHamFest/SmallCharles.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/PuyallupHamFest/SmallJim.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/PuyallupHamFest/SmallLee.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/PuyallupHamFest/SmallN7IQQ.jpg,none,,asset,,2014-03-02,cdx,old image/stylesheet/template asset
+/Graphics/RedDot.gif,none,,asset,,2005-02-07,cdx,old image/stylesheet/template asset
+/Graphics/Set2002Pics/Its%20finally%20all%20working.jpg,none,,asset,,2005-03-02,cdx,old image/stylesheet/template asset
+/Graphics/Set2002Pics/N7LVO_Packet_Antenna.jpg,none,,asset,,2005-03-02,cdx,old image/stylesheet/template asset
+/Graphics/Set2002Pics/Operating%20in%20VAN_4.jpg,none,,asset,,2005-03-02,cdx,old image/stylesheet/template asset
+/Graphics/Set2002Pics/Small_Its%20finally%20all%20working.jpg,none,,asset,,2005-03-02,cdx,old image/stylesheet/template asset
+/Graphics/Set2002Pics/Small_Ladder%20Tower_1.jpg,none,,asset,,2005-03-02,cdx,old image/stylesheet/template asset
+/Graphics/Set2002Pics/Small_Logging%20at%20night.jpg,none,,asset,,2005-03-02,cdx,old image/stylesheet/template asset
+/Graphics/Set2002Pics/Small_N7LVO_Packet_Antenna.jpg,none,,asset,,2005-03-02,cdx,old image/stylesheet/template asset
+/Graphics/Set2002Pics/Small_Operating%20in%20VAN_4.jpg,none,,asset,,2005-03-02,cdx,old image/stylesheet/template asset
+/Graphics/Set2002Pics/Small_Patti%20Logging.jpg,none,,asset,,2005-03-02,cdx,old image/stylesheet/template asset
+/Graphics/Set2002Pics/Small_VAN%20Tower%20&%20minivan.jpg,none,,asset,,2005-03-02,cdx,old image/stylesheet/template asset
+/Graphics/Set2002Pics/Small_VAN_Operation_1.jpg,none,,asset,,2005-03-02,cdx,old image/stylesheet/template asset
+/Graphics/Set2002Pics/VAN%20Tower%20&%20minivan.jpg,none,,asset,,2005-03-02,cdx,old image/stylesheet/template asset
+/Graphics/Set2002pics/SET2002.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/Graphics/asisna_com.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/Graphics/floy.gif,none,,asset,,2014-03-03,cdx,old image/stylesheet/template asset
+/Graphics/spin-email.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/IncidentCommand.html.[63,none,,static-2004-2015,,2024-05-08,cdx,malformed URL
+/MenuGraphcis/AREShome.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/MenuGraphics/AREShome.gif,none,,asset,,2004-10-17,cdx,old image/stylesheet/template asset
+/MenuGraphics/Calendar-FadeOff.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/MenuGraphics/Calendar-On.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/MenuGraphics/EmailList-FadeOff.gif,none,,asset,,2004-12-16,cdx,old image/stylesheet/template asset
+/MenuGraphics/EmailList-On.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/MenuGraphics/Equip-FadeOff.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/MenuGraphics/Equip-On.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/MenuGraphics/Etiquette-FadeOff.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/MenuGraphics/Etiquette-On.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/MenuGraphics/Fun-On.gif,none,,asset,,2004-12-16,cdx,old image/stylesheet/template asset
+/MenuGraphics/IncidentCommand-FadeOff.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/MenuGraphics/IncidentCommand-On.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/MenuGraphics/Links-FadeOff.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/MenuGraphics/Links-On.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/MenuGraphics/NCS-FadeOff.gif,none,,asset,,2004-08-04,cdx,old image/stylesheet/template asset
+/MenuGraphics/NCS-On.gif,none,,asset,,2004-08-04,cdx,old image/stylesheet/template asset
+/MenuGraphics/Pactor-FadeOff.gif,none,,asset,,2004-08-04,cdx,old image/stylesheet/template asset
+/MenuGraphics/Pactor-On.gif,none,,asset,,2004-08-04,cdx,old image/stylesheet/template asset
+/MenuGraphics/Preamble-FadeOff.gif,none,,asset,,2004-08-04,cdx,old image/stylesheet/template asset
+/MenuGraphics/Preamble-On.gif,none,,asset,,2004-08-04,cdx,old image/stylesheet/template asset
+/MenuGraphics/SectionNews-FadeOff.gif,none,,asset,,2004-08-04,cdx,old image/stylesheet/template asset
+/MenuGraphics/SectionNews-On.gif,none,,asset,,2004-08-04,cdx,old image/stylesheet/template asset
+/MenuGraphics/Staff-FadeOff.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/MenuGraphics/Staff-On.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/MenuGraphics/Testing-FadeOff.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/MenuGraphics/Testing-On.gif,none,,asset,,2005-02-07,cdx,old image/stylesheet/template asset
+/MenuGraphics/TheCode-FadeOff.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/MenuGraphics/TheCode-On.gif,none,,asset,,2005-02-07,cdx,old image/stylesheet/template asset
+/MenuGraphics/ThePlan-FadeOff.gif,none,,asset,,2004-12-16,cdx,old image/stylesheet/template asset
+/MenuGraphics/ThePlan-On.gif,none,,asset,,2005-02-07,cdx,old image/stylesheet/template asset
+/MenuGraphics/Tree-FadeOff.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/MenuGraphics/Tree-On.gif,none,,asset,,2005-02-07,cdx,old image/stylesheet/template asset
+/MenuGraphics/W7GBU-FadeOff.gif,none,,asset,,2012-09-10,cdx,old image/stylesheet/template asset
+/MenuGraphics/W7GBU-On.gif,none,,asset,,2005-02-07,cdx,old image/stylesheet/template asset
+/RACES.gif,none,,asset,,2004-12-16,cdx,old image/stylesheet/template asset
+/administrator/,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/administrator/templates/isis/css/template.css,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/administrator/templates/isis/css/template.css?4039ccfce66262a0793b3d5be9475704,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/administrator/templates/isis/css/template.css?d95c87406739d76ba2e5f8322de1bdc8,none,,probe-or-server-file,,2024-03-30,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/administrator/templates/isis/favicon.ico,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/administrator/templates/isis/images/joomla.png,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/ads.txt,none,,probe-or-server-file,,2024-03-01,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/app-ads.txt,none,,probe-or-server-file,,2024-02-17,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/ares.css,none,,asset,,2011-09-05,cdx,old image/stylesheet/template asset
+/bin/,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/book.gif,none,,asset,,2005-02-04,cdx,old image/stylesheet/template asset
+/cache/,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/cli/,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/components/,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/favicon.ico,none,,probe-or-server-file,,2011-09-05,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/hqdefault.jpg,none,,asset,,2020-02-03,cdx,old image/stylesheet/template asset
+/images/Banke.jpg,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/images/HomePageSlider/1920x1200sunset.jpg,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/images/HomePageSlider/8091bb_6c9b42987e484f27a66a6a7748a7db9c.jpg,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/images/HomePageSlider/8091bb_cfac747e80b142cf8c06b2286c1c6e0b.jpg,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/images/HomePageSlider/8091bb_f2f27737b12847819b5e343bf18efa27.jpg,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/images/HomePageSlider/Don-on-the-air.jpg,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/images/HomePageSlider/IMG_6574.jpg,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/images/HomePageSlider/KD7GHZ.jpg,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/images/HomePageSlider/Operating-in-VAN_4.jpg,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/images/cloud-background.jpg,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/images/eventgallery/Go-kitsandGo-boxes/IMG_20180118_184548532_BURST000_COVER_TOP.jpg,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/images/eventgallery/Go-kitsandGo-boxes/IMG_20180118_191651282.jpg,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/images/floy.gif,none,,asset,,2024-03-07,cdx,old image/stylesheet/template asset
+/images/images/IMG_20180415_144845929_BURST000_COVER_TOP.jpg,none,,asset,,2018-11-19,cdx,old image/stylesheet/template asset
+/images/logos/ACS_logo_1000x1000.png,none,,asset,,2021-01-29,cdx,old image/stylesheet/template asset
+/images/logos/ARES_logo.png,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/images/logos/Asisna.png,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/images/logos/Greater_Spokane_Emergency_Management.png,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/images/logos/RACES_logo.png,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/images/logos/SCDEM_Logo.png,none,,asset,,2021-01-29,cdx,old image/stylesheet/template asset
+/images/logos/Spokane_County_ARES-ACS_logo_slightly_smaller_550x550.png,none,,asset,,2021-01-29,cdx,old image/stylesheet/template asset
+/images/logos/Spokane_County_ARES_RACES_logo_dash.png,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/images/logos/textLogoACS_dash.png,none,,asset,,2021-01-29,cdx,old image/stylesheet/template asset
+/images/logos/textLogo_dash.png,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/images/pdf_files/FD2020_1.png,none,,asset,,2021-01-29,cdx,old image/stylesheet/template asset
+/images/pdf_files/FD2020_2.png,none,,asset,,2021-01-29,cdx,old image/stylesheet/template asset
+/includes/,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/installation/,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/joomla/administrator/,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/language/,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/layouts/,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/libraries/,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/logs/,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/media/com_jcalpro/images/events/icon-event-location.png,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/media/com_jcalpro/js/jcalpro.js,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/media/com_jcalpro/js/jcalpro.min.js,none,,asset,,2020-02-03,cdx,old image/stylesheet/template asset
+/media/com_jcalpro/js/modal.js,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/media/com_jcalpro/modules/calendar/css/common.css,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/media/com_jcalpro/modules/calendar/js/ajax.js,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/media/com_jcalpro/modules/events/css/default.css,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/media/com_jcalpro/themes/inspired/modules/calendar/css/default.css,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/media/com_jce/site/css/content.min.css,none,,asset,,2024-02-17,cdx,old image/stylesheet/template asset
+/media/com_jce/site/css/content.min.css?badb4208be409b1335b815dde676300e,none,,asset,,2024-02-18,cdx,old image/stylesheet/template asset
+/media/com_osdownloads/css/frontend.css?d233662f9c26d1a06118c93ef2fd1de9=,none,,asset,,2024-09-10,cdx,old image/stylesheet/template asset
+/media/com_osdownloads/js/jquery.osdownloads.bundle.min.js?d233662f9c26d1a06118c93ef2fd1de9=,none,,asset,,2024-09-10,cdx,old image/stylesheet/template asset
+/media/com_rsform/css/calendar/calendar.css,none,,asset,,2024-02-23,cdx,old image/stylesheet/template asset
+/media/com_rsform/css/calendar/calendar.css?d95c87406739d76ba2e5f8322de1bdc8,none,,asset,,2024-02-25,cdx,old image/stylesheet/template asset
+/media/com_rsform/css/front.css,none,,asset,,2024-02-25,cdx,old image/stylesheet/template asset
+/media/com_rsform/css/front.css?d95c87406739d76ba2e5f8322de1bdc8,none,,asset,,2024-02-22,cdx,old image/stylesheet/template asset
+/media/com_rsform/js/calendar/calendar.js,none,,asset,,2024-02-27,cdx,old image/stylesheet/template asset
+/media/com_rsform/js/calendar/calendar.js?d95c87406739d76ba2e5f8322de1bdc8,none,,asset,,2024-02-25,cdx,old image/stylesheet/template asset
+/media/com_rsform/js/calendar/script.js,none,,asset,,2024-02-24,cdx,old image/stylesheet/template asset
+/media/com_rsform/js/calendar/script.js?d95c87406739d76ba2e5f8322de1bdc8,none,,asset,,2024-03-30,cdx,old image/stylesheet/template asset
+/media/com_rsform/js/script.js,none,,asset,,2024-02-22,cdx,old image/stylesheet/template asset
+/media/com_rsform/js/script.js?d95c87406739d76ba2e5f8322de1bdc8,none,,asset,,2024-03-30,cdx,old image/stylesheet/template asset
+/media/com_wrapper/js/iframe-height.min.js,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/com_wrapper/js/iframe-height.min.js?10213991526ee4b986b72a75d45e1f74,none,,asset,,2018-06-13,cdx,old image/stylesheet/template asset
+/media/com_wrapper/js/iframe-height.min.js?24724d06cc73c1ae9d6077d9e9140fc9,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/media/com_wrapper/js/iframe-height.min.js?4039ccfce66262a0793b3d5be9475704,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/com_wrapper/js/iframe-height.min.js?4cbc4bc408b92a496c818f72f2e1e502,none,,asset,,2021-01-29,cdx,old image/stylesheet/template asset
+/media/com_wrapper/js/iframe-height.min.js?59d91e814c385d947182784de98f5878,none,,asset,,2019-07-06,cdx,old image/stylesheet/template asset
+/media/com_wrapper/js/iframe-height.min.js?d95c87406739d76ba2e5f8322de1bdc8,none,,asset,,2024-02-29,cdx,old image/stylesheet/template asset
+/media/com_wrapper/js/iframe-height.min.js?d99cc17d7249ad1e90a2673ee12f1b22,none,,asset,,2018-11-19,cdx,old image/stylesheet/template asset
+/media/com_wrapper/js/iframe-height.min.js?e936b1fc61fd632934fcb73f9ba769f4,none,,asset,,2020-02-03,cdx,old image/stylesheet/template asset
+/media/com_wrapper/js/iframe-height.min.js?f158e1b90d7e9505ab60fed8fa880a29,none,,asset,,2025-06-10,cdx,old image/stylesheet/template asset
+/media/com_wrapper/js/iframe-height.min.js?f158e1b90d7e9505ab60fed8fa880a29=,none,,asset,,2024-09-10,cdx,old image/stylesheet/template asset
+/media/jui/js/bootstrap.min.js,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/jui/js/bootstrap.min.js?4039ccfce66262a0793b3d5be9475704,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/jui/js/bootstrap.min.js?d95c87406739d76ba2e5f8322de1bdc8,none,,asset,,2024-03-30,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-migrate.min.js,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-migrate.min.js?10213991526ee4b986b72a75d45e1f74,none,,asset,,2018-06-13,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-migrate.min.js?24724d06cc73c1ae9d6077d9e9140fc9,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-migrate.min.js?4039ccfce66262a0793b3d5be9475704,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-migrate.min.js?4cbc4bc408b92a496c818f72f2e1e502,none,,asset,,2021-01-29,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-migrate.min.js?59d91e814c385d947182784de98f5878,none,,asset,,2019-07-06,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-migrate.min.js?5acef29c8eae7177660322a7d14d0aa8,none,,asset,,2020-02-24,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-migrate.min.js?7b07a6505b882edc9ecb615b4b6b0116,none,,asset,,2019-02-07,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-migrate.min.js?d95c87406739d76ba2e5f8322de1bdc8,none,,asset,,2024-02-17,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-migrate.min.js?d99cc17d7249ad1e90a2673ee12f1b22,none,,asset,,2018-11-19,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-migrate.min.js?e936b1fc61fd632934fcb73f9ba769f4,none,,asset,,2020-02-03,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-migrate.min.js?f158e1b90d7e9505ab60fed8fa880a29,none,,asset,,2025-06-10,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-migrate.min.js?f158e1b90d7e9505ab60fed8fa880a29=,none,,asset,,2024-09-10,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-noconflict.js,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-noconflict.js?10213991526ee4b986b72a75d45e1f74,none,,asset,,2018-06-13,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-noconflict.js?24724d06cc73c1ae9d6077d9e9140fc9,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-noconflict.js?4039ccfce66262a0793b3d5be9475704,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-noconflict.js?4cbc4bc408b92a496c818f72f2e1e502,none,,asset,,2021-01-29,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-noconflict.js?59d91e814c385d947182784de98f5878,none,,asset,,2019-07-06,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-noconflict.js?5acef29c8eae7177660322a7d14d0aa8,none,,asset,,2020-02-24,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-noconflict.js?7b07a6505b882edc9ecb615b4b6b0116,none,,asset,,2019-02-13,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-noconflict.js?d95c87406739d76ba2e5f8322de1bdc8,none,,asset,,2024-02-17,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-noconflict.js?d99cc17d7249ad1e90a2673ee12f1b22,none,,asset,,2018-11-19,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-noconflict.js?e936b1fc61fd632934fcb73f9ba769f4,none,,asset,,2020-02-03,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-noconflict.js?f158e1b90d7e9505ab60fed8fa880a29,none,,asset,,2025-06-10,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery-noconflict.js?f158e1b90d7e9505ab60fed8fa880a29=,none,,asset,,2024-09-10,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery.min.js,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery.min.js?4039ccfce66262a0793b3d5be9475704,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/jui/js/jquery.min.js?d95c87406739d76ba2e5f8322de1bdc8,none,,asset,,2024-03-30,cdx,old image/stylesheet/template asset
+/media/mod_jsshackslides/css/animate.min.css,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/media/mod_jsshackslides/css/jsshackslides.css,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/media/mod_jsshackslides/css/owl.carousel.min.css,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/media/mod_jsshackslides/images/owl.video.play.png,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/media/mod_jsshackslides/js/owl.carousel.min.js,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/media/plg_content_jw_ts/css/template/default/template.min.css,none,,asset,,2024-02-18,cdx,old image/stylesheet/template asset
+/media/plg_content_jw_ts/js/behaviour.min.js,none,,asset,,2024-03-25,cdx,old image/stylesheet/template asset
+/media/plg_content_osembed/css/osembed.css,none,,asset,,2024-02-17,cdx,old image/stylesheet/template asset
+/media/plg_content_osembed/css/osembed.css?2d3122b037d996d22c41158f40c7f2d3,none,,asset,,2025-06-10,cdx,old image/stylesheet/template asset
+/media/plg_content_osembed/css/osembed.css?2d3122b037d996d22c41158f40c7f2d3=,none,,asset,,2024-09-10,cdx,old image/stylesheet/template asset
+/media/plg_content_osembed/css/osembed.css?a0dfa7336568a5287223f087d69c4fbe,none,,asset,,2024-03-30,cdx,old image/stylesheet/template asset
+/media/plg_content_osembed/js/osembed.min.js,none,,asset,,2024-03-30,cdx,old image/stylesheet/template asset
+/media/plg_content_osembed/js/osembed.min.js?2d3122b037d996d22c41158f40c7f2d3,none,,asset,,2025-06-10,cdx,old image/stylesheet/template asset
+/media/plg_content_osembed/js/osembed.min.js?2d3122b037d996d22c41158f40c7f2d3=,none,,asset,,2024-09-10,cdx,old image/stylesheet/template asset
+/media/plg_content_osembed/js/osembed.min.js?a0dfa7336568a5287223f087d69c4fbe,none,,asset,,2024-03-30,cdx,old image/stylesheet/template asset
+/media/plg_system_rsfprecaptchav2/js/recaptchav2.js,none,,asset,,2024-02-22,cdx,old image/stylesheet/template asset
+/media/plg_system_rsfprecaptchav2/js/recaptchav2.js?d95c87406739d76ba2e5f8322de1bdc8,none,,asset,,2024-02-22,cdx,old image/stylesheet/template asset
+/media/system/css/modal.css,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/system/css/modal.css?10213991526ee4b986b72a75d45e1f74,none,,asset,,2018-06-13,cdx,old image/stylesheet/template asset
+/media/system/css/modal.css?24724d06cc73c1ae9d6077d9e9140fc9,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/media/system/css/modal.css?4039ccfce66262a0793b3d5be9475704,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/system/css/modal.css?4cbc4bc408b92a496c818f72f2e1e502,none,,asset,,2021-01-29,cdx,old image/stylesheet/template asset
+/media/system/css/modal.css?59d91e814c385d947182784de98f5878,none,,asset,,2019-07-06,cdx,old image/stylesheet/template asset
+/media/system/css/modal.css?5acef29c8eae7177660322a7d14d0aa8,none,,asset,,2020-02-24,cdx,old image/stylesheet/template asset
+/media/system/css/modal.css?7b07a6505b882edc9ecb615b4b6b0116,none,,asset,,2019-02-06,cdx,old image/stylesheet/template asset
+/media/system/css/modal.css?d95c87406739d76ba2e5f8322de1bdc8,none,,asset,,2024-02-25,cdx,old image/stylesheet/template asset
+/media/system/css/modal.css?d99cc17d7249ad1e90a2673ee12f1b22,none,,asset,,2018-11-19,cdx,old image/stylesheet/template asset
+/media/system/css/modal.css?e936b1fc61fd632934fcb73f9ba769f4,none,,asset,,2020-02-03,cdx,old image/stylesheet/template asset
+/media/system/css/modal.css?f158e1b90d7e9505ab60fed8fa880a29,none,,asset,,2025-06-10,cdx,old image/stylesheet/template asset
+/media/system/css/modal.css?f158e1b90d7e9505ab60fed8fa880a29=,none,,asset,,2024-09-10,cdx,old image/stylesheet/template asset
+/media/system/images/modal/bg_e.png,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/media/system/images/modal/bg_n.png,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/media/system/images/modal/bg_ne.png,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/media/system/images/modal/bg_nw.png,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/media/system/images/modal/bg_s.png,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/media/system/images/modal/bg_se.png,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/media/system/images/modal/bg_sw.png,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/media/system/images/modal/bg_w.png,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/media/system/images/modal/closebox.png,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/media/system/images/modal/spinner.gif,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/media/system/js/caption.js,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/system/js/caption.js?10213991526ee4b986b72a75d45e1f74,none,,asset,,2018-06-13,cdx,old image/stylesheet/template asset
+/media/system/js/caption.js?24724d06cc73c1ae9d6077d9e9140fc9,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/media/system/js/caption.js?4039ccfce66262a0793b3d5be9475704,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/system/js/caption.js?4cbc4bc408b92a496c818f72f2e1e502,none,,asset,,2021-01-29,cdx,old image/stylesheet/template asset
+/media/system/js/caption.js?59d91e814c385d947182784de98f5878,none,,asset,,2019-07-06,cdx,old image/stylesheet/template asset
+/media/system/js/caption.js?5acef29c8eae7177660322a7d14d0aa8,none,,asset,,2020-02-24,cdx,old image/stylesheet/template asset
+/media/system/js/caption.js?7b07a6505b882edc9ecb615b4b6b0116,none,,asset,,2019-02-12,cdx,old image/stylesheet/template asset
+/media/system/js/caption.js?d95c87406739d76ba2e5f8322de1bdc8,none,,asset,,2024-02-17,cdx,old image/stylesheet/template asset
+/media/system/js/caption.js?d99cc17d7249ad1e90a2673ee12f1b22,none,,asset,,2018-11-19,cdx,old image/stylesheet/template asset
+/media/system/js/caption.js?e936b1fc61fd632934fcb73f9ba769f4,none,,asset,,2020-02-03,cdx,old image/stylesheet/template asset
+/media/system/js/caption.js?f158e1b90d7e9505ab60fed8fa880a29,none,,asset,,2025-06-10,cdx,old image/stylesheet/template asset
+/media/system/js/caption.js?f158e1b90d7e9505ab60fed8fa880a29=,none,,asset,,2024-09-10,cdx,old image/stylesheet/template asset
+/media/system/js/core.js,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/system/js/core.js?10213991526ee4b986b72a75d45e1f74,none,,asset,,2018-06-13,cdx,old image/stylesheet/template asset
+/media/system/js/core.js?24724d06cc73c1ae9d6077d9e9140fc9,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/media/system/js/core.js?4039ccfce66262a0793b3d5be9475704,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/system/js/core.js?4cbc4bc408b92a496c818f72f2e1e502,none,,asset,,2021-01-29,cdx,old image/stylesheet/template asset
+/media/system/js/core.js?59d91e814c385d947182784de98f5878,none,,asset,,2019-07-06,cdx,old image/stylesheet/template asset
+/media/system/js/core.js?5acef29c8eae7177660322a7d14d0aa8,none,,asset,,2020-02-24,cdx,old image/stylesheet/template asset
+/media/system/js/core.js?7b07a6505b882edc9ecb615b4b6b0116,none,,asset,,2019-02-09,cdx,old image/stylesheet/template asset
+/media/system/js/core.js?d95c87406739d76ba2e5f8322de1bdc8,none,,asset,,2024-03-30,cdx,old image/stylesheet/template asset
+/media/system/js/core.js?d99cc17d7249ad1e90a2673ee12f1b22,none,,asset,,2018-11-19,cdx,old image/stylesheet/template asset
+/media/system/js/core.js?e936b1fc61fd632934fcb73f9ba769f4,none,,asset,,2020-02-03,cdx,old image/stylesheet/template asset
+/media/system/js/core.js?f158e1b90d7e9505ab60fed8fa880a29,none,,asset,,2025-06-10,cdx,old image/stylesheet/template asset
+/media/system/js/core.js?f158e1b90d7e9505ab60fed8fa880a29=,none,,asset,,2024-09-10,cdx,old image/stylesheet/template asset
+/media/system/js/keepalive.js,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/system/js/keepalive.js?4039ccfce66262a0793b3d5be9475704,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/system/js/keepalive.js?4cbc4bc408b92a496c818f72f2e1e502,none,,asset,,2021-01-29,cdx,old image/stylesheet/template asset
+/media/system/js/keepalive.js?59d91e814c385d947182784de98f5878,none,,asset,,2019-07-06,cdx,old image/stylesheet/template asset
+/media/system/js/keepalive.js?7b07a6505b882edc9ecb615b4b6b0116,none,,asset,,2019-02-09,cdx,old image/stylesheet/template asset
+/media/system/js/keepalive.js?d95c87406739d76ba2e5f8322de1bdc8,none,,asset,,2024-02-17,cdx,old image/stylesheet/template asset
+/media/system/js/keepalive.js?e936b1fc61fd632934fcb73f9ba769f4,none,,asset,,2020-02-03,cdx,old image/stylesheet/template asset
+/media/system/js/keepalive.js?f158e1b90d7e9505ab60fed8fa880a29,none,,asset,,2025-06-10,cdx,old image/stylesheet/template asset
+/media/system/js/keepalive.js?f158e1b90d7e9505ab60fed8fa880a29=,none,,asset,,2024-09-10,cdx,old image/stylesheet/template asset
+/media/system/js/modal.js,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/system/js/modal.js?10213991526ee4b986b72a75d45e1f74,none,,asset,,2018-06-13,cdx,old image/stylesheet/template asset
+/media/system/js/modal.js?24724d06cc73c1ae9d6077d9e9140fc9,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/media/system/js/modal.js?4039ccfce66262a0793b3d5be9475704,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/system/js/modal.js?4cbc4bc408b92a496c818f72f2e1e502,none,,asset,,2021-01-29,cdx,old image/stylesheet/template asset
+/media/system/js/modal.js?59d91e814c385d947182784de98f5878,none,,asset,,2019-07-06,cdx,old image/stylesheet/template asset
+/media/system/js/modal.js?5acef29c8eae7177660322a7d14d0aa8,none,,asset,,2020-02-24,cdx,old image/stylesheet/template asset
+/media/system/js/modal.js?7b07a6505b882edc9ecb615b4b6b0116,none,,asset,,2019-02-14,cdx,old image/stylesheet/template asset
+/media/system/js/modal.js?d95c87406739d76ba2e5f8322de1bdc8,none,,asset,,2024-02-17,cdx,old image/stylesheet/template asset
+/media/system/js/modal.js?d99cc17d7249ad1e90a2673ee12f1b22,none,,asset,,2018-11-19,cdx,old image/stylesheet/template asset
+/media/system/js/modal.js?e936b1fc61fd632934fcb73f9ba769f4,none,,asset,,2020-02-03,cdx,old image/stylesheet/template asset
+/media/system/js/modal.js?f158e1b90d7e9505ab60fed8fa880a29,none,,asset,,2025-06-10,cdx,old image/stylesheet/template asset
+/media/system/js/modal.js?f158e1b90d7e9505ab60fed8fa880a29=,none,,asset,,2024-09-10,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-core.js,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-core.js?10213991526ee4b986b72a75d45e1f74,none,,asset,,2018-06-13,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-core.js?24724d06cc73c1ae9d6077d9e9140fc9,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-core.js?4039ccfce66262a0793b3d5be9475704,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-core.js?4cbc4bc408b92a496c818f72f2e1e502,none,,asset,,2021-01-29,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-core.js?59d91e814c385d947182784de98f5878,none,,asset,,2019-07-06,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-core.js?5acef29c8eae7177660322a7d14d0aa8,none,,asset,,2020-02-24,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-core.js?7b07a6505b882edc9ecb615b4b6b0116,none,,asset,,2019-02-01,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-core.js?d95c87406739d76ba2e5f8322de1bdc8,none,,asset,,2024-03-01,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-core.js?d99cc17d7249ad1e90a2673ee12f1b22,none,,asset,,2018-11-19,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-core.js?e936b1fc61fd632934fcb73f9ba769f4,none,,asset,,2020-02-03,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-core.js?f158e1b90d7e9505ab60fed8fa880a29,none,,asset,,2025-06-10,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-core.js?f158e1b90d7e9505ab60fed8fa880a29=,none,,asset,,2024-09-10,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-more.js,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-more.js?10213991526ee4b986b72a75d45e1f74,none,,asset,,2018-06-13,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-more.js?24724d06cc73c1ae9d6077d9e9140fc9,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-more.js?4039ccfce66262a0793b3d5be9475704,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-more.js?4cbc4bc408b92a496c818f72f2e1e502,none,,asset,,2021-01-29,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-more.js?59d91e814c385d947182784de98f5878,none,,asset,,2019-07-06,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-more.js?5acef29c8eae7177660322a7d14d0aa8,none,,asset,,2020-02-24,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-more.js?7b07a6505b882edc9ecb615b4b6b0116,none,,asset,,2019-02-13,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-more.js?d95c87406739d76ba2e5f8322de1bdc8,none,,asset,,2024-02-17,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-more.js?d99cc17d7249ad1e90a2673ee12f1b22,none,,asset,,2018-11-19,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-more.js?e936b1fc61fd632934fcb73f9ba769f4,none,,asset,,2020-02-03,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-more.js?f158e1b90d7e9505ab60fed8fa880a29,none,,asset,,2025-06-10,cdx,old image/stylesheet/template asset
+/media/system/js/mootools-more.js?f158e1b90d7e9505ab60fed8fa880a29=,none,,asset,,2024-09-10,cdx,old image/stylesheet/template asset
+/media/system/js/polyfill.event.js?59d91e814c385d947182784de98f5878,none,,asset,,2019-07-06,cdx,old image/stylesheet/template asset
+/media/system/js/polyfill.event.js?7b07a6505b882edc9ecb615b4b6b0116,none,,asset,,2019-02-07,cdx,old image/stylesheet/template asset
+/media/system/js/punycode.js?f158e1b90d7e9505ab60fed8fa880a29=,none,,asset,,2024-09-10,cdx,old image/stylesheet/template asset
+/media/system/js/validate.js?f158e1b90d7e9505ab60fed8fa880a29=,none,,asset,,2024-09-10,cdx,old image/stylesheet/template asset
+/modules/,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/modules/mod_weatheraholic/css/flatWeatherPlugin.css,none,,probe-or-server-file,,2019-02-09,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/modules/mod_weatheraholic/fonts/weathericons-regular-webfont.eot,none,,probe-or-server-file,,2019-02-23,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/modules/mod_weatheraholic/fonts/weathericons-regular-webfont.svg,none,,probe-or-server-file,,2019-02-23,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/modules/mod_weatheraholic/fonts/weathericons-regular-webfont.ttf,none,,probe-or-server-file,,2019-02-24,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/modules/mod_weatheraholic/fonts/weathericons-regular-webfont.woff,none,,probe-or-server-file,,2019-02-19,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/modules/mod_weatheraholic/js/jquery.flatWeatherPlugin.min.js,none,,probe-or-server-file,,2019-01-31,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/modules/mod_weatheraholic/js/jquery.flatWeatherPlugin.new.min.js,none,,probe-or-server-file,,2019-07-06,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/plugins/,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/plugins/content/osyoutube/style.css,none,,probe-or-server-file,,2018-06-05,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/plugins/system/jce/css/content.css,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/plugins/system/jce/css/content.css?4cbc4bc408b92a496c818f72f2e1e502,none,,probe-or-server-file,,2021-01-29,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/plugins/system/jce/css/content.css?badb4208be409b1335b815dde676300e,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/plugins/system/jce/css/content.css?e936b1fc61fd632934fcb73f9ba769f4,none,,probe-or-server-file,,2020-02-03,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/robots.txt,none,,probe-or-server-file,,2004-04-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/sitemap.xml,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml
+/templates/js_wright/.../image.png,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/templates/js_wright/css/URL,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/templates/js_wright/css/custom.css,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/templates/js_wright/css/joomla30-generic-extended.css,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/templates/js_wright/css/joomla30-generic-responsive.css,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/templates/js_wright/css/style-generic.css,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/templates/js_wright/favicon.ico,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/templates/js_wright/images/glyphicons-halflings-white.png,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/templates/js_wright/images/glyphicons-halflings.png,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/bootstrap.min.js,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/bootstrap.min.js?10213991526ee4b986b72a75d45e1f74,none,,asset,,2018-06-13,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/bootstrap.min.js?24724d06cc73c1ae9d6077d9e9140fc9,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/bootstrap.min.js?4039ccfce66262a0793b3d5be9475704,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/bootstrap.min.js?4cbc4bc408b92a496c818f72f2e1e502,none,,asset,,2021-01-29,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/bootstrap.min.js?59d91e814c385d947182784de98f5878,none,,asset,,2019-07-06,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/bootstrap.min.js?5acef29c8eae7177660322a7d14d0aa8,none,,asset,,2020-02-24,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/bootstrap.min.js?7b07a6505b882edc9ecb615b4b6b0116,none,,asset,,2019-02-07,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/bootstrap.min.js?d95c87406739d76ba2e5f8322de1bdc8,none,,asset,,2024-02-17,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/bootstrap.min.js?d99cc17d7249ad1e90a2673ee12f1b22,none,,asset,,2018-11-19,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/bootstrap.min.js?e936b1fc61fd632934fcb73f9ba769f4,none,,asset,,2020-02-03,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/bootstrap.min.js?f158e1b90d7e9505ab60fed8fa880a29,none,,asset,,2025-06-10,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/bootstrap.min.js?f158e1b90d7e9505ab60fed8fa880a29=,none,,asset,,2024-09-10,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/jquery.min.js,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/jquery.min.js?10213991526ee4b986b72a75d45e1f74,none,,asset,,2018-06-13,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/jquery.min.js?24724d06cc73c1ae9d6077d9e9140fc9,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/jquery.min.js?4039ccfce66262a0793b3d5be9475704,none,,asset,,2022-10-16,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/jquery.min.js?4cbc4bc408b92a496c818f72f2e1e502,none,,asset,,2021-01-29,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/jquery.min.js?59d91e814c385d947182784de98f5878,none,,asset,,2019-07-06,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/jquery.min.js?5acef29c8eae7177660322a7d14d0aa8,none,,asset,,2020-02-24,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/jquery.min.js?7b07a6505b882edc9ecb615b4b6b0116,none,,asset,,2019-02-14,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/jquery.min.js?d95c87406739d76ba2e5f8322de1bdc8,none,,asset,,2024-03-30,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/jquery.min.js?d99cc17d7249ad1e90a2673ee12f1b22,none,,asset,,2018-11-19,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/jquery.min.js?e936b1fc61fd632934fcb73f9ba769f4,none,,asset,,2020-02-03,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/jquery.min.js?f158e1b90d7e9505ab60fed8fa880a29,none,,asset,,2025-06-10,cdx,old image/stylesheet/template asset
+/templates/js_wright/js/jui/jquery.min.js?f158e1b90d7e9505ab60fed8fa880a29=,none,,asset,,2024-09-10,cdx,old image/stylesheet/template asset
+/templates/js_wright/wright/css/font-awesome.min.css,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/templates/js_wright/wright/font/fontawesome-webfont.eot,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/templates/js_wright/wright/font/fontawesome-webfont.eot?v=4.6.3,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/templates/js_wright/wright/font/fontawesome-webfont.svg?v=4.6.3,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/templates/js_wright/wright/font/fontawesome-webfont.ttf?v=4.6.3,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/templates/js_wright/wright/font/fontawesome-webfont.woff2?v=4.6.3,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/templates/js_wright/wright/font/fontawesome-webfont.woff?v=4.6.3,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/templates/js_wright/wright/images/icons/wright-joomla.png,none,,asset,,2018-07-17,cdx,old image/stylesheet/template asset
+/templates/js_wright/wright/js/stickyfooter.js,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/templates/js_wright/wright/js/stickyfooter.min.js,none,,asset,,2019-02-07,cdx,old image/stylesheet/template asset
+/templates/js_wright/wright/js/utils.js,none,,asset,,2018-06-05,cdx,old image/stylesheet/template asset
+/templates/js_wright/wright/js/utils.min.js,none,,asset,,2019-02-11,cdx,old image/stylesheet/template asset
+/tmp/,none,,probe-or-server-file,,2022-10-16,cdx,bot probe or server file; the new site supplies its own robots.txt/sitemap.xml

@@ -1,0 +1,150 @@
+ 
+ 
+Washington State Emergency Management Division 
+Logistics Section  
+Communications Annex 
+(This document supersedes all preceding State RACES Plans) 
+ 
+UNIT MISSION AND GOALS 
+The mission of the Logistics Communications Unit (LCU) is to provide uninterrupted 
+communication channels between AHJs, critical infrastructure and response partners 
+supporting disaster-related operations with Washington State Emergency Management.  
+The LCU coordinates and operates key elements of the statewide alternate, contingency and 
+emergency communications infrastructure.   
+The LCU operates a network of twelve DHS CISA SHARES Radio Messaging Service (RMS) 
+stations 24 hours a day using Winlink®, a radio-based email service established for 
+emergency communications purposes.  These stations are available to tribal, county and 
+large city emergency management agencies, certain NGOs and designated critical 
+infrastructure partners licensed with DHS CISA SHARES.  WA EMD’s SHARES RMS stations 
+serve all of Washington State as well as our partners across FEMA Region X, the western 
+United States, Alaska and Hawaii.  
+The goals of the LCU are to provide: 
+• Tactical voice communications, for coordination of personnel and resource 
+movement(s) as needed. 
+• Voice message traffic when passing message traffic via digital means is not available. 
+• Data communications through Winlink® in the form of email and document 
+attachments.  Examples include but are not limited to: situation reports (SITREPs), 
+staffing schedules, requests for resources (ICS-213RR), general message traffic (ICS-231 
+General Message), ICS forms/ documents and ISNAP reports.  Templates of these forms 
+can be found in the Winlink program.  
+• Redundant communications, giving WA EMD and AHJs both alternate and additional 
+forms of communication when systems are overtaxed or impaired. 
+ 
+COMMUNICATIONS SYSTEM REDUNDANCY PLAN 
+In the immediate aftermath of a disaster, communications usage through primary providers 
+(phone and Internet) spikes.  The sheer volume of traffic alone can degrade emergency 
+communications capabilities.  Primary communications infrastructure may suffer damage in 
+some disaster scenarios.  WA EMD Logistics established the PACE Communications Plan 
+(described below).  The PACE plan provides (1) both alternate and additional communications 
+resources, minimizing the impact and potential bottlenecks due to primary providers exceeding 
+ 
+ 
+their maximum capacity, (2) communications not subject to single-point-of-failure challenges, 
+and (3) communications services to areas that have experienced outages due to damage or 
+other systemic failure that do not rely on primary communications infrastructure.  The PACE 
+plan outlines both how and what resources are available.   
+PACE is the acronym for Primary, Alternate, Contingency and Emergency Communications 
+Channels: 
+• Primary Communications Channels.  This includes commercial telephone services 
+(tactical) and Internet providers (data).  In many if not most disaster events, primary 
+communications channels are more than sufficient to handle need.  Please click here to 
+download primary phone, Internet information and email addresses.  
+ 
+• Alternate Communications Channels.   Implemented when primary voice and/or email 
+is impacted/ interrupted, temporarily unavailable or overloaded and resources are 
+needed.     
+▪ Tactical (voice):  Satellite phone; CEMNET. 
+▪ Data:  Winlink email.  Email address via Internet: NNA0WA@winlink.org.  Email 
+address by Winlink radio:  NNA0WA.  Additional email addresses as per 
+standing/ operational period ICS-205. 
+ 
+• Contingency Communications Channels.  Implemented when primary and alternate 
+communications channels are impacted or insufficient to handle the message load 
+needed for mitigation and recovery. 
+▪ Tactical:  As per standing/ operational period ICS 205. 
+▪  Data:  Winlink email.  Email address via Internet: NNA0WA@winlink.org.  Email 
+address by Winlink radio:  NNA0WA.  Additional email addresses as per 
+standing/ operational period ICS 205. 
+ 
+• Emergency Communications Channels.   Implemented when a disaster event has 
+occurred and the scope may not be fully known.  Emergency communications provides 
+resources specific to the disaster response. 
+▪ Tactical:  As peer standing/ operational period ICS 205. 
+▪ Data:  Winlink email.  Email address via Internet: NNA0WA@winlink.org.  Email 
+address by Winlink radio:  NNA0WA.  Additional Winlink email addresses can be 
+found on pre-event standing/ operational period ICS 205. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+LOGISTICS COMMUNICATIONS UNIT ORGANIZATIONAL STRUCTURE 
+ 
+Insert Org Chart Here 
+ 
+The Logistics Communications Unit is organized under the Logistics Service Branch and is managed by 
+the WA EMD Logistics Chief.  The LCU has communications assets and teams on-site at Camp Murray 
+and at locations across Washington State.   
+The LCU is coordinated by the Logistics Service Branch.  The LCU consists of four teams:  
+- SEOC Radio Room Operations 
+- WA EMD/ DHS CISA SHARES RMS Station Operations  
+- HF Radio Net Operations on SHARES and 60 Meter Operations (Voice message traffic) 
+- WA EMD 220 MHz Amateur Radio Network Operations (Voice message traffic) 
+Specific information regarding transmit/ receive frequencies, function, and operational modes can be 
+found on the preset standing/ operational ICS-205.  For the current preset standing ICS-205, contact 
+[redacted: contact detail] 
+ 
+COMMUNICATIONS UNIT CONCEPT OF OPERATIONS AND ACTIVATION PROCEDURE 
+Mobilization, staffing and demobilization of the LCU follows ICS procedures established as per 
+any given operational period of an incident.  
+In the event the Logistics Communications Unit is activated, the Logistics Chief or his/her 
+designee will be responsible to staff positions.  In the event of a disaster incident, the standing 
+ICS-205 will be in force throughout the first operational period of the event, or until the new 
+ICS-201/ ICS-205 is released and is in full effect. 
+ 
+RADIO FREQUENCIES, OPERATIONAL PRACTICES 
+Both digital and tactical operational frequencies/ assignments can be found on the ICS-205.  
+Operational practices will follow plain language procedures as per National Incident Command 
+System/ Incident Command System (NICS/ ICS). Guidelines.  Voice operations etiquette follow 
+the National Coast Guard Radio Operations Guide. 
+ 
+TRAINING OF COMMUNICATIONS TEAMS AND UNIT MEMBERS 
+The LCU helps coordinate training tools and guidelines for individual communications specialists 
+(RADOs or “Radio Operators) and AHJ radio units in all aspects established PACE plan.    
+ 
+ 
+Training and training materials follow NIMS/ ICS procedures and protocols, using Homeland 
+Security Exercise and Evaluation Program (HSEEP) guidelines.  These support protocols and 
+procedures used in responses throughout Washington State, FEMA Region X, the western 
+United States, Alaska and Hawaii and will allow for the development of exercises and 
+interoperability support with our partners across FEMA Region X and neighboring states.   
+Exercises and trainings focus on on-air protocols and procedures for the unit member and 
+practical disaster radio unit exercises in which communications systems have suffered damage 
+and radio units must practice reestablishing communications through alternate means.  
+Individual unit members can be certified as WA State RADOs through the completion of Position 
+Task Books (PTBs).  Communications unit training will follow Homeland Security Exercise and 
+Evaluation Program (HSEEP) guidelines by certified trainers.  Training will be provided for both 
+professional emergency management staff and volunteer staff specific to the roles each would 
+fill.  Information regarding trainings and PTBs can be found in training guidelines and the 
+training schedule.    
+WA EMD has developed unit member training guidelines for the training of both professional 
+and volunteer staff.  The training guidelines are based upon Federal Emergency Management 
+Agency (FEMA) NIMS/ICS standards that are incremental in nature.  This creates an environment 
+in which personnel are guided incrementally through a process that leads to increasing levels of 
+proficiency and greater unit capability.  The intent of these trainings and certifications is 
+standardize communications protocols and procedures as they pertain to responding large 
+regional and catastrophic disaster events, but they will also serve as the standard for any 
+communications practices that require contact with agencies outside of the local AHJ.  As these 
+practices and protocols are standardized around the National Incident Command Structure 
+(NICS), it will also allow radio units around Washington State to support our regional partners 
+across FEMA Region X, the western United States, Alaska and Hawaii with communications 
+assistance should the need arise.   
+These guidelines are designed to address interagency operational practices and do not replace 
+local trainings that support specific local needs and that are unique and specific to that agency.  
+Local operations and training decisions regarding local operations remains entirely within the 
+purview of the local AHJ.         
+ 
+ 
