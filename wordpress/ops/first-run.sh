@@ -18,7 +18,8 @@
 #      in the Media Library, the static front page; deletes WordPress's
 #      untouched sample content (idempotent: existing pages are left alone)
 #   3. deletes Akismet and Hello Dolly and every default theme except one
-#      spare (twentytwentyfive), only while they are inactive (§5.11 step 3)
+#      spare (twentytwentyfive), only while they are inactive (§5.11 step 3);
+#      lets UpdraftPlus create its protected backup folder
 #   4. adds security-hosting.md §4.4's two rewrite rules above
 #      "# BEGIN WordPress" (no PHP under uploads; no direct wp-includes/*.php)
 #   5. writes ~/.spokares-weekly.env for weekly-check.sh if it is missing
@@ -96,6 +97,12 @@ for t in twentytwentythree twentytwentyfour; do
     if [[ $(wp option get stylesheet) == "$t" || $(wp option get template) == "$t" ]]; then echo "kept theme $t (active)"; else wp theme delete "$t"; fi
   fi
 done
+
+echo "--- 3b. UpdraftPlus backup folder"
+# UpdraftPlus makes wp-content/updraft/ (with its deny-all .htaccess) on first
+# use; make it now so check-live.sh's 403 check tests the real folder.
+wp eval 'global $updraftplus; if ( is_object( $updraftplus ) && method_exists( $updraftplus, "backups_dir_location" ) ) { echo "backup folder: ", str_replace( ABSPATH, "", $updraftplus->backups_dir_location() ), "\n"; } else { echo "UpdraftPlus is not active\n"; }'
+ls -a wp-content/updraft 2>/dev/null | tr '\n' ' '; echo
 
 echo "--- 4. .htaccess rewrite rules"
 if grep -q '^# BEGIN spokares hardening' .htaccess; then

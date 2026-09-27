@@ -44,13 +44,17 @@ note() { problems+=("$*"); echo "FAIL  $*"; }
 ok() { echo "ok    $*"; }
 
 # Is every entry of <folder> in the allowed list? (index.php is always allowed.)
+# No `< <(...)` process substitution in this file: the Enhance container has
+# no /dev/fd, so the loop would read nothing and report "nothing unexpected".
 only_expected() { # only_expected <label> <folder> <allowed words...>
   local label=$1 dir=$2; shift 2
-  local allowed=" index.php $* " extra=""
+  local allowed=" index.php $* " extra="" entries name
   [[ -d $dir ]] || { note "$label: $dir is missing"; return; }
+  entries=$(find "$dir" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort) || { note "$label: cannot list $dir"; return; }
   while IFS= read -r name; do
+    [[ -z $name ]] && continue
     [[ $allowed == *" $name "* ]] || extra="$extra $name"
-  done < <(find "$dir" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort)
+  done <<<"$entries"
   if [[ -z $extra ]]; then ok "$label: nothing unexpected"; else note "$label: unexpected:$extra"; fi
 }
 
@@ -61,10 +65,12 @@ only_expected "plugins/" wp-content/plugins $EXPECTED_PLUGINS
 only_expected "themes/" wp-content/themes $EXPECTED_THEMES
 only_expected "mu-plugins/" wp-content/mu-plugins spokares-hardening.php spokares-hardening ${SPOKARES_MU_EXTRA:-}
 extra_php=""
+top_php=$(find wp-content -maxdepth 1 -type f -name '*.php') || note "cannot list wp-content/*.php"
 while IFS= read -r f; do
+  [[ -z $f ]] && continue
   name=$(basename "$f")
   [[ " index.php ${SPOKARES_DROPINS:-} " == *" $name "* ]] || extra_php="$extra_php $name"
-done < <(find wp-content -maxdepth 1 -type f -name '*.php')
+done <<<"$top_php"
 if [[ -z $extra_php ]]; then ok "wp-content/*.php: only index.php and recorded drop-ins"; else note "unexpected wp-content/*.php:$extra_php"; fi
 
 # --- WordPress checks ---------------------------------------------------------

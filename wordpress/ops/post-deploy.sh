@@ -31,7 +31,7 @@ wp() { command wp "$@" < /dev/null; }
 
 # 1. Permissions.
 ours="themes/spokares plugins/spokares-core mu-plugins/spokares-hardening"
-(cd wp-content && find $ours -type d -exec chmod 755 {} + && find $ours -type f -exec chmod 644 {} + && chmod 644 mu-plugins/spokares-hardening.php)
+(cd wp-content && chmod 755 mu-plugins && find $ours -type d -exec chmod 755 {} + && find $ours -type f -exec chmod 644 {} + && chmod 644 mu-plugins/spokares-hardening.php)
 [[ -f ~/bin/weekly-check.sh ]] && chmod 755 ~/bin/weekly-check.sh
 say "permissions set (folders 755, files 644)"
 
