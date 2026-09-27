@@ -9,6 +9,7 @@ How our code gets from this repository to the Verpex/Enhance site, and how to la
 | CI | `.github/workflows/ci.yml` runs `wordpress/ops/ci.sh` (the full gate) on every push and pull request |
 | Deploy | `.github/workflows/deploy.yml` runs on a pushed `v*` tag, or by hand (`workflow_dispatch`, input `ref`, default `main`) |
 | Gate before a deploy | the same `ci.yml`, on the exact commit being deployed; the deploy job waits for it |
+| Approval | the `production` environment requires **seantmalone** to approve every deploy (Actions > the run > Review deployments > Approve). Only `main` or a `v*` tag can be deployed (the `check-ref` job) |
 | Deploy steps | `ops/deploy.sh <ref> production --yes` (rsync over SSH), then the ref's `ops/post-deploy.sh` on the host in one SSH session, then `ops/check-live.sh` |
 | Site | Enhance website `2810b31a-7b60-4369-8450-bfe75befb3fd` on the Fire Lizard Host reseller org; server `198.38.90.25`; WordPress in `public_html` |
 | Before the DNS cutover | spokares.org still points at the old InMotion host. The new site is reached by pinning the name to the server (below) |
@@ -202,7 +203,7 @@ Both modes are safe to run again.
 ## Owner to-do now (before launch)
 
 - **Two-factor for the administrator, now.** Sign in through the `/etc/hosts` line or the preview domain; wp-admin sends you to your profile's Two-Factor section. Set up TOTP and print the backup codes. Until then the account (whose name the hardening now hides) is protected by its password only. Use TOTP rather than Email: the admin address `webmaster@spokares.org` is a placeholder.
-- Decide on `first-run.sh ... --launch-cleanup`. Run `--preview` first.
+- ~~Decide on `first-run.sh ... --launch-cleanup`.~~ Done 2026-09-27 (sample content, Akismet, Hello Dolly and spare themes removed; .htaccess hardening block incl. readme.html/license.txt denied); deploy run 36340121133 green, check-live 31/0.
 
 ## Go-live checklist
 
