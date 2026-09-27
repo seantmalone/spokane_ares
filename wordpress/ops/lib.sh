@@ -34,11 +34,24 @@ spk_target() {
 # The version a tag names: v0.1.0, spokares-v0.1.0 and 0.1.0 all give 0.1.0.
 spk_tag_version() { echo "$1" | sed -E 's/^.*[^0-9.]([0-9]+\.[0-9]+\.[0-9]+.*)$/\1/; s/^v//'; }
 
-# Export a tag's shipped files (and ops/) into a directory: a clean checkout,
-# whatever state the working tree is in.
+# Is $1 a git tag? Releases are tags; a manual CI deploy (workflow_dispatch)
+# may name a branch or a commit instead.
+spk_is_tag() { git -C "$SPK_ROOT" rev-parse -q --verify "refs/tags/$1" >/dev/null; }
+
+# The name deploy.sh records in ~/.spokares-deployed-tag and check-live.sh
+# expects there: the tag itself, or `git describe` of any other ref
+# (v0.1.0-3-g1a2b3c4d5e6f, or the bare commit before the first tag).
+spk_ref_label() {
+  if spk_is_tag "$1"; then echo "$1"; return; fi
+  git -C "$SPK_ROOT" describe --tags --always --abbrev=12 "$1^{commit}" 2>/dev/null || spk_die "no git tag, branch or commit '$1'"
+}
+
+# Export a ref's shipped files (and ops/) into a directory: a clean checkout
+# of a tag (or, for a manual deploy, a branch or commit), whatever state the
+# working tree is in.
 spk_export_tag() {
   local tag=$1 dest=$2
-  git -C "$SPK_ROOT" rev-parse -q --verify "refs/tags/$tag" >/dev/null || spk_die "no git tag '$tag'"
+  git -C "$SPK_ROOT" rev-parse -q --verify "$tag^{commit}" >/dev/null || spk_die "no git tag, branch or commit '$tag'"
   mkdir -p "$dest"
   git -C "$SPK_ROOT" archive --format=tar "$tag" \
     wordpress/theme/spokares wordpress/plugins/spokares-core wordpress/mu-plugins wordpress/ops \

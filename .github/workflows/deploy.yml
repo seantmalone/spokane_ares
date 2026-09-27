@@ -1,0 +1,136 @@
+# Deploy our code (theme spokares, plugin spokares-core, must-use plugin
+# spokares-hardening) to the Verpex/Enhance site over SSH with
+# wordpress/ops/deploy.sh (PLAN.md §5.7): a clean export of one commit, code
+# only, never dev/, tools/, uploads or the database. Then ops/check-live.sh.
+#
+#   - on a pushed tag v*  (a release: the version strings must equal the tag)
+#   - by hand: Actions > Deploy > Run workflow, or
+#       gh workflow run deploy.yml -f ref=<tag|branch|commit>
+#
+# The ci.sh gate (ci.yml) runs first on the same commit. Secrets live in the
+# GitHub environment "production" (DEPLOY_SSH_KEY, DEPLOY_KNOWN_HOSTS,
+# DEPLOY_HOST, DEPLOY_USER, DEPLOY_PORT, DEPLOY_PATH), which only main and v*
+# tags may use. Runbook: wordpress/ops/DEPLOY-RUNBOOK.md.
+name: Deploy
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Tag, branch or commit to deploy
+        type: string
+        required: true
+        default: main
+      flush_rewrites:
+        description: Flush rewrite rules (routes, post types or the /docs/ rule changed)
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+# One deploy at a time; a queued one waits, it is never cancelled half-way.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  gate:
+    name: Gate
+    uses: ./.github/workflows/ci.yml
+    with:
+      ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
+
+  deploy:
+    name: Deploy to production
+    needs: gate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    environment: production
+    env:
+      SHA: ${{ needs.gate.outputs.sha }}
+      TAG: ${{ needs.gate.outputs.tag }}
+      FLUSH_REWRITES: ${{ inputs.flush_rewrites && 'yes' || '' }}
+    steps:
+      - name: Check out the gated commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.gate.outputs.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      # Secrets go from the environment into files with printf, never onto a
+      # command line and never echoed; no `set -x` anywhere in this job.
+      - name: Set up SSH (deploy key, pinned host key)
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          for v in DEPLOY_SSH_KEY DEPLOY_KNOWN_HOSTS DEPLOY_HOST DEPLOY_USER DEPLOY_PORT DEPLOY_PATH; do
+            [[ -n ${!v} ]] || { echo "::error::secret $v is not set in the production environment"; exit 1; }
+          done
+          [[ $DEPLOY_PORT =~ ^[0-9]+$ ]] || { echo "::error::DEPLOY_PORT is not a number"; exit 1; }
+          [[ $DEPLOY_HOST =~ ^[A-Za-z0-9.:-]+$ && $DEPLOY_USER =~ ^[A-Za-z0-9._-]+$ && $DEPLOY_PATH =~ ^[A-Za-z0-9._/-]+$ ]] || { echo "::error::DEPLOY_HOST, DEPLOY_USER or DEPLOY_PATH has unexpected characters"; exit 1; }
+          umask 077
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/spokares_deploy
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/spokares_known_hosts
+          # One multiplexed connection for the whole job: the host runs
+          # fail2ban, which blocks rapid reconnects.
+          cat > ~/.ssh/config <<EOF
+          Host spokares-live
+            HostName $DEPLOY_HOST
+            User $DEPLOY_USER
+            Port $DEPLOY_PORT
+            IdentityFile ~/.ssh/spokares_deploy
+            IdentitiesOnly yes
+            UserKnownHostsFile ~/.ssh/spokares_known_hosts
+            StrictHostKeyChecking yes
+            BatchMode yes
+            ControlMaster auto
+            ControlPath ~/.ssh/cm-%C
+            ControlPersist 900
+            ServerAliveInterval 30
+            ConnectTimeout 25
+          EOF
+          # ops.env for the ops scripts (no secrets in it).
+          SPOKARES_OPS_ENV=$RUNNER_TEMP/ops.env
+          echo "SPOKARES_OPS_ENV=$SPOKARES_OPS_ENV" >> "$GITHUB_ENV"
+          {
+            echo "SPOKARES_LIVE_SSH=spokares-live"
+            echo "SPOKARES_LIVE_URL=https://spokares.org"
+            echo "SPOKARES_WP_PATH=$DEPLOY_PATH"
+          } > "$SPOKARES_OPS_ENV"
+          ssh spokares-live 'echo "connected as $(whoami); wp-cli $(wp --version 2>/dev/null | cut -d" " -f2)"'
+
+      - name: Deploy (wordpress/ops/deploy.sh)
+        run: |
+          args=(production --yes)
+          [[ -n $FLUSH_REWRITES ]] && args+=(--flush-rewrites)
+          wordpress/ops/deploy.sh "${TAG:-$SHA}" "${args[@]}"
+
+      # Before the DNS cutover spokares.org still resolves to the old host, so
+      # the curl checks are pinned to the server (curl --resolve, -k for its
+      # self-signed certificate until Let's Encrypt is issued). Once DNS points
+      # at the server, the pin drops out by itself and the certificate is verified.
+      - name: Check the site (wordpress/ops/check-live.sh)
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          args=()
+          if [[ $(getent ahostsv4 spokares.org | awk 'NR == 1 { print $1 }') != "$DEPLOY_HOST" ]]; then
+            args+=(--resolve="$DEPLOY_HOST")
+          fi
+          wordpress/ops/check-live.sh "${TAG:-$SHA}" "${args[@]}"
+
+      - name: Close SSH and remove the key
+        if: always()
+        run: |
+          ssh -O exit spokares-live 2>/dev/null || true
+          rm -f ~/.ssh/spokares_deploy ~/.ssh/config

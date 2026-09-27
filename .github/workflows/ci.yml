@@ -1,0 +1,110 @@
+# Release checks (wordpress/ops/ci.sh; PLAN.md §5.7 and §6.11) on every push
+# and pull request. deploy.yml calls this workflow as its gate, so a deploy
+# runs the same checks on the exact commit it ships.
+#
+# ci.sh: version agreement, the forbidden-code grep, ABSPATH guards, fresh
+# generated files, JSON/JS parse, PHP lint on 8.3 and 8.4, PHPCS
+# WordPress-Extra and Plugin Check (both in WordPress Playground), and the
+# release zips. On a tag it checks a clean export of the tag, whose version
+# strings must equal the tag; the zips are then kept as a workflow artifact.
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_call:
+    inputs:
+      ref:
+        description: Tag, branch or commit to check (empty = the commit that triggered the run)
+        type: string
+        required: false
+        default: ''
+    outputs:
+      sha:
+        description: The commit that was checked
+        value: ${{ jobs.gate.outputs.sha }}
+      tag:
+        description: The tag that was checked (empty when the ref is not a tag)
+        value: ${{ jobs.gate.outputs.tag }}
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    name: ci.sh
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    outputs:
+      sha: ${{ steps.ref.outputs.sha }}
+      tag: ${{ steps.ref.outputs.tag }}
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24'
+
+      # No package-lock (no build step, PLAN §6.0 rule 10), so the npm cache is
+      # cached directly: npx's copy of @wp-playground/cli, Playground's
+      # WordPress zip, and ci.sh's wp-cli.phar.
+      - name: Cache npm, WordPress Playground and wp-cli.phar
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.npm
+            ~/.wordpress-playground
+            ~/.cache/spokares
+          key: ci-${{ runner.os }}-pg3.1.55-wp7.1.2-${{ hashFiles('wordpress/ops/ci.sh') }}
+          restore-keys: |
+            ci-${{ runner.os }}-pg3.1.55-wp7.1.2-
+
+      - name: Resolve the ref
+        id: ref
+        env:
+          INPUT_REF: ${{ inputs.ref }}
+          REF_TYPE: ${{ github.ref_type }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          sha=$(git rev-parse HEAD)
+          tag=""
+          if [[ -n $INPUT_REF ]]; then
+            name=${INPUT_REF#refs/tags/}
+            if git rev-parse -q --verify "refs/tags/$name" >/dev/null; then tag=$name; fi
+          elif [[ $REF_TYPE == tag ]]; then
+            tag=$REF_NAME
+          fi
+          if [[ -n $tag && $(git rev-parse "refs/tags/$tag^{commit}") != "$sha" ]]; then
+            echo "::error::tag $tag does not point at the checked-out commit $sha"
+            exit 1
+          fi
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "Checking $sha${tag:+ (tag $tag)}"
+
+      - name: Release checks (wordpress/ops/ci.sh)
+        env:
+          TAG: ${{ steps.ref.outputs.tag }}
+        run: |
+          export SPOKARES_CACHE="$HOME/.cache/spokares"
+          if [[ -n $TAG ]]; then
+            wordpress/ops/ci.sh --tag="$TAG"
+          else
+            wordpress/ops/ci.sh
+          fi
+
+      - name: Keep the release zips (tags only)
+        if: steps.ref.outputs.tag != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: release-${{ steps.ref.outputs.tag }}
+          path: wordpress/dist/
+          if-no-files-found: error
+          retention-days: 90
