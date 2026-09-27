@@ -1,0 +1,873 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exercises &amp; events | Spokane County ARES-ACS</title>
+<meta name="description" content="Upcoming exercises, training, meetings and public-service events for Spokane County ARES-ACS members, with what to do and how to report.">
+<link rel="icon" href="../assets/img/seal-ares-acs-400.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;family=Schibsted+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css">
+<script>document.documentElement.classList.add('js')</script>
+<style>
+/* Members pages (option B): shared workspace pieces. Page-scoped on purpose;
+   site.css is the system and is not edited by page builders. */
+.ws-section + .ws-section, .ws-row + .ws-section, .ws-section + .ws-row, .ws-row + .ws-row { margin-top: var(--s5); }
+.ws-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 24px; margin-bottom: 18px; }
+.ws-head h2 { font-size: clamp(1.7rem, 1.35rem + .9vw, 2.2rem); }
+.ws-head p { font-size: 15.5px; color: var(--ink-2); max-width: 60ch; }
+.ws-head a { font-weight: 600; font-size: 15.5px; }
+.ws-row { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 24px 28px; align-items: start; }
+.ws-row--even { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.ws-row > .ws-section + .ws-section { margin-top: 0; }
+.page-head .crumbs [aria-current] { color: var(--ink); font-weight: 600; }
+.panel > * + * { margin-top: 12px; }
+.panel .table caption { padding-bottom: 8px; }
+.links-line { display: flex; flex-wrap: wrap; gap: 4px 22px; font-size: 15.5px; }
+.links-line a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
+.note-line { font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+.note-line b { color: var(--ink); font-weight: 600; }
+.workspace .table a { color: var(--ink); text-decoration-color: var(--red-ink); }
+@media (max-width: 1200px) {
+  .ws-row, .ws-row--even { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .workspace { padding-inline: 16px; padding-bottom: 64px; }
+  .panel { padding: 18px 16px; }
+  .ws-section + .ws-section, .ws-row + .ws-section, .ws-section + .ws-row, .ws-row + .ws-row { margin-top: var(--s4); }
+}
+
+/* ---------- Exercises & events (members/exercises.html) ---------- */
+.ex-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-bottom: 6px; }
+.ex-filter .chip { padding: 6px 14px; font-size: 14.5px; }
+.ex-note { font-size: 15px; color: var(--ink-2); margin-bottom: 6px; }
+html:not(.js) .ex-filter { display: none; }
+.tl-month[hidden] { display: none; }
+.month-head { font: 600 15px/1.3 var(--sans); color: var(--ink-2); padding: 26px 0 12px 80px; }
+.tl-month:first-of-type .month-head { padding-top: 14px; }
+.month-note { margin: -4px 0 14px 80px; font-size: 14.5px; color: var(--off); }
+.timeline > li.is-over { display: none; }
+.timeline > li { padding-bottom: 16px; }
+.timeline > li > .date-slab { align-self: start; }
+.tl-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 0 36px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--rule); }
+.tl-grid .timeline__facts { margin-top: 0; padding-top: 0; border-top: 0; align-content: start; }
+.tl-grid > dl:only-child { grid-column: 1 / -1; }
+.timeline__card h4 { font: 600 19px/1.3 var(--sans); color: var(--ink); }
+.timeline__card--compact { padding: 12px 18px 13px; }
+.timeline__card--compact h4 { font-size: 17px; }
+.timeline__card--exercise { border-top: 4px solid var(--red); }
+.timeline .is-now .timeline__card { border-color: #E3B347; border-top-color: var(--red); box-shadow: inset 4px 0 0 var(--amber); }
+.tl-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.tl-tags .tag { min-height: 24px; padding: 2px 9px; font-size: 13px; }
+.timeline__card--compact .tl-tags { margin-bottom: 4px; }
+.tl-when { margin-top: 2px; font-size: 15.5px; color: var(--ink-2); }
+.tl-line { margin-top: 6px; font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+.timeline__facts { grid-template-columns: 6.2em minmax(0, 1fr); gap: 8px 14px; line-height: 1.5; }
+.timeline__facts dt { font-size: 14.5px; }
+.tl-tasks { margin: 0; padding-left: 1.2em; font-variant-numeric: proportional-nums; }
+.tl-tasks li::marker { font-variant-numeric: proportional-nums; }
+.tl-tasks li + li { margin-top: 4px; }
+.tl-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 22px; margin-top: 16px; font-size: 15px; }
+.tl-actions a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; color: var(--ink); text-decoration-color: var(--red-ink); }
+.tl-nets { list-style: none; margin: 8px 0 0; padding: 0; font-size: 15px; line-height: 1.45; }
+.tl-nets li { display: grid; grid-template-columns: 6.6em minmax(0, 1fr); gap: 12px; padding: 6px 0; border-top: 1px solid var(--rule); }
+.tl-nets time { font-weight: 600; color: var(--ink); white-space: nowrap; }
+.tl-nets a { color: var(--ink); text-decoration-color: var(--red-ink); }
+.date-slab--every .date-slab__mon { color: var(--ink-2); }
+.date-slab--every .date-slab__day { font-size: 20px; }
+
+.phases { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; padding: 22px 0; }
+.panel.phases > * + * { margin-top: 0; }
+.phase { padding: 0 26px; }
+.phase + .phase { border-left: 1px solid var(--rule); }
+.phase h3 { display: flex; align-items: center; gap: 10px; font: 600 16px/1.3 var(--sans); color: var(--ink); margin-bottom: 6px; }
+.phase ul { margin: 0; padding-left: 1.1em; font-size: 15px; line-height: 1.5; color: var(--ink); }
+.phase li + li { margin-top: 6px; }
+.phase q { font-style: italic; }
+.ps-list { margin: 0; }
+.ps-list > div { padding: 10px 0; border-top: 1px solid var(--rule); }
+.ps-list dt { font-weight: 600; font-size: 15.5px; }
+.ps-list dd { margin: 2px 0 0; font-size: 14.5px; line-height: 1.45; color: var(--ink-2); }
+
+.wl-how { margin-bottom: 14px; }
+.wl-table td:last-child { color: var(--ink-2); }
+@media (min-width: 641px) {
+  .wl-table th[scope="row"] { width: 9em; }
+  .wl-table td:last-child { width: 30%; }
+  .past-table th[scope="row"] { width: 9em; white-space: nowrap; }
+  .past-table td:nth-child(2) { width: 34%; }
+}
+
+.year__every { font-size: 15.5px; line-height: 1.55; color: var(--ink); max-width: 90ch; }
+.year__months { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0; list-style: none; margin: 18px 0 0; padding: 0; border-left: 1px solid var(--rule); }
+.year__months > li { min-height: 116px; padding: 10px 14px 14px; border-right: 1px solid var(--rule); border-top: 3px solid var(--rule); border-bottom: 1px solid var(--rule); background: #fff; }
+.year__months > li:nth-child(n+7) { border-top-width: 1px; }
+.year__months > li > b { display: block; font: 500 24px/1.1 var(--serif); color: var(--ink); }
+.year__months ul { list-style: none; margin: 6px 0 0; padding: 0; font-size: 14.5px; line-height: 1.4; color: var(--ink); }
+.year__months ul li + li { margin-top: 6px; }
+.year__quiet { display: block; margin-top: 6px; font-size: 13.5px; color: var(--off); }
+.year__months > li.is-current { box-shadow: inset 0 3px 0 var(--amber); background: var(--amber-wash); }
+.year__notes { margin-top: 14px; display: grid; gap: 4px; font-size: 14.5px; color: var(--ink-2); }
+
+.past-table .is-real th, .past-table .is-real td:first-of-type { font-weight: 600; }
+.past-table th[scope="row"] { font-weight: 500; }
+
+@media (max-width: 1200px) {
+}
+@media (max-width: 900px) {
+  .year__months { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .year__months > li:nth-child(n+4) { border-top-width: 1px; }
+}
+@media (max-width: 1100px) {
+  .tl-grid { grid-template-columns: minmax(0, 1fr); }
+  .tl-grid > dl + dl { margin-top: 8px; }
+}
+@media (max-width: 900px) {
+  .phases { grid-template-columns: minmax(0, 1fr); padding: 6px 0; }
+  .phase { padding: 16px 20px; }
+  .phase + .phase { border-left: 0; border-top: 1px solid var(--rule); }
+}
+@media (max-width: 640px) {
+  .month-head { padding-left: 0; }
+  .month-note { margin-left: 0; }
+  .timeline::before { left: 26px; }
+  .timeline > li { grid-template-columns: 54px minmax(0, 1fr); gap: 10px; }
+  .timeline .date-slab { width: 54px; }
+  .timeline .date-slab--range .date-slab__day { font-size: 16px; }
+  .timeline__card { padding: 14px 14px 12px; }
+  /* Facts run in as "Label: value" paragraphs on phones to save height. */
+  .timeline__facts { display: block; }
+  .timeline__facts dt { display: inline; }
+  .timeline__facts dt::after { content: ": "; }
+  .timeline__facts dd { display: inline; margin: 0; }
+  .timeline__facts dd::after { content: ""; display: block; height: 10px; }
+  .timeline__facts dd + dt { margin-top: 0; }
+  .tl-tasks { margin-top: 4px; }
+  .tl-nets li { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .tl-actions { gap: 4px 18px; }
+  .year__months { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .year__months > li { min-height: 0; }
+  .year__months > li:nth-child(n+3) { border-top-width: 1px; }
+}
+</style>
+</head>
+<body class="members-page" data-root="../">
+<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="mp-hill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A3A5C"/><stop offset="1" stop-color="#16223D"/></linearGradient>
+    <linearGradient id="mp-dawnglow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3C29B" stop-opacity="0"/><stop offset="1" stop-color="#F3C29B" stop-opacity=".5"/></linearGradient>
+    <pattern id="mp-rain" width="60" height="48" patternUnits="userSpaceOnUse"><path d="M9 3 L5 11 M31 12 L27 20 M51 4 L47 12 M19 26 L15 34 M43 30 L39 38 M57 38 L53 46 M7 40 L3 48" stroke="#A9B8D6" stroke-opacity=".6" stroke-width="1.1" stroke-linecap="round"/></pattern>
+  </defs>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2"/><path d="M15.5 8.5V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7.5a2 2 0 0 0 2 2h2.5"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4M12 12.5v5.5M9.25 15.25h5.5"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></symbol>
+  <symbol id="i-radio" viewBox="0 0 24 24"><rect x="7" y="7.5" width="10" height="13.5" rx="2"/><path d="M10 7.5V3M9.5 11.5h5M9.5 14.5h5M9.5 17.5h2"/></symbol>
+  <symbol id="i-script" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 15h6M9 18h4"/></symbol>
+  <symbol id="i-form" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M4 8h16M9.5 8v13M12.5 12h4.5M12.5 16h4.5"/></symbol>
+  <symbol id="i-log" viewBox="0 0 24 24"><rect x="4.5" y="4" width="15" height="16.5" rx="1.5"/><path d="M4.5 9h15M4.5 14h15M9.5 4v16.5"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H19v14H7.5A2.5 2.5 0 0 0 5 19.5z"/><path d="M5 19.5A2.5 2.5 0 0 0 7.5 22H19v-5"/></symbol>
+  <symbol id="i-rota" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></symbol>
+  <symbol id="i-winlink" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3.5 7.5l8.5 6 8.5-6"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5.5 21V4M5.5 4.5h11l-2.2 4 2.2 4h-11"/></symbol>
+  <symbol id="i-files" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 20h14"/></symbol>
+  <symbol id="i-antenna" viewBox="0 0 24 24"><path d="M12 21V10M8.5 21L12 10l3.5 11M7 6.8a7 7 0 0 1 10 0M9.3 9a3.6 3.6 0 0 1 5.4 0"/></symbol>
+  <symbol id="i-kit" viewBox="0 0 24 24"><rect x="3.5" y="7" width="17" height="13" rx="2"/><path d="M9 7V5h6v2M3.5 12.5h17M12 11v3"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="9" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M16 6.5a2.8 2.8 0 0 1 0 5.2M17.8 19a5.5 5.5 0 0 0-2.3-4.4"/></symbol>
+  <symbol id="i-training" viewBox="0 0 24 24"><path d="M2.5 9L12 5l9.5 4L12 13z"/><path d="M6.5 11v4.5c1.5 1.4 3.5 2 5.5 2s4-.6 5.5-2V11M21.5 9v5"/></symbol>
+
+  <!-- The message path. 560x400. Every state-dependent part reads a custom
+       property that .msgpath[data-state] sets (site.css section 23). -->
+  <symbol id="msgpath-scene" viewBox="0 0 560 400">
+    <rect class="mp-t" x="0" y="150" width="560" height="180" fill="url(#mp-dawnglow)" style="opacity:var(--mp-dawn,0)"/>
+    <rect class="mp-t" x="0" y="0" width="560" height="330" fill="url(#mp-rain)" style="opacity:var(--mp-storm,0)"/>
+    <!-- mountain and repeater -->
+    <path d="M132 330 C 200 318 238 150 280 122 C 322 150 360 318 428 330 Z" fill="url(#mp-hill)" stroke="#C5CEDF" stroke-opacity=".35" stroke-width="1"/>
+    <g fill="none" stroke="#DCE3EF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M270 124 L280 64 L290 124 M272.4 110 H287.6 M275 94 H285 M277.2 80 H282.8 M272.4 110 L285 94 M275 94 L287.6 110 M275 94 L282.8 80 M277.2 80 L285 94"/>
+      <path d="M280 64 V46"/>
+    </g>
+    <!-- ground -->
+    <rect x="0" y="330" width="560" height="70" fill="#040916" fill-opacity=".38"/>
+    <path d="M0 330.5 H560" stroke="#C5CEDF" stroke-opacity=".45" stroke-width="1"/>
+    <!-- power poles and wires -->
+    <g stroke="#AEBBD4" stroke-width="1.6" stroke-linecap="round" fill="none">
+      <path d="M112 330 V282 M102 288 H122"/><path d="M244 330 V282 M234 288 H254"/><path d="M336 330 V282 M326 288 H346"/>
+    </g>
+    <path class="mp-t" d="M0 293 Q56 303 112 288 Q178 303 244 288 Q290 303 336 288 L352 293" fill="none" stroke="#AEBBD4" stroke-width="1.4" style="opacity:var(--mp-power,0)"/>
+    <path class="mp-t" d="M0 293 Q56 303 112 288 Q146 304 162 326 M244 288 Q232 302 222 322 M244 288 Q290 303 336 288 L352 293" fill="none" stroke="#56627C" stroke-width="1.4" style="opacity:calc(1 - var(--mp-power,0))"/>
+    <!-- houses (lose power) -->
+    <g fill="#16233F" stroke="#8190AE" stroke-width="1.3">
+      <path d="M124 330 V304 L140 290 L156 304 V330 Z"/><path d="M164 330 V308 L178 296 L192 308 V330 Z"/><path d="M294 330 V306 L309 294 L324 306 V330 Z"/>
+    </g>
+    <g fill="#2A3857"><rect x="131" y="311" width="7" height="7"/><rect x="143" y="311" width="7" height="7"/><rect x="174" y="314" width="8" height="7"/><rect x="304" y="313" width="10" height="7"/></g>
+    <g class="mp-t" fill="#FFC857" style="opacity:var(--mp-power,0)"><rect x="131" y="311" width="7" height="7"/><rect x="143" y="311" width="7" height="7"/><rect x="174" y="314" width="8" height="7"/><rect x="304" y="313" width="10" height="7"/></g>
+    <!-- cell tower -->
+    <g fill="none" stroke="#AEBBD4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M206 330 L214 238 L222 330 M208.4 306 H219.6 M210.2 282 H217.8 M211.8 260 H216.2 M208.4 306 L217.8 282 M210.2 282 L219.6 306 M210.2 282 L216.2 260 M211.8 260 L217.8 282"/>
+    </g>
+    <g class="mp-t" fill="none" stroke="#AEBBD4" stroke-width="1.6" stroke-linecap="round" style="opacity:var(--mp-cell,0)">
+      <path d="M204 250 Q197 240 204 230"/><path d="M196 256 Q185 240 196 224"/><path d="M224 250 Q231 240 224 230"/><path d="M232 256 Q243 240 232 224"/>
+    </g>
+    <text class="mp-t mp-sub" x="214" y="222" text-anchor="middle" style="opacity:calc(1 - var(--mp-cell,0));font-size:calc(var(--mp-fs,17px) * .8)">Cell service out</text>
+    <!-- shelter -->
+    <rect x="20" y="282" width="84" height="48" fill="#1B2745" stroke="#8190AE" stroke-width="1.4"/>
+    <rect x="28" y="292" width="16" height="9" fill="#FFC857" fill-opacity=".8"/><rect x="80" y="292" width="16" height="9" fill="#FFC857" fill-opacity=".8"/>
+    <rect x="54" y="306" width="16" height="24" fill="#0A1328"/>
+    <path d="M96 282 V252" stroke="#DCE3EF" stroke-width="1.6" stroke-linecap="round"/>
+    <rect class="mp-t" x="17" y="279" width="90" height="54" fill="none" stroke="#FFC857" stroke-width="2" style="opacity:var(--mp-shelter,0)"/>
+    <!-- county EOC -->
+    <rect x="352" y="268" width="80" height="62" fill="#1B2745" stroke="#8190AE" stroke-width="1.4"/>
+    <g fill="#FFC857" fill-opacity=".8"><rect x="361" y="279" width="22" height="9"/><rect x="399" y="279" width="22" height="9"/><rect x="361" y="296" width="22" height="9"/></g>
+    <rect x="401" y="310" width="16" height="20" fill="#0A1328"/>
+    <path d="M420 268 V234" stroke="#DCE3EF" stroke-width="1.6" stroke-linecap="round"/>
+    <rect class="mp-t" x="349" y="265" width="86" height="68" fill="none" stroke="#FFC857" stroke-width="2" style="opacity:var(--mp-eoc,0)"/>
+    <!-- hospital -->
+    <rect x="452" y="252" width="88" height="78" fill="#1B2745" stroke="#8190AE" stroke-width="1.4"/>
+    <path d="M489 266 h14 v10 h10 v14 h-10 v10 h-14 v-10 h-10 v-14 h10 z" fill="#DCE3EF"/>
+    <rect x="489" y="310" width="14" height="20" fill="#0A1328"/>
+    <path d="M528 252 V224" stroke="#DCE3EF" stroke-width="1.6" stroke-linecap="round"/>
+    <rect class="mp-t" x="449" y="249" width="94" height="84" fill="none" stroke="#FFC857" stroke-width="2" style="opacity:var(--mp-hosp,0)"/>
+    <!-- the message: red arcs (with a soft under-stroke) -->
+    <g class="mp-t" fill="none" stroke-linecap="round" style="opacity:var(--mp-send,0)">
+      <path d="M96 252 Q150 112 280 46 Q392 96 420 234" stroke="#D0202A" stroke-opacity=".28" stroke-width="10"/>
+      <path d="M96 252 Q150 112 280 46 Q392 96 420 234" stroke="#E0303A" stroke-width="3"/>
+    </g>
+    <g class="mp-t" fill="none" stroke-linecap="round" style="opacity:var(--mp-relay,0)">
+      <path d="M420 234 Q474 168 528 224" stroke="#D0202A" stroke-opacity=".28" stroke-width="10"/>
+      <path d="M420 234 Q474 168 528 224" stroke="#E0303A" stroke-width="3"/>
+    </g>
+    <g fill="#FFC857">
+      <circle class="mp-t" cx="96" cy="252" r="4" style="opacity:var(--mp-m1,0)"/>
+      <circle class="mp-t" cx="280" cy="46" r="4" style="opacity:var(--mp-m2,0)"/>
+      <circle class="mp-t" cx="420" cy="234" r="4" style="opacity:var(--mp-send,0)"/>
+      <circle class="mp-t" cx="528" cy="224" r="4" style="opacity:var(--mp-relay,0)"/>
+    </g>
+    <!-- amber hop markers (28px) -->
+    <g class="mp-t" style="opacity:var(--mp-m1,0)"><circle cx="70" cy="238" r="14" fill="#FFC857"/><text class="mp-num" x="70" y="243.5" text-anchor="middle">1</text></g>
+    <g class="mp-t" style="opacity:var(--mp-m2,0)"><circle cx="308" cy="34" r="14" fill="#FFC857"/><text class="mp-num" x="308" y="39.5" text-anchor="middle">2</text></g>
+    <g class="mp-t" style="opacity:var(--mp-m3,0)"><circle cx="394" cy="222" r="14" fill="#FFC857"/><text class="mp-num" x="394" y="227.5" text-anchor="middle">3</text></g>
+    <g class="mp-t" style="opacity:var(--mp-m4,0)"><circle cx="542" cy="194" r="14" fill="#FFC857"/><text class="mp-num" x="542" y="199.5" text-anchor="middle">4</text></g>
+    <!-- place labels -->
+    <text class="mp-label" x="62" y="358" text-anchor="middle" style="font-size:var(--mp-fs,17px)">Shelter</text>
+    <text class="mp-label" x="387" y="358" text-anchor="middle" style="font-size:var(--mp-fs,17px)">County EOC</text>
+    <text class="mp-label" x="502" y="358" text-anchor="middle" style="font-size:var(--mp-fs,17px)">Hospital</text>
+    <text class="mp-label" x="262" y="24" text-anchor="end" style="font-size:var(--mp-fs,17px)">W7GBU repeater</text>
+    <text class="mp-sub" x="262" y="46" text-anchor="end" style="font-size:calc(var(--mp-fs,17px) * .88)">147.300 MHz</text>
+    <!-- "A scenario", drawn in the picture so any crop still says so -->
+    <g style="transform-box:fill-box;transform-origin:100% 0;transform:scale(var(--mp-pill,1))">
+      <rect x="434" y="12" width="114" height="30" rx="15" fill="#0E1A33" fill-opacity=".9" stroke="#FFC857" stroke-opacity=".75"/>
+      <circle cx="451" cy="27" r="4" fill="#FFC857"/>
+      <text class="mp-pilltext" x="461" y="32">A scenario</text>
+    </g>
+  </symbol>
+</svg>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="site-header">
+  <div class="utility">
+    <div class="wrap utility__bar">
+      <p class="utility__net" data-widget="next-net-line"><b class="u-label">The net:</b> Tuesdays at 8:00 PM <span class="u-more">on W7GBU 147.300 MHz, +600 kHz, 100 Hz tone.</span></p>
+      <button class="utility__copy" type="button" data-copy aria-label="Copy radio settings"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg><span>Copy<span class="u-label-long"> radio settings</span></span></button>
+      <span class="utility__sep" aria-hidden="true"></span>
+      <a class="utility__members" href="index.html">For Members</a>
+    </div>
+  </div>
+  <div class="masthead">
+    <div class="wrap masthead__bar">
+      <a class="brand" href="../index.html"><img src="../assets/img/seal-ares-acs-400.png" alt="" width="46" height="46"><span class="brand__name"><span>Spokane County</span> <strong>ARES-ACS</strong></span></a>
+      <nav class="nav" aria-label="Primary">
+        <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="primary-nav"><svg class="icon i-open" aria-hidden="true"><use href="#i-menu"/></svg><svg class="icon i-close" aria-hidden="true"><use href="#i-close"/></svg>Menu</button>
+        <ul class="nav__list" id="primary-nav">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../how-it-works.html">How it works</a></li>
+          <li><a href="../about.html">About ARES &amp; ACS</a></li>
+          <li><a href="index.html" aria-current="page">For Members</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn--red site-header__join" href="../index.html#join">Join the team</a>
+    </div>
+  </div>
+</header>
+<div class="members-shell">
+  <nav class="member-nav" aria-label="Members">
+    <div class="member-nav__inner">
+      <div class="member-nav__net" data-widget="next-net-mini">
+        <p class="member-nav__net-title">Tuesday net</p>
+        <p class="member-nav__net-main" data-slot="main">Every Tuesday, 2000</p>
+        <p class="member-nav__net-sub" data-slot="sub">W7GBU 147.300, +600 kHz, 100 Hz</p>
+        <p class="member-nav__net-sub" data-slot="flag" hidden></p>
+      </div>
+      <ul class="member-nav__list">
+        <li><a href="index.html">Overview (this week)</a></li>
+        <li><span class="member-nav__label" id="mn-operate">Operate</span>
+          <ul aria-labelledby="mn-operate">
+            <li><a href="#">Nets &amp; net control</a></li>
+            <li><a href="#">Winlink &amp; digital</a></li>
+            <li><a href="#">Repeaters &amp; programming</a></li>
+          </ul>
+        </li>
+        <li><span class="member-nav__label" id="mn-prepare">Prepare</span>
+          <ul aria-labelledby="mn-prepare">
+            <li><a href="exercises.html" aria-current="page">Exercises &amp; events</a></li>
+            <li><a href="#">Training &amp; task books</a></li>
+            <li><a href="#">Go-kits &amp; readiness</a></li>
+          </ul>
+        </li>
+        <li><span class="member-nav__label" id="mn-reference">Reference</span>
+          <ul aria-labelledby="mn-reference">
+            <li><a href="documents.html">Documents &amp; downloads</a></li>
+            <li><a href="documents.html#forms">Forms</a></li>
+            <li><a href="#">Contacts &amp; roles</a></li>
+          </ul>
+        </li>
+        <li class="member-nav__ext"><a class="ext" href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io<span class="vh"> (opens groups.io, members only)</span></a><small>Member-only files, calendar and list</small></li>
+      </ul>
+    </div>
+  </nav>
+  <main id="main" class="workspace">
+    <div class="page-head">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../index.html">Home</a></li><li><a href="index.html">For Members</a></li><li><span aria-current="page">Exercises &amp; events</span></li></ol></nav>
+      <h1>Exercises &amp; events</h1>
+      <p class="lede">Practice is most of what we do. Here’s what’s coming, what each exercise asks of you, and what to send in afterwards.</p>
+      <p class="page-head__meta" data-widget="asof">Schedule as of Sat, Sep 26, 2026.</p>
+    </div>
+
+    <section class="ws-section" id="upcoming" aria-labelledby="up-title" data-filter-scope>
+      <div class="ws-head" id="next-up"><h2 id="up-title">Coming up</h2><a class="ext" href="https://spokaneares-acs.groups.io/g/main/calendar" rel="noopener">groups.io calendar<span class="vh"> (opens groups.io, members only)</span></a></div>
+      <div class="ex-filter" role="group" aria-label="Show">
+        <button class="chip" type="button" data-filter="" aria-pressed="true">All</button>
+        <button class="chip" type="button" data-filter="exercise" aria-pressed="false">Exercises</button>
+        <button class="chip" type="button" data-filter="training" aria-pressed="false">Training &amp; meetings</button>
+        <button class="chip" type="button" data-filter="net" aria-pressed="false">Nets</button>
+        <button class="chip" type="button" data-filter="on-air" aria-pressed="false">On-air</button>
+        <button class="chip" type="button" data-filter="public-service" aria-pressed="false">Public service</button>
+      </div>
+      <p class="ex-note" data-verify="true">Sign-ups and local plans are posted on groups.io unless an entry says otherwise. The groups.io calendar is the calendar of record.</p>
+
+        <div class="tl-month" data-month="2026-09">
+          <h3 class="month-head">September 2026</h3>
+          <ol class="timeline">
+          <li id="wsdot-2026" class="is-now tl--full" data-type="exercise" data-start="2026-09-26" data-end="2026-09-27">
+            <span class="date-slab date-slab--range" aria-hidden="true"><span class="date-slab__mon">Sep</span><span class="date-slab__day">26–27</span><span class="date-slab__dow">Sat–Sun</span></span>
+            <article class="timeline__card timeline__card--exercise" aria-labelledby="tt-wsdot">
+              <p class="tl-tags"><span class="tag tag--now" data-now-tag>Happening now</span><span class="tag">Exercise</span></p>
+              <h4 id="tt-wsdot">Spokane County ARES-ACS / WSDOT exercise</h4>
+              <p class="tl-when"><time datetime="2026-09-26">Sat–Sun, Sep 26–27</time>, all weekend.</p>
+              <div class="tl-grid">
+                <dl class="timeline__facts">
+                <dt>What</dt><dd>A joint exercise with the Washington State Department of Transportation during National Preparedness Month.</dd>
+                <dt>Where</dt><dd data-verify="true">Assignments and locations are on groups.io, not on this site.</dd>
+                <dt>Bring</dt><dd>Your go-kit and a programmed handheld. Forms from the go-kit list: <button class="term" type="button" aria-expanded="false" aria-controls="t-ics213">ICS-213</button><span class="term-def" id="t-ics213" role="note">The standard message form of the Incident Command System. It travels by voice, on paper or by radio email.</span>, ICS-213RR and <a href="documents.html#wsdot-580-020">WSDOT Form 580-020</a> (Road and Bridge Assessment).</dd>
+                </dl>
+                <dl class="timeline__facts">
+                <dt>Log</dt><dd>Your activity on an ICS-214 and your messages on an ICS-309.</dd>
+                <dt>Sign up</dt><dd data-verify="true">Exercise details and assignments are posted on groups.io.</dd>
+                <dt>Report to</dt><dd data-verify="true">Net control for the exercise. Check in when you arrive and when you leave.</dd>
+                </dl>
+              </div>
+              <div class="tl-actions"><button class="btn btn--ghost btn--sm" type="button" data-ics="event" data-event-id="wsdot-2026"><svg class="icon" aria-hidden="true"><use href="#i-cal"/></svg>Add to calendar</button><a href="documents.html#forms">Forms</a></div>
+            </article>
+          </li>
+          <li class="tl--compact" data-type="net" data-start="2026-09-29" data-end="2026-09-29">
+            <span class="date-slab date-slab--every" aria-hidden="true"><span class="date-slab__mon">Every</span><span class="date-slab__day">Tue</span><span class="date-slab__dow">2000</span></span>
+            <article class="timeline__card timeline__card--compact" aria-labelledby="tt-nets-2026-9">
+              <p class="tl-tags"><span class="tag">Net</span></p>
+              <h4 id="tt-nets-2026-9">Tuesday nets in September</h4>
+              <p class="tl-when">Every Tuesday, 2000, on W7GBU 147.300 MHz.</p>
+              <ul class="tl-nets">
+                <li><time datetime="2026-09-29">Tue, Sep 29</time> <span><span data-verify="true">Simplex net (5th Tuesday): starts on simplex, then moves to W7GBU.</span> Net control NZ2S.</span></li>
+              </ul>
+            </article>
+          </li>
+          </ol>
+        </div>
+
+        <div class="tl-month" data-month="2026-10">
+          <h3 class="month-head">October 2026</h3>
+          <ol class="timeline">
+          <li class="tl--compact" data-type="net" data-start="2026-10-06" data-end="2026-10-27">
+            <span class="date-slab date-slab--every" aria-hidden="true"><span class="date-slab__mon">Every</span><span class="date-slab__day">Tue</span><span class="date-slab__dow">2000</span></span>
+            <article class="timeline__card timeline__card--compact" aria-labelledby="tt-nets-2026-10">
+              <p class="tl-tags"><span class="tag">Net</span></p>
+              <h4 id="tt-nets-2026-10">Tuesday nets in October</h4>
+              <p class="tl-when">Every Tuesday, 2000, on W7GBU 147.300 MHz.</p>
+              <ul class="tl-nets">
+                <li><time datetime="2026-10-06">Tue, Oct 6</time> <span>Net control open: <a class="ext" href="https://spokaneares-acs.groups.io/g/main" rel="noopener">volunteer on groups.io<span class="vh"> (opens groups.io)</span></a>.</span></li>
+                <li><time datetime="2026-10-13">Tue, Oct 13</time> <span>Winlink night: <a href="#winlink-assignments">assignment</a> on the Did You Feel It (DYFI) form. Net control AE7RJ.</span></li>
+                <li><time datetime="2026-10-20">Tue, Oct 20</time> <span><span data-verify="true">ACS GMRS net at 1930 first.</span> Net control WA7LNC.</span></li>
+                <li><time datetime="2026-10-27">Tue, Oct 27</time> <span>Winlink night: <a href="#winlink-assignments">assignment</a> on the Welfare Message / Quick Health &amp; Welfare form. Net control open: <a class="ext" href="https://spokaneares-acs.groups.io/g/main" rel="noopener">volunteer on groups.io<span class="vh"> (opens groups.io)</span></a>.</span></li>
+              </ul>
+            </article>
+          </li>
+          <li id="set-2026" class="tl--full" data-type="exercise" data-start="2026-10-03" data-end="2026-10-03">
+            <span class="date-slab" aria-hidden="true"><span class="date-slab__mon">Oct</span><span class="date-slab__day">3</span><span class="date-slab__dow">Sat</span></span>
+            <article class="timeline__card timeline__card--exercise" aria-labelledby="tt-set">
+              <p class="tl-tags"><span class="tag tag--now" data-now-tag hidden>Happening now</span><span class="tag">Exercise</span></p>
+              <h4 id="tt-set">Simulated Emergency Test (SET)</h4>
+              <p class="tl-when"><time datetime="2026-10-03">Sat, Oct 3</time>, all day.</p>
+              <div class="tl-grid">
+                <dl class="timeline__facts">
+                <dt>What</dt><dd>The ARRL’s annual national exercise, on the first weekend of October. The Eastern Washington Section Emergency Coordinator sets this year’s scenario. It is lighthearted, but the skills are the same as for a real deployment.</dd>
+                <dt>Your tasks</dt><dd><ol class="tl-tasks"><li>Use <button class="term" type="button" aria-expanded="false" aria-controls="t-winlink">Winlink</button><span class="term-def" id="t-winlink" role="note">Email by radio. Members practice it on Winlink nights, the 2nd and 4th Tuesdays.</span> (radio preferred, Telnet acceptable) to send a WA State Field Situation Report to your EC and to the Section Emergency Coordinator (AG7QP).</li><li>Send a message through the National Traffic System to the Section Manager (KA7LJQ) and the Section Emergency Coordinator (AG7QP).</li><li>Take pictures of your station and operation to share.</li><li>Make as many contacts as you can using the rules of POTA and/or SOTA.</li><li>Send an after-action report (AAR) with a list of participants to the Section Emergency Coordinator.</li><li>Have fun.</li></ol></dd>
+                </dl>
+                <dl class="timeline__facts">
+                <dt>Where</dt><dd data-verify="true">Your station, or wherever the local plan puts you. POTA and SOTA contacts are made from parks and summits.</dd>
+                <dt>Bring</dt><dd>A Winlink station (radio preferred, Telnet acceptable) and a camera or phone for photos.</dd>
+                <dt>Sign up</dt><dd data-verify="true">Local plans, including where to be and who is net control, are on groups.io.</dd>
+                <dt>Report to</dt><dd>Your EC, and the Section Emergency Coordinator (AG7QP), who also gets the after-action report.</dd>
+                </dl>
+              </div>
+              <div class="tl-actions"><button class="btn btn--ghost btn--sm" type="button" data-ics="event" data-event-id="set-2026"><svg class="icon" aria-hidden="true"><use href="#i-cal"/></svg>Add to calendar</button><a class="ext" href="https://www.arrl.org/simulated-emergency-test" rel="noopener">ARRL SET forms<span class="vh"> (opens arrl.org)</span></a><a class="ext" href="https://ag7qp.com/" rel="noopener">Section SET instructions<span class="vh"> (opens ag7qp.com)</span></a><a href="documents.html#wa-field-situation-report">WA Field Situation Report</a></div>
+            </article>
+          </li>
+          <li class="tl--compact" data-type="training meeting" data-start="2026-10-10" data-end="2026-10-10">
+            <span class="date-slab" aria-hidden="true"><span class="date-slab__mon">Oct</span><span class="date-slab__day">10</span><span class="date-slab__dow">Sat</span></span>
+            <article class="timeline__card timeline__card--compact" aria-labelledby="tt-ws-2026-10-10">
+              <p class="tl-tags"><span class="tag">Training</span></p>
+              <h4 id="tt-ws-2026-10-10">Second Saturday Workshop, then the Winlink workshop</h4>
+              <p class="tl-when"><time datetime="2026-10-10">Sat, Oct 10</time>, 0900–1200, then <span data-verify="true">1230–1530</span>. SCEM, 1121 W Gardner Ave.</p>
+              <p class="tl-line">Hands-on skills: radios, digital modes, power, mobile installs and more. The Winlink workshop helps you get email over radio set up and working.</p>
+            </article>
+          </li>
+          <li id="shakeout-2026" class="tl--full" data-type="exercise" data-start="2026-10-15" data-end="2026-10-15">
+            <span class="date-slab" aria-hidden="true"><span class="date-slab__mon">Oct</span><span class="date-slab__day">15</span><span class="date-slab__dow">Thu</span></span>
+            <article class="timeline__card timeline__card--exercise" aria-labelledby="tt-shakeout">
+              <p class="tl-tags"><span class="tag tag--now" data-now-tag hidden>Happening now</span><span class="tag">Exercise</span></p>
+              <h4 id="tt-shakeout">Great ShakeOut: send a DYFI message</h4>
+              <p class="tl-when"><time datetime="2026-10-15">Thu, Oct 15</time>, 1015.</p>
+              <div class="tl-grid">
+                <dl class="timeline__facts">
+                <dt>What</dt><dd>At 1015, send a USGS “Did You Feel It?” (DYFI) report by Winlink. It’s the same report Standing Order 1b asks for after a real earthquake, so this is practice for the day it counts.</dd>
+                <dt>Where</dt><dd>Wherever you are at 1015.</dd>
+                <dt>Bring</dt><dd data-verify="true">Winlink Express with the DYFI form. Mark the report clearly as an exercise.</dd>
+                </dl>
+                <dl class="timeline__facts">
+                <dt>Sign up</dt><dd data-verify="true">No sign-up is listed. The Tue, Oct 13 Winlink-night assignment is also a DYFI report: a good dry run.</dd>
+                <dt>Report to</dt><dd>USGS, through the DYFI form in Winlink Express.</dd>
+                </dl>
+              </div>
+              <div class="tl-actions"><button class="btn btn--ghost btn--sm" type="button" data-ics="event" data-event-id="shakeout-2026"><svg class="icon" aria-hidden="true"><use href="#i-cal"/></svg>Add to calendar</button><a class="ext" href="https://www.shakeout.org/" rel="noopener">Great ShakeOut<span class="vh"> (opens shakeout.org)</span></a><a class="ext" href="https://earthquake.usgs.gov/data/dyfi/" rel="noopener">USGS Did You Feel It?<span class="vh"> (opens earthquake.usgs.gov)</span></a><a class="ext" href="https://ag7qp.com/ares-acs" rel="noopener">Standing Order 1b<span class="vh"> (opens ag7qp.com)</span></a></div>
+            </article>
+          </li>
+          <li class="tl--compact" data-type="meeting training" data-start="2026-10-15" data-end="2026-10-15">
+            <span class="date-slab" aria-hidden="true"><span class="date-slab__mon">Oct</span><span class="date-slab__day">15</span><span class="date-slab__dow">Thu</span></span>
+            <article class="timeline__card timeline__card--compact" aria-labelledby="tt-tt-2026-10-15">
+              <p class="tl-tags"><span class="tag">Meeting</span></p>
+              <h4 id="tt-tt-2026-10-15">Third Thursday training meeting</h4>
+              <p class="tl-when"><time datetime="2026-10-15">Thu, Oct 15</time>, <span data-verify="true">evening</span>. SCEM, 1121 W Gardner Ave.</p>
+              <p class="tl-line">The monthly training meeting, for members and visitors.</p>
+            </article>
+          </li>
+          <li class="tl--compact" data-type="training" data-start="2026-10-17" data-end="2026-10-17" data-verify="true">
+            <span class="date-slab" aria-hidden="true"><span class="date-slab__mon">Oct</span><span class="date-slab__day">17</span><span class="date-slab__dow">Sat</span></span>
+            <article class="timeline__card timeline__card--compact" aria-labelledby="tt-shares">
+              <p class="tl-tags"><span class="tag">Training</span></p>
+              <h4 id="tt-shares">SHARES training meeting</h4>
+              <p class="tl-when"><time datetime="2026-10-17">Sat, Oct 17</time>, 0900–1200. SCEM, 1121 W Gardner Ave.</p>
+              <p class="tl-line">For SHARES participants. Details are shared with participants, not on this site.</p>
+            </article>
+          </li>
+          <li id="commex-2026" class="tl--full" data-type="exercise" data-start="2026-10-24" data-end="2026-10-24" data-verify="true">
+            <span class="date-slab" aria-hidden="true"><span class="date-slab__mon">Oct</span><span class="date-slab__day">24</span><span class="date-slab__dow">Sat</span></span>
+            <article class="timeline__card timeline__card--exercise" aria-labelledby="tt-commex">
+              <p class="tl-tags"><span class="tag tag--now" data-now-tag hidden>Happening now</span><span class="tag">Exercise</span></p>
+              <h4 id="tt-commex">State COMMEX</h4>
+              <p class="tl-when"><time datetime="2026-10-24">Sat, Oct 24</time>, all day.</p>
+              <div class="tl-grid">
+                <dl class="timeline__facts">
+                <dt>What</dt><dd>Washington’s statewide communications exercise. It may be the same event as the “Catastrophic Communications Exercise 2026” listed on ag7qp.com without a date.</dd>
+                <dt>Where</dt><dd>Statewide. The local plan will be on groups.io.</dd>
+                <dt>Bring</dt><dd>Your go-kit and forms. See <a href="#after-action">Before, during and after</a>.</dd>
+                </dl>
+                <dl class="timeline__facts">
+                <dt>Sign up</dt><dd>Through the local plan on groups.io.</dd>
+                <dt>Report to</dt><dd>The net control named in the local plan.</dd>
+                </dl>
+              </div>
+              <div class="tl-actions"><button class="btn btn--ghost btn--sm" type="button" data-ics="event" data-event-id="commex-2026"><svg class="icon" aria-hidden="true"><use href="#i-cal"/></svg>Add to calendar</button></div>
+            </article>
+          </li>
+          </ol>
+        </div>
+
+        <div class="tl-month" data-month="2026-11">
+          <h3 class="month-head">November 2026</h3>
+          <ol class="timeline">
+          <li class="tl--compact" data-type="net" data-start="2026-11-03" data-end="2026-11-24">
+            <span class="date-slab date-slab--every" aria-hidden="true"><span class="date-slab__mon">Every</span><span class="date-slab__day">Tue</span><span class="date-slab__dow">2000</span></span>
+            <article class="timeline__card timeline__card--compact" aria-labelledby="tt-nets-2026-11">
+              <p class="tl-tags"><span class="tag">Net</span></p>
+              <h4 id="tt-nets-2026-11">Tuesday nets in November</h4>
+              <p class="tl-when">Every Tuesday, 2000, on W7GBU 147.300 MHz. Net control: see groups.io.</p>
+              <ul class="tl-nets">
+                <li><time datetime="2026-11-10">Tue, Nov 10</time> <span>Winlink night: <a href="#winlink-assignments">assignment</a> on the ICS-213 form.</span></li>
+                <li><time datetime="2026-11-17">Tue, Nov 17</time> <span><span data-verify="true">ACS GMRS net at 1930 first.</span></span></li>
+                <li><time datetime="2026-11-24">Tue, Nov 24</time> <span>Winlink night: <a href="#winlink-assignments">assignment</a> on the ICS-213RR form.</span></li>
+              </ul>
+            </article>
+          </li>
+          <li class="tl--compact" data-type="training meeting" data-start="2026-11-14" data-end="2026-11-14">
+            <span class="date-slab" aria-hidden="true"><span class="date-slab__mon">Nov</span><span class="date-slab__day">14</span><span class="date-slab__dow">Sat</span></span>
+            <article class="timeline__card timeline__card--compact" aria-labelledby="tt-ws-2026-11-14">
+              <p class="tl-tags"><span class="tag">Training</span></p>
+              <h4 id="tt-ws-2026-11-14">Second Saturday Workshop, then the Winlink workshop</h4>
+              <p class="tl-when"><time datetime="2026-11-14">Sat, Nov 14</time>, 0900–1200, then <span data-verify="true">1230–1530</span>. SCEM, 1121 W Gardner Ave.</p>
+              <p class="tl-line">Hands-on skills: radios, digital modes, power, mobile installs and more. The Winlink workshop helps you get email over radio set up and working.</p>
+            </article>
+          </li>
+          <li id="w1aw7-2026" class="tl--mid" data-type="on-air" data-start="2026-11-18" data-end="2026-11-25" data-verify="true">
+            <span class="date-slab date-slab--range" aria-hidden="true"><span class="date-slab__mon">Nov</span><span class="date-slab__day">18–25</span><span class="date-slab__dow">Wed–Wed</span></span>
+            <article class="timeline__card" aria-labelledby="tt-w1aw7">
+              <p class="tl-tags"><span class="tag tag--now" data-now-tag hidden>Happening now</span><span class="tag">On-air event</span><span class="tag tag--line">Optional</span></p>
+              <h4 id="tt-w1aw7">Washington operates as W1AW/7 (ARRL WAS-250)</h4>
+              <p class="tl-when"><time datetime="2026-11-18">Wed–Wed, Nov 18–25</time>.</p>
+              <div class="tl-grid">
+                <dl class="timeline__facts">
+                <dt>What</dt><dd>Washington operators sign up for shifts as W1AW/7 during the ARRL WAS-250 event.</dd>
+                </dl>
+                <dl class="timeline__facts">
+                <dt>Sign up</dt><dd>For a shift, through the Section and state activity.</dd>
+                </dl>
+              </div>
+              <div class="tl-actions"><button class="btn btn--ghost btn--sm" type="button" data-ics="event" data-event-id="w1aw7-2026"><svg class="icon" aria-hidden="true"><use href="#i-cal"/></svg>Add to calendar</button><a class="ext" href="https://www.arrl.org/america250-was" rel="noopener">ARRL WAS-250<span class="vh"> (opens arrl.org)</span></a></div>
+            </article>
+          </li>
+          <li class="tl--compact" data-type="meeting training" data-start="2026-11-19" data-end="2026-11-19">
+            <span class="date-slab" aria-hidden="true"><span class="date-slab__mon">Nov</span><span class="date-slab__day">19</span><span class="date-slab__dow">Thu</span></span>
+            <article class="timeline__card timeline__card--compact" aria-labelledby="tt-tt-2026-11-19">
+              <p class="tl-tags"><span class="tag">Meeting</span></p>
+              <h4 id="tt-tt-2026-11-19">Third Thursday training meeting</h4>
+              <p class="tl-when"><time datetime="2026-11-19">Thu, Nov 19</time>, <span data-verify="true">evening</span>. SCEM, 1121 W Gardner Ave.</p>
+              <p class="tl-line">The monthly training meeting, for members and visitors.</p>
+            </article>
+          </li>
+          </ol>
+        </div>
+
+        <div class="tl-month" data-month="2026-12">
+          <h3 class="month-head">December 2026</h3>
+          <p class="month-note" data-verify="true">No December training meeting is listed. There was none in 2019.</p>
+          <ol class="timeline">
+          <li class="tl--compact" data-type="net" data-start="2026-12-01" data-end="2026-12-29">
+            <span class="date-slab date-slab--every" aria-hidden="true"><span class="date-slab__mon">Every</span><span class="date-slab__day">Tue</span><span class="date-slab__dow">2000</span></span>
+            <article class="timeline__card timeline__card--compact" aria-labelledby="tt-nets-2026-12">
+              <p class="tl-tags"><span class="tag">Net</span></p>
+              <h4 id="tt-nets-2026-12">Tuesday nets in December</h4>
+              <p class="tl-when">Every Tuesday, 2000, on W7GBU 147.300 MHz. Net control: see groups.io.</p>
+              <ul class="tl-nets">
+                <li><time datetime="2026-12-08">Tue, Dec 8</time> <span>Winlink night: <a href="#winlink-assignments">assignment</a> on the ICS-213 form.</span></li>
+                <li><time datetime="2026-12-15">Tue, Dec 15</time> <span><span data-verify="true">ACS GMRS net at 1930 first.</span></span></li>
+                <li><time datetime="2026-12-22">Tue, Dec 22</time> <span>Winlink night: <a href="#winlink-assignments">assignment</a> on the ICS-213 form.</span></li>
+                <li><time datetime="2026-12-29">Tue, Dec 29</time> <span><span data-verify="true">Simplex net (5th Tuesday): starts on simplex, then moves to W7GBU.</span></span></li>
+              </ul>
+            </article>
+          </li>
+          <li id="srd-2026" class="tl--mid" data-type="on-air" data-start="2026-12-04" data-end="2026-12-05" data-verify="true">
+            <span class="date-slab date-slab--range" aria-hidden="true"><span class="date-slab__mon">Dec</span><span class="date-slab__day">4–5</span><span class="date-slab__dow">Fri–Sat</span></span>
+            <article class="timeline__card" aria-labelledby="tt-srd">
+              <p class="tl-tags"><span class="tag tag--now" data-now-tag hidden>Happening now</span><span class="tag">On-air event</span></p>
+              <h4 id="tt-srd">SKYWARN Recognition Day</h4>
+              <p class="tl-when"><time datetime="2026-12-04">Fri–Sat, Dec 4–5</time>.</p>
+              <div class="tl-grid">
+                <dl class="timeline__facts">
+                <dt>What</dt><dd>The group has run a station at the National Weather Service office in Spokane for SKYWARN Recognition Day every year since 1999.</dd>
+                <dt>Where</dt><dd>NWS Spokane office, Airway Heights.</dd>
+                </dl>
+              </div>
+              <div class="tl-actions"><button class="btn btn--ghost btn--sm" type="button" data-ics="event" data-event-id="srd-2026"><svg class="icon" aria-hidden="true"><use href="#i-cal"/></svg>Add to calendar</button><a class="ext" href="https://www.weather.gov/crh/skywarnrecognition" rel="noopener">SKYWARN Recognition Day<span class="vh"> (opens weather.gov)</span></a></div>
+            </article>
+          </li>
+          <li class="tl--compact" data-type="training meeting" data-start="2026-12-12" data-end="2026-12-12">
+            <span class="date-slab" aria-hidden="true"><span class="date-slab__mon">Dec</span><span class="date-slab__day">12</span><span class="date-slab__dow">Sat</span></span>
+            <article class="timeline__card timeline__card--compact" aria-labelledby="tt-ws-2026-12-12">
+              <p class="tl-tags"><span class="tag">Training</span></p>
+              <h4 id="tt-ws-2026-12-12">Second Saturday Workshop, then the Winlink workshop</h4>
+              <p class="tl-when"><time datetime="2026-12-12">Sat, Dec 12</time>, 0900–1200, then <span data-verify="true">1230–1530</span>. SCEM, 1121 W Gardner Ave.</p>
+              <p class="tl-line">Hands-on skills: radios, digital modes, power, mobile installs and more. The Winlink workshop helps you get email over radio set up and working.</p>
+            </article>
+          </li>
+          </ol>
+        </div>
+
+        <div class="tl-month" data-month="2027">
+          <h3 class="month-head">2027</h3>
+          <p class="month-note">Workshops, the Third Thursday meeting and the Tuesday nets continue every month. See <a href="#year-at-a-glance">the year at a glance</a>.</p>
+          <ol class="timeline">
+          <li id="wfd-2027" class="tl--mid" data-type="on-air" data-start="2027-01-23" data-end="2027-01-24">
+            <span class="date-slab date-slab--range" aria-hidden="true"><span class="date-slab__mon">Jan</span><span class="date-slab__day">23–24</span><span class="date-slab__dow">Sat–Sun</span></span>
+            <article class="timeline__card" aria-labelledby="tt-wfd">
+              <p class="tl-tags"><span class="tag tag--now" data-now-tag hidden>Happening now</span><span class="tag">On-air event</span></p>
+              <h4 id="tt-wfd">Winter Field Day</h4>
+              <p class="tl-when"><time datetime="2027-01-23">Sat–Sun, Jan 23–24, 2027</time>.</p>
+              <div class="tl-grid">
+                <dl class="timeline__facts">
+                <dt>What</dt><dd>A winter operating event that tests portable and emergency-power stations.</dd>
+                </dl>
+                <dl class="timeline__facts">
+                <dt>Sign up</dt><dd>The WinterFieldDay subgroup on groups.io coordinates it.</dd>
+                </dl>
+              </div>
+              <div class="tl-actions"><button class="btn btn--ghost btn--sm" type="button" data-ics="event" data-event-id="wfd-2027"><svg class="icon" aria-hidden="true"><use href="#i-cal"/></svg>Add to calendar</button><a class="ext" href="https://winterfieldday.org/" rel="noopener">Winter Field Day<span class="vh"> (opens winterfieldday.org)</span></a></div>
+            </article>
+          </li>
+          <li id="bloomsday-2027" class="tl--mid" data-type="public-service" data-start="2027-05-02" data-end="2027-05-02">
+            <span class="date-slab" aria-hidden="true"><span class="date-slab__mon">May</span><span class="date-slab__day">2</span><span class="date-slab__dow">Sun</span></span>
+            <article class="timeline__card" aria-labelledby="tt-bloomsday">
+              <p class="tl-tags"><span class="tag tag--now" data-now-tag hidden>Happening now</span><span class="tag">Public service</span></p>
+              <h4 id="tt-bloomsday">Bloomsday</h4>
+              <p class="tl-when"><time datetime="2027-05-02">Sun, May 2, 2027</time>.</p>
+              <div class="tl-grid">
+                <dl class="timeline__facts">
+                <dt>What</dt><dd>One of the group’s signature public-service events: primary or backup communications for the race.</dd>
+                </dl>
+                <dl class="timeline__facts">
+                <dt>Sign up</dt><dd>Volunteer through the AEC, Public Events (NV2Z).</dd>
+                </dl>
+              </div>
+              <div class="tl-actions"><button class="btn btn--ghost btn--sm" type="button" data-ics="event" data-event-id="bloomsday-2027"><svg class="icon" aria-hidden="true"><use href="#i-cal"/></svg>Add to calendar</button><a href="documents.html#public-service-tips">Tips for your first event</a></div>
+            </article>
+          </li>
+          <li id="climb-2027" class="tl--mid" data-type="public-service" data-start="2027-06-13" data-end="2027-06-13" data-verify="true">
+            <span class="date-slab" aria-hidden="true"><span class="date-slab__mon">Jun</span><span class="date-slab__day">13</span><span class="date-slab__dow">Sun</span></span>
+            <article class="timeline__card" aria-labelledby="tt-climb">
+              <p class="tl-tags"><span class="tag tag--now" data-now-tag hidden>Happening now</span><span class="tag">Public service</span></p>
+              <h4 id="tt-climb">Climb for the Cure</h4>
+              <p class="tl-when"><time datetime="2027-06-13">Sun, Jun 13, 2027</time>.</p>
+              <div class="tl-grid">
+                <dl class="timeline__facts">
+                <dt>What</dt><dd>Public-service communications for the event.</dd>
+                </dl>
+                <dl class="timeline__facts">
+                <dt>Sign up</dt><dd>Through the volunteer contact, NZ2S.</dd>
+                </dl>
+              </div>
+              <div class="tl-actions"><button class="btn btn--ghost btn--sm" type="button" data-ics="event" data-event-id="climb-2027"><svg class="icon" aria-hidden="true"><use href="#i-cal"/></svg>Add to calendar</button></div>
+            </article>
+          </li>
+          </ol>
+        </div>
+    </section>
+
+    <section class="ws-section" id="after-action" aria-labelledby="aa-title">
+      <div class="ws-head"><h2 id="aa-title">Before, during and after</h2></div>
+      <div class="panel phases">
+        <div class="phase">
+          <h3><span class="hop" aria-hidden="true">1</span>Before</h3>
+          <ul>
+            <li>Check the assignment and plan on groups.io. Know your <button class="term" type="button" aria-expanded="false" aria-controls="t-ncs">net control</button><span class="term-def" id="t-ncs" role="note">The operator who runs a net, calling stations in turn so every message is heard. Members take turns, and new net controls are coached.</span> and your alternate (<span data-verify="true">146.880 MHz</span> if <button class="term" type="button" aria-expanded="false" aria-controls="t-w7gbu">W7GBU</button><span class="term-def" id="t-w7gbu" role="note">The group’s call sign and repeater, honoring Ira “Dean” Bula. 147.300 MHz, +600 kHz offset, 100 Hz tone.</span> is down).</li>
+            <li>Charge batteries, check your go-kit against the kit list, and program your handheld.</li>
+            <li>Carry forms: ICS-213, ICS-213RR, ICS-214 and 214a, ICS-309, ARRL Radiogram. <a href="documents.html#forms">Forms</a></li>
+            <li data-verify="true">Tip: fill out an ICS-213RR that describes your go-kit, and give it to whoever authorizes your deployment.</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <h3><span class="hop" aria-hidden="true">2</span>During</h3>
+          <ul>
+            <li>Check in with net control when you arrive and when you leave.</li>
+            <li>Log every message on an ICS-309 and your activity on an ICS-214.</li>
+            <li>Keep transmissions short, and leave gaps for priority traffic.</li>
+            <li>Look after yourself and the people around you: rest, eat, drink water. <q>Don’t hesitate to admit when things are getting to be too much.</q></li>
+          </ul>
+        </div>
+        <div class="phase">
+          <h3><span class="hop" aria-hidden="true">3</span>After</h3>
+          <ul>
+            <li>Send your logs and your part of the report as the exercise lead asks.</li>
+            <li>Leaders hold an action review within 72 hours of the end of an event.</li>
+            <li>For the <button class="term" type="button" aria-expanded="false" aria-controls="t-set">SET</button><span class="term-def" id="t-set" role="note">Simulated Emergency Test: the ARRL’s annual national exercise.</span>, an after-action report with a participant list goes to the Section Emergency Coordinator.</li>
+            <li><button class="term" type="button" aria-expanded="false" aria-controls="t-acs">ACS</button><span class="term-def" id="t-acs" role="note">Auxiliary Communications: Spokane County Emergency Management’s own volunteer radio program. Members pass a county background check.</span> members: note the date, and get the sign-off for your task book’s yearly field operation.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="ws-row">
+      <section class="ws-section" id="winlink-assignments" aria-labelledby="wl-title">
+        <div class="ws-head"><h2 id="wl-title">Winlink assignments</h2><a href="documents.html#winlink-intro">Winlink: getting started</a></div>
+        <div class="panel">
+          <p class="note-line wl-how">Answer on an ICS-213 unless another form is named. Send to <b>NV2Z</b> and <b>AG7QP</b> between <b>1700 and 2100</b> on the date shown. Radio is preferred; Telnet is acceptable.</p>
+          <table class="table table--dense table--stack wl-table">
+            <caption class="vh">Winlink assignments, Winlink nights on the 2nd and 4th Tuesdays</caption>
+            <thead><tr><th scope="col">Date</th><th scope="col">Assignment</th><th scope="col">Form</th></tr></thead>
+            <tbody data-widget="winlink-table" data-past="1">
+              <tr class="is-past"><th scope="row"><time datetime="2026-09-22">Tue, Sep 22</time></th><td data-label="Assignment">Identify steps, actions and precautions you should take in extreme cold. <span class="muted">(past)</span></td><td data-label="Form">Quick Message</td></tr>
+            <tr class="is-next"><th scope="row"><time datetime="2026-10-13">Tue, Oct 13</time></th><td data-label="Assignment">Submit a Did You Feel It report. Be sure to mark it as an exercise.</td><td data-label="Form">Did You Feel It (DYFI) report</td></tr>
+            <tr class=""><th scope="row"><time datetime="2026-10-27">Tue, Oct 27</time></th><td data-label="Assignment">Submit a welfare message.</td><td data-label="Form">Welfare Message / Quick Health &amp; Welfare</td></tr>
+            <tr class=""><th scope="row"><time datetime="2026-11-10">Tue, Nov 10</time></th><td data-label="Assignment">Report where you expect to have Thanksgiving dinner.</td><td data-label="Form">ICS-213</td></tr>
+            <tr class=""><th scope="row"><time datetime="2026-11-24">Tue, Nov 24</time></th><td data-label="Assignment">Request what you want Santa to bring you.</td><td data-label="Form">ICS-213RR</td></tr>
+            <tr class=""><th scope="row"><time datetime="2026-12-08">Tue, Dec 8</time></th><td data-label="Assignment">Give Santa a justification for your being good this year.</td><td data-label="Form">ICS-213</td></tr>
+            <tr class=""><th scope="row"><time datetime="2026-12-22">Tue, Dec 22</time></th><td data-label="Assignment">What are your New Year’s Eve plans?</td><td data-label="Form">ICS-213</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+        <section class="ws-section" id="public-service" aria-labelledby="ps-title">
+          <div class="ws-head"><h2 id="ps-title">Public-service events</h2></div>
+          <div class="panel">
+            <p class="note-line">Race courses and parade routes are where most of us first work a busy net. They count as your yearly field operation.</p>
+            <dl class="ps-list">
+              <div><dt>Bloomsday</dt><dd>Sun, May 2, 2027. Volunteer through the AEC, Public Events (NV2Z).</dd></div>
+              <div data-verify="true"><dt>Lilac Festival Armed Forces Torchlight Parade</dt><dd>Date not yet posted. Volunteer through the AEC, Public Events (NV2Z).</dd></div>
+              <div data-verify="true"><dt>Climb for the Cure</dt><dd>Sun, Jun 13, 2027. Volunteer contact NZ2S.</dd></div>
+              <div><dt>Fun runs and bike races</dt><dd>As requested. Volunteer through the AEC, Public Events (NV2Z).</dd></div>
+            </dl>
+            <p class="links-line"><a href="documents.html#public-service-tips">First event? Read these tips first</a></p>
+          </div>
+        </section>
+    </div>
+
+    <section class="ws-section" id="year-at-a-glance" aria-labelledby="ya-title">
+      <div class="ws-head"><h2 id="ya-title">The year at a glance</h2><p>The recurring program, not fixed dates.</p></div>
+      <p class="year__every"><b>Every month:</b> the Tuesday net (Winlink nights on the 2nd and 4th Tuesdays), the Second Saturday Workshop and Winlink workshop, the Third Thursday training meeting, and <span data-verify="true">the ACS GMRS net on the 3rd Tuesday</span>.</p>
+      <ol class="year__months">
+            <li data-m="0"><b>Jan<span class="vh">uary</span></b><ul><li>Winter Field Day</li></ul></li>
+            <li data-m="1"><b>Feb<span class="vh">ruary</span></b></li>
+            <li data-m="2"><b>Mar<span class="vh">ch</span></b></li>
+            <li data-m="3"><b>Apr<span class="vh">il</span></b></li>
+            <li data-m="4" data-verify="true"><b>May<span class="vh"></span></b><ul><li>Bloomsday</li><li>Lilac Festival Armed Forces Torchlight Parade</li></ul></li>
+            <li data-m="5" data-verify="true"><b>Jun<span class="vh">e</span></b><ul><li>ARRL Field Day</li></ul></li>
+            <li data-m="6"><b>Jul<span class="vh">y</span></b></li>
+            <li data-m="7"><b>Aug<span class="vh">ust</span></b></li>
+            <li data-m="8" class="is-current"><b>Sep<span class="vh">tember</span></b><ul><li>National Preparedness Month</li></ul></li>
+            <li data-m="9"><b>Oct<span class="vh">ober</span></b><ul><li>Simulated Emergency Test (first weekend)</li><li>Great ShakeOut “Did You Feel It?” message</li><li>State COMMEX</li></ul></li>
+            <li data-m="10"><b>Nov<span class="vh">ember</span></b></li>
+            <li data-m="11"><b>Dec<span class="vh">ember</span></b><ul><li>SKYWARN Recognition Day station at NWS Spokane</li></ul></li>
+      </ol>
+      <div class="year__notes">
+        <p data-verify="true"><b>Months with a 5th Tuesday:</b> the simplex net.</p>
+        <p data-verify="true"><b>Months with a 5th Saturday:</b> <button class="term" type="button" aria-expanded="false" aria-controls="t-eoc">EOC</button><span class="term-def" id="t-eoc" role="note">Emergency Operations Center: where the county coordinates its response.</span>-to-EOC exercises have been held on 5th Saturdays (2004, 2009, 2013, 2018, 2019).</p>
+      </div>
+    </section>
+
+    <section class="ws-section" id="past" aria-labelledby="past-title">
+      <div class="ws-head"><h2 id="past-title">Past exercises worth knowing</h2><p>Real incidents and the exercises that prepared for them. <span data-verify="true">Photos and after-action notes are welcome: send them to <a href="mailto:webmaster@spokares.org">webmaster@spokares.org</a>.</span></p></div>
+      <div class="panel">
+        <table class="table table--dense table--stack past-table">
+          <caption class="vh">Past exercises and operations, newest first</caption>
+          <thead><tr><th scope="col">When</th><th scope="col">What</th><th scope="col">Notes</th></tr></thead>
+          <tbody>
+              <tr data-verify="true"><th scope="row">2025</th><td data-label="What">Field Day in Spokane Valley as W7GBU</td><td data-label="Notes"><span class="muted" aria-hidden="true">—</span></td></tr>
+              <tr data-verify="true" class="is-real"><th scope="row">Aug 2023</th><td data-label="What">Gray and Oregon Road fires (real incident)</td><td data-label="Notes">The group provided a mobile network unit for the incident command post and the Disaster Assistance Center.</td></tr>
+              <tr><th scope="row">Oct 2022</th><td data-label="What">Rockford exercise</td><td data-label="Notes"><span class="muted" aria-hidden="true">—</span></td></tr>
+              <tr><th scope="row">Oct 2021</th><td data-label="What">Simulated Emergency Test</td><td data-label="Notes"><span class="muted" aria-hidden="true">—</span></td></tr>
+              <tr data-verify="true"><th scope="row">Dec 2019</th><td data-label="What">“Hazard City” hospital deployment exercise</td><td data-label="Notes"><span class="muted" aria-hidden="true">—</span></td></tr>
+              <tr><th scope="row">Oct 2019</th><td data-label="What">Quarterly all-members exercise</td><td data-label="Notes"><span class="muted" aria-hidden="true">—</span></td></tr>
+              <tr><th scope="row">Jul 2019</th><td data-label="What">Kootenai County exercise</td><td data-label="Notes"><span class="muted" aria-hidden="true">—</span></td></tr>
+              <tr><th scope="row">Mar 2019</th><td data-label="What">EOC-to-EOC 5th Saturday exercise</td><td data-label="Notes">More than 20 operators at sites across the county; traffic with Stevens County; Winlink over HF and VHF packet; WA ICS-213RR resource requests to the State EOC at Camp Murray.</td></tr>
+              <tr><th scope="row">Jun 2018</th><td data-label="What">Field Day 2018</td><td data-label="Notes"><span class="muted" aria-hidden="true">—</span></td></tr>
+              <tr><th scope="row">Mar 2018</th><td data-label="What">5th Saturday multi-county exercise</td><td data-label="Notes">Stations at outlying city halls with portable HF, VHF and UHF, Winlink, and the secondary repeater.</td></tr>
+              <tr><th scope="row">Dec 2017</th><td data-label="What">SKYWARN Recognition Day station at NWS Spokane</td><td data-label="Notes">New members operated HF.</td></tr>
+              <tr><th scope="row">Aug 2013</th><td data-label="What">EOC-to-EOC exercise</td><td data-label="Notes"><span class="muted" aria-hidden="true">—</span></td></tr>
+              <tr><th scope="row">2012 and 2013</th><td data-label="What">Field Day with the Inland Empire VHF Radio Amateurs on Mt. Spokane (as WR7VHF)</td><td data-label="Notes"><span class="muted" aria-hidden="true">—</span></td></tr>
+              <tr><th scope="row">Oct 2004</th><td data-label="What">Simulated Emergency Test</td><td data-label="Notes"><span class="muted" aria-hidden="true">—</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <a class="brand" href="../index.html"><img src="../assets/img/seal-ares-acs-400.png" alt="" width="46" height="46" loading="lazy"><span class="brand__name"><span>Spokane County</span> <strong>ARES-ACS</strong></span></a>
+        <div class="footer__lines">
+          <p class="footer__mission">Volunteer amateur radio emergency communications for Spokane County.</p>
+          <p>Formerly Spokane County ARES/RACES.</p>
+          <p>Meetings at Spokane County Emergency Management, 1121 W. Gardner Ave, Spokane, WA 99260.</p>
+        </div>
+        <div class="marks footer__marks">
+          <img class="mark--ares" src="../assets/img/ARES_logo.png" alt="ARRL Amateur Radio Emergency Service emblem" width="44" height="44" loading="lazy">
+          <img class="marks__seal-bg" src="../assets/img/ACS_logo-500.png" alt="Spokane Auxiliary Communications (ACS) seal" width="48" height="48" loading="lazy">
+          <img src="../assets/img/SCDEM_Logo-600.png" alt="Spokane County Emergency Management seal" width="48" height="48" loading="lazy">
+        </div>
+        <p class="footer__lines small">An ARRL Amateur Radio Emergency Service group, serving Spokane County Emergency Management.</p>
+      </div>
+      <div>
+        <h2>New to radio</h2>
+        <ul>
+          <li><a href="../how-it-works.html">How it works</a></li>
+          <li><a href="../about.html">About ARES &amp; ACS</a></li>
+          <li><a href="../about.html#licensing">Get licensed</a></li>
+          <li><a href="../index.html#visit">Listen to the Tuesday net</a></li>
+          <li><a class="ext" href="https://www.weather.gov/otx/Current_Spotter_Training" rel="noopener">SKYWARN spotter training<span class="vh"> (opens weather.gov)</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Licensed hams</h2>
+        <ul>
+          <li><a href="../index.html#join">Join the team</a></li>
+          <li><a href="../index.html#visit">Visit a meeting</a></li>
+          <li><a href="documents.html#ares-application">ARES application</a></li>
+          <li><a class="ext" href="https://spokaneares-acs.groups.io/g/main" rel="noopener">Apply to join groups.io<span class="vh"> (opens groups.io)</span></a></li>
+          <li><a class="ext" href="https://www.spokanecounty.gov/FormCenter/Emergency-Management-31/Volunteer-Emergency-Worker-Application-276" rel="noopener">County ACS application<span class="vh"> (opens spokanecounty.gov)</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Members</h2>
+        <ul>
+          <li><a href="index.html">For Members: this week</a></li>
+          <li><a href="documents.html">Documents &amp; downloads</a></li>
+          <li><a href="exercises.html">Exercises &amp; events</a></li>
+          <li><a href="documents.html#forms">Forms</a></li>
+          <li><a class="ext" href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io (members)<span class="vh"> (opens groups.io)</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Agency partners</h2>
+        <ul>
+          <li><a href="../about.html#for-agencies">For served agencies</a></li>
+          <li><a href="../about.html#who-we-serve">Who we serve</a></li>
+          <li><a href="../about.html#agreements">Agreements</a></li>
+          <li><a href="../how-it-works.html#activation">How activation works</a></li>
+          <li><a href="../about.html#contact">Contact the emergency coordinator</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p class="footer__emergency" data-verify="true">A volunteer group, not an emergency service. In an emergency, call 911.</p>
+      <ul>
+        <li><a href="#">Privacy</a></li>
+        <li>© Spokane County ARES-ACS</li>
+      </ul>
+      <p class="footer__mock">Mockup — content to be verified before launch</p>
+    </div>
+  </div>
+</footer>
+<script src="../assets/data.js"></script>
+<script src="../assets/site.js"></script>
+<script>
+/* Page-scoped: keep the timeline honest to today's date (from data.js, so
+   ?today= works). Entries that have ended drop off; entries in progress get
+   "Happening now"; the current month is marked on the year strip. Months
+   left empty by a filter chip are hidden too. */
+document.addEventListener('DOMContentLoaded', function () {
+  var S = window.SPOKARES; if (!S || !S.fn) return;
+  var today = S.fn.today();
+  Array.prototype.forEach.call(document.querySelectorAll('.timeline > li[data-start]'), function (li) {
+    var s = li.getAttribute('data-start'), e = li.getAttribute('data-end') || s;
+    var tag = li.querySelector('[data-now-tag]'), now = !!tag && s <= today && today <= e;
+    li.classList.toggle('is-over', e < today);
+    li.classList.toggle('is-now', now);
+    if (tag) tag.hidden = !now;
+    Array.prototype.forEach.call(li.querySelectorAll('.tl-nets li'), function (n) { var t = n.querySelector('time'); if (t && t.getAttribute('datetime') < today) n.hidden = true; });
+  });
+  function tidy() {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-month]'), function (m) {
+      var any = Array.prototype.some.call(m.querySelectorAll('.timeline > li'), function (li) { return !li.hidden && !li.classList.contains('is-over'); });
+      m.hidden = !any;
+    });
+  }
+  tidy();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-filter]'), function (b) { b.addEventListener('click', function () { setTimeout(tidy, 0); }); });
+  var mon = S.fn.parse(today).getMonth();
+  Array.prototype.forEach.call(document.querySelectorAll('.year__months > li[data-m]'), function (li) { li.classList.toggle('is-current', +li.getAttribute('data-m') === mon); });
+});
+</script>
+</body>
+</html>

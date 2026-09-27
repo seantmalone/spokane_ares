@@ -1,0 +1,33 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "spokares/toc",
+	"title": "On this page",
+	"category": "spokares",
+	"icon": "list-view",
+	"description": "Contents list built from this page's H2 headings that have anchors.",
+	"textdomain": "spokares-core",
+	"attributes": {
+		"title": {
+			"type": "string",
+			"default": "On this page",
+			"label": "Title"
+		},
+		"labels": {
+			"type": "string",
+			"default": "legal-basis=Legal basis;leadership=Leadership;history=History",
+			"label": "Shorter link text (anchor=Words; …)"
+		}
+	},
+	"supports": {
+		"autoRegister": true,
+		"html": false,
+		"reusable": false,
+		"className": true
+	},
+	"usesContext": [
+		"postId"
+	],
+	"viewScriptModule": "@spokares/toc",
+	"render": "file:./render.php"
+}

@@ -1,0 +1,413 @@
+[
+ {
+  "option": "option-a-field-guide",
+  "pages": [
+   {
+    "page": "index.html",
+    "words": 1894,
+    "h2": 9,
+    "ctas": 27,
+    "h_desktop": 6100,
+    "h_mobile": 13430
+   },
+   {
+    "page": "how-it-works.html",
+    "words": 3620,
+    "h2": 11,
+    "ctas": 14,
+    "h_desktop": 13597,
+    "h_mobile": 28389
+   },
+   {
+    "page": "about.html",
+    "words": 6621,
+    "h2": 14,
+    "ctas": 14,
+    "h_desktop": 29332,
+    "h_mobile": 44302
+   },
+   {
+    "page": "members/index.html",
+    "words": 1271,
+    "h2": 8,
+    "ctas": 6,
+    "h_desktop": 4774,
+    "h_mobile": 10065
+   },
+   {
+    "page": "members/documents.html",
+    "words": 2413,
+    "h2": 11,
+    "ctas": 10,
+    "h_desktop": 9626,
+    "h_mobile": 16406
+   },
+   {
+    "page": "members/exercises.html",
+    "words": 1986,
+    "h2": 7,
+    "ctas": 12,
+    "h_desktop": 7653,
+    "h_mobile": 13416
+   }
+  ],
+  "total_words": 17805,
+  "repeated_shingles": 621,
+  "repeated_shingle_ratio": 0.036,
+  "key_fact_page_counts": {
+   "repeater 147.300": 4,
+   "meeting address": 3,
+   "Tuesday net time": 6,
+   "ARES vs ACS explainer": 1,
+   "join steps": 5,
+   "county application": 4,
+   "ICS-213": 6,
+   "task book": 6,
+   "WSDOT exercise": 4,
+   "groups.io": 5
+  },
+  "key_fact_pages": {
+   "repeater 147.300": [
+    "about.html",
+    "how-it-works.html",
+    "index.html",
+    "members/index.html"
+   ],
+   "meeting address": [
+    "about.html",
+    "index.html",
+    "members/index.html"
+   ],
+   "Tuesday net time": [
+    "about.html",
+    "how-it-works.html",
+    "index.html",
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ],
+   "ARES vs ACS explainer": [
+    "about.html"
+   ],
+   "join steps": [
+    "about.html",
+    "how-it-works.html",
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ],
+   "county application": [
+    "about.html",
+    "how-it-works.html",
+    "index.html",
+    "members/documents.html"
+   ],
+   "ICS-213": [
+    "about.html",
+    "how-it-works.html",
+    "index.html",
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ],
+   "task book": [
+    "about.html",
+    "how-it-works.html",
+    "index.html",
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ],
+   "WSDOT exercise": [
+    "how-it-works.html",
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ],
+   "groups.io": [
+    "about.html",
+    "index.html",
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ]
+  }
+ },
+ {
+  "option": "option-b-lines-down",
+  "pages": [
+   {
+    "page": "index.html",
+    "words": 1096,
+    "h2": 4,
+    "ctas": 12,
+    "h_desktop": 4954,
+    "h_mobile": 9452
+   },
+   {
+    "page": "how-it-works.html",
+    "words": 3802,
+    "h2": 13,
+    "ctas": 13,
+    "h_desktop": 19582,
+    "h_mobile": 32177
+   },
+   {
+    "page": "about.html",
+    "words": 6638,
+    "h2": 26,
+    "ctas": 6,
+    "h_desktop": 31979,
+    "h_mobile": 50214
+   },
+   {
+    "page": "members/index.html",
+    "words": 1145,
+    "h2": 7,
+    "ctas": 8,
+    "h_desktop": 4522,
+    "h_mobile": 10313
+   },
+   {
+    "page": "members/documents.html",
+    "words": 2467,
+    "h2": 11,
+    "ctas": 11,
+    "h_desktop": 9385,
+    "h_mobile": 22783
+   },
+   {
+    "page": "members/exercises.html",
+    "words": 2098,
+    "h2": 6,
+    "ctas": 22,
+    "h_desktop": 9689,
+    "h_mobile": 17840
+   }
+  ],
+  "total_words": 17246,
+  "repeated_shingles": 444,
+  "repeated_shingle_ratio": 0.026,
+  "key_fact_page_counts": {
+   "repeater 147.300": 5,
+   "meeting address": 3,
+   "Tuesday net time": 6,
+   "ARES vs ACS explainer": 1,
+   "join steps": 6,
+   "county application": 6,
+   "ICS-213": 6,
+   "task book": 5,
+   "WSDOT exercise": 5,
+   "groups.io": 6
+  },
+  "key_fact_pages": {
+   "repeater 147.300": [
+    "about.html",
+    "how-it-works.html",
+    "index.html",
+    "members/exercises.html",
+    "members/index.html"
+   ],
+   "meeting address": [
+    "about.html",
+    "index.html",
+    "members/exercises.html"
+   ],
+   "Tuesday net time": [
+    "about.html",
+    "how-it-works.html",
+    "index.html",
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ],
+   "ARES vs ACS explainer": [
+    "about.html"
+   ],
+   "join steps": [
+    "about.html",
+    "how-it-works.html",
+    "index.html",
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ],
+   "county application": [
+    "about.html",
+    "how-it-works.html",
+    "index.html",
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ],
+   "ICS-213": [
+    "about.html",
+    "how-it-works.html",
+    "index.html",
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ],
+   "task book": [
+    "about.html",
+    "how-it-works.html",
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ],
+   "WSDOT exercise": [
+    "how-it-works.html",
+    "index.html",
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ],
+   "groups.io": [
+    "about.html",
+    "how-it-works.html",
+    "index.html",
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ]
+  }
+ },
+ {
+  "option": "option-c-open-door",
+  "pages": [
+   {
+    "page": "index.html",
+    "words": 1644,
+    "h2": 6,
+    "ctas": 14,
+    "h_desktop": 5214,
+    "h_mobile": 11913
+   },
+   {
+    "page": "how-it-works.html",
+    "words": 4146,
+    "h2": 11,
+    "ctas": 14,
+    "h_desktop": 15427,
+    "h_mobile": 23900
+   },
+   {
+    "page": "about.html",
+    "words": 7055,
+    "h2": 26,
+    "ctas": 11,
+    "h_desktop": 35820,
+    "h_mobile": 53541
+   },
+   {
+    "page": "members/index.html",
+    "words": 1215,
+    "h2": 9,
+    "ctas": 3,
+    "h_desktop": 5597,
+    "h_mobile": 13311
+   },
+   {
+    "page": "members/documents.html",
+    "words": 2264,
+    "h2": 11,
+    "ctas": 1,
+    "h_desktop": 10884,
+    "h_mobile": 19600
+   },
+   {
+    "page": "members/exercises.html",
+    "words": 2554,
+    "h2": 6,
+    "ctas": 2,
+    "h_desktop": 8656,
+    "h_mobile": 15933
+   }
+  ],
+  "total_words": 18878,
+  "repeated_shingles": 462,
+  "repeated_shingle_ratio": 0.025,
+  "key_fact_page_counts": {
+   "repeater 147.300": 5,
+   "meeting address": 4,
+   "Tuesday net time": 6,
+   "ARES vs ACS explainer": 1,
+   "join steps": 6,
+   "county application": 4,
+   "ICS-213": 5,
+   "task book": 6,
+   "WSDOT exercise": 5,
+   "groups.io": 6
+  },
+  "key_fact_pages": {
+   "repeater 147.300": [
+    "about.html",
+    "how-it-works.html",
+    "index.html",
+    "members/exercises.html",
+    "members/index.html"
+   ],
+   "meeting address": [
+    "about.html",
+    "how-it-works.html",
+    "index.html",
+    "members/exercises.html"
+   ],
+   "Tuesday net time": [
+    "about.html",
+    "how-it-works.html",
+    "index.html",
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ],
+   "ARES vs ACS explainer": [
+    "about.html"
+   ],
+   "join steps": [
+    "about.html",
+    "how-it-works.html",
+    "index.html",
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ],
+   "county application": [
+    "about.html",
+    "how-it-works.html",
+    "index.html",
+    "members/documents.html"
+   ],
+   "ICS-213": [
+    "about.html",
+    "how-it-works.html",
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ],
+   "task book": [
+    "about.html",
+    "how-it-works.html",
+    "index.html",
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ],
+   "WSDOT exercise": [
+    "how-it-works.html",
+    "index.html",
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ],
+   "groups.io": [
+    "about.html",
+    "how-it-works.html",
+    "index.html",
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ]
+  }
+ }
+]

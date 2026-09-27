@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js'); if (location.hash) document.documentElement.style.scrollBehavior = 'auto'; /* deep links land instantly; site.js restores smooth scrolling */</script>
+<title>About ARES &amp; ACS | Spokane County ARES-ACS</title>
+<meta name="description" content="What ARES and ACS are, the legal basis, who we serve, leadership, how to join, task books, licensing and history.">
+<meta name="theme-color" content="#1E3557">
+<link rel="icon" href="assets/img/seal-ares-acs-400.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  /* =====================================================================
+     About, round 3 (page-scoped). Tokens only: no new colours, fonts,
+     shadows or radii. The TOC is the page's one bold element; the rest is
+     hairlines, lists and tables. The W7GBU callsign block is the one
+     display flourish (DESIGN.md §1.4).
+     ===================================================================== */
+
+  .about-intro .blank { display: inline-block; width: 5.5em; height: 1em; border-bottom: 1.5px solid var(--ink-2); vertical-align: -.2em; }
+
+  /* Every anchored thing in the article lands 24px under the scroll padding,
+     the same as the H2s. Alias ids are empty spans pinned to the top of their H2. */
+  .prose [id] { scroll-margin-top: 24px; }
+  .prose h2 { position: relative; }
+  .prose .alias { position: absolute; top: 0; left: 0; width: 1px; height: 1px; }
+
+  /* Sections: a hairline above each H2 marks the start of a topic */
+  .prose > h2 { margin-top: 1.7em; padding-top: .75em; border-top: 1px solid var(--line); }
+  .prose > h2:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+  .prose > .last-topic > h2:first-child { margin-top: 1.7em; padding-top: .75em; border-top: 1px solid var(--line); }
+  .prose .last-topic > * + * { margin-top: 1em; }
+  .prose .last-topic > h2 + * { margin-top: .6em; }
+
+  /* Contact is the last topic. Reserve enough height below its H2 that a cold load of
+     about.html#contact can scroll it to the top (40px on desktop, 104px under the phone
+     TOC bar). The last number in each calc is a floor for the footer's height there.
+     Capped at 700px so very tall windows don't get a large empty band. */
+  .last-topic { min-height: min(700px, calc(100vh - 40px - var(--section-y) - 150px)); }
+  @media (max-width: 1023px) { .last-topic { min-height: min(700px, calc(100vh - 104px - var(--section-y) - 210px)); } }
+  @media (max-width: 640px) { .last-topic { min-height: min(700px, calc(100vh - 104px - var(--section-y) - 340px)); } }
+  .prose .opt { font-family: var(--font-body); font-weight: 400; font-size: var(--fs-ui); letter-spacing: 0; color: var(--ink-2); }
+  .prose .table-wrap + .table-wrap { margin-top: 16px; }
+
+  /* TOC (≥ 1024px): nine entries in the display face, on a white card */
+  @media (min-width: 1024px) {
+    .toc { top: 24px; background: var(--white); border: 1px solid var(--line); border-radius: var(--r-card); padding: 18px 10px 10px; }
+    .toc-title { padding-inline: 12px; }
+    .toc-list a { min-height: 42px; font-family: var(--font-display); font-weight: 600; font-stretch: 90%; font-size: 1.0625rem; letter-spacing: -.005em; }
+    .toc-list a[aria-current="true"] { font-weight: 700; }
+  }
+  @media (max-width: 1023px) {
+    /* Scripts off: the open TOC must not stick over the text */
+    .no-js .toc { position: static; }
+    .no-js .toc-details[open] .toc-panel { max-height: none; }
+  }
+
+  /* ARES and ACS: four terms, the acronym set large */
+  .prose .defs { display: grid; grid-template-columns: 6.5em minmax(0, 1fr); gap: 0 20px; border-top: 1px solid var(--line); }
+  .defs dt, .defs dd { margin: 0; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .defs dt { font-family: var(--font-display); font-weight: 700; font-stretch: 90%; font-variation-settings: "opsz" 96; font-size: 1.5rem; line-height: 1.2; letter-spacing: -.01em; color: var(--dusk); }
+  .defs dd { line-height: 1.55; }
+  .prose .callout--not ul { margin-top: 4px; }
+
+  /* Organization: two chains that meet in one team (labels only) */
+  .chains { font-size: var(--fs-ui); line-height: 1.35; }
+  .chain-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(4, auto); gap: 18px 16px; }
+  .chain { display: grid; grid-row: 1 / span 4; grid-template-rows: subgrid; }
+  .chain-name { font-weight: 700; font-size: var(--fs-small); color: var(--ink-2); text-align: center; align-self: end; }
+  .prose .chain ol { list-style: none; padding: 0; display: grid; grid-row: 2 / span 3; grid-template-rows: subgrid; }
+  .prose .chain li { position: relative; margin: 0; display: grid; align-content: center; padding: 10px 12px; border-radius: 10px; background: var(--dusk-tint); text-align: center; }
+  .chain li + li::before { content: ""; position: absolute; left: 50%; top: -18px; height: 18px; border-left: 2px solid var(--dusk-line); }
+  .prose .chain--county li { background: var(--pine-tint); }
+  .chain li small { display: block; font-size: var(--fs-small); color: var(--ink-2); }
+  .chain-merge { display: block; width: 100%; height: 40px; color: var(--dusk-line); }
+  .prose .chain-meet { margin-top: 0; padding: 14px 18px; border: 2px solid var(--dusk); border-radius: var(--r-card); background: var(--white); text-align: center; }
+  .chain-meet b { display: block; font-family: var(--font-display); font-size: 1.1875rem; font-stretch: 90%; color: var(--dusk-deep); line-height: 1.25; }
+  .chains figcaption { margin-top: 12px; font-size: var(--fs-small); color: var(--ink-2); line-height: 1.5; }
+
+  /* Leadership tables: roles in regular weight, call signs carry the weight */
+  .roles tbody th { font-weight: 400; }
+  .roles td { width: 34%; }
+  .roles .callsign { font-weight: 700; color: var(--dusk-deep); }
+
+  /* Joining: the two paths are real sequences */
+  .prose ol.path { padding-left: 1.5em; }
+  .prose .path > li { padding-left: .25em; }
+  .prose .path > li::marker { font-family: var(--font-display); font-weight: 800; color: var(--dusk); }
+  .prose .path-cta { margin-top: 12px; }
+
+  /* ACS task book table */
+  .tb tbody th { width: 27%; }
+  .lvl-n { display: block; margin-bottom: 4px; font-family: var(--font-display); font-weight: 800; font-stretch: 75%; font-variation-settings: "opsz" 96; font-size: 1.75rem; line-height: 1; color: var(--dusk); }
+  .prose .cell-list { list-style: none; padding-left: 0; }
+  .prose .cell-list li + li { margin-top: 4px; }
+
+  /* Exam table: keep the fee column to one line */
+  .exams th:last-child, .exams td:last-child { white-space: nowrap; }
+
+  /* History: the callsign block is the page's one display flourish, kept a size
+     below site.css's 11rem so the TOC stays the anchor */
+  .prose > .callsign-block { font-size: clamp(4.5rem, 2rem + 7vw, 8rem); }
+  .prose .timeline { padding-left: 0; }
+  .prose .timeline li { margin-top: 0; grid-template-columns: 2.6em 20px minmax(0, 1fr); }
+  .timeline .tl-time { font-size: 1rem; text-align: left; }
+  .timeline .tl-body p { margin-top: 0; font-size: var(--fs-ui); line-height: 1.5; color: var(--ink); }
+
+  @media (max-width: 640px) {
+    .prose .defs { grid-template-columns: minmax(0, 1fr); }
+    .defs dt { padding-bottom: 0; border-bottom: 0; }
+    .defs dd { padding-top: 4px; }
+    .chain-cols { column-gap: 10px; }
+    .prose .chain li { padding: 8px; font-size: var(--fs-small); }
+    .tb tbody th, .roles td { width: auto; }
+    .lvl-n { display: inline-block; margin: 0 8px 0 0; font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body data-root="">
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ======================= ICON SPRITE (copy verbatim into every page) ======================= -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4.5" height="7" rx="1.5"/><rect x="16.5" y="14" width="4.5" height="7" rx="1.5"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15.6 14.3A5 5 0 0 1 21 19"/></symbol>
+  <symbol id="i-tools" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></symbol>
+  <symbol id="i-door" viewBox="0 0 24 24"><path d="M6 21V4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5V21"/><path d="M3 21h18"/><circle cx="14.5" cy="12.5" r="1" fill="currentColor"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-radio" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="14" rx="2"/><path d="M9.5 7V2.5M10 11h4M10 14h4"/><circle cx="12" cy="17.6" r=".7" fill="currentColor"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-form" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2.8h6V4M8.5 10h7M8.5 14h7M8.5 18h4"/></symbol>
+  <symbol id="i-hospital" viewBox="0 0 24 24"><path d="M4 21V8l8-4 8 4v13M2.5 21h19M12 9v6M9 12h6"/></symbol>
+  <symbol id="i-weather" viewBox="0 0 24 24"><path d="M7 17a4.5 4.5 0 1 1 1-8.9A5.5 5.5 0 0 1 18.5 10 3.5 3.5 0 0 1 18 17"/><path d="M12.5 13l-2 4h3l-2 4"/></symbol>
+  <symbol id="i-antenna" viewBox="0 0 24 24"><path d="M12 10v11M8 21l4-11 4 11"/><circle cx="12" cy="8" r="1.5"/><path d="M8.5 4.5a5 5 0 0 0 0 7M15.5 4.5a5 5 0 0 1 0 7"/></symbol>
+  <symbol id="i-trailer" viewBox="0 0 24 24"><rect x="2.5" y="6" width="15" height="10" rx="1.5"/><path d="M17.5 13h4M10 6V3.5"/><circle cx="7" cy="17.5" r="1.8"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5z"/><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H20"/></symbol>
+  <symbol id="i-kit" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M12 11v5M9.5 13.5h5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></symbol>
+  <symbol id="i-message" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol>
+  <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 12h3l2-5 3 10 3-12 3 12 2-5h4"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></symbol>
+  <!-- Drawn locator for "Where we meet" (not a Google capture). Use: <svg viewBox="0 0 400 250" role="img" aria-label="…"><use href="#map-meet"/></svg> -->
+  <symbol id="map-meet" viewBox="0 0 400 250">
+    <rect width="400" height="250" fill="#E8EEF6"/>
+    <g stroke="#D0DAE7" stroke-width="19" fill="none">
+      <path d="M0 36H400M0 104H400M0 212H400M58 0V250M176 104V250M370 0V250"/>
+    </g>
+    <g stroke="#FFFFFF" stroke-width="15" fill="none">
+      <path d="M0 36H400M0 104H400M0 212H400M58 0V250M176 104V250M370 0V250"/>
+    </g>
+    <rect x="190" y="175" width="164" height="28" rx="3" fill="#FFFFFF" stroke="#B9C7DB" stroke-width="1.5"/>
+    <text x="272" y="193.5" text-anchor="middle" font-family="Atkinson Hyperlegible, Verdana, sans-serif" font-size="11.5" fill="#465163">Spokane County Courthouse</text>
+    <rect x="193" y="121" width="78" height="42" rx="3" fill="#E4EFEA" stroke="#2E5B4F" stroke-width="2"/>
+    <g font-family="Atkinson Hyperlegible, Verdana, sans-serif" font-size="12.5" fill="#465163">
+      <text x="248" y="40.5">W Boone Ave</text>
+      <text x="72" y="108.5" font-weight="700" fill="#1B2433">W Gardner Ave</text>
+      <text x="248" y="216.5">W Mallon Ave</text>
+      <text transform="translate(180.5 204) rotate(-90)" font-weight="700" fill="#1B2433">N Jefferson St</text>
+      <text transform="translate(62.5 196) rotate(-90)">N Adams St</text>
+      <text transform="translate(374.5 196) rotate(-90)">N Monroe St</text>
+    </g>
+    <g font-family="Atkinson Hyperlegible, Verdana, sans-serif">
+      <text x="196" y="60" font-size="13" font-weight="700" fill="#1E3557">Spokane County</text>
+      <text x="196" y="75" font-size="13" font-weight="700" fill="#1E3557">Emergency Management</text>
+      <text x="196" y="90" font-size="12" fill="#465163">1121 W Gardner Ave</text>
+    </g>
+    <path d="M232 94V112" stroke="#2F4E7E" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <g transform="translate(232 141)">
+      <path d="M0 0C-3 -6-11 -12-11 -21A11 11 0 0 1 11 -21C11 -12 3 -6 0 0Z" fill="#2F4E7E"/>
+      <circle cx="0" cy="-21" r="4" fill="#FFFFFF"/>
+    </g>
+    <g transform="translate(26 158)" font-family="Atkinson Hyperlegible, Verdana, sans-serif">
+      <circle r="13" fill="#FFFFFF" stroke="#B9C7DB" stroke-width="1.5"/>
+      <path d="M0 -8L4.5 4 0 1.5-4.5 4Z" fill="#1E3557"/>
+      <text y="28" text-anchor="middle" font-size="11" fill="#465163">N</text>
+    </g>
+  </symbol>
+</svg>
+<!-- ======================= /ICON SPRITE ======================= -->
+
+<!-- ======================= HEADER ======================= -->
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="index.html" aria-label="Spokane County ARES-ACS, home">
+      <img src="assets/img/seal-ares-acs-400.png" alt="" width="50" height="50">
+      <span class="brand-text"><span class="brand-county">Spokane County</span><span class="brand-name">ARES-ACS</span></span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <ul class="nav-list">
+        <li><a class="nav-link" href="index.html">Home</a></li>
+        <li><a class="nav-link" href="how-it-works.html">How it works</a></li>
+        <li><a class="nav-link" href="about.html" aria-current="page">About ARES &amp; ACS</a></li>
+        <li><a class="nav-link" href="members/index.html">For Members</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn--join header-join" href="index.html#join">Join the team</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <svg class="icon icon-open" aria-hidden="true"><use href="#i-menu"/></svg>
+      <svg class="icon icon-close" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
+  </div>
+</header>
+<!-- ======================= /HEADER ======================= -->
+
+
+<main id="main">
+
+  <!-- ============================================================= INTRO
+       H1, one-sentence lede, the reviewed line. No breadcrumb: the header marks the page.
+       The review date is filled in by the page owner at review (copy-about.md); never invent one. -->
+  <div class="page-intro about-intro">
+    <div class="wrap">
+      <h1>About ARES &amp; ACS</h1>
+      <p class="lede">The details behind the team, for prospective members and partner agencies.</p>
+      <p class="meta-line" data-verify="true">Last reviewed <span class="blank" title="Filled in by the page owner at review"><span class="sr-only">(date to come)</span></span>. Page owner: Emergency Coordinator.</p>
+    </div>
+  </div>
+
+  <div class="wrap doc-layout">
+
+    <!-- ============================================================= TOC
+         Nine entries, one per H2, hand-written so it works with scripts off (site.js
+         only builds the list when it is empty). data-widget="toc" adds the scroll-spy
+         and closes the disclosure on phones. -->
+    <nav class="toc" id="contents" aria-label="On this page" data-widget="toc">
+      <details class="toc-details" open>
+        <summary>Jump to section <span class="current"></span><svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary>
+        <div class="toc-panel">
+          <p class="toc-title">On this page</p>
+          <ol class="toc-list">
+            <li><a href="#ares-acs">ARES and ACS</a></li>
+            <li><a href="#legal-basis">Legal basis</a></li>
+            <li><a href="#who-we-serve">Who we serve</a></li>
+            <li><a href="#leadership">Leadership</a></li>
+            <li><a href="#membership">Joining</a></li>
+            <li><a href="#training-path">Training and task books</a></li>
+            <li><a href="#licensing">Getting licensed</a></li>
+            <li><a href="#history">History</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ol>
+        </div>
+      </details>
+    </nav>
+
+    <!-- ============================================================= ARTICLE -->
+    <article class="prose">
+
+      <!-- 1. ARES and ACS. Retired ids kept as aliases (placement-map §2.4): empty spans
+           pinned to the top of the H2, so they land exactly where #ares-acs does. -->
+      <h2 id="ares-acs"><span class="alias" id="what-is-ares"></span><span class="alias" id="what-is-acs"></span><span class="alias" id="two-hats"></span><span class="alias" id="auxcomm"></span>ARES and ACS</h2>
+      <dl class="defs">
+        <dt>ARES</dt>
+        <dd><b>Amateur Radio Emergency Service.</b> The ARRL’s volunteer program, open to any licensed ham.</dd>
+        <dt>ACS</dt>
+        <dd><b data-verify="true">Auxiliary Communications.</b> Spokane County Emergency Management’s volunteer radio unit, open to ARES members who pass a Sheriff’s Office background check.</dd>
+        <dt>RACES</dt>
+        <dd>The FCC’s rule for amateurs serving government (97.407). The county’s RACES program is now part of ACS, so older documents say “ARES/RACES.”</dd>
+        <dt>AUXCOMM</dt>
+        <dd>The federal qualification ACS is modeled on, not a separate group to join.</dd>
+      </dl>
+      <div class="callout callout--not" id="what-we-are-not">
+        <p class="callout-label">What we are not</p>
+        <ul>
+          <li>Not first responders. We support the agencies that respond.</li>
+          <li>Not a replacement for 911 or the county’s radio systems.</li>
+          <li>Not a public alert service. For alerts, register with <a href="https://www.spokanecounty.gov/3007/Alert-Spokane" rel="noopener">ALERT Spokane<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens spokanecounty.gov)</span></a>.</li>
+          <li>Not a source of official incident information.</li>
+        </ul>
+      </div>
+
+      <!-- 2. Legal basis. The whole section is data-verify: SCEM must review it before
+           launch, and it must not overstate protection. -->
+      <h2 id="legal-basis">The legal basis, in plain English</h2>
+      <div class="table-wrap" data-verify="true">
+        <table class="data-table table--stack">
+          <thead><tr><th scope="col">Layer</th><th scope="col">Rule</th><th scope="col">What it means</th></tr></thead>
+          <tbody>
+            <tr>
+              <th scope="row">Federal</th>
+              <td data-label="Rule"><a href="https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-97" rel="noopener">47 CFR Part 97<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens ecfr.gov)</span></a></td>
+              <td data-label="What it means">Every member holds an FCC license.</td>
+            </tr>
+            <tr>
+              <th scope="row">Federal</th>
+              <td data-label="Rule"><a href="https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-97/subpart-E/section-97.407" rel="noopener">97.407, RACES<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens ecfr.gov)</span></a></td>
+              <td data-label="What it means">Agency-certified operators, civil-defense traffic only, drills capped at one hour a week (more with approval).</td>
+            </tr>
+            <tr>
+              <th scope="row">State</th>
+              <td data-label="Rule"><a href="https://app.leg.wa.gov/rcw/default.aspx?cite=38.52" rel="noopener">RCW 38.52<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens leg.wa.gov)</span></a> and <a href="https://app.leg.wa.gov/wac/default.aspx?cite=118-04" rel="noopener">WAC 118-04<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens leg.wa.gov)</span></a></td>
+              <td data-label="What it means">Emergency-worker registration and coverage.</td>
+            </tr>
+            <tr>
+              <th scope="row">County</th>
+              <td data-label="Rule">Spokane County emergency plan, 2021</td>
+              <td data-label="What it means">ACS supports ESF-2, the county’s communications function.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout callout--legal" data-verify="true">
+        <p><b>What this means for you.</b> Protection comes from being a registered county emergency worker (the ACS path) on an activity with a state mission number. ARES-only activities, such as community events, are not county activations.</p>
+      </div>
+
+      <!-- 3. Who we serve. Red Cross and IEVHFRA appear under Agreements only. -->
+      <h2 id="who-we-serve">Who we serve</h2>
+      <ul>
+        <li><b>Spokane County Emergency Management:</b> primary; activates ACS.</li>
+        <li><b>National Weather Service, Spokane:</b> SKYWARN.</li>
+        <li><b>Area hospitals:</b> backup communications.</li>
+        <li><b>Community event organizers.</b></li>
+      </ul>
+
+      <h3 id="agreements">Agreements</h3>
+      <ul>
+        <li><b>Inland Empire VHF Radio Amateurs (IEVHFRA), MOU Revision 5 (May 6, 2023):</b> a backup repeater, a second repeater for special nets, and packet paths into Winlink.</li>
+        <li><b>National, through the ARRL:</b> FEMA (2023), American Red Cross (renewed 2021), NWS SKYWARN (1986).</li>
+      </ul>
+
+      <h3 id="for-agencies">How we work with agencies</h3>
+      <p>Agencies request support through Spokane County Emergency Management.</p>
+      <p><a class="btn btn--outline" href="mailto:ec@spokares.org" data-verify="true"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg>Email the Emergency Coordinator</a></p>
+
+      <!-- 4. Organization and leadership. Figure: labels only (two chains meeting in one
+           team); the line under it is the caption. Every table row data-verify. -->
+      <h2 id="leadership">Organization and leadership</h2>
+      <figure class="chains" id="structure">
+        <div class="chain-cols">
+          <div class="chain">
+            <p class="chain-name">ARRL</p>
+            <ol>
+              <li>ARRL</li>
+              <li>Eastern Washington Section</li>
+              <li>ARES District 9</li>
+            </ol>
+          </div>
+          <div class="chain chain--county">
+            <p class="chain-name">County</p>
+            <ol>
+              <li>Washington Emergency Management Division</li>
+              <li>Spokane County Emergency Management<small>Sheriff, Director</small></li>
+              <li>ACS</li>
+            </ol>
+          </div>
+        </div>
+        <svg class="chain-merge" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M25 0 C25 24 50 16 50 40 M75 0 C75 24 50 16 50 40" fill="none" stroke="currentColor" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>
+        <p class="chain-meet"><b>Emergency Coordinator + AECs</b>One team</p>
+        <figcaption data-verify="true">The Emergency Coordinator is appointed through the ARRL Section and also serves as the county’s RACES/ACS officer.</figcaption>
+      </figure>
+
+      <div class="table-wrap">
+        <table class="data-table roles">
+          <thead><tr><th scope="col">Spokane County unit</th><th scope="col">Call sign</th></tr></thead>
+          <tbody>
+            <tr data-verify="true"><th scope="row">Emergency Coordinator; website admin</th><td class="callsign">W7TSC</td></tr>
+            <tr data-verify="true"><th scope="row">AEC, Public Events; Winlink coordinator</th><td class="callsign">NV2Z</td></tr>
+            <tr data-verify="true"><th scope="row">AEC, Hospital Coordinator</th><td class="callsign">K7MHG</td></tr>
+            <tr data-verify="true"><th scope="row">AEC, Logistics &amp; Comms; W7GBU license trustee</th><td class="callsign">K7DSR</td></tr>
+            <tr data-verify="true"><th scope="row">AEC, Net Manager</th><td class="callsign">AG7QP</td></tr>
+            <tr data-verify="true"><th scope="row">Public Information Officer</th><td>Open position. <a href="#contact">Interested? Tell us.</a></td></tr>
+            <tr data-verify="true"><th scope="row">SKYWARN representatives</th><td class="callsign">AA7RT, W7UWC</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table roles">
+          <thead><tr><th scope="col">Eastern Washington Section</th><th scope="col">Call sign</th></tr></thead>
+          <tbody>
+            <tr data-verify="true"><th scope="row">ARRL Section Manager</th><td class="callsign">KA7LJQ</td></tr>
+            <tr data-verify="true"><th scope="row">Section Emergency Coordinator</th><td class="callsign">AG7QP</td></tr>
+            <tr data-verify="true"><th scope="row">ARES District 9 Emergency Coordinator</th><td class="callsign">WA7EC</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 5. Joining. The page's primary action (Get the ARES application) is in step 1.
+           join@ is printed once, in #contact; here the mailto sits on "email it". -->
+      <h2 id="membership">Joining</h2>
+      <ul>
+        <li data-verify="true">No membership dues.</li>
+        <li>Members use their own radios, any brand. You need nothing to visit.</li>
+      </ul>
+
+      <h3 id="ares-path">ARES</h3>
+      <ol class="path">
+        <li>
+          <p>Fill out the Spokane County ARES Membership Application (2024-11-07). It includes a county non-disclosure agreement.</p>
+          <p class="path-cta"><a class="btn btn--primary" href="members/documents.html#ares-application"><svg class="icon" aria-hidden="true"><use href="#i-form"/></svg>Get the ARES application</a></p>
+        </li>
+        <li data-verify="true">Hand it to the Emergency Coordinator or an AEC at a meeting, or <a href="mailto:join@spokares.org">email it</a>.</li>
+        <li>Track your training in the <a href="#arrl-task-book">ARRL ARES Task Book</a>.</li>
+      </ol>
+      <p>ARRL membership isn’t needed to join. The ARRL requires it from its Intermediate level up; EC and AEC appointments also need the Advanced level.</p>
+
+      <h3 id="acs-path">ACS <span class="opt">(optional)</span></h3>
+      <ol class="path">
+        <li>Join ARES.</li>
+        <li>Submit the county’s <a href="https://www.spokanecounty.gov/FormCenter/Emergency-Management-31/Volunteer-Emergency-Worker-Application-276" rel="noopener">Volunteer Emergency Worker Application<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens spokanecounty.gov)</span></a>.</li>
+        <li>Pass the Sheriff’s Office background check. The county assigns your volunteer number.</li>
+        <li data-verify="true">Attend New Member Orientation. It’s held regularly; ask us for the next date.</li>
+        <li>Serve as a New Member, normally up to a year, while you finish <a href="#acs-task-book">Level 1</a>.</li>
+        <li>Advance to Radio Operator and receive your ACS ID card.</li>
+      </ol>
+
+      <!-- 6. Training and task books. The Level 1 cells are the one home of "what it takes";
+           kept as written, set as short lists. The FEMA Student ID tip lives on Documents. -->
+      <h2 id="training-path">Training and task books</h2>
+      <p>Task books list what each level requires. The Emergency Coordinator or any AEC signs off items; the EC signs off each level.</p>
+
+      <h3 id="acs-task-book">ACS Position Task Book <span class="opt">(2024-08-09)</span></h3>
+      <div class="table-wrap">
+        <table class="data-table table--stack tb">
+          <thead><tr><th scope="col">Level</th><th scope="col">Once</th><th scope="col">Regularly</th></tr></thead>
+          <tbody>
+            <tr>
+              <th scope="row"><span class="lvl-n">1</span>New Member</th>
+              <td data-label="Once"><ul class="cell-list"><li>Orientation</li><li>FEMA IS-100.c, 200.c, 700.b, 800.d</li><li>ARRL Basic EmComm</li><li>HIPAA</li><li>ALERT Spokane</li></ul></td>
+              <td data-label="Regularly"><ul class="cell-list"><li>Net check-in monthly</li><li>Meeting or workshop quarterly</li><li>Field operation yearly</li><li>Kits ready and handheld programmed yearly</li><li>ICS-309 log on every operation</li></ul></td>
+            </tr>
+            <tr>
+              <th scope="row"><span class="lvl-n">2</span>Radio Operator (RADO)</th>
+              <td data-label="Once"><ul class="cell-list"><li>Radio room and trailer competency</li><li>ARRL Intermediate EmComm</li></ul></td>
+              <td data-label="Regularly"><ul class="cell-list"><li>Net control yearly</li><li>ICS-214 log</li><li>First Aid/CPR every two years</li></ul></td>
+            </tr>
+            <tr>
+              <th scope="row"><span class="lvl-n">3</span>Senior Radio Operator (S-RADO)</th>
+              <td data-label="Once"><ul class="cell-list"><li>General license</li><li>Set up the Mobile Network Units</li></ul></td>
+              <td data-label="Regularly"><ul class="cell-list"><li>Winlink over VHF yearly</li><li>Lead or assist an event yearly</li></ul></td>
+            </tr>
+            <tr>
+              <th scope="row"><span class="lvl-n">4</span>Leadership</th>
+              <td data-label="Once">FEMA IS-120, 230, 235, 240, 241, 242, 244, 288</td>
+              <td data-label="Regularly">Radio support for an event or the county, yearly</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Higher levels keep up the New Member requirements. Encouraged: weekly check-ins, monthly meetings, SKYWARN training, the AUXCOMM course.</p>
+      <p>FEMA courses are free online: <a href="members/documents.html#training">course links</a>. Download the <a href="members/documents.html#acs-task-book">ACS Task Book (DOCX)</a>.</p>
+
+      <h3 id="arrl-task-book">ARRL ARES levels</h3>
+      <p>The ARRL’s levels use the same courses:</p>
+      <ul>
+        <li><b>Basic:</b> Level 1’s FEMA and ARRL Basic courses.</li>
+        <li><b>Intermediate:</b> adds ARRL Intermediate EmComm.</li>
+        <li><b>Advanced:</b> Level 4’s FEMA courses, minus IS-120 and IS-235.</li>
+      </ul>
+      <p><a href="https://www.arrl.org/files/file/ARES%20Taskbook%20July%202024.pdf" rel="noopener">ARRL ARES Task Book (PDF)<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens arrl.org)</span></a></p>
+
+      <h3 id="equipment">Equipment</h3>
+      <ul>
+        <li><b>Personal kit:</b> food, water, clothing, hygiene items and medication for 24 hours minimum, 72 preferred.</li>
+        <li><b>Radio kit:</b> 2 m and 70 cm radios, spare batteries, antenna, coax and power for 24 to 72 hours. HF and Winlink encouraged.</li>
+      </ul>
+      <p><a href="members/documents.html#go-kits">Go-kit guide</a></p>
+
+      <!-- 7. Getting licensed. Exam details data-verify. Option names link to the
+           organizers (data.js links.licensing). -->
+      <h2 id="licensing">Getting licensed</h2>
+      <p>The Technician exam works like a driver’s written test, except every question in the pool is published in advance.</p>
+
+      <h3>Three ways to study</h3>
+      <ul>
+        <li><b>On your own:</b> free practice sites such as <a href="https://hamstudy.org/" rel="noopener">HamStudy.org<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens hamstudy.org)</span></a> drill the real questions.</li>
+        <li><b>With a class:</b> <a href="https://ag7qp.com/licenses" rel="noopener">local license classes<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens ag7qp.com)</span></a>.</li>
+        <li><b>Online:</b> ARRL study guides and video courses.</li>
+      </ul>
+
+      <h3>Where to take the exam</h3>
+      <div class="table-wrap" data-verify="true">
+        <table class="data-table table--stack exams">
+          <thead><tr><th scope="col">Option</th><th scope="col">When</th><th scope="col">Where</th><th scope="col">Exam fee</th></tr></thead>
+          <tbody>
+            <tr>
+              <th scope="row">After a local class</th>
+              <td data-label="When">End of class day</td>
+              <td data-label="Where">Class location</td>
+              <td data-label="Exam fee">$15</td>
+            </tr>
+            <tr>
+              <th scope="row"><a href="http://wa7dre.org/testing/" rel="noopener">Washington Digital Radio Enthusiasts (Laurel VEC)<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens wa7dre.org)</span></a></th>
+              <td data-label="When">Usually 3rd Wednesday, 6:00 PM</td>
+              <td data-label="Where">Action Recycling, 1027 E Marietta Ave, Spokane</td>
+              <td data-label="Exam fee">None</td>
+            </tr>
+            <tr>
+              <th scope="row"><a href="https://k7id.org/fcc-testing/" rel="noopener">Kootenai Amateur Radio Society<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens k7id.org)</span></a></th>
+              <td data-label="When">2nd Monday, 5:30 PM (not December)</td>
+              <td data-label="Where">Kootenai County OEM, 1662 W Wyoming Ave, Hayden, ID</td>
+              <td data-label="Exam fee">$15</td>
+            </tr>
+            <tr>
+              <th scope="row"><a href="https://hamstudy.org/sessions/glaarg" rel="noopener">Online (GLAARG)<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens hamstudy.org)</span></a></th>
+              <td data-label="When">Many sessions</td>
+              <td data-label="Where">Book through HamStudy</td>
+              <td data-label="Exam fee">Varies</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ul>
+        <li><b>FCC fee:</b> $35 for a new license, on top of the exam fee.</li>
+        <li><b>Bring:</b> photo ID, your FCC Registration Number (FRN, get it before exam day), and your license if upgrading.</li>
+        <li><b>Under 18:</b> the ARRL VEC exam fee is $5, and the ARRL reimburses the FCC fee.</li>
+        <li><b>Before you’re licensed:</b> <a href="how-it-works.html#nets">listen</a>, <a href="index.html#visit">visit</a>, or take <a href="members/documents.html#skywarn-training">SKYWARN training</a>.</li>
+      </ul>
+
+      <!-- 8. History and W7GBU. The callsign block is decorative (the story names the call). -->
+      <h2 id="history">History and W7GBU</h2>
+      <p class="callsign-block" aria-hidden="true">W7GBU</p>
+
+      <h3 id="w7gbu">The W7GBU story</h3>
+      <p>Our call sign honors Ira “Dean” Bula, W7GBU. For years he handed out technical wisdom and friendly advice from the counter at Northwest Electronics. Each morning he led an on-air round table on the repeater that now carries his call. <span data-verify="true">Newly licensed hams found him there, and it became the 7:30 Bunch, which still meets weekday mornings.</span></p>
+      <p>When the county retired the repeater’s old call sign, the Spokane County ARES-RACES Support Group applied for Dean’s call to inspire its members.</p>
+      <blockquote class="quote"><p>“He was a person who made a difference in Spokane by making others feel like they could make a difference themselves.”</p></blockquote>
+
+      <h3>Timeline</h3>
+      <ol class="timeline">
+        <li data-verify="true"><span class="tl-time">1999</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p>SKYWARN Recognition Day station at NWS Spokane, every year since.</p></div></li>
+        <li><span class="tl-time">2004</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p>The earliest website records show the Tuesday net and Third Thursday meeting.</p></div></li>
+        <li><span class="tl-time">2017</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p>The FCC grants W7GBU’s current club license. Second Saturday workshops begin.</p></div></li>
+        <li><span class="tl-time">2019</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p>The county sets up ACS.</p></div></li>
+        <li><span class="tl-time">2026</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p>New net scripts and a new website.</p></div></li>
+      </ol>
+
+      <!-- 9. Contact. Role addresses are proposed, not live (decisions.md D11). No groups.io
+           line here: the footer carries it. The .last-topic wrapper only reserves room
+           so about.html#contact can scroll to the top on a cold load (see the style block). -->
+      <div class="last-topic">
+        <h2 id="contact">Contact</h2>
+        <div class="table-wrap" data-verify="true">
+          <table class="data-table">
+            <thead><tr><th scope="col">For</th><th scope="col">Address</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Joining</th><td><a href="mailto:join@spokares.org">join@spokares.org</a></td></tr>
+              <tr><th scope="row">Agencies and partners</th><td><a href="mailto:ec@spokares.org">ec@spokares.org</a></td></tr>
+              <tr><th scope="row">This website</th><td><a href="mailto:webmaster@spokares.org">webmaster@spokares.org</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><b>In person:</b> see <a href="index.html#visit">Come visit</a>.</p>
+      </div>
+
+    </article>
+  </div>
+</main>
+
+<!-- ======================= FOOTER, top-level pages ======================= -->
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-main">
+      <p class="footer-brand"><img src="assets/img/seal-ares-acs-400.png" alt="" width="44" height="44">Spokane County ARES-ACS</p>
+      <nav aria-label="Footer">
+        <ul class="footer-links">
+          <li><a href="how-it-works.html">How it works</a></li>
+          <li><a href="about.html">About ARES &amp; ACS</a></li>
+          <li><a href="members/index.html">For Members</a></li>
+          <li><a href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io)</span></a></li>
+          <li><a href="about.html#contact">Contact</a></li>
+          <li><span class="soon">Privacy (coming)</span></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-fine">
+      <p class="safety">Volunteers, not first responders. In an emergency, call 911.</p>
+      <p>© Spokane County ARES-ACS. Mockup — content to be verified before launch</p>
+    </div>
+  </div>
+</footer>
+<!-- ======================= /FOOTER ======================= -->
+
+<script src="assets/data.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

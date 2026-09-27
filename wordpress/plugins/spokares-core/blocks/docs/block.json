@@ -1,0 +1,32 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "spokares/docs",
+	"title": "Documents",
+	"category": "spokares",
+	"icon": "media-document",
+	"description": "The document library, its search box and the hub tiles. Edit them in Documents and Hub tiles.",
+	"textdomain": "spokares-core",
+	"attributes": {
+		"view": {
+			"type": "string",
+			"default": "library",
+			"enum": [
+				"library",
+				"search",
+				"tiles"
+			],
+			"label": "What to show"
+		}
+	},
+	"supports": {
+		"autoRegister": true,
+		"html": false,
+		"reusable": false,
+		"className": true
+	},
+	"usesContext": [
+		"postId"
+	],
+	"render": "file:./render.php"
+}

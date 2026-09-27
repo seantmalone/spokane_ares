@@ -1,0 +1,1273 @@
+/*!
+ * Spokane County ARES-ACS | WordPress theme "spokares", Option B: "Carry the Message"
+ * site.css: the whole design system, front end and editor (handle "spokares-site").
+ *
+ * Ported from design/round3/option-b-lines-down/assets/site.css plus the
+ * page-scoped <style> blocks of how-it-works.html, about.html and members/*.html,
+ * retargeted to core block markup (PLAN.md §6.7, class vocabulary §6.8).
+ * Section numbers follow B's file so the two can be compared; sections B used
+ * only in rounds 1-2 are listed as dropped.
+ *
+ * The idea in one line: each page moves from night to daylight. Night frames
+ * the chrome and the story; daylight carries the practical content; a dawn
+ * gradient is the hinge. A red message line (#D0202A) and amber numbered hop
+ * markers (#FFC857) are the only accents, and both carry meaning.
+ *
+ * How B's markup maps to blocks:
+ *  - B's class names ride on core blocks through "Additional CSS class"
+ *    (Group, List, Paragraph, Heading, Table, Button, Spacer, Separator, Quote, Cover).
+ *  - Numbered markers (join steps, hops, run-sheets, levels, task-book levels)
+ *    are CSS counters, never typed numbers.
+ *  - A list item's leading <strong> is its label ("bold the first words");
+ *    an item without one still reads as plain text.
+ *  - Plugin blocks (spokares/*) print B's own markup inside
+ *    <div class="wp-block-spokares-… is-view-…">; this file styles it.
+ *
+ *  1  Tokens (from theme.json)          16  Tables (+ stacking)
+ *  2  Surfaces (tone)                   17  Cards, tiles, callouts, quotes, definition rows
+ *  3  Base and typography               18  Net settings box and night bar
+ *  4  Layout                            19  Events and date slabs
+ *  5  Skip link, focus, a11y            20  Home: stops and steps on the line
+ *  7  Masthead, primary nav, menu       21  Search
+ *  8  Buttons and links                 23  Message-path figure
+ *  9  Tags and badges                   25  Readiness levels
+ * 10  Section rules                     26  Long read (About)
+ * 11  Hero (Home)                       27  Documents library
+ * 12  Dawn                              28  Members shell, sub-nav, hub, exercises
+ * 15  Toast                             29  Footer
+ *                                       30  Home
+ *                                       32  How it works
+ *                                       33  WordPress helpers (edit links, verify, plain pages)
+ *                                       34  Responsive, reduced motion, print
+ * Dropped from B (unused in round 3): 6 utility bar, 13 photos/PHOTO NEEDED,
+ * 14 tap-to-define, 18 net card/radio card, 19 timeline, 21 form fields,
+ * 22 ICS-213 paper, 23 diagram states (baked into the block), 24 story,
+ * 25 numerals/posts, 26 drop cap/sidenotes/FAQ/glossary, 27 status key.
+ */
+
+/* ============================================================ 1. Tokens
+   theme.json is the single source; B's variable names are kept so rules port
+   one to one. */
+:root {
+  --night: var(--wp--preset--color--night, #0E1A33);
+  --slate-2: var(--wp--preset--color--slate-2, #1F2C47);
+  --slate: var(--wp--preset--color--slate, #33415C);
+  --peach: var(--wp--preset--color--peach, #F3C29B);  /* dawn gradient and 4px top rules only */
+  --day: var(--wp--preset--color--day, #FFFFFF);
+  --paper: var(--wp--preset--color--paper, #F6F7FA);
+  --mist: var(--wp--preset--color--mist, #C5CEDF);    /* body text on night (10.9:1) */
+  --mist-2: var(--wp--preset--color--mist-2, #A9B4C9);/* secondary text on night (8.2:1) */
+  --ink: var(--wp--preset--color--ink, #0E1A33);
+  --ink-2: var(--wp--preset--color--ink-2, #3C4863);  /* secondary text on light (9.1:1) */
+  --off: var(--wp--preset--color--off, #56627C);      /* captions on light (6.1:1) */
+  --rule: var(--wp--preset--color--rule, #D9DEE8);
+  --field: var(--wp--preset--color--field, #7D889E);
+  --red: var(--wp--preset--color--red, #D0202A);
+  --red-hover: var(--wp--preset--color--red-hover, #B51C25);
+  --red-ink: var(--wp--preset--color--red-ink, #B01A23);
+  --amber: var(--wp--preset--color--amber, #FFC857);
+  --amber-wash: var(--wp--preset--color--amber-wash, #FFF4D6);
+  --amber-ink: var(--wp--preset--color--amber-ink, #6B4A00);
+
+  --serif: var(--wp--preset--font-family--serif, "Crimson Pro", Georgia, "Times New Roman", serif);
+  --sans: var(--wp--preset--font-family--sans, "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+  --fs-display: var(--wp--preset--font-size--display, clamp(2.75rem, 1rem + 5.4vw, 5.5rem));
+  --fs-h1: var(--wp--preset--font-size--h1, clamp(2.5rem, 1.35rem + 3.2vw, 4.25rem));
+  --fs-h2: var(--wp--preset--font-size--h2, clamp(2rem, 1.2rem + 2.4vw, 3.25rem));
+  --fs-h3: var(--wp--preset--font-size--h3, clamp(1.45rem, 1.2rem + .7vw, 1.875rem));
+  --fs-narr: var(--wp--preset--font-size--narr, clamp(1.35rem, 1.1rem + .55vw, 1.75rem));
+  --fs-lede: var(--wp--preset--font-size--lede, clamp(1.2rem, 1.05rem + .45vw, 1.5rem));
+  --fs-prose: var(--wp--preset--font-size--prose, 1.25rem);
+  --fs-body: var(--wp--preset--font-size--body, 1.0625rem);
+  --fs-ui: 1rem;
+  --fs-small: var(--wp--preset--font-size--small, .875rem);
+
+  --s1: 8px; --s2: 16px; --s3: 24px; --s4: 40px; --s5: 64px; --s6: 96px; --s7: 128px;
+  --gutter: 32px;
+  --wrap: min(1240px, calc(100% - 2 * var(--gutter)));
+
+  /* The sticky masthead (64px under 900px) and the logged-in admin bar above it. */
+  --mast-h: var(--wp--custom--mast-h, 72px);
+  --spk-bar: var(--wp-admin--admin-bar--height, 0px);
+
+  --r-panel: var(--wp--custom--radius--panel, 16px);
+  --r-card: var(--wp--custom--radius--card, 12px);
+  --r-paper: var(--wp--custom--radius--paper, 4px);
+  --r-pill: var(--wp--custom--radius--pill, 999px);
+  --r-sm: var(--wp--custom--radius--sm, 8px);
+
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  --fade: 400ms;
+
+  /* Members H2 rule. Round-3 review: a hairline; set to "3px solid var(--red)" to restore B's red rule. */
+  --m-head-rule: 1px solid var(--rule);
+}
+
+/* ============================================================ 2. Surfaces (tone)
+   A surface sets its background AND a tone. Components read the tone vars
+   (--fg, --muted, --link, --line, --focus) so they work on night or day
+   without modifiers. Surfaces are classes on Groups (bg-night, bg-dawn, …). */
+.dark, .bg-night, .bg-slate-2, .bg-slate, .bg-storm, .site-header, .site-footer, .hero, .card--night {
+  --fg: #FFFFFF; --muted: var(--mist); --faint: var(--mist-2);
+  --link: #FFFFFF; --link-line: rgba(197, 206, 223, .55); --link-hover: var(--amber);
+  --line: rgba(197, 206, 223, .18); --line-strong: rgba(197, 206, 223, .45);
+  --focus: var(--amber); --focus-gap: var(--night);
+  --term-line: var(--amber); --term-bg: rgba(255, 200, 87, .10);
+  --tag-bg: rgba(197, 206, 223, .10);
+  color: var(--fg);
+}
+:root, .light, .bg-day, .bg-paper, .bg-dawn, .card, .workspace, .tile, .member-nav, .netbox {
+  --fg: var(--ink); --muted: var(--ink-2); --faint: var(--off);
+  --link: var(--red-ink); --link-line: currentColor; --link-hover: var(--ink);
+  --line: var(--rule); --line-strong: #AEB6C6;
+  --focus: var(--ink); --focus-gap: #FFFFFF;
+  --term-line: var(--red-ink); --term-bg: #FBEFEF;
+  --tag-bg: #EEF1F6;
+}
+.light, .bg-day, .bg-paper, .bg-dawn, .card, .workspace { color: var(--fg); }
+.card--night { background: var(--night); border-color: var(--night); }
+.bg-night   { background: var(--night); }
+.bg-slate-2 { background: var(--slate-2); }
+.bg-slate   { background: var(--slate); }
+.bg-storm   { background: linear-gradient(180deg, var(--night) 0%, var(--night) 35%, var(--slate-2) 78%, var(--slate) 100%); }
+.bg-day     { background: var(--day); }
+.bg-paper   { background: var(--paper); }
+.bg-dawn    { background: linear-gradient(180deg, var(--peach) 0%, #F8D6BD 16%, #FFF3E9 52%, var(--day) 100%); }
+
+/* ============================================================ 3. Base and typography */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body {
+  margin: 0; min-width: 320px;
+  background: var(--paper); color: var(--ink);
+  font: 400 var(--fs-body)/1.6 var(--sans);
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1;
+}
+img, svg, video { max-width: 100%; height: auto; }
+img { display: block; }
+h1, h2, h3, h4, h5, p, ul, ol, dl, dd, figure, blockquote { margin: 0; }
+ul, ol { padding: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+[hidden] { display: none !important; }
+/* Only the masthead is sticky, so one offset serves every page (plus the admin bar when it is fixed). */
+[id] { scroll-margin-top: calc(var(--mast-h) + 24px + var(--spk-bar)); }
+
+a { color: var(--link); text-decoration-line: underline; text-decoration-color: var(--link-line); text-decoration-thickness: 1.5px; text-underline-offset: .2em; }
+a:hover { text-decoration-thickness: 3px; text-decoration-color: var(--link-hover); }
+
+/* Headings: Crimson Pro 500 for voice; sans for small UI headings (h4) */
+h1, .h1 { font: 500 var(--fs-h1)/1.04 var(--serif); letter-spacing: -.014em; text-wrap: balance; }
+h2, .h2 { font: 500 var(--fs-h2)/1.08 var(--serif); letter-spacing: -.01em; text-wrap: balance; }
+h3, .h3 { font: 500 var(--fs-h3)/1.15 var(--serif); letter-spacing: -.005em; text-wrap: balance; }
+h4, .h4 { font: 600 1.1875rem/1.3 var(--sans); letter-spacing: -.005em; }
+.display { font: 500 var(--fs-display)/1.04 var(--serif); letter-spacing: -.016em; text-wrap: balance; }
+.lede { font: 400 var(--fs-lede)/1.45 var(--serif); color: var(--muted); }
+.narr { font: 400 var(--fs-narr)/1.45 var(--serif); color: var(--muted); }
+.narr strong, .lede strong { color: var(--fg); font-weight: 600; }
+.small { font-size: var(--fs-small); line-height: 1.5; }
+.muted { color: var(--muted); }
+.tnum { font-variant-numeric: tabular-nums lining-nums; }
+time, .freq { font-variant-numeric: lining-nums; }
+.nowrap { white-space: nowrap; }
+abbr[title] { text-decoration-thickness: 1px; text-underline-offset: .18em; }
+
+/* ============================================================ 4. Layout
+   .wrap = the site width. max-width: none defends against a Group that was
+   given WordPress's "constrained" layout (which caps children at 760px). */
+.wrap { width: var(--wrap); max-width: none; margin-inline: auto; }
+/* The footer sits at the bottom of the window on short pages (404, an empty
+   members list) and never pushes past it on tall ones. (B's members pages used a
+   min-height that pushed the footer off tall screens; round-3 review.) */
+.wp-site-blocks { display: flex; flex-direction: column; min-height: calc(100vh - var(--wp-admin--admin-bar--height, 0px)); overflow-x: clip; }
+.wp-site-blocks > main, .wp-site-blocks > .members-shell { flex: 1 0 auto; }
+.wp-site-blocks > * { width: 100%; }
+
+/* ============================================================ 5. Skip link, focus, a11y
+   WordPress prints the skip link (".skip-link.screen-reader-text", to #main);
+   this is B's amber version of it. */
+.skip-link.screen-reader-text:focus {
+  left: 16px; top: calc(10px + var(--spk-bar)); z-index: 100001;
+  padding: 12px 18px; border-radius: var(--r-sm);
+  background: var(--amber); color: var(--night);
+  font: 700 16px/1.2 var(--sans); text-decoration: none;
+}
+:focus { outline: none; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; box-shadow: 0 0 0 2px var(--focus-gap); border-radius: 4px; }
+.vh, .has-vh-caption > figcaption {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.icon { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ============================================================ 7. Masthead, primary nav, menu
+   parts/header.html: header.site-header > .masthead > .wrap.masthead__bar >
+   brand + core Navigation (nav.nav, overlayMenu "always") + Buttons (Join).
+   Core puts the nav's classes on its inner <ul> as well, so rules say "nav.nav". */
+.site-header { position: sticky; top: var(--spk-bar); z-index: 60; }
+/* The frosted night bar is painted by a pseudo-element: a backdrop-filter on
+   .masthead itself would become the containing block of the menu overlay
+   (position: fixed) and trap it inside the 72px bar. */
+/* The hairline is drawn by the pseudo-element too (over its own background, as
+   B's border sits over B's background); .masthead keeps a transparent 1px border
+   so the bar is 73px tall, as in B. */
+.masthead { position: relative; isolation: isolate; border-bottom: 1px solid transparent; }
+.masthead::before { content: ""; position: absolute; inset: 0 0 -1px; z-index: -1; background: rgba(14, 26, 51, .97); border-bottom: 1px solid rgba(197, 206, 223, .14); }
+@supports ((backdrop-filter: blur(8px)) or (-webkit-backdrop-filter: blur(8px))) {
+  .masthead::before { background: rgba(14, 26, 51, .92); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+}
+.masthead__bar { display: flex; align-items: center; gap: 28px; height: var(--mast-h); }
+
+.brand { display: flex; align-items: center; gap: 12px; margin-right: auto; min-width: 0; color: #fff; text-decoration: none; }
+.brand img { width: 46px; height: 46px; border-radius: 50%; background: #fff; flex: none; }
+.brand__name { display: flex; flex-direction: column; font: 500 13px/1.12 var(--sans); color: var(--mist); white-space: nowrap; }
+.brand__name strong { font-size: 19px; font-weight: 700; color: #fff; letter-spacing: .005em; }
+.brand:hover { text-decoration: none; }
+.brand:hover strong { text-decoration: underline; text-decoration-color: var(--amber); text-underline-offset: 4px; }
+
+nav.nav { flex: none; gap: 0; }
+nav.nav .wp-block-navigation__container { gap: 6px; }
+nav.nav .wp-block-navigation-item > .wp-block-navigation-item__content {
+  position: relative; display: flex; align-items: center; min-height: 44px; padding: 0 12px;
+  font: 500 15.5px/1 var(--sans); color: #E7ECF5; text-decoration: none; border-radius: 6px; white-space: nowrap;
+}
+nav.nav .wp-block-navigation-item > .wp-block-navigation-item__content:hover { color: #fff; background: rgba(197, 206, 223, .08); }
+nav.nav .wp-block-navigation-item > .wp-block-navigation-item__content[aria-current] { color: #fff; }
+nav.nav .wp-block-navigation-item > .wp-block-navigation-item__content[aria-current]::after {
+  content: ""; position: absolute; left: 12px; right: 12px; bottom: 4px; height: 3px; border-radius: 2px; background: var(--amber);
+}
+
+/* The "Menu" and "Close" buttons: B's pill (.nav__toggle) with its line icons. */
+/* Core sets font-size/weight/family to inherit with a triple-class selector
+   (0,3,0), so the font here uses a doubled class to win. */
+nav.nav .wp-block-navigation__responsive-container-open,
+nav.nav .wp-block-navigation__responsive-container-close {
+  align-items: center; gap: 8px; min-height: 44px; padding: 0 14px;
+  background: transparent; color: #fff; border: 1.5px solid rgba(255, 255, 255, .4); border-radius: var(--r-pill);
+  cursor: pointer;
+}
+nav.nav .wp-block-navigation__responsive-container-open.wp-block-navigation__responsive-container-open,
+nav.nav .wp-block-navigation__responsive-container-close.wp-block-navigation__responsive-container-close {
+  font: 600 15px/1 var(--sans);
+}
+nav.nav .wp-block-navigation__responsive-container-open { display: inline-flex; }
+nav.nav .wp-block-navigation__responsive-container-open:hover,
+nav.nav .wp-block-navigation__responsive-container-close:hover { border-color: #fff; }
+nav.nav .wp-block-navigation__responsive-container-open::before,
+nav.nav .wp-block-navigation__responsive-container-close::before {
+  content: ""; width: 18px; height: 18px; flex: none; background: currentColor;
+  -webkit-mask: var(--spk-i-menu) no-repeat center / contain; mask: var(--spk-i-menu) no-repeat center / contain;
+}
+nav.nav .wp-block-navigation__responsive-container-close::before {
+  -webkit-mask-image: var(--spk-i-close); mask-image: var(--spk-i-close);
+}
+:root {
+  --spk-i-menu: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 7h16M4 12h16M4 17h16' fill='none' stroke='%23000' stroke-width='1.75' stroke-linecap='round'/%3E%3C/svg%3E");
+  --spk-i-close: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 6l12 12M18 6L6 18' fill='none' stroke='%23000' stroke-width='1.75' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* The open menu (under 1020px): B's night drop-down. Core's overlay (its
+   focus trap, Escape and outside-click closing are kept) is placed against
+   .masthead exactly as B's .nav__list was: full width, under the bar. The
+   brand and Join stay in the bar; "Close" takes the Menu button's place. */
+nav.nav { position: static; }
+nav.nav .wp-block-navigation__responsive-container.is-menu-open {
+  position: absolute; top: 100%; left: 0; right: 0; bottom: auto; overflow: visible; animation: none;
+  padding: 8px var(--gutter) 20px;
+  background: var(--night) !important; color: #fff !important;
+  border-bottom: 1px solid rgba(197, 206, 223, .2); box-shadow: 0 18px 30px -18px rgba(0, 0, 0, .7);
+}
+nav.nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-close,
+nav.nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-dialog { position: static; max-width: none; margin: 0; }
+html.has-modal-open .admin-bar nav.nav .is-menu-open .wp-block-navigation__responsive-dialog { margin-top: 0; }
+nav.nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-close {
+  display: inline-flex; top: calc((var(--mast-h) - 44px) / 2 - var(--mast-h)); right: var(--gutter);
+}
+/* Hidden under Close while open; opacity (not visibility) so core can hand focus back to it on close. */
+html.has-modal-open nav.nav .wp-block-navigation__responsive-container-open { opacity: 0; }
+nav.nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content { padding-top: 0; align-items: stretch; }
+nav.nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container { gap: 0; width: 100%; align-items: stretch; }
+nav.nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item { width: 100%; }
+nav.nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item > .wp-block-navigation-item__content {
+  width: 100%; min-height: 52px; padding: 0 4px; font-size: 18px;
+  border-bottom: 1px solid rgba(197, 206, 223, .12); border-radius: 0;
+}
+nav.nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item > .wp-block-navigation-item__content[aria-current]::after {
+  left: auto; right: 4px; top: 50%; bottom: auto; width: 8px; height: 8px; border-radius: 50%; transform: translateY(-50%);
+}
+
+/* 1020px and up: the four links sit in the bar; no Menu button. */
+@media (min-width: 1020px) {
+  nav.nav .wp-block-navigation__responsive-container-open { display: none; }
+  nav.nav .wp-block-navigation__responsive-container:not(.is-menu-open) {
+    display: block; position: relative; inset: auto; width: auto; z-index: auto;
+  }
+  nav.nav .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__responsive-container-close { display: none; }
+}
+
+.site-header__actions { flex: none; gap: 0; }
+
+/* ============================================================ 8. Buttons and links
+   .btn (plugin markup) and core Button (.wp-block-button__link) are the same
+   pill. A core Button's look comes from a class on the block: btn--red
+   (default when none), btn--ghost, btn--light, btn--ink; size btn--lg, btn--sm.
+   One filled .btn--red per page (and the header's Join). No arrow glyphs. */
+.btn, .wp-block-button__link {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 44px; padding: 10px 22px; border-radius: var(--r-pill); border: 1.5px solid transparent;
+  font: 600 16px/1.2 var(--sans); letter-spacing: normal; text-decoration: none; white-space: nowrap; cursor: pointer;
+  transition: background-color .18s, border-color .18s, color .18s;
+}
+.btn:hover, .wp-block-button__link:hover { text-decoration: none; }
+.btn .icon { width: 18px; height: 18px; }
+.wp-block-button__link { width: auto; background: var(--red); color: #fff; }
+.wp-block-button__link:hover { background: var(--red-hover); color: #fff; }
+.wp-block-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
+.wp-block-buttons > .wp-block-button { margin: 0; }
+
+.btn.btn--red, .wp-block-button.btn--red > .wp-block-button__link { background: var(--red); color: #fff; border-color: transparent; }
+.btn.btn--red:hover, .wp-block-button.btn--red > .wp-block-button__link:hover { background: var(--red-hover); color: #fff; }
+.btn.btn--ghost, .wp-block-button.btn--ghost > .wp-block-button__link { background: transparent; color: var(--fg); border-color: var(--line-strong); }
+.btn.btn--ghost:hover, .wp-block-button.btn--ghost > .wp-block-button__link:hover { background: transparent; border-color: var(--fg); color: var(--fg); }
+.btn.btn--light, .wp-block-button.btn--light > .wp-block-button__link { background: #fff; color: var(--ink); }
+.btn.btn--light:hover, .wp-block-button.btn--light > .wp-block-button__link:hover { background: var(--paper); color: var(--ink); }
+.btn.btn--ink, .wp-block-button.btn--ink > .wp-block-button__link { background: var(--ink); color: #fff; }
+.btn.btn--ink:hover, .wp-block-button.btn--ink > .wp-block-button__link:hover { background: #22304F; color: #fff; }
+.btn.btn--lg, .wp-block-button.btn--lg > .wp-block-button__link { min-height: 54px; padding: 14px 30px; font-size: 17px; }
+.btn.btn--sm, .wp-block-button.btn--sm > .wp-block-button__link { min-height: 44px; padding: 8px 16px; font-size: 15px; }
+
+/* Text link for the secondary action beside a pill. Paragraph class has-textlink = every link in it. */
+.textlink, .has-textlink a { font-weight: 600; color: var(--fg); text-decoration-color: var(--term-line); text-decoration-thickness: 2px; text-underline-offset: 6px; }
+.textlink:hover, .has-textlink a:hover { color: var(--fg); text-decoration-color: currentColor; }
+/* External-link marker: class "ext" (added by the theme's render filter) + a .vh "(opens groups.io)". */
+.ext::after {
+  content: ""; display: inline-block; width: .72em; height: .72em; margin-left: .32em; vertical-align: .02em;
+  background: currentColor; opacity: .85;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M4.5 1.5H10.5V7.5M10.2 1.8L2 10' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center / contain;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M4.5 1.5H10.5V7.5M10.2 1.8L2 10' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center / contain;
+}
+
+/* ============================================================ 9. Tags and badges */
+.tag {
+  display: inline-flex; align-items: center; gap: 6px; width: fit-content; min-height: 26px; padding: 3px 10px;
+  border-radius: var(--r-pill); background: var(--tag-bg); color: var(--fg);
+  font: 500 13.5px/1.2 var(--sans); white-space: nowrap;
+}
+.tag--line { background: none; border: 1px dashed var(--line-strong); color: var(--muted); }
+.tag--amber { background: var(--amber); color: var(--night); font-weight: 600; }
+.tag--open { background: var(--amber-wash); color: var(--amber-ink); border: 1px dashed #D7A53A; font-weight: 600; }
+a.tag--open { text-decoration: none; }
+a.tag--open:hover { border-style: solid; }
+.dark .tag--open, .bg-night .tag--open { background: rgba(255, 200, 87, .12); color: var(--amber); border-color: rgba(255, 200, 87, .5); }
+.tag--now { background: var(--amber); color: var(--night); font-weight: 600; }
+.tag--now::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--night); }
+
+/* Hop marker: amber circle with a night numeral. True sequences only. The
+   CSS-counter markers below (hops, seq, levels, task-book levels) share it. */
+.hop,
+.hops > li::before, .seq > li::before, .level::before, .tb tbody th::before {
+  display: inline-grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--amber); color: var(--night); font: 700 14px/1 var(--sans); font-variant-numeric: lining-nums;
+}
+.hop--ring { background: transparent; color: var(--fg); box-shadow: inset 0 0 0 2px var(--amber); }
+
+/* Format badge (DOCX, PDF, Online form). */
+.fmt {
+  display: inline-block; padding: 2px 7px; border-radius: 4px; border: 1px solid var(--line-strong);
+  font: 600 12.5px/1.35 var(--sans); color: var(--muted); letter-spacing: .01em; white-space: nowrap;
+}
+
+/* ============================================================ 10. Section rules
+   The message line as a divider (core Separator, class "redline"): a 3px red
+   rule from an amber node to an amber ring. */
+.redline, .wp-block-separator.redline {
+  position: relative; display: block; width: auto; max-width: none; height: 3px; margin: 0;
+  background: var(--red); border: 0; opacity: 1; overflow: visible; color: var(--red);
+}
+.redline::before, .redline::after { content: ""; position: absolute; top: 50%; border-radius: 50%; transform: translateY(-50%); }
+.redline::before { left: -2px; width: 13px; height: 13px; background: var(--amber); }
+.redline::after { right: -2px; width: 11px; height: 11px; background: var(--night); box-shadow: inset 0 0 0 2.5px var(--amber); }
+.light .redline::after, .bg-day .redline::after, .bg-paper .redline::after, .bg-dawn .redline::after { background: #fff; }
+
+/* ============================================================ 11. Hero (Home)
+   core Cover (class "hero", photo from the Media Library). H1, lede, two
+   buttons of different weight, one small agency line. The two overlay
+   gradients are B's, painted between the photo and the text. */
+.wp-block-cover.hero {
+  position: relative; isolation: isolate; overflow: hidden; background: var(--night);
+  display: flex; flex-direction: column; justify-content: center; align-items: stretch;
+  min-height: clamp(520px, calc(100svh - var(--mast-h) - 160px), 640px); padding: 0;
+}
+.hero .wp-block-cover__image-background { z-index: -2; object-fit: cover; object-position: 50% 80%; filter: saturate(.9); }
+.hero .wp-block-cover__background { display: none; }
+.wp-block-cover.hero::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; opacity: 1;
+  background:
+    linear-gradient(90deg, rgba(14, 26, 51, .88) 0%, rgba(14, 26, 51, .62) 42%, rgba(14, 26, 51, .12) 78%),
+    linear-gradient(180deg, rgba(14, 26, 51, .55) 0%, rgba(14, 26, 51, 0) 30%, rgba(14, 26, 51, 0) 58%, rgba(14, 26, 51, .92) 92%, var(--night) 100%);
+}
+.wp-block-cover.hero .wp-block-cover__inner-container { position: relative; width: 100%; color: var(--fg); }
+.hero__body { padding-block: 72px 88px; }
+.hero__title { max-width: 18.5ch; }
+.hero__lede { margin-top: 26px; max-width: 44ch; font: 400 var(--fs-narr)/1.42 var(--serif); color: #E4E9F2; }
+.hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 16px; margin-top: 36px; }
+.hero__actions .btn--ghost > .wp-block-button__link, .hero__actions a.btn--ghost { color: #fff; border-color: rgba(255, 255, 255, .5); }
+.hero__actions .btn--ghost > .wp-block-button__link:hover, .hero__actions a.btn--ghost:hover { border-color: #fff; color: #fff; }
+/* Round-3 review: small text on night uses --mist, never --mist-2. */
+.hero__agency { margin-top: 26px; font-size: 15.5px; color: var(--mist); }
+.hero__agency a { font-weight: 600; }
+
+/* ============================================================ 12. Dawn
+   The hinge strip from night to peach (a Spacer, class "dawn-sky"; its height
+   comes from here, never from the block). Follow it with a bg-dawn section.
+   Peach lives ONLY here and in 4px top rules. */
+.wp-block-spacer.dawn-sky, .dawn-sky {
+  height: clamp(80px, 7vw, 104px) !important; margin: 0;
+  background: linear-gradient(180deg, var(--night) 0%, var(--slate) 26%, #5E5F80 48%, #A68A9A 68%, #DDAE9E 85%, var(--peach) 100%);
+}
+/* A retired id kept as an alias at the top of a section (Spacer with an anchor). */
+.wp-block-spacer.anchor-alias, .anchor-alias { display: block; height: 0 !important; margin: 0; overflow: hidden; }
+
+/* ============================================================ 15. Toast
+   One global live region (made by the plugin's copy module) reports copies. */
+.toast {
+  position: fixed; left: 50%; bottom: 24px; z-index: 300; transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+  max-width: min(520px, calc(100% - 32px)); padding: 12px 18px; border-radius: 12px;
+  background: var(--night); color: #fff; border: 1px solid rgba(255, 200, 87, .55); box-shadow: 0 18px 40px -16px rgba(0, 0, 0, .6);
+  font: 500 15px/1.45 var(--sans); transition: opacity .2s, transform .2s var(--ease);
+}
+.toast.is-on { opacity: 1; transform: translate(-50%, 0); }
+
+/* ============================================================ 16. Tables
+   "table" is on the plugin's <table> or on a core Table's <figure>; the
+   descendant rules below work for both. Core's own borders are reset first. */
+.table { width: 100%; border-collapse: collapse; font: 400 15.5px/1.5 var(--sans); color: var(--fg); }
+.wp-block-table.table { width: auto; margin: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.wp-block-table.table > table { width: 100%; border-collapse: collapse; table-layout: auto; }
+.wp-block-table.table thead { border: 0; }
+.table caption { caption-side: top; text-align: left; padding: 0 0 12px; font: 600 16px/1.4 var(--sans); color: var(--fg); }
+.table th, .table td { padding: 12px 14px; border: 0; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.table th:first-child, .table td:first-child { padding-left: 0; }
+.table thead th { font: 600 13.5px/1.3 var(--sans); color: var(--muted); border-bottom: 2px solid var(--fg); white-space: nowrap; }
+.table tbody th { font-weight: 600; }
+.table time { white-space: nowrap; }
+.table .is-past { color: var(--faint); }
+.table .is-next > * { background: var(--amber-wash); }
+.table .is-next > :first-child { box-shadow: inset 3px 0 0 var(--amber); padding-left: 12px; }
+.dark .table .is-next > *, .bg-night .table .is-next > * { background: rgba(255, 200, 87, .08); }
+.table--dense th, .table--dense td { padding-block: 9px; }
+.table caption.vh { padding: 0; }
+/* A visible core table caption (none in round 3) reads like B's caption. */
+.wp-block-table.table > figcaption { margin: 0 0 12px; font: 600 16px/1.4 var(--sans); color: var(--fg); caption-side: top; }
+/* Stacking table: rows become labelled cards at 640px and below. The theme
+   adds data-label to each body cell from the header row (render filter). */
+@media (max-width: 640px) {
+  .table--stack thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  table.table--stack, .table--stack > table, .table--stack tbody, .table--stack tr, .table--stack th, .table--stack td { display: block; width: 100%; }
+  .table--stack tr { padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .table--stack th, .table--stack td { border: 0; padding: 3px 0 !important; box-shadow: none !important; }
+  .table--stack td[data-label] { position: relative; padding-left: 7.5rem !important; min-height: 1.6em; }
+  .table--stack td[data-label]::before { content: attr(data-label); position: absolute; left: 0; top: 5px; width: 7rem; font: 600 13px/1.5 var(--sans); color: var(--muted); }
+  .table--stack .is-next { background: var(--amber-wash); padding-inline: 12px; border-radius: 8px; }
+  .table--stack .is-next > * { background: none; }
+}
+
+/* ============================================================ 17. Cards, tiles, callouts, quotes, definition rows
+   Cards are separated by a hairline, not by a shadow. */
+.card { background: #fff; border: 1px solid var(--rule); border-radius: var(--r-card); padding: 24px 26px; }
+.card--dawn { border-top: 4px solid var(--peach); }
+.card--red { border-top: 4px solid var(--red); }
+.card__title { font: 600 19px/1.3 var(--sans); color: var(--fg); }
+.card > * + * { margin-top: 10px; }
+
+/* Quick-link tiles (members hub, spokares/docs view "tiles"). */
+.quick { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; list-style: none; margin: 0; padding: 0; }
+.tile {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 12px; align-items: start; height: 100%;
+  padding: 16px 18px; background: #fff; border: 1px solid var(--rule); border-radius: var(--r-card);
+  color: var(--ink); text-decoration: none;
+}
+.tile:hover { border-color: var(--ink); text-decoration: none; }
+.tile .icon { grid-row: span 2; width: 24px; height: 24px; color: var(--red-ink); margin-top: 1px; }
+.tile__label { font: 600 16px/1.35 var(--sans); color: var(--ink); }
+
+/* Callouts (Groups): "What we are not" = plain; legal basis = boxed. */
+.callout { padding: 22px 26px; border-radius: var(--r-card); background: var(--paper); font: 400 17px/1.6 var(--sans); color: var(--ink); }
+.callout__title { font: 600 16px/1.4 var(--sans); color: var(--ink); margin-bottom: 6px; }
+.callout--plain { background: #fff; border: 1px solid var(--rule); border-top: 4px solid var(--peach); }
+.callout--legal { background: #fff; border: 1.5px solid var(--ink); border-radius: var(--r-sm); }
+.callout > * + * { margin-top: .6em; }
+
+/* Pull quote (core Quote, class "pullquote"). */
+.wp-block-quote.pullquote, .pullquote { margin: 1.6em 0; padding: 0 0 0 24px; border: 0; border-left: 3px solid var(--red); max-width: 40ch; }
+.pullquote p { font: italic 400 28px/1.3 var(--serif); color: var(--fg); }
+.pullquote cite, .pullquote footer { display: block; margin-top: 10px; font: 400 14.5px/1.4 var(--sans); font-style: normal; color: var(--muted); }
+
+/* Definition rows (How it works training rhythm): Group "deflist" > Group
+   "deflist__item" > term + definition paragraphs. */
+.deflist { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); }
+.deflist > .deflist__item { padding: 14px 0; border-top: 1px solid var(--line); }
+.deflist__term { font-weight: 600; color: var(--fg); }
+.deflist__def { margin-top: 2px; color: var(--muted); font-size: 16px; line-height: 1.5; }
+.deflist--2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 40px; }
+
+/* ============================================================ 18. Net settings box and night bar
+   Printed by spokares/net (views "settings" and "bar"). */
+.netbox { background: #fff; border: 1px solid var(--rule); border-top: 4px solid var(--peach); border-radius: var(--r-card); padding: 22px 26px 12px; color: var(--ink); }
+.netbox__when { font: 600 24px/1.2 var(--sans); letter-spacing: -.01em; color: var(--ink); font-variant-numeric: lining-nums; }
+.netbox__rows { margin: 14px 0 0; }
+.netbox__rows > div { display: grid; grid-template-columns: 7.5em minmax(0, 1fr) auto; gap: 4px 16px; align-items: center; padding: 10px 0; border-top: 1px solid var(--rule); }
+.netbox__rows dt { font-size: 15px; font-weight: 600; color: var(--ink-2); }
+.netbox__rows dd { margin: 0; font: 600 17px/1.4 var(--sans); color: var(--ink); font-variant-numeric: lining-nums; }
+.btn.netbox__copy { min-height: 40px; padding: 6px 14px; }
+
+.netbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; margin-bottom: 20px; padding: 14px 14px 14px 22px; border-radius: var(--r-card); background: var(--night); }
+.netbar__line { font: 500 clamp(1.3rem, 1.15rem + .45vw, 1.6rem)/1.25 var(--serif); color: #fff; font-variant-numeric: lining-nums proportional-nums; }
+.netbar__time { display: inline-block; margin-right: 12px; padding-right: 14px; border-right: 1px solid rgba(197, 206, 223, .35); color: var(--amber); }
+/* Longer settings than B's "100 Hz" (a tone such as "103.5 Hz"): a little
+   smaller, so the line and the Copy button still share one row. */
+.netbar--long .netbar__line { font-size: clamp(1.2rem, 1.02rem + .4vw, 1.45rem); }
+.netbar--long .netbar__time { margin-right: 10px; padding-right: 12px; }
+
+/* ============================================================ 19. Events and date slabs (hub "This week") */
+.events { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.event { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px; align-items: start; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.event__body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.event__title { font: 600 16.5px/1.35 var(--sans); color: var(--fg); }
+.event__meta { font-size: 14.5px; line-height: 1.45; color: var(--muted); }
+.event__where { color: var(--muted); }
+.event__now { margin-top: 4px; }
+.event a { color: var(--fg); }
+.date-slab {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; width: 60px; min-height: 64px; padding: 6px 0;
+  border-radius: 10px; border: 1px solid var(--line-strong); background: var(--day); line-height: 1.05; color: var(--ink);
+}
+.dark .date-slab, .bg-night .date-slab { background: transparent; color: #fff; }
+.date-slab__mon { font: 600 12.5px/1.2 var(--sans); color: var(--red-ink); }
+.dark .date-slab__mon, .bg-night .date-slab__mon { color: var(--amber); }
+.date-slab__day { font: 500 26px/1 var(--serif); font-variant-numeric: lining-nums tabular-nums; }
+.date-slab__dow { font: 500 12px/1.2 var(--sans); color: var(--muted); }
+.date-slab--range .date-slab__day { font-size: 19px; }
+
+/* ============================================================ 20. Home: stops and steps on the message line
+   .stops  What we do (List): four stops on ONE horizontal line (night). Not a
+           sequence, so plain amber dots. Item = "<strong>Label</strong> text".
+           Vertical under 900px.
+   .steps  Join in four steps (Group of Groups): a true sequence, so numbered
+           amber markers (a counter from 0) on a vertical red line; the
+           segment into the optional step is dashed. */
+/* Any number of stops share the line (B has four); editors may add or remove one. */
+.stops { position: relative; list-style: none; margin: 0; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0 44px; }
+.stops::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 7px; height: 3px; border-radius: 2px;
+  background: var(--red); box-shadow: 0 0 0 3.5px rgba(208, 32, 42, .28);
+}
+.stops::after {
+  content: ""; position: absolute; right: -2px; top: 2px; width: 13px; height: 13px; border-radius: 50%;
+  background: var(--night); box-shadow: inset 0 0 0 2.5px var(--amber);
+}
+.stops > li { position: relative; padding-top: 44px; max-width: 30ch; font-size: 17px; line-height: 1.55; color: var(--mist); }
+.stops > li::before { content: ""; position: absolute; left: 0; top: 1px; width: 15px; height: 15px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 0 5px var(--night); }
+/* (".rich-text": the same text inside the block editor.) */
+.stops > li > strong:first-child, .stops > li > .rich-text > strong:first-child { display: block; margin-bottom: 10px; font: 500 var(--fs-h3)/1.15 var(--serif); color: #fff; letter-spacing: -.005em; }
+
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: spk-step -1; }
+/* Each step is a two-column grid: the title and an optional "Optional" pill
+   share the first row; every other paragraph spans both columns. */
+.steps__item {
+  position: relative; counter-increment: spk-step;
+  display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 12px; align-items: center; justify-items: start;
+  padding: 10px 0 44px 84px;
+}
+.steps__item:last-child { padding-bottom: 0; }
+.steps__item > * { grid-column: 1 / -1; min-width: 0; }
+.steps__item::before {
+  content: counter(spk-step); position: absolute; left: 0; top: 0;
+  display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%;
+  background: var(--amber); color: var(--night); font: 500 30px/1 var(--serif); font-variant-numeric: lining-nums;
+}
+.steps__item--opt::before { background: var(--day); color: var(--ink); box-shadow: inset 0 0 0 2.5px #D7A53A; }
+.steps__item:not(:last-child)::after { content: ""; position: absolute; left: 26.5px; top: 56px; bottom: 0; width: 3px; background: var(--red); }
+.steps__item:nth-last-child(2)::after { background: repeating-linear-gradient(180deg, var(--red) 0 9px, transparent 9px 16px); }
+.steps__title { font: 500 var(--fs-h3)/1.15 var(--serif); color: var(--fg); }
+.steps__item > .steps__title { grid-column: 1; }
+.steps__item > .tag { grid-column: 2; margin: 0; }
+.steps__title abbr { text-decoration: none; }   /* the title attribute still expands it */
+.steps__text { margin-top: 6px; max-width: 54ch; color: var(--muted); }
+.steps__action { margin-top: 4px; }
+.steps__action a { display: inline-flex; align-items: center; min-height: 44px; }
+.steps__note { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--rule); max-width: 54ch; font-size: 15.5px; line-height: 1.55; color: var(--muted); }
+.steps__note b, .steps__note strong { color: var(--fg); font-weight: 600; }
+
+/* ============================================================ 21. Search (hub and library; B's .search, renamed
+   because WordPress puts class "search" on <body> for search results). */
+.searchbar { display: flex; flex-wrap: wrap; gap: 10px; }
+.searchbar__field { position: relative; flex: 1 1 280px; min-width: 0; }
+.searchbar__field .icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--ink-2); pointer-events: none; }
+.searchbar__field input { width: 100%; min-height: 52px; padding: 10px 14px 10px 44px; border: 1.5px solid var(--field); border-radius: 10px; background: #fff; font: 500 17px/1.3 var(--sans); color: var(--ink); }
+.searchbar__field input::placeholder { color: #7B859A; }
+.searchbar__field input:hover { border-color: var(--ink-2); }
+.searchbar__field input:focus-visible { border-color: var(--ink); }
+
+/* ============================================================ 23. Message-path figure (spokares-theme/message-path)
+   The drawing is fixed in its one state; only the label size changes. */
+.msgpath { display: block; width: 100%; height: auto; aspect-ratio: 560 / 400; overflow: visible; color: var(--mist); --mp-fs: 17px; }
+.mp-label { font-family: var(--sans); font-weight: 600; fill: #fff; }
+.mp-sub { font-family: var(--sans); font-weight: 500; fill: var(--mist); }
+.mp-pilltext { font-family: var(--sans); font-weight: 600; font-size: 15px; fill: var(--amber); }
+.mp-num { font-family: var(--sans); font-weight: 700; font-size: 16px; fill: var(--night); }
+.msgpath-panel { margin: 0; background: rgba(5, 11, 26, .5); border: 1px solid rgba(197, 206, 223, .16); border-radius: var(--r-panel); padding: 14px 16px 16px; }
+
+/* ============================================================ 25. Readiness levels (How it works), explained only
+   Group "levels" > four Groups "level" > name, colour word, meaning, action.
+   Neutral cards; the number is a counter; never a "current" marker. */
+.levels { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--line); counter-reset: spk-level; }
+.level {
+  counter-increment: spk-level; padding: 22px 24px 4px 0;
+  display: grid; grid-template-columns: 28px minmax(0, 1fr); column-gap: 12px; align-content: start;
+}
+.level + .level { padding-left: 24px; border-left: 1px solid var(--line); }
+.level::before { content: counter(spk-level); grid-column: 1; grid-row: 1 / span 2; align-self: center; }
+.level > * { grid-column: 1 / -1; }
+.level > .level__name { grid-column: 2; grid-row: 1; font: 600 18px/1.25 var(--sans); color: var(--fg); }
+.level > .level__color { grid-column: 2; grid-row: 2; font-size: 14.5px; font-weight: 500; line-height: 1.25; color: var(--muted); }
+.level > .level__means { margin-top: 10px; margin-bottom: 6px; font: 600 15px/1.45 var(--sans); color: var(--ink); }
+.level > .level__do { font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+
+/* ============================================================ 26. Long read (About)
+   Group "wrap longread" > "longread__aside" (the TOC block) + "longread__main prose". */
+.longread { display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; }
+@media (min-width: 1024px) { .longread { grid-template-columns: 232px minmax(0, 1fr); gap: 56px; } }
+@media (min-width: 1200px) { .longread { grid-template-columns: 220px minmax(0, 64ch) 260px; column-gap: 48px; } }
+.longread__main { min-width: 0; }
+.prose { font: 400 var(--fs-prose)/1.62 var(--serif); color: var(--ink); max-width: 64ch; }
+.prose p, .prose ul, .prose ol, .prose dl, .prose blockquote, .prose .callout, .prose figure, .prose details, .prose .wp-block-buttons { margin-top: 1em; }
+.prose > :first-child { margin-top: 0; }
+.prose ul, .prose ol { padding-left: 1.2em; }
+.prose li + li { margin-top: .35em; }
+.prose h2 { margin-top: 2.4em; font-size: clamp(2rem, 1.4rem + 1.6vw, 2.75rem); }
+.prose h3 { margin-top: 1.8em; font-size: clamp(1.4rem, 1.2rem + .5vw, 1.7rem); }
+.prose h2 + p, .prose h3 + p { margin-top: .6em; }
+.prose .table, .prose .callout, .prose .tag, .prose .fmt { font-family: var(--sans); }
+.prose strong { font-weight: 600; }
+.prose a { color: var(--red-ink); }
+/* Buttons inside prose keep their own colours (.prose a would otherwise out-rank the plugin's .btn). */
+.prose a.btn--red, .prose a.btn--red:hover, .prose a.btn--ink, .prose a.btn--ink:hover { color: #fff; }
+.prose a.btn--light, .prose a.btn--light:hover { color: var(--ink); }
+.prose a.btn--ghost { color: var(--fg); }
+.prose .wp-block-buttons { margin-top: 1.1em; }
+/* B's .table-wrap took 1.1em of the prose size; the figure's own em is the table's 15.5px. */
+.prose .wp-block-table.table { margin-top: calc(var(--fs-prose) * 1.1); }
+/* A join path's button sits under its step, as in B (the button follows the list in the page). */
+.prose .seq + .wp-block-buttons { margin-top: .7em; margin-left: 44px; }
+.prose .wp-block-buttons + .seq { margin-top: .7em; }
+.chapter-meta { font: 400 14.5px/1.5 var(--sans); color: var(--off); }
+
+/* Page head: a short dawn hinge, then the title on dawn. */
+.wp-block-spacer.about-sky { height: 44px !important; }
+.about-head { padding: 28px 0 56px; }
+.about-head__main > * + * { margin-top: 16px; }
+.about-head .lede { max-width: 46ch; color: var(--ink-2); }
+@media (min-width: 1024px) { .about-head__main { margin-left: calc(232px + 56px); } }
+@media (min-width: 1200px) { .about-head__main { margin-left: calc(220px + 48px); } }
+.about-body { padding: 0 0 var(--s6); background: var(--day); }
+
+/* Table of contents (spokares/toc): sticky side column at 1024px and up,
+   a closed <details> on small screens. The block wrapper fills the aside so
+   the list can stick for the whole page. */
+.longread__aside > .wp-block-spokares-toc { height: 100%; }
+.toc { font: 400 14.5px/1.35 var(--sans); }
+@media (min-width: 1024px) {
+  .toc { position: sticky; top: calc(var(--mast-h) + 28px + var(--spk-bar)); max-height: calc(100vh - var(--mast-h) - 56px - var(--spk-bar)); overflow-y: auto; padding-bottom: 24px; }
+}
+.toc__title { font: 600 14px/1.3 var(--sans); color: var(--ink-2); margin-bottom: 10px; }
+.toc ol { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--rule); }
+.toc a { display: block; margin-left: -1px; padding: 6px 0 6px 16px; border-left: 3px solid transparent; color: var(--ink-2); text-decoration: none; }
+.toc a:hover { color: var(--ink); text-decoration: underline; }
+.toc a.is-active, .toc a[aria-current="true"] { border-left-color: var(--red); color: var(--ink); font-weight: 600; }
+/* The contents list is the message line: a red line grows from an amber node to the chapter you are in. */
+.toc--side { padding-top: 10px; padding-left: 7px; margin-left: -7px; }
+.toc--side ol { position: relative; }
+.toc--side ol::before { content: ""; position: absolute; z-index: 1; left: -6px; top: -9px; width: 13px; height: 13px; border-radius: 50%; background: var(--amber); }
+.toc__rail { position: absolute; top: 0; left: 6px; width: 3px; height: 0; background: var(--red); pointer-events: none; transition: height .35s var(--ease); }
+.toc--side a { padding-block: 5px; }
+.toc--side a.is-read { color: var(--ink); }
+.toc-mobile { border: 1px solid var(--rule); border-radius: var(--r-card); background: #fff; }
+.toc-mobile summary { display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 0 18px; font: 600 16px/1 var(--sans); cursor: pointer; list-style: none; }
+.toc-mobile summary::-webkit-details-marker { display: none; }
+.toc-mobile summary::after { content: ""; width: 10px; height: 10px; border-right: 2px solid var(--ink); border-bottom: 2px solid var(--ink); transform: rotate(45deg) translateY(-3px); }
+.toc-mobile[open] summary::after { transform: rotate(-135deg) translateY(-3px); }
+.toc-mobile .toc { padding: 4px 18px 16px; }
+.toc-mobile .toc a { padding: 10px 0 10px 16px; font-size: 15.5px; }
+@media (min-width: 1024px) { .toc-mobile { display: none; } }
+@media (max-width: 1023px) { .toc--side { display: none; } }
+.contents-fab { position: fixed; right: 16px; bottom: 16px; z-index: 50; box-shadow: 0 12px 26px -12px rgba(5, 11, 26, .7); transition: opacity .2s, visibility .2s; }
+.contents-fab.is-parked { opacity: 0; visibility: hidden; }
+@media (min-width: 1024px) { .contents-fab { display: none !important; } }
+
+/* Chapters: a hairline and a heading, nothing else. */
+.prose .chapter { margin-top: 0; }
+.prose .chapter + .chapter { margin-top: 72px; padding-top: 40px; border-top: 1px solid var(--rule); }
+.prose .chapter h2 { margin-top: 0; }
+/* The last chapter is tall enough to scroll to the top, so #contact deep links land and the contents line reaches it. */
+.prose .chapter:last-child { min-height: calc(100vh - 280px); }
+.prose .note { font: 400 15.5px/1.55 var(--sans); color: var(--ink-2); }
+.prose .callout ul { padding-left: 1.1em; }
+.prose .callout li + li { margin-top: .3em; }
+.prose .linkrow { font: 400 16px/1.6 var(--sans); color: var(--ink-2); }
+.prose .linkrow a { font-weight: 600; white-space: nowrap; }
+/* Links are separated by a space in the text (the wrap point) plus this margin,
+   so a link that wraps starts flush left, as in B's flex row. */
+.prose .linkrow a:not(:last-child) { margin-right: 24px; }
+/* Wide tables use the empty rail at 1200px and up. */
+@media (min-width: 1200px) { .prose .bleed { margin-right: calc(-260px - 48px); } }
+
+/* Definitions (ARES, ACS, RACES, AUXCOMM): Group "defs" > Group "def" > term, [expansion], text. */
+.prose .defs { margin-top: 1.1em; border-top: 1px solid var(--rule); }
+.def { display: grid; grid-template-columns: 8.5em minmax(0, 1fr); grid-template-rows: auto 1fr; column-gap: 24px; align-content: start; padding: 14px 0; border-bottom: 1px solid var(--rule); }
+.def > * { grid-column: 2; margin: 0 !important; }
+.def > .def__term { grid-column: 1; grid-row: 1; font: 600 17px/1.75 var(--sans); color: var(--ink); }
+.def > .def__expansion { grid-column: 1; grid-row: 2; font: 400 13.5px/1.35 var(--sans); color: var(--ink-2); }
+.def > .def__text { grid-column: 2; grid-row: 1 / span 2; line-height: 1.5; }
+
+/* Structure figure: two chains of labels merging into one team. The merge
+   curve is drawn under the two columns, the amber node above the team box. */
+.prose .chains { margin-top: 1.4em; font-family: var(--sans); }
+.chains__cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.chains__cols::after {
+  content: ""; grid-column: 1 / -1; height: 48px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 48' preserveAspectRatio='none'%3E%3Cpath d='M25 0 C25 26 50 20 50 48M75 0 C75 26 50 20 50 48' fill='none' stroke='%233C4863' stroke-width='1.5' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+.prose .chain { position: relative; list-style: none; margin: 0; padding: 0 6%; }
+.chain::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 1.5px; margin-left: -.75px; background: var(--ink-2); }
+.prose .chain li { position: relative; margin: 0 0 18px; padding: 10px 12px; background: #fff; border: 1px solid #AEB6C6; border-radius: 8px; text-align: center; font: 500 15px/1.35 var(--sans); color: var(--ink); }
+.prose .chain li:last-child { margin-bottom: 0; }
+.chain li small { font-size: 13px; font-weight: 400; color: var(--ink-2); }
+.chains__team { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.chains__team::before { content: ""; width: 16px; height: 16px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 0 4px #fff, 0 0 0 5.5px #D7A53A; }
+.prose .chains__team p { margin-top: 12px; padding: 10px 22px; border: 1.5px solid var(--ink); border-radius: 10px; font: 400 15px/1.4 var(--sans); color: var(--ink-2); }
+.chains__team strong, .chains__team b { font-size: 16px; font-weight: 600; color: var(--ink); }
+.chains abbr, .roles abbr { text-decoration: none; }
+.prose .chains__caption { margin-top: 16px; font: 400 15px/1.5 var(--sans); color: var(--ink-2); }
+
+/* About tables. */
+.roles td:last-child { width: 32%; font-weight: 600; font-variant-numeric: lining-nums; }
+/* An open role: bold words followed by a link ("Open position" then
+   "Interested? Tell us.") print as B's amber "open" pill. Editors only type
+   words and bold them; no markup to keep. */
+.roles td:last-child > strong:first-child:has(+ a) {
+  display: inline-flex; align-items: center; min-height: 26px; margin: 0 8px 4px 0; padding: 3px 10px;
+  border: 1px dashed #D7A53A; border-radius: var(--r-pill); background: var(--amber-wash); color: var(--amber-ink);
+  font: 600 13.5px/1.2 var(--sans); white-space: nowrap;
+}
+.tb tbody { counter-reset: spk-tb; }
+.tb tbody tr { counter-increment: spk-tb; }
+.tb tbody th { position: relative; padding-left: 40px !important; }
+.tb tbody th::before { content: counter(spk-tb); position: absolute; left: 0; top: 10px; }
+.table--dense.tb tbody th::before { top: 8px; }
+@media (min-width: 641px) {
+  .legal-table tbody th { width: 5.5em; }
+  .legal-table td:nth-child(2) { width: 30%; }
+  .tb tbody th { width: 30%; }
+  .exams tbody th { width: 30%; }
+  .exams td:last-child { white-space: nowrap; }
+}
+/* "(optional)", "(2024-08-09)" after an About H3 (a span in the heading text). */
+.prose .h3-note { font-weight: 400; font-size: .72em; color: var(--ink-2); }
+.contacts tbody th { width: 45%; font-weight: 400; }
+.contacts a { font-weight: 600; }
+
+/* Join paths and run-sheets in prose (List "seq"): hop markers, no rule between. */
+.prose .seq { list-style: none; padding: 0; }
+.prose .seq > li, .prose .seq > li:last-child { min-height: 0; padding-top: 0; padding-bottom: 0; line-height: 1.62; }
+.prose .seq > li + li { margin-top: .7em; }
+.prose .seq > li::after, .prose .seq > li:not(:last-child)::after { content: none; }
+.prose .seq > li::before { top: .15em; }
+
+/* History timeline (ordered List "years"): item = "<strong>1999</strong> text". */
+.prose .years { list-style: none; padding: 0; margin-top: .9em; border-top: 1px solid var(--rule); }
+.years > li { position: relative; margin: 0 !important; padding: 11px 0 11px calc(4.5em + 16px); border-bottom: 1px solid var(--rule); line-height: 1.5; }
+.years > li > strong:first-child, .years > li > .rich-text > strong:first-child { position: absolute; left: 0; top: 11px; width: 4.5em; font: 600 15.5px/1.95 var(--sans); color: var(--ink); font-variant-numeric: lining-nums; }
+.prose .pullquote { margin: 1.4em 0 0; }
+
+/* ============================================================ 27. Documents library (spokares/docs view "library") */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 8px 16px; border-radius: var(--r-pill);
+  border: 1px solid var(--line-strong); background: #fff; color: var(--ink-2); font: 500 15px/1 var(--sans); text-decoration: none; cursor: pointer; white-space: nowrap;
+}
+.chip:hover { border-color: var(--ink); color: var(--ink); text-decoration: none; }
+.chip[aria-pressed="true"], .chip[aria-current="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+.doc-count { font: 500 15px/1.4 var(--sans); color: var(--ink-2); min-height: 1.4em; }
+.doc-group__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 3px solid var(--red); }
+.doc-title { font: 600 16px/1.35 var(--sans); color: var(--ink); }
+a.doc-title { color: var(--ink); text-decoration-color: var(--red-ink); }
+.doc-note { display: block; margin-top: 4px; font-size: 14px; color: var(--off); }
+.doc-empty { padding: 28px; text-align: left; }
+
+.lib { display: grid; grid-template-columns: 272px minmax(0, 1fr); gap: 32px 64px; align-items: start; }
+.lib__rail { position: sticky; top: calc(var(--mast-h) + 24px + var(--spk-bar)); display: grid; gap: 28px; }
+.lib__label { flex-basis: 100%; font: 600 15px/1.35 var(--sans); color: var(--ink); }
+.lib__search .searchbar__field { flex: 1 1 100%; }
+.lib__cats .chips { flex-direction: column; gap: 2px; }
+.lib__cats .chip { width: 100%; justify-content: flex-start; min-height: 44px; padding: 8px 14px; border-color: transparent; border-radius: 8px; background: transparent; }
+.lib__cats .chip:hover { background: #fff; border-color: var(--rule); }
+.lib__cats .chip[aria-pressed="true"], .lib__cats .chip[aria-current="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+.lib__main { min-width: 0; }
+.lib__main .doc-count { margin-bottom: 20px; }
+.doc-empty { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; margin-bottom: 24px; }
+.doc-empty > * + * { margin-top: 0; }
+.doc-group + .doc-group { margin-top: 56px; }
+.doc-table { font-size: 15px; }
+.doc-table td:first-child { width: auto; }
+.doc-table th:nth-child(2), .doc-table td:nth-child(2) { width: 30%; }
+.doc-table th:nth-child(3), .doc-table td:nth-child(3) { width: 21%; }
+.doc-table td:nth-child(3) { color: var(--ink-2); }
+.doc-ver { font-size: 14px; color: var(--ink-2); }
+.doc-links a { font-weight: 600; }
+.doc-table tr:target > * { background: var(--amber-wash); }
+/* "Not posted here" follows the library block; on wide screens it lines up with the right column. */
+.lib__not-here { margin-top: var(--s5); padding-top: 20px; border-top: 1px solid var(--rule); }
+.workspace .lib__not-here h2, .lib__not-here h2 { font: 600 17px/1.35 var(--sans); letter-spacing: 0; }
+.lib__not-here p { margin-top: 6px; max-width: 64ch; font-size: 15.5px; color: var(--ink-2); }
+@media (min-width: 1024px) {
+  .wp-block-spokares-docs.is-view-library + .lib__not-here { margin-left: calc(272px + 64px); }
+}
+
+/* ============================================================ 28. Members shell, sub-nav, hub, exercises
+   templates/page-members|documents|exercises.html:
+   .members-shell > members-nav part + main.workspace > Group "members-page wrap". */
+.members-shell { background: var(--paper); }
+/* Sub-nav (core Navigation, class "member-nav", never collapses): one white
+   row under the night masthead, five labels, wraps to two rows on phones. */
+nav.member-nav.wp-block-navigation { display: block; background: var(--day); border-bottom: 1px solid var(--rule); }
+/* The list is 2 x 14px wider than the page wrap, so link TEXT lines up with the page edge on every row. */
+nav.member-nav > .wp-block-navigation__container { flex-wrap: wrap; gap: 0 2px; width: calc(var(--wrap) + 28px); margin: 0 auto; padding: 6px 0; }
+nav.member-nav .wp-block-navigation-item > .wp-block-navigation-item__content {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 8px;
+  font: 500 15.5px/1.2 var(--sans); color: var(--ink-2); text-decoration: none; white-space: nowrap;
+}
+nav.member-nav .wp-block-navigation-item > .wp-block-navigation-item__content:hover { background: var(--paper); color: var(--ink); }
+nav.member-nav .wp-block-navigation-item > .wp-block-navigation-item__content[aria-current="page"] { color: var(--ink); font-weight: 600; border-radius: 8px 8px 0 0; box-shadow: inset 0 -3px 0 var(--amber); }
+.workspace { min-width: 0; padding: 40px 0 96px; background: var(--paper); }
+.workspace h2 { font-size: clamp(1.75rem, 1.35rem + 1vw, 2.35rem); }
+.page-head { margin-bottom: var(--s4); }
+.page-head h1 { font-size: clamp(2.4rem, 1.6rem + 2.2vw, 3.5rem); }
+.page-head .lede { margin-top: 12px; max-width: 58ch; }
+.page-head__meta { margin-top: 10px; font-size: 14.5px; color: var(--off); }
+
+/* Shared members pieces. */
+h2.m-head { margin-bottom: 16px; padding-bottom: 10px; border-bottom: var(--m-head-rule); }
+h2.m-head, .doc-group__head h2 { font-size: clamp(1.6rem, 1.3rem + .8vw, 2rem); }
+.m-label { margin: 0 0 6px; font: 600 15px/1.35 var(--sans); color: var(--ink-2); }
+.m-line { font-size: 16px; line-height: 1.55; }
+.m-line b, .m-line strong { font-weight: 600; }
+.workspace .table { background: transparent; }
+
+/* Hub: a switchboard. Head with search; This week beside Tuesday net; four tiles. */
+.hub-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 520px); gap: 24px 56px; align-items: end; }
+.hub-search__label { flex-basis: 100%; font: 600 15px/1.35 var(--sans); color: var(--ink); }
+.hub-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s5) 72px; align-items: start; }
+.hub-bring { margin-top: 16px; }
+.hub-meeting { margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--rule); }
+.wp-block-spokares-meetings.is-view-next { margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--rule); }
+.wp-block-spokares-meetings.is-view-next .hub-meeting { margin-top: 0; padding-top: 0; border-top: 0; }
+/* A cancelled or moved meeting, shown for 14 days before the date. */
+.hub-meeting-change { margin-bottom: 12px; padding: 10px 14px; border-radius: 0 8px 8px 0; background: var(--amber-wash); box-shadow: inset 3px 0 0 var(--amber); font-size: 15.5px; color: var(--ink); }
+.hub-rota th[scope="row"] { font-weight: 500; white-space: nowrap; }
+/* A Tuesday nobody has filled in yet: quieter than a call sign or an Open slot. */
+.rota-tbd { color: var(--faint); font-size: 14.5px; }
+.hub-rota td:last-child { color: var(--ink-2); }
+.hub-open { margin-top: 12px; font-size: 15px; color: var(--ink-2); }
+.hub-most { margin-top: var(--s5); }
+.hub-most .tile { align-items: center; padding: 18px 20px; }
+.hub-most .tile .icon { grid-row: auto; }
+
+/* Exercises: next events first (the red-topped card is the page's one filled
+   action), then four compact reference blocks, two by two on wide screens. */
+.ex-bring { max-width: 80ch; }
+.ex-cards { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 24px; align-items: start; margin-top: 24px; }
+/* The Next-up block holds the cards or, with nothing scheduled, one plain line; either sits 24px under "Bring". */
+.wp-block-spokares-events.is-view-next-up { margin-top: 24px; }
+.wp-block-spokares-events.is-view-next-up > .ex-cards { margin-top: 0; }
+.ex-card { padding: 26px 28px 28px; }
+.ex-card h3 { font: 600 21px/1.3 var(--sans); letter-spacing: -.005em; }
+.ex-card > * + * { margin-top: 12px; }
+.ex-when { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; font: 600 16px/1.4 var(--sans); color: var(--ink-2); }
+/* An event's place (optional, from the event form). */
+.ex-card .ex-where { margin-top: 4px; font: 500 15px/1.4 var(--sans); color: var(--ink-2); }
+.ex-table .ex-where { color: var(--muted); font-weight: 400; }
+.ex-card .ex-action { margin-top: 22px; }
+.ex-tasks { padding-left: 1.4em; }
+.ex-tasks li { padding-left: 4px; }
+.ex-tasks li + li { margin-top: 6px; }
+.ex-tasks li::marker { font-weight: 600; color: var(--ink-2); }
+.ex-after { margin-top: 24px; max-width: 80ch; }
+.ex-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s5) 64px; margin-top: var(--s5); align-items: start; }
+.ex-table th[scope="row"] { font-weight: 600; }
+.ex-later th[scope="row"] { width: 38%; white-space: nowrap; font-weight: 500; }
+.ex-later tr:first-child > * { border-top: 0; }
+.ex-winlink th[scope="row"] { white-space: nowrap; font-weight: 500; }
+.ex-howto { margin-bottom: 14px; font-size: 15.5px; color: var(--ink-2); }
+.ex-public td { white-space: nowrap; }
+.ex-tips { margin-top: 12px; font-size: 15.5px; }
+.ex-past { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.ex-past li { display: grid; grid-template-columns: 6.5em minmax(0, 1fr); gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--rule); font-size: 15.5px; line-height: 1.5; }
+.ex-past__when { font-weight: 600; color: var(--ink-2); font-variant-numeric: tabular-nums lining-nums; }
+
+/* ============================================================ 29. Footer (minimal)
+   parts/footer.html: seal, five links, "Privacy (coming)", the safety line,
+   the copyright and mockup note. */
+.site-footer { background: var(--night); padding: 36px 0 28px; font-size: 15px; line-height: 1.5; }
+.footer__bar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 26px; }
+.footer__seal { display: inline-flex; flex: none; margin-right: 10px; border-radius: 50%; }
+.footer__seal img { width: 44px; height: 44px; border-radius: 50%; background: #fff; }
+/* .footer__nav holds the Navigation and "Privacy (coming)" as one inline run,
+   so the note wraps with the links, as B's last <li> did. */
+.footer__nav { flex: 0 1 auto; min-width: 0; margin-right: -26px; font-size: 0; } /* the negative margin absorbs the last item's gap; font-size 0 drops the space between the blocks */
+.footer__nav > * { font-size: 15px; }
+.footer__nav > nav.footer__links,
+.footer__nav > nav.footer__links > .wp-block-navigation__container { display: inline; }
+.footer__nav > nav.footer__links .wp-block-navigation-item { display: inline-flex; align-items: center; min-height: 44px; margin-right: 26px; vertical-align: top; }
+.footer__nav > .footer__privacy { vertical-align: top; }
+.site-footer a,
+nav.footer__links .wp-block-navigation-item > .wp-block-navigation-item__content {
+  color: #fff; text-decoration-line: underline; text-decoration-color: rgba(197, 206, 223, .45); text-decoration-thickness: 1.5px; text-underline-offset: .2em;
+}
+.site-footer a:hover,
+nav.footer__links .wp-block-navigation-item > .wp-block-navigation-item__content:hover { text-decoration-color: var(--amber); text-decoration-thickness: 3px; }
+.footer__privacy { display: inline-flex; align-items: center; min-height: 44px; color: var(--mist-2); }
+.footer__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 28px; margin-top: 20px; padding-top: 18px; border-top: 1px solid rgba(197, 206, 223, .16); font-size: 14px; color: var(--mist-2); }
+.footer__emergency { color: #fff; font-weight: 500; }
+.footer__mock { color: #95A1B8; font-size: 13.5px; }
+
+/* ============================================================ 30. Home
+   Night (hero, What we do) -> dawn strip -> Come visit on dawn -> Join on day. */
+.home-h2 { margin-bottom: 52px; }
+.home-do { padding: 8px 0 112px; }
+.home-do .home-h2 { color: #fff; }
+.home-visit { padding: 40px 0 104px; }
+.home-visit__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 40px 72px; align-items: start; }
+.home-visit__air { padding: 28px 30px 30px; }
+.home-visit__air p:not(.spk-edit-link):not(.spk-edit-hint) { font: 400 var(--fs-lede)/1.5 var(--serif); color: var(--ink); }
+.home-visit__air strong { font-weight: 600; }
+.home-visit__person > p,
+.home-visit__person .wp-block-spokares-meetings > p:first-child { font: 400 var(--fs-lede)/1.5 var(--serif); color: var(--ink); max-width: 40ch; }
+.home-visit__person strong { font-weight: 600; }
+.meetings { list-style: none; margin: 22px 0 0; padding: 0; border-top: 1px solid rgba(14, 26, 51, .14); }
+.meetings li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 28px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid rgba(14, 26, 51, .14); }
+.meetings__next { font: 600 15.5px/1.3 var(--sans); color: var(--ink); white-space: nowrap; }
+.home-join { padding: 24px 0 120px; }
+.home-join__grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 32px 64px; align-items: start; padding-top: 72px; border-top: 1px solid var(--rule); }
+.home-join .home-h2 { margin: 0; }
+
+/* ============================================================ 32. How it works
+   Night opener (the story, one screen) -> dawn -> five daylight chapters on a
+   4/8 rail: headings left, content right. */
+.how-open { padding: 56px 0 64px; }
+.how-open__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 0 64px; align-items: start; }
+.how-open__text, .how-open__side { min-width: 0; }
+.how-open h1 { color: #fff; }
+.how-open__jump { margin-top: 14px; font: 500 15.5px/1.4 var(--sans); }
+.how-open__line { margin-top: 16px; font: 400 var(--fs-narr)/1.35 var(--serif); color: #fff; }
+.how-open__note { margin-top: 10px; font-size: 15px; line-height: 1.5; color: var(--mist); text-wrap: balance; }
+.how-open abbr { text-decoration-color: rgba(197, 206, 223, .45); }
+/* The four hops (ordered List "hops"): amber counters; item = "<strong>Lead.</strong> text". */
+.hops { list-style: none; margin: 30px 0 0; padding: 0; display: grid; gap: 16px; }
+.hops > li { position: relative; padding-left: 44px; max-width: calc(46ch + 44px); font: 400 1.125rem/1.5 var(--serif); color: var(--mist); }
+.hops > li::before { content: counter(list-item); position: absolute; left: 0; top: 1px; }
+.hops strong, .hops b { font-weight: 600; color: #fff; }
+.how-open__fig { margin: 0; }
+.how-open__after { margin-top: 28px; font: italic 400 clamp(1.5rem, 1.1rem + 1vw, 2.125rem)/1.25 var(--serif); color: #fff; }
+.wp-block-spacer.how-dawn { height: 72px !important; }
+
+.how-ch { padding: 0 0 96px; }
+.how-ch--first { padding-top: 48px; }
+.how-ch .redline { margin-bottom: 56px; }
+.how-row { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 20px 64px; align-items: start; }
+.how-row + .how-row { margin-top: 64px; }
+.how-row__head > * + * { margin-top: 12px; }
+.how-row__head p { max-width: 34ch; color: var(--ink-2); }
+.how-row__body { min-width: 0; max-width: 760px; }
+.how-row .how-row__body > * + * { margin-top: 24px; }
+.how-lede { font: 400 var(--fs-lede)/1.45 var(--serif); color: var(--ink); max-width: 44ch; }
+.how-lede b, .how-lede strong { font-weight: 600; }
+.how-lede.has-textlink a { white-space: nowrap; }
+.how-label { font: 600 16px/1.4 var(--sans); color: var(--ink); }
+.how-row .how-row__body .how-label + * { margin-top: 14px; }
+
+/* Run-sheets (ordered List "seq"): small amber markers on a quiet rule. The
+   visitor cue is a nested List "seq__cue" inside an item. */
+.seq { list-style: none; margin: 0; padding: 0; }
+/* min-height: B's row was the 28px marker (+1px offset) plus the 14px gap. */
+.seq > li { position: relative; min-height: 43px; padding: 2px 0 14px 44px; line-height: 1.5; color: var(--ink); }
+.seq > li:last-child { min-height: 29px; padding-bottom: 0; }
+.seq > li::before { content: counter(list-item); position: absolute; left: 0; top: 1px; }
+.seq > li:not(:last-child)::after { content: ""; position: absolute; left: 13px; top: 32px; bottom: 4px; width: 2px; background: var(--rule); }
+.seq strong, .seq b { font-weight: 600; }
+.seq__cue { list-style: none; margin: 10px 0 0; padding: 2px 14px 10px; /* B's rendered padding (its ".seq p" rule set the top to 2px) */ border-radius: 0 8px 8px 0; background: var(--amber-wash); box-shadow: inset 3px 0 0 var(--amber); font-size: 15.5px; }
+.prose .seq__cue { font-family: var(--sans); }
+
+/* One-line items with a hairline between them (List "lines"; also printed by spokares/net "other-nets"). */
+.lines { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.lines > li { padding: 12px 0; border-bottom: 1px solid var(--rule); line-height: 1.5; }
+.lines strong, .lines b { font-weight: 600; }
+.prose .lines { padding: 0; }
+
+/* The real event, set apart from the scenario. */
+.how-real { padding-left: 16px; border-left: 3px solid var(--red); max-width: 60ch; color: var(--ink); }
+.how-row__body .deflist--2 .deflist__def { font-size: 16px; }
+.how-roles th[scope="row"] { width: 30%; }
+.how-roles td:last-child { width: 32%; }
+/* "Ready?" and the page's one filled button. */
+.how-close { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-top: 48px !important; }
+.how-close > p { font: 500 var(--fs-h3)/1.15 var(--serif); color: var(--ink); }
+.how-close > .wp-block-buttons { margin: 0; }
+
+/* ============================================================ 33. WordPress helpers
+   Logged-in editors only: the plugin's "Edit this list in …" link under each
+   dynamic list, and the plain-text hint in editor previews. Small and quiet,
+   never competing with B's buttons. */
+.spk-edit-link { margin-top: 10px; font: 500 13.5px/1.4 var(--sans); }
+.spk-edit-link a { color: var(--muted); text-decoration-style: dashed; text-decoration-color: var(--line-strong); }
+.spk-edit-link a:hover { color: var(--fg); text-decoration-style: solid; text-decoration-color: currentColor; }
+.spk-edit-hint {
+  margin-top: 10px; padding: 8px 12px; border-radius: var(--r-sm);
+  background: var(--amber-wash); color: var(--amber-ink); border: 1px dashed #D7A53A;
+  font: 500 13.5px/1.4 var(--sans);
+}
+/* Reviewer aid (?verify=1, logged-in page editors): outline every former data-verify element. */
+.spk-verify .needs-verify { outline: 2px dashed var(--amber-ink); outline-offset: 2px; }
+.spk-verify .bg-night .needs-verify, .spk-verify .bg-storm .needs-verify, .spk-verify .site-footer .needs-verify { outline-color: var(--amber); }
+
+/* Plain pages (404, search results, any page without a pattern layout). */
+.plain-page { padding: 64px 0 96px; }
+.plain-page__title { margin-bottom: 24px; }
+.plain-page__line { font: 400 var(--fs-lede)/1.5 var(--serif); color: var(--ink-2); max-width: 46ch; }
+.plain-page__body > * + * { margin-top: 1em; }
+.results__list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.results__list > li { padding: 20px 0; border-bottom: 1px solid var(--rule); }
+.results__title { font-size: var(--fs-h3); }
+.results__title a { color: var(--ink); text-decoration-color: var(--red-ink); }
+.results__excerpt { margin-top: 6px; color: var(--ink-2); }
+.results__excerpt .wp-block-post-excerpt__more-link { display: none; }
+
+/* Block editor canvas only (these classes never reach the front end). In the
+   post editor WordPress holds page-level blocks to the 760px content width
+   because post content isn't at the template's root; B's sections are full
+   width and set their own spacing, as on the front end. */
+.editor-styles-wrapper .block-editor-block-list__layout.is-root-container > * { max-width: none !important; margin-left: 0 !important; margin-right: 0 !important; }
+.editor-styles-wrapper .editor-visual-editor__post-title-wrapper > .wp-block-post-title { width: var(--wrap); margin: 32px auto 24px; }
+/* When an editor selects a section, core outlines each editable block with an
+   absolutely positioned ::after. After balanced text (text-wrap: balance) Chrome
+   gives that pseudo-element an empty line of its own, so the hero H1 grew by a
+   line. As a grid container the heading keeps the same line breaks and the
+   pseudo-element takes no line. */
+.editor-styles-wrapper :is(h1, h2, h3, .how-open__note).rich-text.has-editable-outline { display: grid; }
+
+/* ============================================================ 34. Responsive */
+@media (max-width: 1180px) {
+  nav.nav .wp-block-navigation-item > .wp-block-navigation-item__content { padding: 0 9px; font-size: 15px; }
+  nav.nav .wp-block-navigation-item > .wp-block-navigation-item__content[aria-current]::after { left: 9px; right: 9px; }
+  .masthead__bar { gap: 18px; }
+}
+@media (max-width: 1100px) {
+  .quick { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .levels { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 32px; }
+  .levels .level:nth-child(3) { padding-left: 0; border-left: 0; }
+  .stops { gap: 0 28px; }
+  .how-row { grid-template-columns: minmax(0, 1fr); }
+  .how-row__head p { max-width: 60ch; }
+}
+@media (max-width: 1023px) {
+  .about-body .longread { gap: 32px; }
+  .lib { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .lib__rail { position: static; gap: 18px; }
+  .lib__search .searchbar__field { flex: 1 1 200px; }
+  .lib__search input { font-size: 16px; }
+  .lib__search .btn { padding-inline: 18px; }
+  .lib__cats .chips { flex-direction: row; gap: 8px; }
+  .lib__cats .chip { width: auto; min-height: 44px; padding: 8px 16px; border-color: var(--line-strong); border-radius: var(--r-pill); background: #fff; }
+  .ex-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 1019.98px) {
+  /* The primary nav collapses behind "Menu"; Join stays visible in the bar. */
+  .masthead__bar > nav.nav { order: 3; }
+  .masthead__bar > .site-header__actions { order: 2; }
+  .masthead__bar { gap: 10px; }
+}
+@media (max-width: 900px) {
+  :root { --mast-h: 64px; }
+  .home-visit__grid, .home-join__grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .home-join__grid { gap: 36px; }
+  /* What we do: the line turns vertical, stops hang off its left side. */
+  .stops { grid-auto-flow: row; grid-template-columns: minmax(0, 1fr); gap: 32px; padding-left: 40px; }
+  .stops::before { left: 6px; right: auto; top: 8px; bottom: 10px; width: 3px; height: auto; }
+  .stops::after { left: 1px; right: auto; top: auto; bottom: 2px; }
+  .stops > li { padding-top: 0; max-width: 46ch; }
+  .stops > li::before { left: -40px; top: 8px; }
+  .workspace { padding-top: 28px; }
+  .hub-head, .hub-grid { grid-template-columns: minmax(0, 1fr); }
+  .hub-head { gap: 24px; }
+  .hub-net { order: -1; }   /* Round-3 review: the Tuesday net first on phones. */
+  .ex-cards { grid-template-columns: minmax(0, 1fr); }
+  /* How it works opener stacks: heading, the picture, then the hops that explain it. */
+  .how-open { padding: 40px 0 48px; }
+  .how-open__grid { display: flex; flex-direction: column; }
+  .how-open__text, .how-open__side { display: contents; }
+  .how-open__grid h1 { order: 1; }
+  .how-open__jump { order: 1; }
+  .how-open__line { order: 2; }
+  .how-open__note { order: 3; }
+  .how-open__fig { order: 4; margin-top: 24px; }
+  .hops { order: 5; margin-top: 28px; }
+  .how-open__after { order: 6; }
+}
+@media (max-width: 640px) {
+  :root { --gutter: 16px; }
+  body { font-size: 16px; }
+  .quick, .levels, .deflist--2 { grid-template-columns: minmax(0, 1fr); }
+  .levels .level, .levels .level + .level { padding: 0; border-left: 0; }
+  .levels .level + .level { padding-top: 22px; border-top: 1px solid var(--line); }
+  .brand img { width: 38px; height: 38px; }
+  .brand { gap: 9px; }
+  .brand__name { font-size: 11.5px; }
+  .brand__name strong { font-size: 16px; }
+  .site-header__join > .wp-block-button__link { min-height: 44px; padding: 8px 14px; font-size: 14.5px; }
+  nav.nav .wp-block-navigation__responsive-container-open.wp-block-navigation__responsive-container-open,
+  nav.nav .wp-block-navigation__responsive-container-close.wp-block-navigation__responsive-container-close { padding: 0 12px; font-size: 14.5px; gap: 6px; }
+  .wp-block-cover.hero { min-height: 0; }
+  .hero__body { padding-block: 48px 64px; }
+  .hero__lede { margin-top: 18px; }
+  .hero__actions { margin-top: 28px; }
+  .msgpath-panel { padding: 10px 10px 12px; }
+  .pullquote p { font-size: 23px; }
+  /* Home */
+  .home-h2 { margin-bottom: 36px; }
+  .home-do { padding-bottom: 80px; }
+  .home-visit { padding: 32px 0 72px; }
+  .home-visit__air { padding: 22px 20px 24px; }
+  .meetings li { grid-template-columns: minmax(0, 1fr); }
+  .home-join { padding-bottom: 88px; }
+  .home-join__grid { padding-top: 56px; }
+  .steps__item { padding: 6px 0 36px 60px; }
+  .steps__item:last-child { padding-bottom: 0; }
+  .steps__item:not(:last-child)::after { left: 20.5px; top: 44px; }
+  .steps__item::before { width: 44px; height: 44px; font-size: 24px; }
+  /* Members sub-nav: two rows at 390, all five visible */
+  nav.member-nav > .wp-block-navigation__container { width: calc(var(--wrap) + 24px); padding: 4px 0; }
+  nav.member-nav .wp-block-navigation-item > .wp-block-navigation-item__content { padding: 0 12px; font-size: 15px; }
+  /* Footer */
+  .footer__nav { margin-right: -20px; }
+  .footer__nav > nav.footer__links .wp-block-navigation-item { margin-right: 20px; }
+  .footer__bottom { flex-direction: column; }
+  /* How it works: the story stays within one screen before #nets (390x844), so the figure is dropped here. */
+  .how-ch { padding-bottom: 72px; }
+  .how-ch--first { padding-top: 36px; }
+  .how-ch .redline { margin-bottom: 44px; }
+  .how-row + .how-row { margin-top: 52px; }
+  .how-open { padding: 32px 0; }
+  .how-open__fig { display: none; }
+  .hops { gap: 12px; }
+  .hops > li { font-size: 1.0625rem; }
+  .how-open__after { margin-top: 22px; font-size: 1.375rem; }
+  .wp-block-spacer.how-dawn { height: 40px !important; }
+  .how-row .levels { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 20px; }
+  .how-row .levels .level { padding: 16px 0 12px; border-top: 0; }
+  .how-row .levels .level:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .netbox { padding: 18px 18px 8px; }
+  .netbox__when { font-size: 21px; }
+  .netbox__rows > div { grid-template-columns: minmax(0, 1fr) auto; }
+  .netbox__rows dt { grid-column: 1 / -1; }
+  .netbox__rows dd { font-size: 16px; }
+  .how-roles th[scope="row"], .how-roles td:last-child { width: auto; }
+  /* About */
+  .wp-block-spacer.about-sky { height: 32px !important; }
+  .about-head { padding: 20px 0 36px; }
+  .prose { font-size: 19px; }
+  .prose .chapter + .chapter { margin-top: 56px; padding-top: 32px; }
+  .def { grid-template-columns: minmax(0, 1fr); }
+  .def > .def__term, .def > .def__expansion, .def > .def__text { grid-column: 1; grid-row: auto; }
+  .prose .chain { padding: 0 4%; }
+  .prose .chain li { padding: 9px 8px; font-size: 14px; }
+  .prose .pullquote { padding-left: 18px; }
+  .years > li { padding-left: calc(3.4em + 12px); }
+  .years > li > strong:first-child, .years > li > .rich-text > strong:first-child { width: 3.4em; }
+  /* About only (B's about.html page style); How it works and members keep 7.5rem. */
+  .about-body .table--stack tbody th { padding-top: 2px !important; }
+  .about-body .table--stack td[data-label] { padding-left: 6.5rem !important; }
+  .about-body .table--stack td[data-label]::before { width: 6rem; }
+  .about-body .tb tbody th::before { top: 0; } /* B: the marker's top meets the 2px row padding (margin-top -2px) */
+  .about-body .tb tbody th { min-height: 31px; } /* B's level cell holds the 28px marker (margin-top -2px) */
+  /* B's unit table: the call column was as wide as its "Open position" pill (148px), so
+     "AA7RT, W7UWC" stayed on one line. The section table after it keeps 32%. */
+  .roles:has(+ .roles) td:last-child { min-width: 148px; }
+  /* B: the definition sits 2px below its term (the dl grid's row gap). */
+  .def > .def__text { margin-top: 2px !important; }
+  /* Hub */
+  .netbar { padding: 14px 14px 14px 18px; }
+  .netbar__time { display: block; margin: 0 0 2px; padding: 0; border: 0; }
+  .hub-rota th, .hub-rota td { padding-inline: 8px; }
+  .hub-most .quick { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hub-search .searchbar__field { flex-basis: 180px; }
+  .hub-search input { font-size: 16px; }
+  .hub-search .btn { padding-inline: 18px; }
+  /* Documents: each row collapses to the title (and its note), then format and source on one line. */
+  .doc-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .doc-table, .doc-table tbody { display: block; width: 100%; }
+  .doc-table tr { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .doc-table td { display: block; width: auto !important; padding: 0; border: 0; }
+  .doc-table td:first-child { flex: 1 1 100%; }
+  .doc-table td:empty { display: none; }
+  .doc-table td:nth-child(3) { font-size: 14px; }
+  .doc-table tr:target { background: var(--amber-wash); box-shadow: -8px 0 0 var(--amber-wash), 8px 0 0 var(--amber-wash); }
+  .doc-table tr:target > * { background: none; }
+  .doc-group + .doc-group { margin-top: 44px; }
+  /* Exercises */
+  .ex-card { padding: 22px 20px 24px; }
+  .ex-later, .ex-later tbody, .ex-later tr, .ex-later th, .ex-later td { display: block; width: 100% !important; }
+  .ex-later tr { padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .ex-later th, .ex-later td { padding: 0 !important; border: 0; }
+  .ex-later th[scope="row"] { font-weight: 600; font-size: 14.5px; color: var(--ink-2); }
+  .ex-winlink thead, .ex-public thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .ex-winlink, .ex-winlink tbody, .ex-public, .ex-public tbody { display: block; width: 100%; }
+  .ex-winlink tr, .ex-public tr { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .ex-winlink th, .ex-winlink td, .ex-public th, .ex-public td { display: block; padding: 0 !important; border: 0; }
+  .ex-winlink td[data-label="Form"] { order: 1; color: var(--ink-2); font-size: 14.5px; }
+  .ex-winlink td[data-label="Assignment"] { order: 2; flex: 1 1 100%; }
+  .ex-winlink tr.is-next { padding-inline: 12px; border-radius: 8px; background: var(--amber-wash); }
+  .table.ex-winlink tr.is-next > * { background: none; box-shadow: none; }
+  .ex-public th { flex: 1 1 100%; }
+  .ex-public td { font-size: 14.5px; color: var(--ink-2); white-space: normal; }
+  .ex-public td[data-label="Volunteer through"]::before { content: "Volunteer through "; }
+  .plain-page { padding: 40px 0 72px; }
+}
+@media (max-width: 600px) {
+  /* The admin bar scrolls away at this width, so the header sticks to the very top. */
+  :root { --spk-bar: 0px; }
+}
+@media (max-width: 460px) {
+  .brand__name > span { display: none; }
+  .masthead__bar { gap: 8px; }
+  .site-header__join > .wp-block-button__link { padding: 8px 13px; }
+  nav.nav .wp-block-navigation__responsive-container-open { padding: 0 11px; }
+  .msgpath { --mp-fs: 21px; --mp-pill: 1.25; }
+}
+@media (max-width: 380px) {
+  /* Narrow phones (360): the seal carries the brand; the name stays for screen readers. */
+  .brand__name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  nav.member-nav > .wp-block-navigation__container { width: calc(var(--wrap) + 20px); }
+  nav.member-nav .wp-block-navigation-item > .wp-block-navigation-item__content { padding: 0 10px; }
+}
+
+/* Reduced motion: no transitions, no smooth scroll. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+@media print {
+  nav.nav, .site-header__actions, nav.member-nav, .toast, .contents-fab, .spk-edit-link { display: none !important; }
+  .site-header { position: static; }
+  body { background: #fff; }
+}

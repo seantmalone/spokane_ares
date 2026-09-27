@@ -1,0 +1,1361 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+<title>How it works | Spokane County ARES-ACS</title>
+<meta name="description" content="How Spokane County ARES-ACS volunteers are activated, how the Tuesday net runs, how messages are handled by voice and Winlink, and the exercises and events members take part in.">
+<meta name="theme-color" content="#1E3557">
+<link rel="icon" href="assets/img/seal-ares-acs-400.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  /* =====================================================================
+     How it works: page-scoped layout only. Tokens, type, radii and
+     shadows all come from site.css; nothing here restyles a component.
+     ===================================================================== */
+
+  /* Page intro: H1 + lede beside the field-station photo */
+  .hiw-intro .split { align-items: center; }
+  .hiw-intro h1 { max-width: 9em; }
+  .hiw-intro .lede { max-width: 30em; }
+  .intro-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 28px; margin-top: 20px; }
+  .intro-photo .photo-frame { aspect-ratio: 16 / 9; }
+  .intro-photo .photo-frame img { object-position: 55% 72%; }
+
+  /* ---- "A month with the team": the month calendar (the page's one bold thing) */
+  .month .section-head { margin-bottom: 20px; }
+  .cal { background: #fff; border: 1px solid var(--dusk-line); border-radius: var(--r-week); overflow: hidden; box-shadow: var(--shadow-float); }
+  .cal-band { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 20px; background: var(--dusk-deep); color: var(--on-dark); padding: 14px 22px; }
+  .cal-band h3 { font-size: clamp(1.375rem, 1.1rem + .8vw, 1.75rem); color: #fff; font-stretch: 90%; font-variation-settings: "opsz" 96; }
+  .cal-band p { font-size: var(--fs-small); color: var(--on-dark-2); }
+  .cal-weekdays { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); background: var(--dusk-mist); border-bottom: 1px solid var(--line); }
+  .cal-weekdays span { padding: 7px 12px; font-size: var(--fs-small); font-weight: 700; color: var(--ink-2); }
+  .cal-grid { list-style: none; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  .cal-day { min-height: 100px; padding: 8px 8px 10px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .cal-day:nth-child(7n) { border-right: 0; }
+  .cal-date { display: flex; align-items: center; gap: 6px; }
+  .cal-num { display: inline-grid; place-items: center; min-width: 30px; height: 30px; border-radius: 50%; font-family: var(--font-display); font-weight: 700; font-stretch: 85%; font-size: 1.125rem; line-height: 1; color: var(--ink); }
+  .cal-day.is-out .cal-num { color: var(--ink-2); font-weight: 400; }   /* out-of-month: lighter weight, still AA */
+  .cal-day.is-out { background: var(--cloud); }
+  .cal-day.is-today { background: var(--dusk-mist); }
+  .cal-day.is-today .cal-num { background: var(--dusk); color: #fff; }
+  .cal-today { font-size: var(--fs-tiny); font-weight: 700; color: var(--dusk-deep); }
+  .cal-dow, .cal-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .cal-evs { list-style: none; display: grid; gap: 4px; margin-top: 4px; }
+  .cal-ev { display: block; padding: 5px 8px 6px; border-radius: 6px; border: 1px solid var(--dusk-line); border-left: 3px solid var(--dusk); background: #fff; color: var(--dusk-deep); font-size: var(--fs-tiny); line-height: 1.25; text-decoration: none; }
+  .cal-ev b { display: block; font-weight: 700; }
+  .cal-ev small { display: block; margin-top: 1px; font-size: .8125rem; color: var(--ink-2); }
+  .cal-ev:hover { color: var(--dusk-deep); }
+  .cal-ev:hover b { text-decoration: underline; }
+  .cal-ev--exercise { background: var(--dusk); border-color: var(--dusk); color: #fff; }
+  .cal-ev--exercise:hover { color: #fff; }
+  .cal-ev--exercise small { color: var(--on-dark); }
+  .cal-ev--train { background: var(--pine-tint); border-color: transparent; border-left-color: var(--pine); color: var(--pine-deep); }
+  .cal-ev--train:hover { color: var(--pine-deep); }
+  .cal-ev--train small { color: var(--pine-deep); }
+  .cal-ev--other { background: var(--dusk-mist); border-color: transparent; border-left-color: var(--dusk-line); color: var(--ink); }
+  .cal-ev.is-past { background: #fff; color: var(--ink-2); border: 1px dashed var(--dusk-line); }
+  .cal-ev.is-past small { color: var(--ink-2); }
+  .cal-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 24px; padding: 12px 22px 14px; font-size: var(--fs-small); color: var(--ink-2); }
+  .cal-keys { list-style: none; display: flex; flex-wrap: wrap; gap: 6px 18px; }
+  .cal-keys li { display: inline-flex; align-items: center; gap: 8px; }
+  .cal-keys i { width: 22px; height: 14px; border-radius: 4px; border: 1px solid var(--dusk-line); border-left: 3px solid var(--dusk); background: #fff; }
+  .cal-keys .k-exercise { background: var(--dusk); border-color: var(--dusk); }
+  .cal-keys .k-train { background: var(--pine-tint); border-color: var(--pine-tint); border-left-color: var(--pine); }
+  .cal-keys .k-other { background: var(--dusk-mist); border-color: var(--dusk-mist); border-left-color: var(--dusk-line); }
+
+  /* ---- The weekly net: timeline beside a sticky "Tune in" card */
+  .net-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 72px); align-items: start; }
+  .net-grid > div > h3 { font-size: 1.375rem; }
+  .net-grid .source-note { margin-top: 4px; font-size: var(--fs-small); color: var(--ink-2); }
+  .net-grid .timeline { margin-top: 22px; }
+  .tune { position: sticky; top: 84px; }
+  .tune .week-body { padding: 18px 22px 16px; }
+  .tune-call { font-family: var(--font-display); font-weight: 800; font-stretch: 90%; font-size: 1.375rem; color: var(--dusk-deep); line-height: 1.1; }
+  .tune-freq { display: flex; align-items: baseline; gap: 10px; margin-top: 4px; }
+  .tune-freq .display-num { font-size: clamp(3.5rem, 2.6rem + 2.4vw, 4.75rem); }
+  .tune-freq .unit { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; color: var(--dusk); }
+  .tune-dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 18px; margin-top: 14px; font-size: var(--fs-ui); line-height: 1.45; }
+  .tune-dl dt { font-weight: 700; color: var(--ink-2); }
+  .tune-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 16px; }
+  .tune-actions .status-msg { flex-basis: 100%; }
+  .tune-alt { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); font-size: var(--fs-small); line-height: 1.5; }
+  .tune-next { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 14px; align-items: start; padding: 14px 22px 16px; background: var(--cloud); border-top: 1px solid var(--line); font-size: var(--fs-ui); line-height: 1.45; }
+  .tune-next .date-block .num { font-size: 2.2rem; }
+  .net-notes { margin-top: 28px; }
+  .net-notes .card h4 { font-size: 1.125rem; }
+  .net-notes .card p { font-size: var(--fs-ui); line-height: 1.5; }
+  .other-nets { margin-top: clamp(40px, 5vw, 56px); }
+  .other-nets > h3 { font-size: 1.375rem; margin-bottom: 14px; }
+
+  /* ---- When the county calls */
+  .callers .card { display: flex; flex-direction: column; gap: 10px; }
+  .caller-head { display: flex; align-items: center; gap: 12px; }
+  .caller-head img { width: 48px; height: 48px; object-fit: contain; flex: none; }
+  .caller-head h4 { font-size: 1.1875rem; color: var(--ink); }
+  .callers .card p { font-size: var(--fs-ui); line-height: 1.5; }
+  .callers .card .link-action { margin-top: auto; font-size: var(--fs-ui); }
+  .agency-note { margin-top: 14px; font-size: var(--fs-small); color: var(--ink-2); }
+  .sub-block { margin-top: clamp(40px, 5vw, 60px); }
+  .sub-block > h3 { font-size: clamp(1.375rem, 1.2rem + .5vw, 1.625rem); font-stretch: 92%; }
+  .sub-block > h3 + p { margin-top: 8px; max-width: 44em; font-size: var(--fs-ui); color: var(--ink-2); }
+  .sub-block > .steps-inline, .sub-block > .levels { margin-top: 18px; }
+  /* Headings one level down from the component defaults (h3 -> h4) keep the same look */
+  .level h4 { margin-top: 10px; font-size: 1.25rem; color: var(--ink); }
+  .hop h4 { margin-top: 14px; font-size: 1.1875rem; color: var(--ink); }
+  .so-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 48px); align-items: start; }
+  .so-grid .callout { margin: 0; padding: 20px 24px; }
+  .so-grid .callout > p:not(.callout-label) { font-size: var(--fs-ui); line-height: 1.55; }
+  .so-grid .callout ul { padding-left: 1.2em; font-size: var(--fs-ui); line-height: 1.55; }
+  .so-grid .callout li + li { margin-top: 6px; }
+  .so-grid .quote { font-size: var(--fs-ui); }
+  .real { background: #fff; border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden; }
+  .real .photo-frame { border-radius: 0; aspect-ratio: 16 / 9; }
+  .real-body { padding: 16px 20px 18px; }
+  .real-body h3 { font-size: 1.25rem; color: var(--ink); }
+  .real-body p { margin-top: 6px; font-size: var(--fs-ui); line-height: 1.5; }
+  .real-body .real-when { font-family: var(--font-display); font-weight: 700; font-stretch: 85%; color: var(--dusk); font-size: 1.0625rem; }
+
+  /* ---- How a message moves */
+  .scenario-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-bottom: 20px; }
+  .scenario-head h3 { font-size: clamp(1.375rem, 1.2rem + .5vw, 1.625rem); font-stretch: 92%; }
+  .scenario-close { margin-top: 22px; max-width: 44em; font-family: var(--font-display); font-weight: 600; font-size: 1.1875rem; line-height: 1.35; color: var(--dusk-deep); }
+  .system { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: start; margin-top: clamp(40px, 5vw, 60px); padding: clamp(20px, 3vw, 32px); background: var(--dusk-mist); border-radius: var(--r-card); }
+  .system h3 { font-size: 1.375rem; }
+  .system p { margin-top: 8px; font-size: var(--fs-ui); line-height: 1.55; }
+  .system .caption { color: var(--ink-2); font-size: var(--fs-small); }
+  .paths { list-style: none; display: grid; gap: 8px; }
+  .paths--chain { gap: 18px; }
+  .paths--chain .path { position: relative; }
+  .paths--chain .path:not(:last-child)::after { content: ""; position: absolute; left: 33px; bottom: -19px; width: 2px; height: 18px; background: var(--dusk); }
+  .paths--grid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 8px; }
+  .paths--grid .path { grid-template-columns: 36px minmax(0, 1fr); gap: 0 12px; padding: 10px 12px; align-items: start; }
+  .paths--grid .icon-disc { width: 36px; height: 36px; }
+  .path { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 2px 14px; align-items: center; padding: 10px 14px; background: #fff; border-radius: var(--r-input); border: 1px solid var(--dusk-line); font-size: var(--fs-ui); line-height: 1.4; }
+  .path--backup { border-style: dashed; }
+  .path .icon-disc { grid-row: span 2; width: 40px; height: 40px; }
+  .path b { color: var(--dusk-deep); }
+  .path span.sub { color: var(--ink-2); font-size: var(--fs-small); }
+  .paths-label { font-size: var(--fs-small); font-weight: 700; color: var(--ink-2); margin: 10px 0 0; }
+  .msg-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 56px); align-items: start; margin-top: clamp(40px, 5vw, 60px); }
+  .msg-grid h3 { font-size: 1.375rem; }
+  .msg-grid h3 + p { margin-top: 8px; font-size: var(--fs-ui); line-height: 1.55; }
+  .form213 { margin-top: 18px; background: #fff; border: 1px solid var(--dusk-line); border-radius: var(--r-input); box-shadow: var(--shadow-float); font-size: var(--fs-small); overflow: hidden; }
+  .f213-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 14px; border-bottom: 2px solid var(--ink); }
+  .f213-top b { font-family: var(--font-display); font-weight: 700; font-size: 1.0625rem; color: var(--ink); }
+  .f213-rows { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .f213 { grid-column: span 6; padding: 8px 14px 10px; border-bottom: 1px solid var(--line); }
+  .f213--half { grid-column: span 3; }
+  .f213--third { grid-column: span 2; }
+  .f213--half + .f213--half, .f213--third + .f213--third { border-left: 1px solid var(--line); }
+  .f213-label { display: block; font-weight: 700; color: var(--ink); }
+  .f213-label small { font-weight: 400; color: var(--ink-2); font-size: .8125rem; }
+  .f213-val { display: block; margin-top: 2px; font-size: 1rem; color: var(--dusk-deep); font-weight: 700; }
+  .f213-val.is-blank { color: var(--ink-2); font-weight: 400; }
+  .f213--reply { background: var(--cloud); border-bottom: 0; }
+  .form-notes { margin-top: 18px; display: grid; gap: 12px; font-size: var(--fs-ui); line-height: 1.5; }
+  .precedence { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; counter-reset: pr; }
+  .precedence li { counter-increment: pr; display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 4px 12px 4px 6px; border-radius: var(--r-pill); background: #fff; border: 1px solid var(--dusk-line); font-weight: 700; color: var(--dusk-deep); font-size: var(--fs-ui); }
+  .precedence li::before { content: counter(pr); display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--dusk); color: #fff; font: 800 .875rem/1 var(--font-display); }
+  .winlink-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden; }
+  .winlink-card .photo-frame { border-radius: 0; aspect-ratio: 16 / 9; }
+  .winlink-card .photo-frame img { object-position: 50% 60%; }
+  .winlink-body { padding: 18px 22px 20px; }
+  .winlink-body ul { margin-top: 10px; padding-left: 1.2em; font-size: var(--fs-ui); line-height: 1.5; }
+  .winlink-body li + li { margin-top: 6px; }
+  .wl-next { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 14px; align-items: start; margin-top: 16px; padding: 14px 16px; border-radius: var(--r-card); background: var(--dusk-tint); font-size: var(--fs-ui); line-height: 1.45; }
+  .wl-next b { color: var(--dusk-deep); }
+  .wl-next .small { margin-top: 4px; color: var(--ink-2); }
+  .logs { margin-top: 20px; }
+  .logs dl { margin-top: 8px; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 16px; font-size: var(--fs-ui); line-height: 1.5; }
+  .logs dt { font-weight: 700; color: var(--dusk-deep); }
+
+  /* ---- Exercises and training */
+  .ex-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 48px); align-items: start; }
+  .ex-when { white-space: nowrap; }
+  .ex-when .tag { margin-top: 4px; }
+  .data-table td .tag { white-space: nowrap; }
+  .train-list { list-style: none; margin-top: 12px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-card); }
+  .train-list li { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 14px; align-items: start; padding: 12px 16px; }
+  .train-list li + li { border-top: 1px solid var(--line); }
+  .train-list b { display: block; color: var(--ink); font-size: 1.0625rem; line-height: 1.3; }
+  .train-list div > p { font-size: var(--fs-small); color: var(--ink-2); line-height: 1.45; margin-top: 2px; }
+  .train-list .date-block--sm .num { font-size: 1.6rem; }
+  .ex-side .photo { margin-bottom: 24px; }
+  .ex-side .photo-frame { max-width: 460px; }
+  .ex-side h3 { font-size: 1.25rem; }
+  .on-air { margin-top: 20px; font-size: var(--fs-ui); line-height: 1.55; max-width: 60em; }
+
+  /* ---- Public service */
+  .ps-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(28px, 5vw, 64px); align-items: start; }
+  .ps-media { display: grid; gap: 14px; }
+  .ps-media .photo-frame { aspect-ratio: 2 / 1; }
+  .ps-media .photo-frame img { object-position: 50% 0%; }
+  .ps-media .photo-needed { min-height: 170px; }
+  .ps-events { list-style: none; margin-top: 18px; border-top: 2px solid var(--ink); }
+  .ps-events li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 16px; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .ps-events b { font-family: var(--font-display); font-weight: 700; font-size: 1.1875rem; color: var(--dusk-deep); line-height: 1.2; }
+  .ps-events .when { font-family: var(--font-display); font-weight: 700; font-stretch: 85%; color: var(--dusk); white-space: nowrap; }
+  .ps-events .who { grid-column: 1 / -1; font-size: var(--fs-small); color: var(--ink-2); }
+  .shift { margin-top: clamp(32px, 4vw, 48px); }
+  .shift h3 { font-size: 1.375rem; }
+  .shift .checklist { margin-top: 12px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; }
+
+  /* ---- Where we work: drawn county map */
+  .where-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 56px); align-items: start; }
+  .where-grid .map-frame svg { background: #fff; }
+  .where-list { list-style: none; }
+  .where-list li { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 14px; align-items: start; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: var(--fs-ui); line-height: 1.45; }
+  .where-list b { display: block; color: var(--ink); }
+  .where-list .key { display: grid; place-items: center; width: 44px; height: 44px; }
+  .where-list .key svg { width: 40px; height: 40px; }
+  .where-list .icon-disc { background: #fff; border: 1px dashed var(--dusk-line); color: var(--ink-2); }
+  .where-h { font-size: 1.125rem; color: var(--ink-2); font-family: var(--font-body); font-weight: 700; margin: 0 0 4px; }
+  .where-h + .where-list { border-top: 2px solid var(--ink); }
+  .where-list + .where-h { margin-top: 24px; }
+
+  /* ---- Find your spot */
+  .elig-key { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-bottom: 20px; font-size: var(--fs-small); color: var(--ink-2); }
+  .role-grid .media.art svg { width: 100%; height: 100%; }
+  .role-more { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-top: 16px; }
+  .role-mini { display: flex; flex-direction: column; gap: 8px; height: 100%; padding: 16px 18px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-card); }
+  .role-mini .role-head { display: flex; align-items: center; gap: 12px; }
+  .role-mini h3 { font-size: 1.125rem; color: var(--ink); line-height: 1.2; }
+  .role-mini p { font-size: var(--fs-ui); line-height: 1.45; }
+  .role-mini .role-train { margin-top: auto; font-size: var(--fs-small); color: var(--ink-2); }
+  .role-ask { background: var(--pine-tint); border-color: transparent; }
+  .role-ask .link-action { margin-top: auto; font-size: var(--fs-ui); }
+
+  /* ---- First month + what it takes */
+  .first-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 72px); align-items: start; }
+  .first-grid .timeline { margin-top: 20px; }
+  .first-grid .timeline .tl-time { font-size: 1rem; }
+  .takes-side h3 { font-size: clamp(1.5rem, 1.2rem + 1vw, 1.875rem); font-stretch: 90%; font-variation-settings: "opsz" 96; color: var(--dusk); }
+  .takes-side > p { margin-top: 8px; font-size: var(--fs-ui); color: var(--ink-2); }
+  .takes-side .figures { margin-top: 16px; }
+  .takes-side .takes-note { margin-top: 12px; font-size: var(--fs-small); color: var(--ink-2); }
+
+  /* ---- Questions + page end */
+  .faq-wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: clamp(24px, 5vw, 72px); align-items: start; }
+  .faq-wrap .section-head { margin-bottom: 0; }
+  .end-band .audience { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .end-band h2 { margin-bottom: 20px; }
+
+  /* Mobile folds: long reference blocks collapse under 641px (page script); open everywhere else and with JS off */
+  .fold > summary { list-style: none; }
+  .fold > summary::-webkit-details-marker { display: none; }
+  .fold-hint, .fold-chev { display: none; }
+  .other-nets > .fold-sum, .shift > .fold-sum { margin-bottom: 14px; }
+  .shift > .fold-sum { margin-bottom: 0; }
+  .fold-lede { margin-top: 8px; max-width: 44em; font-size: var(--fs-ui); color: var(--ink-2); }
+  #alert-levels > .fold-sum h3 { font-size: clamp(1.375rem, 1.2rem + .5vw, 1.625rem); font-stretch: 92%; }
+  @media (min-width: 641px) {
+    .js .fold > summary { pointer-events: none; }
+    .fold-sum--mobile { display: none; }
+  }
+
+  @media (max-width: 1180px) {
+    .role-more { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+    .ex-grid { grid-template-columns: minmax(0, 1fr); }
+    .ex-side { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 0 32px; align-items: start; }
+    .ex-side .photo { grid-row: span 2; margin-bottom: 0; }
+  }
+  @media (max-width: 960px) {
+    .net-grid, .so-grid, .system, .msg-grid, .ex-grid, .ps-grid, .where-grid, .first-grid, .faq-wrap { grid-template-columns: minmax(0, 1fr); }
+    .callers { grid-template-columns: minmax(0, 1fr); }
+    .tune { position: static; order: -1; }   /* phones and tablets: the settings before the minute-by-minute */
+    .hop h4 { margin-top: 4px; }
+    .end-band .audience { grid-template-columns: minmax(0, 1fr); }
+    .end-band .audience li + li { border-left: 0; border-top: 1px solid var(--line); }
+    .end-band .audience li:nth-child(n+3) { border-top: 1px solid var(--line); }
+  }
+  @media (max-width: 640px) {
+    .fold > .fold-sum { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 2px 12px; min-height: 56px; padding: 10px 14px; border: 1px solid var(--dusk-line); border-radius: var(--r-card); background: #fff; cursor: pointer; }
+    .fold > .fold-sum h3, .fold > .fold-sum .callout-label { grid-column: 1; margin: 0; font-size: 1.1875rem; }
+    .fold-hint { display: block; grid-column: 1; font-size: var(--fs-small); color: var(--ink-2); }
+    .fold-chev { display: block; grid-column: 2; grid-row: 1 / span 2; color: var(--dusk); transition: transform .2s ease; }
+    .fold[open] > .fold-sum { margin-bottom: 14px; }
+    .fold[open] > .fold-sum .fold-chev { transform: rotate(180deg); }
+    .callout.fold { padding: 0; border: 0; background: none; }
+    .callout.fold[open] { padding: 0 0 4px; }
+    .callout.fold > .fold-sum .callout-label { font-size: 1.0625rem; }
+    .role-fold { margin-top: 16px; }
+    .paths--grid { grid-template-columns: minmax(0, 1fr); }
+    .role-card .media.art { display: none; }
+    .role-card .media.photo-needed { aspect-ratio: 5 / 2; }
+    .steps-inline li { position: relative; padding-left: 40px; }
+    .steps-inline li::before { position: absolute; left: 0; top: 12px; margin: 0; font-size: 1.75rem; }
+    .intro-actions { flex-direction: column; align-items: flex-start; gap: 0; }
+    .ex-side { grid-template-columns: minmax(0, 1fr); }
+    .ex-side .photo { margin-bottom: 20px; }
+    /* The month grid becomes an agenda: only days with something on */
+    .cal-band { padding: 12px 16px; }
+    .cal-weekdays { display: none; }
+    .cal-grid { display: block; }
+    .cal-day { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 12px; min-height: 0; padding: 12px 16px; border-right: 0; }
+    .cal-day.is-out, .cal-day.is-empty { display: none; }
+    .cal-date { flex-direction: column; align-items: center; gap: 0; align-self: start; padding: 4px 0; border-radius: 8px; background: var(--dusk-tint); color: var(--dusk-deep); }
+    .cal-day.is-today .cal-date { background: var(--dusk); color: #fff; }
+    .cal-day.is-today .cal-num { background: none; }
+    .cal-dow { position: static; width: auto; height: auto; overflow: visible; clip: auto; font-size: .8125rem; font-weight: 700; }
+    .cal-num { height: auto; min-width: 0; font-size: 1.6rem; font-stretch: 75%; font-weight: 800; color: inherit; }
+    .cal-evs { margin-top: 0; }
+    .cal-ev { font-size: var(--fs-ui); padding: 7px 10px 8px; }
+    .cal-ev small { font-size: var(--fs-small); }
+    .cal-foot { padding: 12px 16px; }
+    .tune .week-body, .tune-next { padding-inline: 16px; }
+    .f213--third { grid-column: span 3; }
+    .f213--subject { grid-column: span 6; }
+    .f213--subject + .f213--third { border-left: 0; }
+    .shift .checklist { grid-template-columns: minmax(0, 1fr); }
+    .logs dl { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    .logs dd + dt { margin-top: 8px; }
+    .system { padding: 18px 16px; }
+  }
+</style>
+</head>
+<body data-root="">
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ICON SPRITE (copy verbatim from _chrome.html) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4.5" height="7" rx="1.5"/><rect x="16.5" y="14" width="4.5" height="7" rx="1.5"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15.6 14.3A5 5 0 0 1 21 19"/></symbol>
+  <symbol id="i-tools" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></symbol>
+  <symbol id="i-door" viewBox="0 0 24 24"><path d="M6 21V4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5V21"/><path d="M3 21h18"/><circle cx="14.5" cy="12.5" r="1" fill="currentColor"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-radio" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="14" rx="2"/><path d="M9.5 7V2.5M10 11h4M10 14h4"/><circle cx="12" cy="17.6" r=".7" fill="currentColor"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-form" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2.8h6V4M8.5 10h7M8.5 14h7M8.5 18h4"/></symbol>
+  <symbol id="i-hospital" viewBox="0 0 24 24"><path d="M4 21V8l8-4 8 4v13M2.5 21h19M12 9v6M9 12h6"/></symbol>
+  <symbol id="i-weather" viewBox="0 0 24 24"><path d="M7 17a4.5 4.5 0 1 1 1-8.9A5.5 5.5 0 0 1 18.5 10 3.5 3.5 0 0 1 18 17"/><path d="M12.5 13l-2 4h3l-2 4"/></symbol>
+  <symbol id="i-antenna" viewBox="0 0 24 24"><path d="M12 10v11M8 21l4-11 4 11"/><circle cx="12" cy="8" r="1.5"/><path d="M8.5 4.5a5 5 0 0 0 0 7M15.5 4.5a5 5 0 0 1 0 7"/></symbol>
+  <symbol id="i-trailer" viewBox="0 0 24 24"><rect x="2.5" y="6" width="15" height="10" rx="1.5"/><path d="M17.5 13h4M10 6V3.5"/><circle cx="7" cy="17.5" r="1.8"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5z"/><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H20"/></symbol>
+  <symbol id="i-kit" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M12 11v5M9.5 13.5h5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></symbol>
+  <symbol id="i-message" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol>
+  <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 12h3l2-5 3 10 3-12 3 12 2-5h4"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></symbol>
+  <!-- Drawn locator for "Where we meet" (not a Google capture). Use: <svg viewBox="0 0 400 250" role="img" aria-label="…"><use href="#map-meet"/></svg> -->
+  <symbol id="map-meet" viewBox="0 0 400 250">
+    <rect width="400" height="250" fill="#E8EEF6"/>
+    <g stroke="#D0DAE7" stroke-width="19" fill="none">
+      <path d="M0 36H400M0 104H400M0 212H400M58 0V250M176 104V250M370 0V250"/>
+    </g>
+    <g stroke="#FFFFFF" stroke-width="15" fill="none">
+      <path d="M0 36H400M0 104H400M0 212H400M58 0V250M176 104V250M370 0V250"/>
+    </g>
+    <rect x="190" y="175" width="164" height="28" rx="3" fill="#FFFFFF" stroke="#B9C7DB" stroke-width="1.5"/>
+    <text x="272" y="193.5" text-anchor="middle" font-family="Atkinson Hyperlegible, Verdana, sans-serif" font-size="11.5" fill="#465163">Spokane County Courthouse</text>
+    <rect x="193" y="121" width="78" height="42" rx="3" fill="#E4EFEA" stroke="#2E5B4F" stroke-width="2"/>
+    <g font-family="Atkinson Hyperlegible, Verdana, sans-serif" font-size="12.5" fill="#465163">
+      <text x="248" y="40.5">W Boone Ave</text>
+      <text x="72" y="108.5" font-weight="700" fill="#1B2433">W Gardner Ave</text>
+      <text x="248" y="216.5">W Mallon Ave</text>
+      <text transform="translate(180.5 204) rotate(-90)" font-weight="700" fill="#1B2433">N Jefferson St</text>
+      <text transform="translate(62.5 196) rotate(-90)">N Adams St</text>
+      <text transform="translate(374.5 196) rotate(-90)">N Monroe St</text>
+    </g>
+    <g font-family="Atkinson Hyperlegible, Verdana, sans-serif">
+      <text x="196" y="60" font-size="13" font-weight="700" fill="#1E3557">Spokane County</text>
+      <text x="196" y="75" font-size="13" font-weight="700" fill="#1E3557">Emergency Management</text>
+      <text x="196" y="90" font-size="12" fill="#465163">1121 W Gardner Ave</text>
+    </g>
+    <path d="M232 94V112" stroke="#2F4E7E" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <g transform="translate(232 141)">
+      <path d="M0 0C-3 -6-11 -12-11 -21A11 11 0 0 1 11 -21C11 -12 3 -6 0 0Z" fill="#2F4E7E"/>
+      <circle cx="0" cy="-21" r="4" fill="#FFFFFF"/>
+    </g>
+    <g transform="translate(26 158)" font-family="Atkinson Hyperlegible, Verdana, sans-serif">
+      <circle r="13" fill="#FFFFFF" stroke="#B9C7DB" stroke-width="1.5"/>
+      <path d="M0 -8L4.5 4 0 1.5-4.5 4Z" fill="#1E3557"/>
+      <text y="28" text-anchor="middle" font-size="11" fill="#465163">N</text>
+    </g>
+  </symbol>
+</svg>
+<!-- Page-only icon (How it works): a house, for shelters and home stations -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="p-home" viewBox="0 0 24 24"><path d="M3.5 11L12 4l8.5 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5.5h4V20"/></symbol>
+</svg>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="index.html" aria-label="Spokane County ARES-ACS, home">
+      <img src="assets/img/seal-ares-acs-400.png" alt="" width="50" height="50">
+      <span class="brand-text"><span class="brand-county">Spokane County</span><span class="brand-name">ARES-ACS</span></span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <ul class="nav-list">
+        <li><a class="nav-link" href="index.html">Home</a></li>
+        <li><a class="nav-link" href="how-it-works.html" aria-current="page">How it works</a></li>
+        <li><a class="nav-link" href="about.html">About ARES &amp; ACS</a></li>
+        <li><a class="nav-link" href="members/index.html">For Members</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn--join header-join" href="index.html#join">Join the team</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <svg class="icon icon-open" aria-hidden="true"><use href="#i-menu"/></svg>
+      <svg class="icon icon-close" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- "On this page": sticky chip bar with scroll-spy (site.js data-widget="scrollspy") -->
+<nav class="pillbar chipbar" aria-label="On this page" data-widget="scrollspy">
+  <div class="wrap pillbar-scroll">
+    <div class="chipbar-inner">
+      <span class="chipbar-label">On this page</span>
+      <ul class="chipbar-list">
+        <li><a class="pill" href="#nets">Weekly net</a></li>
+        <li><a class="pill" href="#activation">When the county calls</a></li>
+        <li><a class="pill" href="#message-handling">Messages</a></li>
+        <li><a class="pill" href="#exercises">Exercises</a></li>
+        <li><a class="pill" href="#public-service">Public service</a></li>
+        <li><a class="pill" href="#where-we-work">Where we work</a></li>
+        <li><a class="pill" href="#roles">Find your spot</a></li>
+        <li><a class="pill" href="#first-month">First month</a></li>
+        <li><a class="pill" href="#questions">Questions</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main id="main">
+
+<!-- ============================================================ INTRO -->
+<section class="page-intro hiw-intro" aria-labelledby="page-h">
+  <div class="wrap split">
+    <div>
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li aria-current="page">How it works</li></ol></nav>
+      <h1 id="page-h">How it works</h1>
+      <p class="lede">Emergency radio only works if people have practiced it. Here’s how our volunteers are called on, how a message moves, and what a normal month looks like.</p>
+      <div class="intro-actions">
+        <a class="link-action" href="#month"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>See a month with the team</a>
+        <a class="link-action" href="index.html#visit-listen"><svg class="icon" aria-hidden="true"><use href="#i-headphones"/></svg>Listen this Tuesday</a>
+      </div>
+    </div>
+    <figure class="photo intro-photo">
+      <div class="photo-frame"><img src="assets/img/IMG_6574-2000w.jpg" width="2000" height="1500" data-verify="true" alt="A portable emergency radio station set up on a pickup tailgate at a mountain overlook: radios in a rack case, a laptop and a binder of forms."></div>
+      <figcaption>A portable station: radios, a laptop for Winlink, and a binder of forms. It runs without the grid.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============================================================ A MONTH WITH THE TEAM -->
+<!-- Rendered from assets/data.js by the page script below (the month that contains
+     "today + 7 days"). Fallback = October 2026, as data.js gives it on 2026-09-26.
+     WordPress: a block that reads the calendar feed. SSG: a partial built from the data file. -->
+<section class="section section--cloud month" id="month" aria-labelledby="month-h">
+  <div class="wrap">
+    <div class="section-head section-head--row">
+      <div>
+        <h2 id="month-h">A month with the team</h2>
+        <p>A net every Tuesday, a workshop and a training meeting every month, and exercises on top. Here’s <span data-slot="cal-month">October</span> on our calendar. Each entry links to how it works.</p>
+      </div>
+    </div>
+    <div class="cal" data-cal>
+      <div class="cal-band"><h3 id="cal-h" data-slot="cal-title">October 2026</h3><p>From the group calendar, as of <span data-slot="asof">Sat, Sep 26, 2026</span></p></div>
+      <div class="cal-weekdays" aria-hidden="true"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+      <ol class="cal-grid" aria-labelledby="cal-h" data-slot="cal-grid"><li class="cal-day is-out" aria-hidden="true"><span class="cal-date"><span class="cal-num">27</span></span></li>
+        <li class="cal-day is-out" aria-hidden="true"><span class="cal-date"><span class="cal-num">28</span></span></li>
+        <li class="cal-day is-out" aria-hidden="true"><span class="cal-date"><span class="cal-num">29</span></span></li>
+        <li class="cal-day is-out" aria-hidden="true"><span class="cal-date"><span class="cal-num">30</span></span></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Thu</span> <span class="cal-num">1</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Fri</span> <span class="cal-num">2</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day has-ev"><span class="cal-date"><span class="cal-dow">Sat</span> <span class="cal-num">3</span><span class="cal-sr"> October</span></span><ul class="cal-evs"><li><a class="cal-ev cal-ev--exercise" href="#ex-set-2026"><b>Simulated Emergency Test</b><small>The ARRL’s national exercise</small></a></li></ul></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Sun</span> <span class="cal-num">4</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Mon</span> <span class="cal-num">5</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day has-ev"><span class="cal-date"><span class="cal-dow">Tue</span> <span class="cal-num">6</span><span class="cal-sr"> October</span></span><ul class="cal-evs"><li><a class="cal-ev" href="#weekly-net"><b>Tuesday net, 8 PM</b><small>Net control slot open</small></a></li></ul></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Wed</span> <span class="cal-num">7</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Thu</span> <span class="cal-num">8</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Fri</span> <span class="cal-num">9</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day has-ev"><span class="cal-date"><span class="cal-dow">Sat</span> <span class="cal-num">10</span><span class="cal-sr"> October</span></span><ul class="cal-evs"><li><a class="cal-ev cal-ev--train" href="#training"><b>Second Saturday Workshop</b><small>9:00 AM to noon, then Winlink</small></a></li></ul></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Sun</span> <span class="cal-num">11</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Mon</span> <span class="cal-num">12</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day has-ev"><span class="cal-date"><span class="cal-dow">Tue</span> <span class="cal-num">13</span><span class="cal-sr"> October</span></span><ul class="cal-evs"><li data-verify="true"><a class="cal-ev" href="#winlink"><b>Winlink night, 8 PM</b><small>Net control AE7RJ</small></a></li></ul></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Wed</span> <span class="cal-num">14</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day has-ev"><span class="cal-date"><span class="cal-dow">Thu</span> <span class="cal-num">15</span><span class="cal-sr"> October</span></span><ul class="cal-evs"><li><a class="cal-ev cal-ev--exercise" href="#ex-shakeout-2026"><b>Great ShakeOut</b><small>A DYFI report by Winlink, 10:15 AM</small></a></li><li data-verify="true"><a class="cal-ev cal-ev--train" href="#training"><b>Training meeting</b><small>Third Thursday, evening</small></a></li></ul></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Fri</span> <span class="cal-num">16</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Sat</span> <span class="cal-num">17</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Sun</span> <span class="cal-num">18</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Mon</span> <span class="cal-num">19</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day has-ev"><span class="cal-date"><span class="cal-dow">Tue</span> <span class="cal-num">20</span><span class="cal-sr"> October</span></span><ul class="cal-evs"><li data-verify="true"><a class="cal-ev cal-ev--other" href="#other-nets"><b>ACS GMRS net, 7:30 PM</b><small>For GMRS licensees</small></a></li><li><a class="cal-ev" href="#weekly-net"><b>Tuesday net, 8 PM</b><small>Net control WA7LNC</small></a></li></ul></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Wed</span> <span class="cal-num">21</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Thu</span> <span class="cal-num">22</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Fri</span> <span class="cal-num">23</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day has-ev"><span class="cal-date"><span class="cal-dow">Sat</span> <span class="cal-num">24</span><span class="cal-sr"> October</span></span><ul class="cal-evs"><li data-verify="true"><a class="cal-ev cal-ev--exercise" href="#ex-commex-2026"><b>State COMMEX</b><small>Statewide exercise</small></a></li></ul></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Sun</span> <span class="cal-num">25</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Mon</span> <span class="cal-num">26</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day has-ev"><span class="cal-date"><span class="cal-dow">Tue</span> <span class="cal-num">27</span><span class="cal-sr"> October</span></span><ul class="cal-evs"><li data-verify="true"><a class="cal-ev" href="#winlink"><b>Winlink night, 8 PM</b><small>Net control slot open</small></a></li></ul></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Wed</span> <span class="cal-num">28</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Thu</span> <span class="cal-num">29</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Fri</span> <span class="cal-num">30</span><span class="cal-sr"> October</span></span></li>
+        <li class="cal-day is-empty" aria-hidden="true"><span class="cal-date"><span class="cal-dow">Sat</span> <span class="cal-num">31</span><span class="cal-sr"> October</span></span></li></ol>
+      <div class="cal-foot">
+        <ul class="cal-keys" aria-label="Key">
+          <li><i aria-hidden="true"></i>Tuesday net</li>
+          <li><i class="k-exercise" aria-hidden="true"></i>Exercise</li>
+          <li><i class="k-train" aria-hidden="true"></i>Workshop or meeting</li>
+          <li><i class="k-other" aria-hidden="true"></i>Other nets and events</li>
+        </ul>
+        <a class="link-action" href="members/exercises.html">Members: the full calendar</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 1. THE WEEKLY NET -->
+<section class="section section--white" id="nets" aria-labelledby="nets-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="nets-h">The weekly net</h2>
+      <p>A net is an organized on-air meeting, run by a <button type="button" class="term" aria-expanded="false" aria-controls="t-ncs">net control station</button><span class="term-def" id="t-ncs" role="note"><b>Net control station</b>The station that runs a net. Net control calls stations in turn so everyone gets heard.</span>. Ours is a directed net: net control calls each group in turn, so everyone gets heard. It’s how we keep radios, antennas and habits in working order.</p>
+    </div>
+
+    <div class="net-grid" id="weekly-net">
+      <div>
+        <h3>A net night, minute by minute</h3>
+        <p class="source-note">From the current net script, version March 4, 2026.</p>
+        <ol class="timeline" aria-label="What happens on a net night">
+          <li><span class="tl-time">7:55 PM</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Five minutes’ notice</p><p>Net control announces that the net starts in about five minutes. On Winlink nights: “get paper and pencil.”</p></div></li>
+          <li><span class="tl-time">8:00 PM</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">The net opens</p><p>Net control (<span data-slot="nc-line"><b class="callsign">NZ2S</b> this week</span>) reads its purpose: coordination for the group, and a weekly emergency-net training session to test equipment and check propagation.</p></div></li>
+          <li><span class="tl-time">Any time</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Emergencies come first</p><p>“Stations with emergency or priority traffic may break in at any time.”</p></div></li>
+          <li><span class="tl-time">First</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Officials check in</p><p>The county emergency coordinator, county Emergency Management staff, the assistant emergency coordinators, ARRL District and Section officials, and officials from surrounding counties.</p></div></li>
+          <li><span class="tl-time">Next</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Members check in</p><p>Members should check in at least once a month. Weekly is encouraged.</p></div></li>
+          <li class="tl-you"><span class="tl-time">Then</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Visitors: this is your cue</p><p>Licensed and curious? Wait for the call for visiting stations, then give your call sign (slowly and phonetically), your name and location. That’s it. Not licensed? Listen along: any radio or scanner that receives 147.300 MHz will do.</p></div></li>
+          <li><span class="tl-time">Then</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Simplex, no-tone and cross-band stations</p><p>Stations heard on the repeater’s output, then any relays.</p></div></li>
+          <li><span class="tl-time">Then</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Traffic and late check-ins</p><p>Listed traffic is handled, then late or missed check-ins, “Alpha through Zulu.”</p></div></li>
+          <li data-verify="true"><span class="tl-time">2nd, 4th Tue</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">The Winlink assignment</p><p>On Winlink nights only, the assignment is given on the air. <a href="#winlink">How Winlink practice works</a></p></div></li>
+          <li><span class="tl-time">Last</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">The close</p><p>A last call for traffic, and net control closes the net.</p></div></li>
+        </ol>
+
+        <div class="grid-2 net-notes">
+          <div class="card">
+            <h4>Net control rotates</h4>
+            <p>Members take turns as net control, and the Net Manager coaches anyone taking a first turn. At the ACS Radio Operator level, serving as net control once a year is a requirement.</p>
+          </div>
+          <div class="card" data-verify="true">
+            <h4>Pause for the repeater</h4>
+            <p>Net control leaves gaps so the repeater can drop and cross-band stations can break in. On W7GBU: identify at the start, every ten minutes and when you clear, and break in with just your call sign (“emergency traffic” if it is).</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TUNE IN: the radio settings. Next-net line and the live lamp come from data.js (page script). -->
+      <aside class="week-card tune" aria-labelledby="tune-h">
+        <div class="week-head"><h3 id="tune-h">Tune in</h3></div>
+        <div class="week-body">
+          <p class="tune-call"><button type="button" class="term" aria-expanded="false" aria-controls="t-w7gbu">W7GBU</button><span class="term-def" id="t-w7gbu" role="note"><b>W7GBU</b>The group’s call sign and repeater, honoring Ira “Dean” Bula.</span> repeater</p>
+          <p class="tune-freq"><span class="display-num">147.300</span><span class="unit">MHz</span></p>
+          <dl class="tune-dl">
+            <dt>Offset</dt><dd>+600 kHz</dd>
+            <dt>Tone</dt><dd>100 Hz</dd>
+            <dt>When</dt><dd>Every Tuesday, 8:00 PM</dd>
+            <dt>Site</dt><dd>Brownes Mountain, <span data-verify="true">on emergency power</span></dd>
+          </dl>
+          <div class="tune-actions" data-status-scope>
+            <button type="button" class="btn btn--primary btn--small" data-copy="radio"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy radio settings</button>
+            <a class="btn btn--outline btn--small" data-ics="weekly-net" href="https://spokaneares-acs.groups.io/g/main/calendar"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Add to calendar</a>
+            <p class="status-msg" role="status"></p>
+          </div>
+          <p class="tune-alt" data-verify="true"><b>If the repeater is down:</b> the alternate, 146.880 MHz, −600 kHz, 123 Hz tone (the Inland Empire VHF Radio Amateurs’ repeater, under a written agreement).</p>
+        </div>
+        <div class="tune-next" data-slot="tune-next">
+          <p class="date-block" aria-hidden="true"><span class="dow">Tue</span><span class="num">29</span><span class="mon">Sep</span></p>
+          <div>
+            <p><b>Next net: <time datetime="2026-09-29">Tue, Sep 29</time></b></p>
+            <p>Net control: <b class="callsign">NZ2S</b></p>
+            <p class="net-flag" data-verify="true">Fifth Tuesday: the net starts on simplex, then moves to W7GBU.</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <details class="fold other-nets" id="other-nets" data-fold open>
+      <summary class="fold-sum"><h3>The rest of the month</h3><span class="fold-hint">Five more nets members use</span><svg class="icon fold-chev" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary>
+      <div class="table-wrap">
+        <table class="data-table table--stack">
+          <caption>Other nets members use<small>All times are local (Pacific). We don’t publish the simplex frequency.</small></caption>
+          <thead><tr><th scope="col">Net</th><th scope="col">When</th><th scope="col">Where</th><th scope="col">What it is</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Winlink night</th><td data-label="When" data-verify="true">2nd and 4th Tuesdays, during the 8 PM net</td><td data-label="Where">W7GBU</td><td data-label="What it is">A Winlink assignment is given on the net; answers go by radio email that evening. <a href="#winlink">Winlink</a></td></tr>
+            <tr><th scope="row">Simplex net</th><td data-label="When" data-verify="true">Months with a 5th Tuesday, 8 PM</td><td data-label="Where">Starts on the ARES-ACS simplex frequency, then moves to W7GBU</td><td data-label="What it is">No repeater: each station reads back the stations it heard, which shows who can reach whom without it.</td></tr>
+            <tr><th scope="row">ACS GMRS net</th><td data-label="When" data-verify="true">3rd Tuesday, 7:30 PM</td><td data-label="Where" data-verify="true">WRCY281 GMRS repeater (GMRS channel 7)</td><td data-label="What it is">For county volunteers with GMRS licenses.</td></tr>
+            <tr data-verify="true"><th scope="row">0730 Bunch</th><td data-label="When">Weekdays, 7:30 AM</td><td data-label="Where">W7GBU, 147.300 MHz</td><td data-label="What it is">An informal round table started by Dean Bula, W7GBU.</td></tr>
+            <tr><th scope="row">Section nets (EWSEN)</th><td data-label="When">Mondays</td><td data-label="Where" data-verify="true">VHF 6:15 PM on the KBARA linked repeaters; HF 6:45 PM on 3.985 MHz; Winlink check-ins 5:00 to 7:00 PM</td><td data-label="What it is">Run by the Eastern Washington Section. <a href="https://ag7qp.com/eastern-washington-section" rel="noopener">Section nets<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens ag7qp.com)</span></a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <div class="section-end">
+      <a class="btn btn--primary" href="index.html#visit-listen"><svg class="icon" aria-hidden="true"><use href="#i-headphones"/></svg>Plan to listen this Tuesday</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 2. WHEN THE COUNTY CALLS -->
+<section class="section section--cloud" id="activation" aria-labelledby="act-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="act-h">When the county calls</h2>
+      <p>The same volunteers wear two hats. Which hat they’re wearing decides who can call on them.</p>
+    </div>
+
+    <div id="who-calls-us">
+      <h3 class="sr-only">Who calls us, and when</h3>
+      <div class="grid-3 callers">
+        <article class="card card--accent">
+          <div class="caller-head"><img src="assets/img/ACS_logo-500.png" width="48" height="48" alt="Spokane Auxiliary Communications (ACS) seal"><h4>The county, through <button type="button" class="term" aria-expanded="false" aria-controls="t-acs">ACS</button><span class="term-def" id="t-acs" role="note" data-verify="true"><b>ACS</b>Auxiliary Communications, Spokane County Emergency Management’s volunteer radio program.</span></h4></div>
+          <p>Spokane County Emergency Management is the agency having jurisdiction. When it needs amateur radio support, it activates ACS members, the volunteers who have passed the county background check. Only activated ACS members work inside emergency operations centers, incident command posts, hospitals and shelters, where sensitive information is handled.</p>
+          <p data-verify="true">Before volunteers serve a government agency, the county obtains a state <button type="button" class="term" aria-expanded="false" aria-controls="t-mission">mission number</button><span class="term-def" id="t-mission" role="note"><b>Mission number</b>A state number for an activation or exercise that ties it to Washington’s emergency-worker protections.</span>. That number is what ties an activation to Washington’s emergency-worker protections.</p>
+        </article>
+        <article class="card card--accent">
+          <div class="caller-head"><img src="assets/img/ARES_logo.png" width="48" height="48" alt="ARRL Amateur Radio Emergency Service emblem"><h4>Community partners, through <button type="button" class="term" aria-expanded="false" aria-controls="t-ares">ARES</button><span class="term-def" id="t-ares" role="note"><b>ARES</b>Amateur Radio Emergency Service, the ARRL’s volunteer emergency program.</span></h4></div>
+          <p>ARES members don’t need a declared emergency. They can serve community events, run training and support the National Weather Service “without approval from anyone,” and they support the Red Cross under a national ARRL agreement.</p>
+        </article>
+        <article class="card card--accent">
+          <div class="caller-head"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-flag"/></svg></span><h4>When nobody has called yet</h4></div>
+          <p>If something big happens and there are no instructions, the Eastern Washington Section’s Standing Order 1b applies. It’s an information-gathering routine, not a deployment: no one is asked to leave home or travel.</p>
+          <a class="link-action" href="#standing-order-1b">Standing Order 1b</a>
+        </article>
+      </div>
+      <p class="agency-note"><span data-verify="true">Agencies request support through Spokane County Emergency Management.</span> <a href="about.html#for-agencies">For agencies and partners</a></p>
+    </div>
+
+    <div class="sub-block">
+      <h3>Activation in five steps</h3>
+      <ol class="steps-inline">
+        <li><b>Something might happen</b>Check your radios, go-kits and supplies. Watch National Weather Service statements.</li>
+        <li><b>Something has happened</b>Load the car. Monitor W7GBU (147.300) and NOAA Weather Radio WXL86 (162.400).</li>
+        <li><b>The county activates</b>Spokane County Emergency Management activates ACS. <span data-verify="true">An activation message goes out to members registered for notices.</span></li>
+        <li><b>Check in, then go</b>Check in with net control on W7GBU, then go to your assignment or a staging area.</li>
+        <li><b>Release and review</b>Served agencies and the emergency coordinator release members. Leaders hold an action review within 72 hours.</li>
+      </ol>
+    </div>
+
+    <details class="sub-block fold" id="alert-levels" data-fold open>
+      <summary class="fold-sum"><h3>The four readiness levels, explained</h3><span class="fold-hint">What members do at each level</span><svg class="icon fold-chev" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary>
+      <p class="fold-lede">Members follow four readiness levels. They describe what to do. They are not a public status, and this site never shows a current level.</p>
+      <ol class="levels" data-verify="true">
+        <li class="level"><h4 class="h3">Green <span class="level-sub">Inactive. Normal conditions; nothing expected.</span></h4><ul><li>Normal amateur radio operations.</li><li>Keep a monthly battery check and recharge schedule.</li></ul></li>
+        <li class="level"><h4 class="h3">Yellow <span class="level-sub">Alert. Something might happen: a tornado, severe thunderstorm, flooding or ice storm.</span></h4><ul><li>Check your radios, go-kits and supplies. Batteries must be charged.</li><li>Stay tuned to the assigned frequencies and watch National Weather Service statements.</li><li>Members may get an e-mail notice. There’s no activation timeframe yet.</li></ul></li>
+        <li class="level"><h4 class="h3">Orange <span class="level-sub">Stand by. Something has happened, and full activation is likely.</span></h4><ul><li>Load the car, including your go-kits, and be ready to go to an assignment or a staging area.</li><li>Monitor NOAA Weather Radio WXL86 (162.400 MHz) and the W7GBU repeater (147.300 MHz).</li><li>On the repeater: keep traffic short and leave long pauses for deployment instructions.</li></ul></li>
+        <li class="level"><h4 class="h3">Red <span class="level-sub">Deploy. Full emergency communications.</span></h4><ul><li>An activation message goes to members registered for notices.</li><li>Nets start full operation. Available members check in with net control on W7GBU (147.300).</li><li>After checking in, go to your assignment or a staging area.</li></ul></li>
+      </ol>
+      <p class="levels-after">After the event: served agencies and the emergency coordinator release members. Once every station is secured and home, the level returns to Green. Leaders hold an action review within 72 hours.</p>
+    </details>
+
+    <div class="sub-block so-grid">
+      <details class="callout callout--plain fold" id="standing-order-1b" data-fold open>
+        <summary class="fold-sum"><span class="callout-label"><svg class="icon" aria-hidden="true"><use href="#i-flag"/></svg>If something happens and no one has called: Standing Order 1b</span><svg class="icon fold-chev" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary>
+        <p>The Eastern Washington Section’s standing order (January 16, 2026) tells every ARES, AUXCOMM and RACES group what to do when normal communications may be disrupted and there are no instructions yet.</p>
+        <ul>
+          <li><b>Safety first.</b> Personal and family safety come before anything else. No one is asked to leave home or travel.</li>
+          <li><b>Follow higher authority</b> when it’s present. Nothing in the order overrides an assignment from your emergency management agency.</li>
+          <li><b>Gather and report information.</b> The first station on starts an HF net on 3.985 MHz, takes a roll call, and asks stations to send a Washington State Field Situation Report by Winlink to their local emergency management, their EC, their District EC and the Section Emergency Coordinator. For an earthquake, add a USGS “Did You Feel It?” report; for weather, a report to the National Weather Service.</li>
+          <li><b>Then widen the net</b> on 40 meters and on the KBARA linked repeaters, on a set check-in schedule.</li>
+        </ul>
+        <blockquote class="quote"><p>“Nothing in this order suggests that anyone becomes first responders if a disaster strikes. ARES is an auxiliary support function.”</p><cite>Standing Order 1b, Eastern Washington Section</cite></blockquote>
+        <p><a class="link-action" href="https://ag7qp.com/ares-acs" rel="noopener"><span>Read Standing Order 1b <span class="nowrap">(EWA Section)<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></span></span><span class="sr-only"> (opens ag7qp.com)</span></a></p>
+      </details>
+      <article class="real" id="real-world" aria-labelledby="real-h">
+        <div class="photo-frame"><img src="assets/img/Operating-in-VAN_4.jpg" width="640" height="480" loading="lazy" data-verify="true" alt="Volunteers in headsets operate radios at desks inside a communications trailer."></div>
+        <div class="real-body">
+          <p class="real-when">August 2023</p>
+          <h3 id="real-h">When it was real</h3>
+          <p data-verify="true">During the Gray and Oregon Road fires, the group provided a mobile network unit for the incident command post and the Disaster Assistance Center.</p>
+          <p class="small muted">Photo: inside the county communications trailer.</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="section-end">
+      <a class="link-action" href="about.html#for-agencies"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>For agencies: how to request support</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 3. HOW A MESSAGE MOVES -->
+<section class="section section--white" id="message-handling" aria-labelledby="msg-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="msg-h">How a message moves</h2>
+      <p>In an emergency, a message that is garbled, lost or unrecorded is worse than no message. So we use the same forms the agencies use, read them word for word, and log everything.</p>
+    </div>
+
+    <div id="follow-a-message">
+      <div class="scenario-head">
+        <h3>Follow one message</h3>
+        <span class="scenario-label" data-verify="true"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-flag"/></svg>A scenario. Not a real event. It shows how the system is meant to work.</span>
+      </div>
+      <ol class="hops">
+        <li class="hop"><span class="hop-icon"><svg class="icon" aria-hidden="true"><use href="#p-home"/></svg></span><div class="hop-body"><h4 class="h3">The phones go quiet</h4><p>Ice brings the lines down overnight. Cell towers run on batteries, then fall silent. At a warming shelter, a resident’s home oxygen concentrator has no power, and the shelter manager needs to reach the county’s <button type="button" class="term" aria-expanded="false" aria-controls="t-eoc">Emergency Operations Center</button><span class="term-def" id="t-eoc" role="note"><b>EOC</b>Emergency operations center: where the county coordinates its response.</span>.</p></div></li>
+        <li class="hop"><span class="hop-icon"><svg class="icon" aria-hidden="true"><use href="#i-radio"/></svg></span><div class="hop-body"><h4 class="h3">A volunteer picks up the radio</h4><p>The ACS member assigned to the shelter writes an <button type="button" class="term" aria-expanded="false" aria-controls="t-213">ICS-213</button><span class="term-def" id="t-213" role="note"><b>ICS-213</b>The general message form of the Incident Command System.</span>, calls net control on the W7GBU repeater and reads it word for word.</p></div></li>
+        <li class="hop"><span class="hop-icon"><svg class="icon" aria-hidden="true"><use href="#i-form"/></svg></span><div class="hop-body"><h4 class="h3">The radio room copies it</h4><p>In the county radio room, another volunteer copies the message, logs it on an ICS-309 and hands it to the EOC.</p></div></li>
+        <li class="hop"><span class="hop-icon"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg></span><div class="hop-body"><h4 class="h3">The EOC acts on it</h4><p>The request goes where it needs to go, through the agency’s own channels. By morning the message has been handled, and every hop is on paper.</p></div></li>
+      </ol>
+      <p class="scenario-close">None of it depends on luck. It depends on volunteers who practiced on ordinary Tuesdays, so a real night feels familiar.</p>
+    </div>
+
+    <div class="system" id="the-system">
+      <div>
+        <h3>The system in one picture</h3>
+        <p>A handheld or mobile radio, a repeater on a mountain, and a trained operator at the other end. That’s the core. Everything else is a backup to it.</p>
+        <p class="caption">Every link is a person. Net control keeps the frequency orderly, operators copy messages word for word, and everything is logged.</p>
+        <p class="paths-label">If a link fails</p>
+        <ul class="paths paths--grid" aria-label="Backup paths">
+          <li class="path path--backup" data-verify="true"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-antenna"/></svg></span><span><b>Alternate repeater, 146.880 MHz</b><br><span class="sub">The Inland Empire VHF Radio Amateurs’ repeater, under a written agreement</span></span></li>
+          <li class="path path--backup"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-radio"/></svg></span><span><b>Simplex</b><br><span class="sub">Radio to radio, no repeater</span></span></li>
+          <li class="path path--backup"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-wave"/></svg></span><span><b>HF radio</b><br><span class="sub">Long distance, such as the Section net on 3.985 MHz</span></span></li>
+          <li class="path path--backup"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-mail"/></svg></span><span><b>Winlink</b><br><span class="sub">Email by radio</span></span></li>
+        </ul>
+      </div>
+      <ol class="paths paths--chain" aria-label="The core path, from the field to the agency">
+        <li class="path"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#p-home"/></svg></span><b>Field station</b><span class="sub">A shelter, an event course or a home</span></li>
+        <li class="path"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-antenna"/></svg></span><b>W7GBU repeater, 147.300 MHz</b><span class="sub">On Brownes Mountain</span></li>
+        <li class="path"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-form"/></svg></span><b>County radio room</b><span class="sub">Net control and message logging</span></li>
+        <li class="path"><span class="icon-disc icon-disc--pine" aria-hidden="true"><svg class="icon"><use href="#i-shield"/></svg></span><b>Served agency</b><span class="sub">The people who act on the message</span></li>
+      </ol>
+    </div>
+
+    <div class="msg-grid">
+      <div id="ics-213">
+        <h3>The ICS-213 general message</h3>
+        <p>The ICS-213 is the standard message form of the Incident Command System. Anyone can start one. It travels by voice, on paper or inside Winlink.</p>
+        <figure class="form213" aria-label="A sample ICS-213, with its blocks labelled">
+          <div class="f213-top"><b>General Message (ICS 213)</b><span class="badge badge--format">Sample</span></div>
+          <div class="f213-rows">
+            <div class="f213 f213--half"><span class="f213-label">To <small>name and position</small></span><span class="f213-val">EOC Logistics</span></div>
+            <div class="f213 f213--half"><span class="f213-label">From <small>name and position</small></span><span class="f213-val">Shelter Manager</span></div>
+            <div class="f213 f213--third f213--subject"><span class="f213-label">Subject</span><span class="f213-val">Resident needs oxygen</span></div>
+            <div class="f213 f213--third"><span class="f213-label">Date <small>MM/DD/YYYY</small></span><span class="f213-val is-blank">MM/DD/YYYY</span></div>
+            <div class="f213 f213--third"><span class="f213-label">Time <small>24-hour, L or Z</small></span><span class="f213-val is-blank">HHMM L</span></div>
+            <div class="f213"><span class="f213-label">Message <small>as short as it can be</small></span><span class="f213-val">A resident’s home oxygen concentrator has no power.</span></div>
+            <div class="f213"><span class="f213-label">Approved by <small>name, signature and position</small></span><span class="f213-val">Shelter Manager</span></div>
+            <div class="f213 f213--reply"><span class="f213-label">Reply <small>the recipient answers on the same form</small></span><span class="f213-val is-blank">Left for the EOC</span></div>
+          </div>
+          <figcaption class="sr-only">A sample only, not a real message.</figcaption>
+        </figure>
+        <div class="form-notes">
+          <p><b>To and From</b> carry a name and position, at least a first initial and last name. <b>Time</b> is 24-hour, with L for local or Z for UTC when it matters.</p>
+          <p><b>Related forms:</b> the ICS-213RR for resource requests, and the ARRL Radiogram, the National Traffic System’s message format. <span data-verify="true">Tip from the task book: keep an ICS-213RR filled out that lists your go-kit; it helps with any claim for lost or damaged equipment.</span> <a href="members/documents.html#forms">All forms, from the official source</a></p>
+          <div>
+            <p><b>Precedence.</b> Messages are handled in this order. With equal precedence, net control clears the stations with the fewest messages first.</p>
+            <ol class="precedence"><li>Emergency</li><li>Priority</li><li>Welfare</li><li>Routine</li></ol>
+          </div>
+        </div>
+        <div class="logs card" id="logs">
+          <h3>Logs</h3>
+          <dl>
+            <dt>ICS-309</dt><dd>The communications log: every message sent or received, kept by the radio operator during all ACS radio operations. Winlink Express can build it automatically.</dd>
+            <dt>ICS-214</dt><dd>The activity log: what you did and when, kept during exercises and activations.</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div>
+        <article class="winlink-card" id="winlink" aria-labelledby="wl-h">
+          <div class="photo-frame"><img src="assets/img/Don-on-the-air.jpg" width="1600" height="1200" loading="lazy" data-verify="true" alt="A volunteer runs a battery-powered radio and laptop station off a vehicle bumper."></div>
+          <div class="winlink-body">
+            <h3 id="wl-h"><button type="button" class="term" aria-expanded="false" aria-controls="t-winlink">Winlink</button><span class="term-def" id="t-winlink" role="note"><b>Winlink</b>Email by radio: messages and forms sent over the air, with or without the internet.</span>: email by radio</h3>
+            <p style="margin-top:8px;font-size:var(--fs-ui)">Winlink sends email-style messages, with attachments and forms, over radio. It works with or without the internet, and it can use the internet (Telnet) when that’s all you have.</p>
+            <ul>
+              <li><b>Forms built in:</b> ICS-213, the Washington State Field Situation Report (phones, power, water, broadcast and internet at your location), USGS “Did You Feel It?” reports and more.</li>
+              <li><b>Maps:</b> reports sent to a call sign can be plotted on a map in Winlink Express, so an emergency manager sees the picture at a glance instead of reading a hundred e-mails.</li>
+              <li><b>Our gateway:</b> the group runs the W7GBU-10 Winlink gateway, managed by the AEC for public events (<span class="callsign">NV2Z</span>).</li>
+              <li><b>Practice:</b> twice a month, members get an assignment and answer it on the form named, usually an ICS-213, sent to <span class="callsign">NV2Z</span> and <span class="callsign">AG7QP</span> between 5 and 9 PM. Radio is preferred; Telnet is acceptable.</li>
+              <li data-verify="true"><b>Help:</b> a Winlink workshop follows the Second Saturday Workshop, 12:30 to 3:30 PM, open to everyone.</li>
+            </ul>
+            <div class="wl-next">
+              <p class="date-block date-block--sm" aria-hidden="true" data-slot="wl-block"><span class="dow">Tue</span><span class="num">13</span><span class="mon">Oct</span></p>
+              <div>
+                <p><b>Next assignment, <time data-next="winlink" data-format="short" datetime="2026-10-13">Tue, Oct 13</time></b></p>
+                <p data-slot="wl-task">Submit a Did You Feel It report. Be sure to mark it as an exercise.</p>
+                <p class="small">Form: <span data-slot="wl-form">Did You Feel It (DYFI) report</span></p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <div class="section-end">
+      <a class="link-action" href="index.html#visit-workshop"><svg class="icon" aria-hidden="true"><use href="#i-tools"/></svg>Try Winlink at the next workshop</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 4. EXERCISES AND TRAINING -->
+<section class="section section--cloud" id="exercises" aria-labelledby="ex-h">
+  <div class="wrap">
+    <div class="section-head section-head--row">
+      <div>
+        <h2 id="ex-h">Exercises and training</h2>
+        <p>Most of our year is practice. Some of it is big and public; most of it is a Tuesday night or a Saturday morning.</p>
+      </div>
+      <a class="btn btn--outline" href="members/exercises.html">Members: exercises and events</a>
+    </div>
+
+    <div class="ex-grid">
+      <div>
+        <!-- Rows carry data-event (data.js ids): the page script hides past rows and tags "Happening now" / "Next". -->
+        <div class="table-wrap">
+          <table class="data-table table--stack" id="exercise-table">
+            <caption>Exercises this season<small>Dates come from our calendar.</small></caption>
+            <thead><tr><th scope="col">Exercise</th><th scope="col">What it is</th><th scope="col">When</th></tr></thead>
+            <tbody>
+              <tr id="ex-wsdot-2026" data-event="wsdot-2026"><th scope="row">ARES-ACS and WSDOT exercise</th><td data-label="What it is">A joint exercise with the Washington State Department of Transportation during National Preparedness Month.</td><td data-label="When" class="ex-when">Sep 26–27, 2026<span data-slot="ex-tag"></span></td></tr>
+              <tr id="ex-set-2026" data-event="set-2026"><th scope="row"><button type="button" class="term" aria-expanded="false" aria-controls="t-set">SET</button><span class="term-def" id="t-set" role="note"><b>SET</b>Simulated Emergency Test, the ARRL’s annual national exercise.</span>, the Simulated Emergency Test</th><td data-label="What it is">The ARRL’s national exercise. The old county plan called it “the largest event sponsored by Spokane County ARES/RACES itself.”</td><td data-label="When" class="ex-when">Every October; Sat, Oct 3, 2026<span data-slot="ex-tag"></span></td></tr>
+              <tr id="ex-shakeout-2026" data-event="shakeout-2026"><th scope="row">Great ShakeOut</th><td data-label="What it is">Members send a USGS “Did You Feel It?” report by Winlink.</td><td data-label="When" class="ex-when">Thu, Oct 15, 2026, 10:15 AM<span data-slot="ex-tag"></span></td></tr>
+              <tr id="ex-commex-2026" data-event="commex-2026" data-verify="true"><th scope="row">State COMMEX</th><td data-label="What it is">Washington’s statewide communications exercise.</td><td data-label="When" class="ex-when">Sat, Oct 24, 2026<span data-slot="ex-tag"></span></td></tr>
+              <tr data-verify="true"><th scope="row">EOC-to-EOC exercises</th><td data-label="What it is">Stations at sites across the county pass traffic to emergency operations centers and to the State EOC at Camp Murray. Held on 5th Saturdays in past years.</td><td data-label="When">As scheduled</td></tr>
+              <tr><th scope="row">Winlink assignments</th><td data-label="What it is">Short practice messages on the 2nd and 4th Tuesdays.</td><td data-label="When">Twice a month; next <time data-next="winlink" data-format="day" datetime="2026-10-13">Oct 13</time></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="on-air" id="on-air"><b>On-air events:</b> ARRL Field Day and Winter Field Day (portable, off-grid stations), and SKYWARN Recognition Day, when <span data-verify="true">the group has run a station at the National Weather Service office in Spokane every year since 1999</span>.</p>
+      </div>
+
+      <div class="ex-side" id="training">
+        <figure class="photo">
+          <div class="photo-frame ratio-16x9"><img src="assets/img/8091bb_cfac747e80b142cf8c06b2286c1c6e0b.jpg" width="659" height="372" loading="lazy" data-verify="true" alt="Volunteers in hi-vis vests raise an antenna mast in a frosty field."></div>
+          <figcaption>Raising a mast on a winter morning.</figcaption>
+        </figure>
+        <h3>Regular training</h3>
+        <ul class="train-list">
+          <li><p class="date-block date-block--sm" aria-hidden="true"><span class="dow">Sat</span><span class="num" data-cal-day="workshop">10</span><span class="mon" data-cal-mon="workshop">Oct</span></p><div><b>Second Saturday Workshop</b><p>Next: <time data-next="workshop" data-format="short" datetime="2026-10-10">Sat, Oct 10</time>, 9:00 AM to noon, at Spokane County Emergency Management. Hands-on sessions such as digital-mode setups, emergency power, mobile installs and cross-band repeating. <span data-verify="true">The Winlink workshop follows at 12:30.</span></p></div></li>
+          <li data-verify="true"><p class="date-block date-block--sm date-block--quiet" aria-hidden="true"><span class="dow">Thu</span><span class="num" data-cal-day="third-thursday">15</span><span class="mon" data-cal-mon="third-thursday">Oct</span></p><div><b>Third Thursday training meeting</b><p>Next: <time data-next="third-thursday" data-format="short" datetime="2026-10-15">Thu, Oct 15</time>, evening. Recent topics have included shelter training and go-kits.</p></div></li>
+          <li data-verify="true"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-people"/></svg></span><div><b>New Member Orientation</b><p>The mission and structure, qualifying, HIPAA, then a tour of the county Comm Room and the 8 PM net. Held regularly; ask us for the next date.</p></div></li>
+          <li><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-book"/></svg></span><div><b>County-arranged classes</b><p>First Aid/CPR, and optional defensive driving (needed only to drive county vehicles); AUXCOMM and COMT for senior members.</p></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-end">
+      <a class="link-action" href="index.html#visit-workshop"><svg class="icon" aria-hidden="true"><use href="#i-door"/></svg>Visitors are welcome at workshops and meetings</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 5. PUBLIC SERVICE -->
+<section class="section section--white" id="public-service" aria-labelledby="ps-h">
+  <div class="wrap">
+    <div class="ps-grid">
+      <div>
+        <h2 id="ps-h">Public-service events</h2>
+        <p class="lede" style="margin-top:12px">Race courses and parade routes are where most members first work a real net: many stations, a busy frequency and a net control keeping order. The county plan treated these events as primary training for working alongside fire and law enforcement.</p>
+        <ul class="ps-events">
+          <li><b>Bloomsday</b><span class="when"><time data-next="event:bloomsday-2027" data-format="short-year" datetime="2027-05-02">Sun, May 2, 2027</time></span><span class="who">Volunteer through the AEC for public events (<span class="callsign">NV2Z</span>)</span></li>
+          <li><b>Lilac Festival Armed Forces Torchlight Parade</b><span class="when">Date not yet posted</span><span class="who">Volunteer through the AEC for public events (<span class="callsign">NV2Z</span>)</span></li>
+          <li data-verify="true"><b>Climb for the Cure</b><span class="when"><time data-next="event:climb-2027" data-format="short-year" datetime="2027-06-13">Sun, Jun 13, 2027</time></span><span class="who">Volunteer contact: <span class="callsign">NZ2S</span></span></li>
+          <li><b>Fun runs and bike races</b><span class="when">As requested</span><span class="who">Volunteer through the AEC for public events (<span class="callsign">NV2Z</span>)</span></li>
+        </ul>
+      </div>
+      <div class="ps-media">
+        <figure class="photo" style="margin:0">
+          <div class="photo-frame"><img src="assets/img/operator-headset-badge-blurred.jpg" width="659" height="372" loading="lazy" data-verify="true" alt="An operator in headphones speaks into a hand microphone beside a parade route map."></div>
+          <figcaption>Working a parade: the route map is pinned beside the radio.</figcaption>
+        </figure>
+        <div class="photo-needed">
+          <svg class="icon" aria-hidden="true"><use href="#i-camera"/></svg>
+          <p><b>PHOTO NEEDED</b>An operator in a hi-vis vest on a race course with runners passing, wide, landscape</p>
+        </div>
+      </div>
+    </div>
+
+    <details class="shift fold" data-fold open>
+      <summary class="fold-sum"><h3>What a shift looks like</h3><span class="fold-hint">Six tips for event day</span><svg class="icon fold-chev" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary>
+      <p class="muted" style="margin-top:6px;font-size:var(--fs-ui)">Adapted from the Section’s tips. You’re part of a team, and net control will answer your questions.</p>
+      <ul class="checklist">
+        <li>Dress in layers and bring water, sunscreen and any medication.</li>
+        <li>Bring charged and spare batteries, a pen and a small notepad.</li>
+        <li>Check in on the talk-in frequency as you arrive, so you can be directed to parking.</li>
+        <li>A speaker-mic or headset helps. Don’t use VOX: it picks up crowd noise and ties up the frequency.</li>
+        <li>If you have a spare radio, bring it for a volunteer who has none.</li>
+        <li>A public-service event counts as your yearly field operation.</li>
+      </ul>
+    </details>
+
+    <div class="section-end">
+      <a class="link-action" href="members/exercises.html#public-service"><svg class="icon" aria-hidden="true"><use href="#i-flag"/></svg>Members: sign up for an event</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 6. WHERE WE WORK -->
+<section class="section section--cloud" id="where-we-work" aria-labelledby="where-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="where-h">Where we work</h2>
+      <p>In general terms, because some of these places handle sensitive information.</p>
+    </div>
+    <div class="where-grid">
+      <figure class="map-frame">
+        <!-- Drawn, not a map capture. Shows only public places; hospitals as a hatched general area. -->
+        <svg viewBox="0 0 520 450" role="img" aria-labelledby="map-t">
+          <title id="map-t">Drawn map of Spokane County. The Spokane River crosses from Idaho in the east, through Spokane, and forms the county’s northwest edge. Marked: Spokane County Emergency Management downtown, the downtown event area, the National Weather Service office west of Spokane, and a hatched general area for area hospitals around Spokane.</title>
+          <defs>
+            <pattern id="hw-hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="#E4EFEA"/><path d="M0 0V8" stroke="#2E5B4F" stroke-width="1.6" stroke-opacity=".55"/></pattern>
+          </defs>
+          <rect width="520" height="450" fill="#FFFFFF"/>
+          <path d="M160 28H486V424H34V178C60 172 78 152 92 128C106 102 128 56 160 28Z" fill="#EEF3F9" stroke="#2F4E7E" stroke-width="2.5" stroke-linejoin="round"/>
+          <text transform="translate(505 330) rotate(90)" text-anchor="middle" font-family="Atkinson Hyperlegible, Verdana, sans-serif" font-size="15" fill="#465163">Idaho</text>
+          <path d="M486 230C458 226 440 238 412 234C386 230 366 240 340 238C318 236 302 242 286 236C266 228 252 210 238 194C220 172 196 160 174 142C150 122 118 118 92 128" fill="none" stroke="#B9C7DB" stroke-width="6" stroke-linecap="round"/>
+          <text transform="translate(176 118) rotate(34)" font-family="Atkinson Hyperlegible, Verdana, sans-serif" font-size="14" font-style="italic" fill="#465163">Spokane River</text>
+          <text x="186" y="74" font-family="Bricolage Grotesque, Arial Narrow, sans-serif" font-size="24" font-weight="700" fill="#1E3557">Spokane County</text>
+          <ellipse cx="318" cy="246" rx="74" ry="40" fill="url(#hw-hatch)" stroke="#2E5B4F" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <circle cx="300" cy="248" r="20" fill="#FFFFFF" fill-opacity=".75" stroke="#2F4E7E" stroke-width="2.5" stroke-dasharray="5 4"/>
+          <g transform="translate(296 238)"><path d="M0 0C-3 -6-11 -12-11 -21A11 11 0 0 1 11 -21C11 -12 3 -6 0 0Z" fill="#2F4E7E"/><circle cx="0" cy="-21" r="4" fill="#FFFFFF"/></g>
+          <g transform="translate(204 262)"><circle r="17" fill="#FFFFFF" stroke="#2F4E7E" stroke-width="2"/><use href="#i-weather" x="-11" y="-11" width="22" height="22" fill="none" stroke="#2F4E7E" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></g>
+          <g font-family="Atkinson Hyperlegible, Verdana, sans-serif" fill="#1B2433">
+            <text x="318" y="306" text-anchor="middle" font-size="17" font-weight="700">Spokane</text>
+            <text x="420" y="284" text-anchor="middle" font-size="15" fill="#465163">Spokane Valley</text>
+            <text x="204" y="300" text-anchor="middle" font-size="15" fill="#465163">Airway Heights</text>
+          </g>
+          <g transform="translate(66 384)" font-family="Atkinson Hyperlegible, Verdana, sans-serif"><circle r="14" fill="#FFFFFF" stroke="#B9C7DB" stroke-width="1.5"/><path d="M0 -9L5 4 0 1.5-5 4Z" fill="#1E3557"/><text y="30" text-anchor="middle" font-size="13" fill="#465163">N</text></g>
+        </svg>
+        <figcaption><span>Drawn, not to scale. Sensitive sites are never shown.</span></figcaption>
+      </figure>
+
+      <div>
+        <h3 class="where-h">On the map</h3>
+        <ul class="where-list">
+          <li><span class="key" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M20 34C17 28 9 22 9 13A11 11 0 0 1 31 13C31 22 23 28 20 34Z" fill="#2F4E7E"/><circle cx="20" cy="13" r="4" fill="#fff"/></svg></span><div><b>Spokane County Emergency Management</b>1121 W Gardner Ave. The county radio room is here, and it’s where we meet.</div></li>
+          <li><span class="key" aria-hidden="true"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="15" fill="#fff" stroke="#2F4E7E" stroke-width="2.5" stroke-dasharray="5 4"/></svg></span><div><b>Event courses</b>Across Spokane, such as Bloomsday and the Torchlight Parade downtown.</div></li>
+          <li><span class="key" aria-hidden="true"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="#fff" stroke="#2F4E7E" stroke-width="2"/><use href="#i-weather" x="9" y="9" width="22" height="22" fill="none" stroke="#2F4E7E" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><b>The National Weather Service office in Spokane</b>For SKYWARN Recognition Day.</div></li>
+          <li><span class="key" aria-hidden="true"><svg viewBox="0 0 40 40"><rect x="4" y="9" width="32" height="22" rx="11" fill="url(#hw-hatch)" stroke="#2E5B4F" stroke-width="1.5" stroke-dasharray="4 4"/></svg></span><div><b>Area hospitals, as a general area only</b>Where backup radio and computer equipment is kept ready.</div></li>
+        </ul>
+        <h3 class="where-h">Not on the map</h3>
+        <ul class="where-list">
+          <li><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-trailer"/></svg></span><div><b>The county communications trailer and Mobile Network Units</b>Set up where an incident needs them.</div></li>
+          <li><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-shield"/></svg></span><div><b>Shelters, emergency operations centers and incident command posts</b>ACS members only.</div></li>
+          <li><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#p-home"/></svg></span><div><b>Home stations all over the county</b>For nets, Winlink and Standing Order 1b reports.</div></li>
+        </ul>
+      </div>
+    </div>
+    <div class="section-end">
+      <a class="link-action" href="index.html#visit-meeting"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>How to find us for a meeting</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 7. FIND YOUR SPOT -->
+<section class="section section--white" id="roles" aria-labelledby="roles-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="roles-h">Find your spot</h2>
+      <p>Everyone starts by checking into the net. From there, people find the work that suits them.</p>
+    </div>
+    <p class="elig-key"><span>Open to:</span><span class="elig elig--anyone">Anyone</span><span class="elig elig--ares">ARES and ACS</span><span class="elig elig--acs">ACS</span><span class="elig elig--open">Open position</span></p>
+
+    <ul class="role-grid">
+      <li class="role-card">
+        <div class="media photo-needed"><svg class="icon" aria-hidden="true"><use href="#i-camera"/></svg><p><b>PHOTO NEEDED</b>Net control at a home station on a Tuesday night, logbook and handheld, warm light</p></div>
+        <div class="role-body"><h3>Net control station</h3><p>Run a net: call check-ins, keep order, move traffic.</p><ul class="elig-list"><li class="elig elig--ares">ARES and ACS</li></ul><p class="role-train">Coached by the Net Manager; the NCS guide. Required once a year at the ACS Radio Operator level.</p></div>
+      </li>
+      <li class="role-card">
+        <div class="media art" aria-hidden="true">
+          <svg viewBox="0 0 320 180" fill="none" stroke="#2F4E7E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M28 152H292" stroke="#B9C7DB"/>
+            <path d="M70 96L136 52L202 96"/><rect x="82" y="92" width="108" height="60" rx="2" fill="#FFFFFF"/>
+            <path d="M124 152V122H148V152"/><rect x="96" y="104" width="18" height="14" rx="2" stroke="#9FB2CC"/><rect x="158" y="104" width="18" height="14" rx="2" stroke="#9FB2CC"/>
+            <path d="M176 70V38M170 50H182"/><path d="M188 42a12 12 0 0 1 0 18M196 34a24 24 0 0 1 0 34" stroke="#2E5B4F"/>
+            <rect x="232" y="84" width="30" height="54" rx="6" fill="#FFFFFF"/><path d="M240 84V64M241 100h14M241 110h14" /><circle cx="247" cy="126" r="3" />
+          </svg>
+        </div>
+        <div class="role-body"><h3>Field or shelter radio operator</h3><p>Pass messages from a shelter, staging area or event post.</p><ul class="elig-list"><li class="elig elig--acs">ACS for shelters</li><li class="elig elig--ares">ARES and ACS for events</li></ul><p class="role-train">ICS-213 and ICS-309; a go-kit.</p></div>
+      </li>
+      <li class="role-card">
+        <div class="media art" aria-hidden="true">
+          <svg viewBox="0 0 320 180" fill="none" stroke="#2F4E7E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M28 152H292" stroke="#B9C7DB"/>
+            <path d="M96 96a26 26 0 1 1 6-51A34 34 0 0 1 166 56a22 22 0 0 1-2 44H96" fill="#FFFFFF"/>
+            <path d="M132 104l-12 22h16l-12 22" stroke="#2E5B4F" stroke-width="3"/>
+            <path d="M188 118l-6 12M204 118l-6 12M172 118l-6 12" stroke="#9FB2CC"/>
+            <rect x="226" y="88" width="30" height="54" rx="6" fill="#FFFFFF"/><path d="M234 88V66M235 104h14M235 114h14"/><circle cx="241" cy="130" r="3"/>
+          </svg>
+        </div>
+        <div class="role-body"><h3>SKYWARN spotter</h3><p>Report severe weather to the National Weather Service.</p><ul class="elig-list"><li class="elig elig--anyone">Anyone who takes the training</li></ul><p class="role-train">NWS spotter training. No license needed. <a href="https://www.weather.gov/otx/Current_Spotter_Training" rel="noopener">Spotter training<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens weather.gov)</span></a></p></div>
+      </li>
+    </ul>
+
+    <details class="fold role-fold" data-fold open>
+      <summary class="fold-sum fold-sum--mobile"><h3>Seven more roles</h3><span class="fold-hint">Events, Winlink, the radio room, hospitals and more</span><svg class="icon fold-chev" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary>
+    <ul class="role-more">
+      <li class="role-mini"><div class="role-head"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-flag"/></svg></span><h3>Public-event operator</h3></div><p>Work a race course or parade route.</p><ul class="elig-list"><li class="elig elig--ares">ARES and ACS</li></ul><p class="role-train">A short-term go-kit; event briefing.</p></li>
+      <li class="role-mini"><div class="role-head"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-mail"/></svg></span><h3>Winlink and digital operator</h3></div><p>Send forms and reports by radio email.</p><ul class="elig-list"><li class="elig elig--ares">ARES and ACS</li></ul><p class="role-train">Winlink workshop; assignments. Yearly at ACS Senior Radio Operator.</p></li>
+      <li class="role-mini"><div class="role-head"><span class="icon-disc icon-disc--pine" aria-hidden="true"><svg class="icon"><use href="#i-radio"/></svg></span><h3>Radio room operator</h3></div><p>Staff the county radio room during an activation.</p><ul class="elig-list"><li class="elig elig--acs">ACS</li></ul><p class="role-train">Comm Room and trailer familiarization, then competency (a Radio Operator requirement).</p></li>
+      <li class="role-mini"><div class="role-head"><span class="icon-disc icon-disc--pine" aria-hidden="true"><svg class="icon"><use href="#i-hospital"/></svg></span><h3>Hospital team</h3></div><p>Keep backup hospital communications ready.</p><ul class="elig-list"><li class="elig elig--acs">ACS; HIPAA training required</li></ul><p class="role-train">Orientation; HIPAA.</p></li>
+      <li class="role-mini"><div class="role-head"><span class="icon-disc icon-disc--pine" aria-hidden="true"><svg class="icon"><use href="#i-trailer"/></svg></span><h3>Mobile units and logistics</h3></div><p>Set up the trailer and Mobile Network Units; keep equipment and programming ready.</p><ul class="elig-list"><li class="elig elig--acs">ACS Senior Radio Operator</li></ul><p class="role-train">MNU setup and take-down.</p></li>
+      <li class="role-mini"><div class="role-head"><span class="icon-disc icon-disc--pine" aria-hidden="true"><svg class="icon"><use href="#i-star"/></svg></span><h3>Leadership (AEC)</h3></div><p>Plan training, lead exercises and coordinate events.</p><ul class="elig-list"><li class="elig elig--acs">ACS Leadership level</li></ul><p class="role-train">FEMA IS-120, 230, 235, 240, 241, 242, 244 and 288. ARRL membership is required for ARES appointments.</p></li>
+      <li class="role-mini"><div class="role-head"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-message"/></svg></span><h3>Public Information Officer</h3></div><p>Tell the group’s story to the media and the public.</p><ul class="elig-list"><li class="elig elig--open">Open position</li></ul><p class="role-train">ARRL PR-101 (optional).</p></li>
+      <li class="role-mini role-ask"><div class="role-head"><span class="icon-disc icon-disc--pine" aria-hidden="true"><svg class="icon"><use href="#i-tools"/></svg></span><h3>Not sure yet?</h3></div><p>Most people find their spot by showing up. Ask at a workshop what suits you.</p><a class="link-action" href="index.html#visit-workshop">Drop into a workshop</a></li>
+    </ul>
+    </details>
+
+    <div class="section-end">
+      <a class="btn btn--primary" href="index.html#join">See the four steps to join</a>
+      <a class="link-action" href="about.html#training-path">The training path</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 8. YOUR FIRST MONTH -->
+<section class="section section--cloud" id="first-month" aria-labelledby="first-h">
+  <div class="wrap first-grid">
+    <div>
+      <h2 id="first-h">Your first month after joining</h2>
+      <p class="lede" style="margin-top:12px;color:var(--ink-2)">If you joined this week, this is what’s next. Every step has a date and a place, and none of them needs experience.</p>
+      <!-- Dated items are filled from data.js (data-next) and re-sorted by date by the page script. -->
+      <ol class="timeline" data-sort-dates aria-label="Your first month">
+        <li data-order="first"><span class="tl-time">This week</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Apply and get connected</p><p>Send the <a href="members/documents.html#ares-application">ARES application</a> (bring it to a meeting or send it to <span data-verify="true">join@spokares.org</span>), and apply to join our groups.io list. A moderator approves new members.</p></div></li>
+        <li data-key="net" class="tl-you"><span class="tl-time"><time data-next="net" data-format="day" datetime="2026-09-29">Sep 29</time></span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Your first Tuesday</p><p>Check into the net as a member, after the officials. Net control that night: <span class="callsign" data-netcontrol="0">NZ2S</span>.</p></div></li>
+        <li data-key="workshop"><span class="tl-time"><time data-next="workshop" data-format="day" datetime="2026-10-10">Oct 10</time></span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Your first workshop</p><p>Second Saturday Workshop, 9:00 AM to noon. <span data-verify="true">Stay for the Winlink workshop at 12:30 if you like.</span></p></div></li>
+        <li data-key="winlink"><span class="tl-time"><time data-next="winlink" data-format="day" datetime="2026-10-13">Oct 13</time></span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Your first Winlink assignment</p><p>“<span data-slot="wl-task">Submit a Did You Feel It report. Be sure to mark it as an exercise.</span>” Answer on the form named and send it to <span class="callsign">NV2Z</span> and <span class="callsign">AG7QP</span> between 5 and 9 PM. Radio is preferred; Telnet is acceptable.</p></div></li>
+        <li data-key="third-thursday" data-verify="true"><span class="tl-time"><time data-next="third-thursday" data-format="day" datetime="2026-10-15">Oct 15</time></span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Your first training meeting</p><p>Third Thursday, evening. As the orientation puts it, “An emergency is a poor time to be handing out business cards.”</p></div></li>
+        <li data-order="last" data-verify="true"><span class="tl-time">Ask us</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">New Member Orientation</p><p>Held regularly; ask us for the next date. It ends with a tour of the county Comm Room and the 8 PM net.</p></div></li>
+      </ol>
+    </div>
+    <aside class="takes-side" id="time-it-takes" aria-labelledby="takes-h">
+      <h3 id="takes-h">Here’s what it takes</h3>
+      <p>Honest numbers, from the county’s ACS task book.</p>
+      <ul class="figures">
+        <li class="figure"><span class="display-num" aria-hidden="true">1</span><div><b><span class="sr-only">1 </span>net check-in a month</b><span>Weekly is encouraged.</span></div></li>
+        <li class="figure"><span class="display-num" aria-hidden="true">1</span><div><b><span class="sr-only">1 </span>meeting or workshop a quarter</b><span>Monthly is encouraged.</span></div></li>
+        <li class="figure"><span class="display-num" aria-hidden="true">1</span><div><b><span class="sr-only">1 </span>field operation a year</b><span>An activation, an exercise or a public-service event.</span></div></li>
+        <li class="figure"><span class="display-num" aria-hidden="true">2</span><div><b><span class="sr-only">2 </span>kits, ready</b><span>A personal kit for 24 hours or more (72 preferred) and a 2 m / 70 cm radio kit.</span></div></li>
+      </ul>
+      <p class="takes-note">New members also complete four free online FEMA courses and the ARRL Basic EmComm course in their first year. <a href="about.html#training-path">The full training path</a></p>
+    </aside>
+  </div>
+</section>
+
+<!-- ============================================================ 9. QUESTIONS -->
+<section class="section section--white" id="questions" aria-labelledby="faq-h">
+  <div class="wrap faq-wrap">
+    <div class="section-head">
+      <h2 id="faq-h">Questions newcomers ask</h2>
+      <p>What people wonder before a first visit, answered plainly.</p>
+      <p style="margin-top:16px"><a class="link-action" href="about.html#faq">More questions, on About</a></p>
+    </div>
+    <div class="faq">
+      <details><summary>“Do I need my own radio?”<svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary><div class="answer"><p>Not to visit. To listen from home, any radio or scanner that receives 147.300 MHz will do. Members provide their own gear, and there’s no required brand or model. A Second Saturday workshop is a good place to ask what’s worth buying.</p></div></details>
+      <details><summary>“I’m not licensed. Can I still come?”<svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary><div class="answer"><p>Yes. Anyone can listen to the net, visitors are welcome at meetings and workshops, and anyone can take SKYWARN spotter training from the National Weather Service. To check in on the air or to join, you’ll need an FCC Technician license or higher.</p><p><a href="about.html#licensing">Getting licensed, in plain English</a></p></div></details>
+      <details><summary>“How much time does it take?”<svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary><div class="answer"><p>The ACS minimum is one net check-in a month, one meeting or workshop a quarter, and one field operation a year, plus the first-year courses. Weekly check-ins and monthly meetings are encouraged. <a href="#time-it-takes">Here’s what it takes</a></p></div></details>
+      <details><summary>“Do I have to be an expert?”<svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary><div class="answer"><p>No. New members have up to about a year to work toward the Radio Operator level. Net control rotates among members, and the Net Manager coaches anyone taking a turn for the first time. Workshops are hands-on, and the digital side is there when you want it.</p></div></details>
+      <details><summary>“What happens in a real emergency?”<svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary><div class="answer"><p>Spokane County Emergency Management activates the team, and members follow <a href="#alert-levels">four readiness levels</a>. Your personal and family safety come first. We support the agencies that respond, when they ask: “ARES is an auxiliary support function.”</p><p>In an emergency, call 911.</p></div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ NEXT STEPS -->
+<section class="section section--tint end-band" aria-labelledby="end-h">
+  <div class="wrap">
+    <h2 id="end-h">Ready to try it?</h2>
+    <ul class="audience">
+      <li><a href="index.html#visit-listen"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-headphones"/></svg></span><b>Listen this Tuesday</b><span class="hint">8:00 PM on W7GBU, 147.300 MHz. No license needed to listen.</span></a></li>
+      <li><a href="index.html#join"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-people"/></svg></span><b>Join the team</b><span class="hint">Four steps, starting at 0 if you’re not licensed yet.</span></a></li>
+      <li><a href="about.html"><span class="icon-disc icon-disc--pine" aria-hidden="true"><svg class="icon"><use href="#i-book"/></svg></span><b>Read the details</b><span class="hint">Membership, training and the legal basis, on About ARES &amp; ACS.</span></a></li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="assets/img/seal-ares-acs-400.png" alt="" width="60" height="60">
+        <div>
+          <span class="footer-name">Spokane County ARES-ACS</span>
+          <p>Volunteer amateur radio emergency communications for Spokane County. Formerly Spokane County ARES/RACES.</p>
+          <address>Spokane County Emergency Management<br>1121 W Gardner Ave, Spokane, WA 99260</address>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h2>New to radio</h2>
+        <ul>
+          <li><a href="how-it-works.html">How it works</a></li>
+          <li><a href="about.html">About ARES &amp; ACS</a></li>
+          <li><a href="about.html#licensing">Get licensed</a></li>
+          <li><a href="index.html#visit">Visit a meeting</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Licensed hams</h2>
+        <ul>
+          <li><a href="index.html#join">Join the team</a></li>
+          <li><a href="index.html#visit-listen">Listen on Tuesday night</a></li>
+          <li><a href="members/documents.html#ares-application">The ARES application</a></li>
+          <li><a href="about.html#training-path">The training path</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Members</h2>
+        <ul>
+          <li><a href="members/index.html">For Members (this week)</a></li>
+          <li><a href="members/documents.html">Documents &amp; downloads</a></li>
+          <li><a href="members/exercises.html">Exercises &amp; events</a></li>
+          <li><a href="members/documents.html#forms">Forms</a></li>
+          <li><a href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io (members)<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io)</span></a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Agency partners</h2>
+        <ul>
+          <li><a href="about.html#who-we-serve">Who we serve</a></li>
+          <li><a href="about.html#for-agencies">For agencies and partners</a></li>
+          <li><a href="about.html#agreements">Agreements</a></li>
+          <li><a href="how-it-works.html#activation">How activation works</a></li>
+          <li><a href="about.html#contact">Contact the emergency coordinator</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-affil">
+      <div class="marks">
+        <img src="assets/img/ARES_logo.png" alt="ARRL Amateur Radio Emergency Service emblem" width="44" height="44">
+        <img src="assets/img/ACS_logo-500.png" alt="Spokane Auxiliary Communications (ACS) seal" width="44" height="44">
+        <img src="assets/img/SCDEM_Logo-600.png" alt="Spokane County Emergency Management seal" width="44" height="44">
+      </div>
+      <p>An ARRL Amateur Radio Emergency Service group, serving Spokane County Emergency Management.</p>
+    </div>
+    <div class="footer-fine">
+      <p data-verify="true">A volunteer group, not an emergency service. In an emergency, call 911.</p>
+      <p class="fine-links"><a href="#">Privacy</a><span>© Spokane County ARES-ACS</span></p>
+      <p class="mockup-note">Mockup — content to be verified before launch</p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/site.js"></script>
+<script>
+/* =============================================================================
+   How it works: page script (progressive enhancement; the HTML above is the
+   complete no-JS page). Reads window.SPOKARES (data.js) and window.SPO (site.js).
+   1. The month calendar ("A month with the team")
+   2. The "Tune in" card: next net, net control, flags, live lamp
+   3. The 8 PM step's net-control line
+   4. The exercises table: hide past rows, tag "Happening now" and "Next"
+   5. The Winlink next-assignment box and the regular-training date blocks
+   6. "Your first month": sort the dated steps by their next date
+   7. Mobile folds: long reference blocks start closed under 641px
+   WordPress: one small block per widget. SSG: render the same at build time.
+   ============================================================================= */
+(function (win, doc) {
+  'use strict';
+  var S = win.SPOKARES, SPO = win.SPO;
+  if (!S || !S.fn || !SPO || !SPO.now) return;
+  var F = S.fn;
+  var DAY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var MONLONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  function $(s, r) { return (r || doc).querySelector(s); }
+  function $$(s, r) { return Array.prototype.slice.call((r || doc).querySelectorAll(s)); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function parse(iso) { var p = String(iso).split('-'); return new Date(+p[0], +p[1] - 1, +(p[2] || 1)); }
+  function iso(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function eventById(id) { for (var i = 0; i < S.events.length; i++) if (S.events[i].id === id) return S.events[i]; return null; }
+  function isPublic(x) {
+    var rec = x.id && eventById(x.id);
+    return !/^shares/.test(x.id || '') && !x.optional && !(rec && rec.optional);
+  }
+
+  /* ---------------------------------------------------- 1. month calendar */
+  var EX_TITLE = { 'wsdot-2026': 'ARES-ACS and WSDOT exercise', 'set-2026': 'Simulated Emergency Test', 'shakeout-2026': 'Great ShakeOut', 'commex-2026': 'State COMMEX', 'srd-2026': 'SKYWARN Recognition Day', 'wfd-2027': 'Winter Field Day' };
+  var EX_SUB = { 'wsdot-2026': 'With WSDOT', 'set-2026': 'The ARRL’s national exercise', 'shakeout-2026': 'A DYFI report by Winlink, 10:15 AM', 'commex-2026': 'Statewide exercise', 'srd-2026': 'Station at NWS Spokane', 'wfd-2027': 'Portable, off-grid stations' };
+  function evHTML(x, past, today) {
+    var cls = 'cal-ev', href = '#exercises', b = x.title, sm = '';
+    if (x.type === 'net') {
+      b = (x.mode === 'winlink' ? 'Winlink night' : x.mode === 'simplex' ? 'Simplex net' : 'Tuesday net') + ', 8 PM';
+      sm = x.netControl ? 'Net control ' + x.netControl : (x.open ? 'Net control slot open' : '');
+      href = x.mode === 'winlink' ? '#winlink' : x.mode === 'simplex' ? '#other-nets' : '#weekly-net';
+    } else if (x.type === 'gmrs') {
+      cls += ' cal-ev--other'; b = 'ACS GMRS net, 7:30 PM'; sm = 'For GMRS licensees'; href = '#other-nets';
+    } else if (x.type === 'meeting' || x.type === 'training') {
+      cls += ' cal-ev--train'; href = '#training';
+      if (x.id.indexOf('workshop-') === 0) { b = 'Second Saturday Workshop'; sm = '9:00 AM to noon, then Winlink'; }
+      else if (x.id.indexOf('third-thursday') === 0) { b = 'Training meeting'; sm = 'Third Thursday, evening'; }
+    } else if (x.type === 'exercise') {
+      cls += ' cal-ev--exercise'; b = EX_TITLE[x.id] || x.title; sm = EX_SUB[x.id] || 'Exercise';
+      href = doc.getElementById('ex-' + x.id) ? '#ex-' + x.id : '#exercises';
+    } else if (x.type === 'on-air') {
+      cls += ' cal-ev--other'; b = EX_TITLE[x.id] || x.title; sm = EX_SUB[x.id] || 'On-air event'; href = '#on-air';
+    } else if (x.type === 'public-service') {
+      cls += ' cal-ev--other'; sm = 'Public service'; href = '#public-service';
+    }
+    var endIso = x.endDate || x.date;
+    if (x.endDate && x.date <= today && endIso >= today) sm = 'Happening now';
+    if (past) cls += ' is-past';
+    return '<li' + (x.verify ? ' data-verify="true"' : '') + '><a class="' + cls + '" href="' + href + '"><b>' + esc(b) + '</b>' + (sm ? '<small>' + esc(sm) + '</small>' : '') + '</a></li>';
+  }
+  function monthFor(today) {
+    var t = parse(today), probe = new Date(t.getFullYear(), t.getMonth(), t.getDate() + 7);
+    var y = probe.getFullYear(), m = probe.getMonth();
+    var first = new Date(y, m, 1), days = new Date(y, m + 1, 0).getDate(), firstIso = iso(first);
+    var items = F.upcoming({ from: firstIso, days: days, types: ['net', 'gmrs', 'meeting', 'exercise', 'training', 'public-service', 'on-air'] }).filter(isPublic);
+    var byDay = {};
+    items.forEach(function (x) {
+      if (x.type === 'meeting' && x.id.indexOf('winlink-workshop') === 0) return;   /* folded into the workshop entry */
+      var k = x.date < firstIso ? firstIso : x.date;
+      (byDay[k] = byDay[k] || []).push(x);
+    });
+    var out = '', lead = first.getDay(), i, d;
+    for (i = lead; i > 0; i--) { d = new Date(y, m, 1 - i); out += '<li class="cal-day is-out" aria-hidden="true"><span class="cal-date"><span class="cal-num">' + d.getDate() + '</span></span></li>'; }
+    for (var n = 1; n <= days; n++) {
+      d = new Date(y, m, n);
+      var k = iso(d), evs = byDay[k] || [], past = k < today, isToday = k === today;
+      out += '<li class="cal-day' + (evs.length ? ' has-ev' : ' is-empty') + (past ? ' is-past' : '') + (isToday ? ' is-today' : '') + '"' + (evs.length ? '' : ' aria-hidden="true"') + '>' +
+        '<span class="cal-date"><span class="cal-dow">' + DAY[d.getDay()] + '</span> <span class="cal-num">' + n + '</span><span class="cal-sr"> ' + MONLONG[m] + (past ? ' (past)' : '') + '</span>' + (isToday ? '<span class="cal-today">Today</span>' : '') + '</span>' +
+        (evs.length ? '<ul class="cal-evs">' + evs.map(function (x) { return evHTML(x, past, today); }).join('') + '</ul>' : '') + '</li>';
+    }
+    var trail = (7 - (lead + days) % 7) % 7;
+    for (i = 1; i <= trail; i++) out += '<li class="cal-day is-out" aria-hidden="true"><span class="cal-date"><span class="cal-num">' + i + '</span></span></li>';
+    return { title: MONLONG[m] + ' ' + y, month: MONLONG[m], html: out };
+  }
+  function calendar(today) {
+    var grid = $('[data-slot="cal-grid"]');
+    if (!grid) return;
+    var r = monthFor(today);
+    grid.innerHTML = r.html;
+    $$('[data-slot="cal-title"]').forEach(function (el) { el.textContent = r.title; });
+    $$('[data-slot="cal-month"]').forEach(function (el) { el.textContent = r.month; });
+  }
+  SPO.monthFor = monthFor;   /* exposed so the static fallback can be regenerated */
+
+  /* ------------------------------------------ 2 + 3. tune-in card, 8 PM line */
+  function netFlags(net) {
+    var out = '';
+    if (net.mode === 'simplex') out += '<p class="net-flag" data-verify="true">Fifth Tuesday: the net starts on simplex, then moves to W7GBU.</p>';
+    if (net.mode === 'winlink') out += '<p class="net-flag" data-verify="true">Winlink night: have paper and pencil ready.</p>';
+    if (net.gmrsSameDay) out += '<p class="net-flag" data-verify="true">Third Tuesday: the ACS GMRS net meets at 7:30 PM, before this net.</p>';
+    return out;
+  }
+  function tune() {
+    var nn = SPO.nextNet(), net = nn.net;
+    if (!net) return;
+    var box = $('[data-slot="tune-next"]');
+    if (box) {
+      var nc = net.netControl ? 'Net control: <b class="callsign">' + esc(net.netControl) + '</b>' :
+        net.open ? '<span class="net-flag net-flag--open" style="margin-top:0">Net control slot open. Members: <a href="members/index.html#rota">take the slot</a></span>' : 'Net control: a member on the rota';
+      box.innerHTML = SPO.dateBlock(net.date) + '<div><p><b>' + (nn.state ? 'Tonight' : 'Next net') + ': <time datetime="' + net.date + '">' + esc(SPO.fmt(net.date)) + '</time></b></p><p>' + nc + '</p>' + netFlags(net) + '</div>';
+    }
+    var head = $('.tune .week-head');
+    if (head && nn.state) {
+      var s = doc.createElement('span');
+      s.className = 'live' + (nn.state === 'on-air' ? ' live--on-air' : '');
+      s.textContent = nn.state === 'on-air' ? 'On the air now' : 'Tonight, 8:00 PM';
+      head.appendChild(s);
+    }
+    $$('[data-slot="nc-line"]').forEach(function (el) {
+      el.innerHTML = net.netControl ? '<b class="callsign">' + esc(net.netControl) + '</b> this week' : net.open ? 'a volunteer: this week’s slot is open' : 'a member on the rota';
+    });
+  }
+
+  /* ------------------------------------------------------- 4. exercises */
+  function exercises(today) {
+    var nextDone = false;
+    $$('tr[data-event]').forEach(function (tr) {
+      var ev = eventById(tr.getAttribute('data-event')), slot = $('[data-slot="ex-tag"]', tr);
+      if (!ev || !slot) return;
+      var end = ev.end || ev.start;
+      tr.classList.remove('is-next');
+      if (end < today) { tr.hidden = true; return; }
+      if (ev.start <= today) slot.innerHTML = '<br><span class="tag tag--now">Happening now</span>';
+      else if (!nextDone) { nextDone = true; tr.classList.add('is-next'); slot.innerHTML = '<br><span class="tag tag--net">Next</span>'; }
+      else slot.innerHTML = '';
+    });
+  }
+
+  /* ------------------------------------------ 5. Winlink box, training dates */
+  function smallBlock(el, isoDate) {
+    if (!el || !isoDate) return;
+    var d = parse(isoDate);
+    el.innerHTML = '<span class="dow">' + DAY[d.getDay()] + '</span><span class="num">' + d.getDate() + '</span><span class="mon">' + MON[d.getMonth()] + '</span>';
+  }
+  function winlinkAndTraining() {
+    var w = SPO.nextWinlink && SPO.nextWinlink();
+    if (w) {
+      smallBlock($('[data-slot="wl-block"]'), w.date);
+      $$('[data-slot="wl-task"]').forEach(function (t) { t.textContent = w.task; });
+      $$('[data-slot="wl-form"]').forEach(function (f) { f.textContent = w.form; });
+    }
+    ['workshop', 'third-thursday'].forEach(function (key) {
+      var dt = SPO.nextDateFor(key, 0), num = $('[data-cal-day="' + key + '"]');
+      if (dt && num) smallBlock(num.parentNode, dt);
+    });
+  }
+
+  /* ------------------------------------------------ 6. first month order */
+  function firstMonth() {
+    $$('ol[data-sort-dates]').forEach(function (ol) {
+      var items = $$(':scope > li', ol), dated = [], first = [], last = [];
+      items.forEach(function (li) {
+        var k = li.getAttribute('data-key');
+        if (li.getAttribute('data-order') === 'first') first.push(li);
+        else if (!k) last.push(li);
+        else dated.push({ li: li, d: SPO.nextDateFor(k, 0) || '9999' });
+      });
+      dated.sort(function (a, b) { return a.d < b.d ? -1 : a.d > b.d ? 1 : 0; });
+      first.concat(dated.map(function (x) { return x.li; })).concat(last).forEach(function (li) { ol.appendChild(li); });
+    });
+  }
+
+  /* ------------------------------------------------ 7. mobile folds */
+  function folds() {
+    var list = $$('details[data-fold]');
+    if (!list.length || !win.matchMedia) return;
+    var mq = win.matchMedia('(max-width: 640px)');
+    function sync() {
+      list.forEach(function (d) {
+        var s = $('summary', d);
+        d.open = !mq.matches;
+        if (s) { if (mq.matches) s.removeAttribute('tabindex'); else s.setAttribute('tabindex', '-1'); }
+      });
+    }
+    function openFor(id) {
+      var t = id && doc.getElementById(id), d = t && t.closest('details[data-fold]');
+      if (d && !d.open) d.open = true;
+    }
+    sync();
+    if (mq.addEventListener) mq.addEventListener('change', sync); else if (mq.addListener) mq.addListener(sync);
+    doc.addEventListener('click', function (e) { var a = e.target.closest && e.target.closest('a[href^="#"]'); if (a) openFor(a.getAttribute('href').slice(1)); }, true);
+    win.addEventListener('hashchange', function () { openFor(win.location.hash.slice(1)); });
+    openFor(win.location.hash.slice(1));
+  }
+
+  function run() {
+    var today = SPO.now().date;
+    [function () { calendar(today); }, tune, function () { exercises(today); }, winlinkAndTraining, firstMonth, folds].forEach(function (fn) {
+      try { fn(); } catch (e) { if (win.console) console.warn('How it works: kept the fallback', e); }
+    });
+  }
+  if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', run); else run();
+})(window, document);
+</script>
+</body>
+</html>

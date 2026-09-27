@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js'); if (location.hash) document.documentElement.style.scrollBehavior = 'auto'; /* deep links land instantly; site.js restores smooth scrolling */</script>
+<title>Documents & forms | Spokane County ARES-ACS</title>
+<meta name="description" content="Net scripts, applications, task books, forms and guides for Spokane County ARES-ACS members.">
+<meta name="theme-color" content="#1E3557">
+<link rel="icon" href="../assets/img/seal-ares-acs-400.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+  /* members/documents.html only. Shared members layout (same rules in index.html and exercises.html):
+     a white intro band, then "ledger" rows with the heading on the left. Promote to site.css later. */
+  .m-intro { padding-block: clamp(24px, 3.4vw, 44px) clamp(20px, 2.6vw, 32px); }
+  .m-intro h1 { font-size: clamp(2.25rem, 1.6rem + 2.4vw, 3.5rem); }
+  .ledger { padding-bottom: var(--section-y); }
+  .ledger-row { display: grid; grid-template-columns: 15rem minmax(0, 1fr); gap: 14px 48px; padding-block: clamp(28px, 3.4vw, 44px); }
+  .ledger-row:not([hidden]) ~ .ledger-row { border-top: 1px solid var(--line); }   /* a hairline above every row after the first one showing */
+  .ledger-row > h2 { font-size: clamp(1.625rem, 1.3rem + .9vw, 2.125rem); }
+
+  /* The one bold thing on this page: a wide search, with the category chips under it */
+  .lib-search { max-width: 52rem; margin-top: clamp(20px, 2.4vw, 28px); }
+  .lib-search .search-field input { min-height: 60px; font-size: 1.1875rem; }
+  .lib-search .btn { min-height: 60px; padding-inline: 30px; }
+  .lib-chips { margin-top: 16px; }
+  .lib-chips .fchip { font-size: .9375rem; }
+  .result-count { margin-top: 10px; font-size: var(--fs-small); }
+  .result-count:empty { display: none; }
+  .lib-empty { margin-top: clamp(28px, 3.4vw, 44px); }
+  .lib-empty .link-action { background: none; border: 0; padding: 0; cursor: pointer; font: inherit; font-weight: 700; }
+
+  /* Library tables: title (+ a short note), format, source */
+  .lib-table { table-layout: fixed; }
+  .lib-table thead th { background: none; color: var(--ink-2); font-weight: 400; font-size: var(--fs-tiny); padding-block: 9px 7px; }
+  .lib-table thead th:nth-child(2) { width: 13rem; }
+  .lib-table thead th:nth-child(3) { width: 11.5rem; }
+  .lib-table tbody th { font-weight: 400; }
+  .lib-table .doc-title { display: block; font-weight: 700; color: var(--ink); line-height: 1.35; }
+  .lib-table a.doc-title { color: var(--dusk-deep); text-decoration-color: var(--dusk-line); }
+  .lib-table a.doc-title:hover { text-decoration-color: var(--dusk-deep); }
+  .lib-table .doc-desc { display: block; margin-top: 2px; font-size: var(--fs-small); color: var(--ink-2); line-height: 1.4; }
+  .lib-table td { font-size: var(--fs-small); line-height: 1.4; }
+  .lib-table td[data-label="Source"] { color: var(--ink-2); }
+  .lib-table .doc-ver { margin-left: 3px; color: var(--ink-2); }
+  .lib-table .soon { color: var(--ink-2); font-style: italic; }
+  .lib-row:target > *, .lib-row.is-target > * { background: var(--dusk-tint); }
+  .lib-row:target > th, .lib-row.is-target > th { box-shadow: inset 4px 0 0 var(--dusk); }
+
+  @media (max-width: 1100px) {
+    .ledger-row { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .lib-search .search-field input, .lib-search .btn { min-height: 52px; }
+    .lib-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: calc(var(--gutter) * -1); padding: 2px var(--gutter); -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent 100%); mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent 100%); }
+    .lib-chips::-webkit-scrollbar { display: none; }
+    .lib-chips .fchip { flex: none; }
+    /* Rows collapse: the title (and its note), then format and source on one line */
+    .lib-table, .lib-table tbody { display: block; table-layout: auto; }
+    .lib-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .lib-table tr { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 14px; padding: 12px 16px; border-top: 1px solid var(--line); }
+    .lib-table tbody tr:first-child { border-top: 0; }
+    .lib-table th, .lib-table td { display: block; padding: 0; border: 0; }
+    .lib-table tbody th { flex: 1 1 100%; }
+    .lib-table td:empty { display: none; }
+    .lib-row:target > th, .lib-row.is-target > th { box-shadow: none; }
+    .lib-row:target, .lib-row.is-target { background: var(--dusk-tint); box-shadow: inset 4px 0 0 var(--dusk); }
+  }
+</style>
+</head>
+<body data-root="../">
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ICON SPRITE (copy verbatim from _chrome.html) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4.5" height="7" rx="1.5"/><rect x="16.5" y="14" width="4.5" height="7" rx="1.5"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15.6 14.3A5 5 0 0 1 21 19"/></symbol>
+  <symbol id="i-tools" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></symbol>
+  <symbol id="i-door" viewBox="0 0 24 24"><path d="M6 21V4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5V21"/><path d="M3 21h18"/><circle cx="14.5" cy="12.5" r="1" fill="currentColor"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-radio" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="14" rx="2"/><path d="M9.5 7V2.5M10 11h4M10 14h4"/><circle cx="12" cy="17.6" r=".7" fill="currentColor"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-form" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2.8h6V4M8.5 10h7M8.5 14h7M8.5 18h4"/></symbol>
+  <symbol id="i-hospital" viewBox="0 0 24 24"><path d="M4 21V8l8-4 8 4v13M2.5 21h19M12 9v6M9 12h6"/></symbol>
+  <symbol id="i-weather" viewBox="0 0 24 24"><path d="M7 17a4.5 4.5 0 1 1 1-8.9A5.5 5.5 0 0 1 18.5 10 3.5 3.5 0 0 1 18 17"/><path d="M12.5 13l-2 4h3l-2 4"/></symbol>
+  <symbol id="i-antenna" viewBox="0 0 24 24"><path d="M12 10v11M8 21l4-11 4 11"/><circle cx="12" cy="8" r="1.5"/><path d="M8.5 4.5a5 5 0 0 0 0 7M15.5 4.5a5 5 0 0 1 0 7"/></symbol>
+  <symbol id="i-trailer" viewBox="0 0 24 24"><rect x="2.5" y="6" width="15" height="10" rx="1.5"/><path d="M17.5 13h4M10 6V3.5"/><circle cx="7" cy="17.5" r="1.8"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5z"/><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H20"/></symbol>
+  <symbol id="i-kit" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M12 11v5M9.5 13.5h5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></symbol>
+  <symbol id="i-message" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol>
+  <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 12h3l2-5 3 10 3-12 3 12 2-5h4"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></symbol>
+  <!-- Drawn locator for "Where we meet" (not a Google capture). Use: <svg viewBox="0 0 400 250" role="img" aria-label="…"><use href="#map-meet"/></svg> -->
+  <symbol id="map-meet" viewBox="0 0 400 250">
+    <rect width="400" height="250" fill="#E8EEF6"/>
+    <g stroke="#D0DAE7" stroke-width="19" fill="none">
+      <path d="M0 36H400M0 104H400M0 212H400M58 0V250M176 104V250M370 0V250"/>
+    </g>
+    <g stroke="#FFFFFF" stroke-width="15" fill="none">
+      <path d="M0 36H400M0 104H400M0 212H400M58 0V250M176 104V250M370 0V250"/>
+    </g>
+    <rect x="190" y="175" width="164" height="28" rx="3" fill="#FFFFFF" stroke="#B9C7DB" stroke-width="1.5"/>
+    <text x="272" y="193.5" text-anchor="middle" font-family="Atkinson Hyperlegible, Verdana, sans-serif" font-size="11.5" fill="#465163">Spokane County Courthouse</text>
+    <rect x="193" y="121" width="78" height="42" rx="3" fill="#E4EFEA" stroke="#2E5B4F" stroke-width="2"/>
+    <g font-family="Atkinson Hyperlegible, Verdana, sans-serif" font-size="12.5" fill="#465163">
+      <text x="248" y="40.5">W Boone Ave</text>
+      <text x="72" y="108.5" font-weight="700" fill="#1B2433">W Gardner Ave</text>
+      <text x="248" y="216.5">W Mallon Ave</text>
+      <text transform="translate(180.5 204) rotate(-90)" font-weight="700" fill="#1B2433">N Jefferson St</text>
+      <text transform="translate(62.5 196) rotate(-90)">N Adams St</text>
+      <text transform="translate(374.5 196) rotate(-90)">N Monroe St</text>
+    </g>
+    <g font-family="Atkinson Hyperlegible, Verdana, sans-serif">
+      <text x="196" y="60" font-size="13" font-weight="700" fill="#1E3557">Spokane County</text>
+      <text x="196" y="75" font-size="13" font-weight="700" fill="#1E3557">Emergency Management</text>
+      <text x="196" y="90" font-size="12" fill="#465163">1121 W Gardner Ave</text>
+    </g>
+    <path d="M232 94V112" stroke="#2F4E7E" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <g transform="translate(232 141)">
+      <path d="M0 0C-3 -6-11 -12-11 -21A11 11 0 0 1 11 -21C11 -12 3 -6 0 0Z" fill="#2F4E7E"/>
+      <circle cx="0" cy="-21" r="4" fill="#FFFFFF"/>
+    </g>
+    <g transform="translate(26 158)" font-family="Atkinson Hyperlegible, Verdana, sans-serif">
+      <circle r="13" fill="#FFFFFF" stroke="#B9C7DB" stroke-width="1.5"/>
+      <path d="M0 -8L4.5 4 0 1.5-4.5 4Z" fill="#1E3557"/>
+      <text y="28" text-anchor="middle" font-size="11" fill="#465163">N</text>
+    </g>
+  </symbol>
+</svg>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="../index.html" aria-label="Spokane County ARES-ACS, home">
+      <img src="../assets/img/seal-ares-acs-400.png" alt="" width="50" height="50">
+      <span class="brand-text"><span class="brand-county">Spokane County</span><span class="brand-name">ARES-ACS</span></span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <ul class="nav-list">
+        <li><a class="nav-link" href="../index.html">Home</a></li>
+        <li><a class="nav-link" href="../how-it-works.html">How it works</a></li>
+        <li><a class="nav-link" href="../about.html">About ARES &amp; ACS</a></li>
+        <li><a class="nav-link" href="../members/index.html" aria-current="true">For Members</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn--join header-join" href="../index.html#join">Join the team</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <svg class="icon icon-open" aria-hidden="true"><use href="#i-menu"/></svg>
+      <svg class="icon icon-close" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
+  </div>
+</header>
+<nav class="pillbar subnav" aria-label="Members">
+  <div class="wrap">
+    <ul class="subnav-list">
+      <li><a class="pill" href="index.html">This week</a></li>
+      <li><a class="pill" href="exercises.html">Exercises &amp; events</a></li>
+      <li><a class="pill" href="documents.html" aria-current="page">Documents &amp; forms</a></li>
+      <li><a class="pill" href="../about.html#training-path">Task books</a></li>
+      <li><a class="pill pill--ext" href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io, members only)</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="main">
+  <!-- Round 3 library: the library is the page. No lede. Rows are generated from round-3 data.js
+       (one row per record, id = the record's id); the page script filters them in place. -->
+  <div class="page-intro m-intro">
+    <div class="wrap">
+      <h1>Documents &amp; forms</h1>
+      <form class="search-box lib-search" id="search" role="search" action="documents.html" method="get">
+        <label for="lib-q">Search the library</label>
+        <div class="search-field"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><input id="lib-q" name="q" type="search" placeholder="preamble, 213, task book" autocomplete="off"></div>
+        <button class="btn btn--primary" type="submit">Search</button>
+      </form>
+      <!-- Without JS these are links to each category; with JS they become filter buttons (plus All and Most used). -->
+      <div class="fchips lib-chips" role="group" aria-label="Categories" data-lib-chips>
+        <a class="fchip" href="documents.html" data-cat="" hidden>All</a>
+        <a class="fchip" href="#most-used" data-cat="most-used" hidden>Most used</a>
+        <a class="fchip" href="#net-ops" data-cat="net-ops">Net operations</a>
+        <a class="fchip" href="#join" data-cat="join">Join &amp; task books</a>
+        <a class="fchip" href="#forms" data-cat="forms">Forms</a>
+        <a class="fchip" href="#training" data-cat="training">Training</a>
+        <a class="fchip" href="#readiness" data-cat="readiness">Go-kits &amp; readiness</a>
+        <a class="fchip" href="#digital" data-cat="digital">Winlink &amp; digital</a>
+        <a class="fchip" href="#reference" data-cat="reference">Reference</a>
+      </div>
+      <p class="result-count" aria-live="polite" data-lib-count></p>
+    </div>
+  </div>
+
+  <div class="wrap ledger" data-lib>
+    <div class="empty-state lib-empty" data-lib-empty hidden>
+      <p>Nothing matches “<span data-lib-q></span>”.</p>
+      <button type="button" class="link-action" data-lib-clear>Clear search</button>
+    </div>
+    <section class="ledger-row lib-cat" id="net-ops" aria-labelledby="h-net-ops">
+      <h2 id="h-net-ops">Net operations</h2>
+      <div class="table-wrap">
+        <table class="data-table lib-table" aria-labelledby="h-net-ops">
+          <thead><tr><th scope="col">Document</th><th scope="col">Format</th><th scope="col">Source</th></tr></thead>
+          <tbody>
+          <tr class="lib-row" id="net-scripts" data-verify="true"><th scope="row"><a class="doc-title" href="https://ag7qp.com/spokane-county-ares-acs" rel="noopener">Net scripts: weekly, simplex and GMRS<span class="sr-only"> (opens ag7qp.com)</span></a></th><td data-label="Format">DOCX <span class="doc-ver">2026-03-04; GMRS 2025-08-19</span></td><td data-label="Source">ag7qp.com<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="ncs-principles"><th scope="row"><span class="doc-title">Principles of a Net Control Station</span></th><td data-label="Format"></td><td data-label="Source"><span class="soon">Soon</span></td></tr>
+          <tr class="lib-row" id="repeater-etiquette" data-verify="true"><th scope="row"><span class="doc-title">Repeater etiquette on W7GBU</span><span class="doc-desc">How to identify and break in.</span></th><td data-label="Format"></td><td data-label="Source"><span class="soon">Soon</span></td></tr>
+          <tr class="lib-row" id="net-roster"><th scope="row"><a class="doc-title" href="https://spokaneares-acs.groups.io/g/main/files" rel="noopener">Net roster<span class="sr-only"> (opens groups.io, members only)</span></a></th><td data-label="Format"></td><td data-label="Source">groups.io, members<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section class="ledger-row lib-cat" id="join" aria-labelledby="h-join">
+      <h2 id="h-join">Join &amp; task books</h2>
+      <div class="table-wrap">
+        <table class="data-table lib-table" aria-labelledby="h-join">
+          <thead><tr><th scope="col">Document</th><th scope="col">Format</th><th scope="col">Source</th></tr></thead>
+          <tbody>
+          <tr class="lib-row" id="ares-application" data-verify="true"><th scope="row"><a class="doc-title" href="https://ag7qp.com/ares-acs" rel="noopener">Spokane County ARES Membership Application<span class="sr-only"> (opens ag7qp.com)</span></a></th><td data-label="Format">DOCX <span class="doc-ver">2024-11-07</span></td><td data-label="Source">ag7qp.com<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="county-application"><th scope="row"><a class="doc-title" href="https://www.spokanecounty.gov/FormCenter/Emergency-Management-31/Volunteer-Emergency-Worker-Application-276" rel="noopener">Volunteer Emergency Worker Application (for ACS)<span class="sr-only"> (opens Spokane County)</span></a></th><td data-label="Format">Online form</td><td data-label="Source">Spokane County<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="acs-task-book" data-verify="true"><th scope="row"><a class="doc-title" href="https://ag7qp.com/acs-task-book" rel="noopener">ACS Position Task Book<span class="sr-only"> (opens ag7qp.com)</span></a><span class="doc-desc">Print it; keep sign-offs in a binder.</span></th><td data-label="Format">DOCX <span class="doc-ver">2024-08-09</span></td><td data-label="Source">ag7qp.com<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="arrl-ares-task-book"><th scope="row"><a class="doc-title" href="https://www.arrl.org/files/file/ARES%20Taskbook%20July%202024.pdf" rel="noopener">ARRL ARES Position Task Book<span class="sr-only"> (opens ARRL)</span></a></th><td data-label="Format">PDF <span class="doc-ver">July 2024</span></td><td data-label="Source">ARRL<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="arrl-ares-plan" data-verify="true"><th scope="row"><a class="doc-title" href="https://www.arrl.org/ares" rel="noopener">ARRL ARES Plan<span class="sr-only"> (opens ARRL)</span></a></th><td data-label="Format"></td><td data-label="Source">ARRL<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="orientation-guide"><th scope="row"><a class="doc-title" href="https://ag7qp.com/new-members-orientation" rel="noopener">New Member Orientation guide<span class="sr-only"> (opens ag7qp.com)</span></a></th><td data-label="Format"></td><td data-label="Source">ag7qp.com<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section class="ledger-row lib-cat" id="forms" aria-labelledby="h-forms">
+      <h2 id="h-forms">Forms</h2>
+      <div class="table-wrap">
+        <table class="data-table lib-table" aria-labelledby="h-forms">
+          <thead><tr><th scope="col">Document</th><th scope="col">Format</th><th scope="col">Source</th></tr></thead>
+          <tbody>
+          <tr class="lib-row" id="ics-213"><th scope="row"><a class="doc-title" href="https://training.fema.gov/emiweb/is/icsresource/icsforms/" rel="noopener">ICS 213 General Message<span class="sr-only"> (opens FEMA)</span></a><span class="doc-desc"><a href="https://ag7qp.com/ics-213" rel="noopener">How to write one<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens ag7qp.com)</span></a></span></th><td data-label="Format">PDF <span class="doc-ver">v3</span></td><td data-label="Source">FEMA<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="ics-213rr"><th scope="row"><a class="doc-title" href="https://training.fema.gov/emiweb/is/icsresource/icsforms/" rel="noopener">ICS 213RR Resource Request Message<span class="sr-only"> (opens FEMA)</span></a></th><td data-label="Format">PDF <span class="doc-ver">v3</span></td><td data-label="Source">FEMA<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="ics-214"><th scope="row"><a class="doc-title" href="https://training.fema.gov/emiweb/is/icsresource/icsforms/" rel="noopener">ICS 214 Activity Log<span class="sr-only"> (opens FEMA)</span></a></th><td data-label="Format">PDF <span class="doc-ver">v3.1</span></td><td data-label="Source">FEMA<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="ics-309" data-verify="true"><th scope="row"><span class="doc-title">ICS 309 Communications Log</span><span class="doc-desc"><a href="https://www.youtube.com/watch?v=VmVJpoPmQvc" rel="noopener">Generate it in Winlink Express (video)<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens youtube.com)</span></a></span></th><td data-label="Format"></td><td data-label="Source"><span class="soon">Soon</span></td></tr>
+          <tr class="lib-row" id="arrl-radiogram"><th scope="row"><a class="doc-title" href="https://www.arrl.org/files/media/Group/Fillable%20Radiogram%20Form.pdf" rel="noopener">ARRL Radiogram (fillable)<span class="sr-only"> (opens ARRL)</span></a><span class="doc-desc">National Traffic System message form.</span></th><td data-label="Format">PDF</td><td data-label="Source">ARRL<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="wa-ics-213rr" data-verify="true"><th scope="row"><a class="doc-title" href="https://mil.wa.gov/asset/5ba420f505d91" rel="noopener">Washington State ICS-213RR<span class="sr-only"> (opens WA Military Dept.)</span></a><span class="doc-desc">Used in state exercises.</span></th><td data-label="Format">PDF</td><td data-label="Source">WA Military Dept.<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="wa-field-situation-report"><th scope="row"><a class="doc-title" href="https://winlink.org/" rel="noopener">Washington State Field Situation Report<span class="sr-only"> (opens Winlink)</span></a><span class="doc-desc">Winlink Express: Templates › Standard Forms › WA State Forms.</span></th><td data-label="Format">Winlink form</td><td data-label="Source">Winlink<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="wsdot-580-020"><th scope="row"><a class="doc-title" href="https://wsdot.wa.gov/publications/fulltext/forms/580-020.pdf" rel="noopener">WSDOT Form 580-020, Road and Bridge Assessment<span class="sr-only"> (opens WSDOT)</span></a></th><td data-label="Format">PDF</td><td data-label="Source">WSDOT<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="fema-ics-forms"><th scope="row"><a class="doc-title" href="https://training.fema.gov/emiweb/is/icsresource/icsforms/" rel="noopener">All FEMA ICS forms<span class="sr-only"> (opens FEMA)</span></a></th><td data-label="Format"></td><td data-label="Source">FEMA<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section class="ledger-row lib-cat" id="training" aria-labelledby="h-training">
+      <h2 id="h-training">Training</h2>
+      <div class="table-wrap">
+        <table class="data-table lib-table" aria-labelledby="h-training">
+          <thead><tr><th scope="col">Document</th><th scope="col">Format</th><th scope="col">Source</th></tr></thead>
+          <tbody>
+          <tr class="lib-row" id="fema-is-courses"><th scope="row">FEMA courses: <a id="is-100" href="https://training.fema.gov/is/courseoverview.aspx?code=IS-100.c&amp;lang=en" rel="noopener" aria-label="IS-100.c, Introduction to the Incident Command System (opens FEMA)">IS-100.c</a>, <a id="is-200" href="https://training.fema.gov/is/courseoverview.aspx?code=IS-200.c&amp;lang=en" rel="noopener" aria-label="IS-200.c, Basic ICS for Initial Response (opens FEMA)">IS-200.c</a>, <a id="is-700" href="https://training.fema.gov/is/courseoverview.aspx?code=IS-700.b&amp;lang=en" rel="noopener" aria-label="IS-700.b, An Introduction to NIMS (opens FEMA)">IS-700.b</a>, <a id="is-800" href="https://training.fema.gov/is/courseoverview.aspx?code=IS-800.d&amp;lang=en" rel="noopener" aria-label="IS-800.d, National Response Framework, An Introduction (opens FEMA)">IS-800.d</a><span class="doc-desc"><a id="fema-sid" href="https://cdp.dhs.gov/femasid" rel="noopener">Get a FEMA Student ID (SID) first<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens cdp.dhs.gov)</span></a></span></th><td data-label="Format">Online course, free</td><td data-label="Source">FEMA<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="arrl-basic-emcomm"><th scope="row"><a class="doc-title" href="https://learn.arrl.org/courses/67044" rel="noopener">ARRL Basic EmComm course<span class="sr-only"> (opens ARRL)</span></a><span class="doc-desc">Three modules, about 10 to 20 hours.</span></th><td data-label="Format">Online course</td><td data-label="Source">ARRL<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="arrl-intermediate-emcomm"><th scope="row"><a class="doc-title" href="https://learn.arrl.org/courses/68230" rel="noopener">ARRL Intermediate EmComm course<span class="sr-only"> (opens ARRL)</span></a><span class="doc-desc">35-question final; 74% to pass.</span></th><td data-label="Format">Online course</td><td data-label="Source">ARRL<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="hipaa-video" data-verify="true"><th scope="row"><a class="doc-title" href="https://youtu.be/9ryH0P5MCdk" rel="noopener">HIPAA training video (12 minutes)<span class="sr-only"> (opens YouTube)</span></a><span class="doc-desc">If you missed it at orientation.</span></th><td data-label="Format">Video</td><td data-label="Source">YouTube<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="skywarn-training"><th scope="row"><a class="doc-title" href="https://www.weather.gov/otx/Current_Spotter_Training" rel="noopener">SKYWARN spotter training<span class="sr-only"> (opens NWS Spokane)</span></a><span class="doc-desc">In person or online. Encouraged every two years.</span></th><td data-label="Format"></td><td data-label="Source">NWS Spokane<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="ratpac"><th scope="row"><a class="doc-title" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTVywG1s025_zsAaKrn8Lr_DPGT6tGV0SVsV5LEdBA91dFCYk_LP8S3kXhMcD9vXFM3Cg-q468jf6Nd/pubhtml" rel="noopener">RATPAC video presentations<span class="sr-only"> (opens RATPAC)</span></a></th><td data-label="Format"></td><td data-label="Source">RATPAC<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="anderson-powerpoles"><th scope="row"><a class="doc-title" href="https://www.arrl.org/files/file/Public%20Service/TrainingModules/Technical/Anderson%20powerpole.pdf" rel="noopener">A guide to Anderson Powerpoles<span class="sr-only"> (opens ARRL)</span></a><span class="doc-desc">Make your own DC power connections.</span></th><td data-label="Format">PDF</td><td data-label="Source">ARRL<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section class="ledger-row lib-cat" id="readiness" aria-labelledby="h-readiness">
+      <h2 id="h-readiness">Go-kits &amp; readiness</h2>
+      <div class="table-wrap">
+        <table class="data-table lib-table" aria-labelledby="h-readiness">
+          <thead><tr><th scope="col">Document</th><th scope="col">Format</th><th scope="col">Source</th></tr></thead>
+          <tbody>
+          <tr class="lib-row" id="go-kits"><th scope="row"><a class="doc-title" href="https://ag7qp.com/go-kits" rel="noopener">Go-kit guide<span class="sr-only"> (opens ag7qp.com)</span></a></th><td data-label="Format"></td><td data-label="Source">ag7qp.com<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="alert-spokane"><th scope="row"><a class="doc-title" href="https://www.spokanecounty.gov/3007/Alert-Spokane" rel="noopener">Register with ALERT Spokane<span class="sr-only"> (opens Spokane County)</span></a><span class="doc-desc">Now on Regroup; task book says “Code Red.”</span></th><td data-label="Format"></td><td data-label="Source">Spokane County<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="programming-radios"><th scope="row"><a class="doc-title" href="https://ag7qp.com/programming-radios" rel="noopener">Radio programming cheat sheets<span class="sr-only"> (opens ag7qp.com)</span></a></th><td data-label="Format"></td><td data-label="Source">ag7qp.com<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section class="ledger-row lib-cat" id="digital" aria-labelledby="h-digital">
+      <h2 id="h-digital">Winlink &amp; digital</h2>
+      <div class="table-wrap">
+        <table class="data-table lib-table" aria-labelledby="h-digital">
+          <thead><tr><th scope="col">Document</th><th scope="col">Format</th><th scope="col">Source</th></tr></thead>
+          <tbody>
+          <tr class="lib-row" id="winlink-intro"><th scope="row"><a class="doc-title" href="https://ag7qp.com/winlink" rel="noopener">Winlink: getting started<span class="sr-only"> (opens ag7qp.com)</span></a><span class="doc-desc">Account setup, then Telnet, then radio.</span></th><td data-label="Format"></td><td data-label="Source">ag7qp.com<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="winlink-express"><th scope="row"><a class="doc-title" href="https://winlink.org/WinlinkExpress" rel="noopener">Winlink Express (software)<span class="sr-only"> (opens Winlink)</span></a><span class="doc-desc">Service code: PUBLIC EMCOMM.</span></th><td data-label="Format">Software</td><td data-label="Source">Winlink<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="winlink-mapping" data-verify="true"><th scope="row"><a class="doc-title" href="https://winlink.org/sites/default/files/RMSE_FORMS/winlink_mapping_enabled_forms.pdf" rel="noopener">Winlink map-enabled forms (guide)<span class="sr-only"> (opens Winlink)</span></a></th><td data-label="Format">PDF</td><td data-label="Source">Winlink<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="i-am-safe" data-verify="true"><th scope="row"><a class="doc-title" href="https://ag7qp.com/ares-acs" rel="noopener">“I Am Safe” messaging: procedures<span class="sr-only"> (opens ag7qp.com)</span></a><span class="doc-desc">Welfare messages from a disaster area.</span></th><td data-label="Format">DOCX <span class="doc-ver">July 2023</span></td><td data-label="Source">ag7qp.com<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section class="ledger-row lib-cat" id="reference" aria-labelledby="h-reference">
+      <h2 id="h-reference">Reference</h2>
+      <div class="table-wrap">
+        <table class="data-table lib-table" aria-labelledby="h-reference">
+          <thead><tr><th scope="col">Document</th><th scope="col">Format</th><th scope="col">Source</th></tr></thead>
+          <tbody>
+          <tr class="lib-row" id="sop-1b"><th scope="row"><a class="doc-title" href="https://ag7qp.com/ares-acs" rel="noopener">Eastern Washington Section Standing Order 1b<span class="sr-only"> (opens ag7qp.com)</span></a><span class="doc-desc">What to do when you have no instructions.</span></th><td data-label="Format">PDF <span class="doc-ver">2026-01-16</span></td><td data-label="Source">ag7qp.com<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="field-guides"><th scope="row"><a class="doc-title" href="https://www.cisa.gov/safecom/field-operations-guides" rel="noopener">AUXFOG and NIFOG field operations guides<span class="sr-only"> (opens CISA)</span></a></th><td data-label="Format">PDF or app</td><td data-label="Source">CISA<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="acsfog"><th scope="row"><a class="doc-title" href="https://spokaneares-acs.groups.io/g/main/files" rel="noopener">Spokane County ACS Field Operating Guide (ACSFOG)<span class="sr-only"> (opens groups.io, members only)</span></a></th><td data-label="Format"></td><td data-label="Source">groups.io, members<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          <tr class="lib-row" id="public-service-tips"><th scope="row"><a class="doc-title" href="https://ag7qp.com/preparing-for-public-service-communications" rel="noopener">Preparing for public-service communications<span class="sr-only"> (opens ag7qp.com)</span></a><span class="doc-desc">Nine tips for your first event shift.</span></th><td data-label="Format"></td><td data-label="Source">ag7qp.com<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section class="ledger-row" id="not-here" aria-labelledby="h-not-here">
+      <h2 id="h-not-here">Not posted here</h2>
+      <p class="measure">County, hospital, SHARES and 800 MHz details are never posted here. Older workshop presentations are being recovered.</p>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-main">
+      <p class="footer-brand"><img src="../assets/img/seal-ares-acs-400.png" alt="" width="44" height="44">Spokane County ARES-ACS</p>
+      <nav aria-label="Footer">
+        <ul class="footer-links">
+          <li><a href="../how-it-works.html">How it works</a></li>
+          <li><a href="../about.html">About ARES &amp; ACS</a></li>
+          <li><a href="../members/index.html">For Members</a></li>
+          <li><a href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io)</span></a></li>
+          <li><a href="../about.html#contact">Contact</a></li>
+          <li><span class="soon">Privacy (coming)</span></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-fine">
+      <p class="safety">Volunteers, not first responders. In an emergency, call 911.</p>
+      <p>© Spokane County ARES-ACS. Mockup — content to be verified before launch</p>
+    </div>
+  </div>
+</footer>
+<script src="../assets/data.js"></script>
+<script src="../assets/site.js"></script>
+<script>
+/* members/documents.html: search and category filter for the static library (ES5 like site.js).
+   Reads ?q= and ?cat=, #category (net-ops, join, forms, training, readiness, digital, reference,
+   most-used) and #document-id (the row is shown and highlighted; site.js lands on it).
+   Without JS the page is the whole library and the chips are plain links to each category. */
+document.addEventListener('DOMContentLoaded', function () {
+  var S = window.SPOKARES, SPO = window.SPO;
+  var lib = document.querySelector('[data-lib]'), chipsBox = document.querySelector('[data-lib-chips]');
+  var input = document.getElementById('lib-q');
+  if (!S || !S.fn || !SPO || !lib || !chipsBox || !input) return;
+  var F = S.fn, each = function (list, fn) { Array.prototype.forEach.call(list, fn); };
+  var countEl = document.querySelector('[data-lib-count]'), empty = lib.querySelector('[data-lib-empty]'), emptyQ = lib.querySelector('[data-lib-q]');
+  var rows = lib.querySelectorAll('.lib-row'), secs = lib.querySelectorAll('.lib-cat');
+  var cats = { 'most-used': true };
+  S.documentCategories.forEach(function (c) { cats[c.id] = true; });
+  var state = { q: SPO.param('q') || '', cat: SPO.param('cat') || '' };
+  if (!cats[state.cat]) state.cat = '';
+
+  /* Chips: links become filter buttons */
+  var chips = [];
+  each(chipsBox.querySelectorAll('.fchip'), function (a) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'fchip'; b.setAttribute('data-cat', a.getAttribute('data-cat')); b.textContent = a.textContent;
+    a.parentNode.replaceChild(b, a); chips.push(b);
+  });
+  chipsBox.setAttribute('aria-label', 'Show');
+  chipsBox.addEventListener('click', function (e) {
+    var b = e.target.closest('.fchip'); if (!b) return;
+    state.cat = b.getAttribute('data-cat'); clearTarget(); run(true);
+  });
+
+  function clearTarget() { each(lib.querySelectorAll('.lib-row.is-target'), function (r) { r.classList.remove('is-target'); }); }
+  function syncUrl() {
+    var qs = [];
+    if (state.q) qs.push('q=' + encodeURIComponent(state.q));
+    if (state.cat) qs.push('cat=' + state.cat);
+    try { history.replaceState(null, '', location.pathname + (qs.length ? '?' + qs.join('&') : '')); } catch (e) { /* file:// in some browsers */ }
+  }
+  function run(user) {
+    var hits = F.documents({ q: state.q, category: state.cat && state.cat !== 'most-used' ? state.cat : null, mostUsed: state.cat === 'most-used' });
+    var ids = {};
+    hits.forEach(function (d) { ids[d.id] = true; });
+    each(rows, function (r) { r.hidden = !ids[r.id]; });
+    each(secs, function (s) { s.hidden = !s.querySelector('.lib-row:not([hidden])'); });
+    chips.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-cat') === state.cat ? 'true' : 'false'); });
+    if (countEl) countEl.textContent = hits.length === 1 ? '1 document' : hits.length + ' documents';
+    if (empty) { empty.hidden = !!hits.length; if (emptyQ) emptyQ.textContent = state.q; }
+    if (user) syncUrl();
+  }
+  /* A hash picks a category, or shows the whole library around one document */
+  function fromHash() {
+    var id = decodeURIComponent((location.hash || '').slice(1)), el = id && document.getElementById(id);
+    if (cats[id]) { state.cat = id; return null; }
+    var row = el && (el.classList.contains('lib-row') ? el : el.closest('.lib-row'));
+    if (row) { state.cat = ''; state.q = ''; clearTarget(); row.classList.add('is-target'); }
+    return row;
+  }
+
+  fromHash();
+  input.value = state.q;
+  run(false);
+
+  var t;
+  input.addEventListener('input', function () { clearTimeout(t); t = setTimeout(function () { state.q = input.value.trim(); clearTarget(); run(true); }, 150); });
+  input.form.addEventListener('submit', function (e) { e.preventDefault(); clearTimeout(t); state.q = input.value.trim(); clearTarget(); run(true); });
+  var clear = lib.querySelector('[data-lib-clear]');
+  if (clear) clear.addEventListener('click', function () { state.q = ''; state.cat = ''; input.value = ''; run(true); input.focus(); });
+  window.addEventListener('hashchange', function () {
+    var row = fromHash(); input.value = state.q; run(false);
+    var target = row || document.getElementById(state.cat);
+    if (target) target.scrollIntoView({ block: 'start' });
+  });
+});
+</script>
+</body>
+</html>

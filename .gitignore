@@ -31,3 +31,13 @@ __pycache__/
 # Original government PDFs (public, but contain individuals contact details we cannot redact in-PDF); redacted .txt extractions are committed
 research/sources/government/*.pdf
 research/sources/government/*.doc
+
+# Design/WordPress screenshots: keep only the chosen design's reference shots
+# and the final WordPress shots (used by EDITING-GUIDE.md and wordpress/review/)
+design/round2/**/shots/
+design/round2/_gallery.png
+design/round3/**/shots/
+!design/round3/option-b-lines-down/shots/
+design/round3/_gallery.png
+wordpress/shots/*
+!wordpress/shots/final/

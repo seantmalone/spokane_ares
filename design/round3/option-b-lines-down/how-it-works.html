@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How it works | Spokane County ARES-ACS</title>
+<meta name="description" content="How the Tuesday net runs, how the county activates volunteers, how a message moves, and how members train.">
+<link rel="icon" href="assets/img/seal-ares-acs-400.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;family=Schibsted+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<script>document.documentElement.classList.add('js'); if (location.hash) document.documentElement.style.scrollBehavior = 'auto'; /* deep links land instantly; site.js hashLanding() restores smooth scrolling */</script>
+<style>
+/* How it works (round 3): page-scoped layout only. Tokens, chrome, buttons,
+   the diagram scene and the focus ring all come from site.css untouched.
+   Night opener (the story, one screen) -> dawn -> five daylight chapters on a
+   4/8 rail: headings left, content right. */
+
+/* ---- Opener: the story in one screen. Text and hops left, the diagram right. */
+.how-open { padding: 56px 0 64px; }
+.how-open__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 0 64px; align-items: start; }
+.how-open__text, .how-open__side { min-width: 0; }
+.how-open h1 { color: #fff; }
+.how-open__line { margin-top: 16px; font: 400 var(--fs-narr)/1.35 var(--serif); color: #fff; }
+.how-open__line span { display: block; }
+.how-open__note { margin-top: 10px; font-size: 15px; line-height: 1.5; color: var(--mist-2); text-wrap: balance; }
+.how-open abbr { text-decoration-color: rgba(197, 206, 223, .45); }
+.hops { list-style: none; margin: 30px 0 0; padding: 0; display: grid; gap: 16px; }
+.hops li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 16px; align-items: start; }
+.hops .hop { margin-top: 1px; }
+.hops p { max-width: 46ch; font: 400 1.125rem/1.5 var(--serif); color: var(--mist); }
+.hops b { font-weight: 600; color: #fff; }
+.how-open__fig { margin: 0; }
+.how-open__after { margin-top: 28px; font: italic 400 clamp(1.5rem, 1.1rem + 1vw, 2.125rem)/1.25 var(--serif); color: #fff; }
+/* No hospital hop (hospital net details are not public): the message ends at the
+   EOC. Hop 4 (the EOC acting on it) is drawn in this instance, not in the scene. */
+.msgpath--to-eoc { --mp-relay: 0; --mp-hosp: 0; --mp-m4: 0; }
+.how-dawn { height: 72px; }
+
+/* ---- Daylight chapters on the rail. */
+.how-ch { padding: 0 0 96px; }
+.how-ch--first { padding-top: 48px; }
+.how-ch .redline { margin-bottom: 56px; }
+.how-row { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 20px 64px; align-items: start; }
+.how-row + .how-row { margin-top: 64px; }
+.how-row__head > * + * { margin-top: 12px; }
+.how-row__head p { max-width: 34ch; color: var(--ink-2); }
+.how-row__body { min-width: 0; max-width: 760px; }
+.how-row .how-row__body > * + * { margin-top: 24px; }
+.how-lede { font: 400 var(--fs-lede)/1.45 var(--serif); color: var(--ink); max-width: 44ch; }
+.how-lede b { font-weight: 600; }
+.how-lede .textlink { white-space: nowrap; }
+.how-label { font: 600 16px/1.4 var(--sans); color: var(--ink); }
+.how-row .how-row__body .how-label + * { margin-top: 14px; }
+
+/* Settings box: the net's one home. White, peach top rule (as .netcard). */
+.netbox { background: #fff; border: 1px solid var(--rule); border-top: 4px solid var(--peach); border-radius: var(--r-card); padding: 22px 26px 12px; }
+.netbox__when { font: 600 24px/1.2 var(--sans); letter-spacing: -.01em; color: var(--ink); font-variant-numeric: lining-nums; }
+.netbox__rows { margin: 14px 0 0; }
+.netbox__rows > div { display: grid; grid-template-columns: 7.5em minmax(0, 1fr) auto; gap: 4px 16px; align-items: center; padding: 10px 0; border-top: 1px solid var(--rule); }
+.netbox__rows dt { font-size: 15px; font-weight: 600; color: var(--ink-2); }
+.netbox__rows dd { margin: 0; font: 600 17px/1.4 var(--sans); color: var(--ink); font-variant-numeric: lining-nums; }
+.netbox__copy { min-height: 40px; padding: 6px 14px; }
+
+/* A true sequence in daylight: small amber hop markers on a quiet rule.
+   (The red line stays with the message itself.) */
+.seq { list-style: none; margin: 0; padding: 0; }
+.seq > li { position: relative; display: grid; grid-template-columns: 28px minmax(0, 1fr); column-gap: 16px; padding-bottom: 14px; }
+.seq > li:last-child { padding-bottom: 0; }
+.seq > li:not(:last-child)::before { content: ""; position: absolute; left: 13px; top: 32px; bottom: 4px; width: 2px; background: var(--rule); }
+.seq .hop { margin-top: 1px; }
+.seq p { padding-top: 2px; line-height: 1.5; color: var(--ink); }
+.seq b { font-weight: 600; }
+.seq__cue { margin-top: 10px; padding: 10px 14px; border-radius: 0 8px 8px 0; background: var(--amber-wash); box-shadow: inset 3px 0 0 var(--amber); font-size: 15.5px; }
+
+/* One-line items with a hairline between them. */
+.lines { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.lines li { padding: 12px 0; border-bottom: 1px solid var(--rule); line-height: 1.5; }
+.lines b { font-weight: 600; }
+
+/* The real event, set apart from the scenario. */
+.how-real { padding-left: 16px; border-left: 3px solid var(--red); max-width: 60ch; color: var(--ink); }
+
+/* Readiness levels: explained only, neutral, numbered escalation. */
+.levels .level { padding-bottom: 4px; }
+.level__means { font: 600 15px/1.45 var(--sans); color: var(--ink); margin-bottom: 6px; }
+.level__do { font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+
+/* Training: four items, two by two. */
+.how-row__body .deflist--2 dd { font-size: 16px; }
+
+/* Roles table and the close. */
+.how-roles th[scope="row"] { width: 30%; }
+.how-roles td:last-child { width: 32%; }
+.how-close { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-top: 48px !important; }
+.how-close span { font: 500 var(--fs-h3)/1.15 var(--serif); color: var(--ink); }
+
+@media (max-width: 1100px) {
+  .how-row { grid-template-columns: minmax(0, 1fr); }
+  .how-row__head p { max-width: 60ch; }
+}
+@media (max-width: 900px) {
+  /* The opener stacks: heading, the picture, then the hops that explain it. */
+  .how-open { padding: 40px 0 48px; }
+  .how-open__grid { display: flex; flex-direction: column; }
+  .how-open__text, .how-open__side { display: contents; }
+  .how-open__grid h1 { order: 1; }
+  .how-open__line { order: 2; }
+  .how-open__note { order: 3; }
+  .how-open__fig { order: 4; margin-top: 24px; }
+  .hops { order: 5; margin-top: 28px; }
+  .how-open__after { order: 6; }
+}
+@media (max-width: 640px) {
+  .how-ch { padding-bottom: 72px; }
+  .how-ch--first { padding-top: 36px; }
+  .how-ch .redline { margin-bottom: 44px; }
+  .how-row + .how-row { margin-top: 52px; }
+  /* Phones: the story must stay within one screen before #nets (390x844).
+     The hop list tells the same four steps in words, and the scenario note
+     stays above it, so the diagram (labels ~10px at this width) is dropped here. */
+  .how-open { padding: 32px 0 32px; }
+  .how-open__fig { display: none; }
+  .hops { gap: 12px; }
+  .hops p { font-size: 1.0625rem; }
+  .how-open__after { margin-top: 22px; font-size: 1.375rem; }
+  .how-dawn { height: 40px; }
+  /* Readiness levels two by two, so four short cards read as one set. */
+  .how-row .levels { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 20px; }
+  .how-row .levels .level { padding: 16px 0 12px; border-top: 0; }
+  .how-row .levels .level:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .netbox { padding: 18px 18px 8px; }
+  .netbox__when { font-size: 21px; }
+  .netbox__rows > div { grid-template-columns: minmax(0, 1fr) auto; }
+  .netbox__rows dt { grid-column: 1 / -1; }
+  .netbox__rows dd { font-size: 16px; }
+  .how-roles th[scope="row"], .how-roles td:last-child { width: auto; }
+}
+</style>
+</head>
+<body class="page-how">
+<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="mp-hill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A3A5C"/><stop offset="1" stop-color="#16223D"/></linearGradient>
+    <linearGradient id="mp-dawnglow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3C29B" stop-opacity="0"/><stop offset="1" stop-color="#F3C29B" stop-opacity=".5"/></linearGradient>
+    <pattern id="mp-rain" width="60" height="48" patternUnits="userSpaceOnUse"><path d="M9 3 L5 11 M31 12 L27 20 M51 4 L47 12 M19 26 L15 34 M43 30 L39 38 M57 38 L53 46 M7 40 L3 48" stroke="#A9B8D6" stroke-opacity=".6" stroke-width="1.1" stroke-linecap="round"/></pattern>
+  </defs>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2"/><path d="M15.5 8.5V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7.5a2 2 0 0 0 2 2h2.5"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4M12 12.5v5.5M9.25 15.25h5.5"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></symbol>
+  <symbol id="i-radio" viewBox="0 0 24 24"><rect x="7" y="7.5" width="10" height="13.5" rx="2"/><path d="M10 7.5V3M9.5 11.5h5M9.5 14.5h5M9.5 17.5h2"/></symbol>
+  <symbol id="i-script" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 15h6M9 18h4"/></symbol>
+  <symbol id="i-form" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M4 8h16M9.5 8v13M12.5 12h4.5M12.5 16h4.5"/></symbol>
+  <symbol id="i-log" viewBox="0 0 24 24"><rect x="4.5" y="4" width="15" height="16.5" rx="1.5"/><path d="M4.5 9h15M4.5 14h15M9.5 4v16.5"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H19v14H7.5A2.5 2.5 0 0 0 5 19.5z"/><path d="M5 19.5A2.5 2.5 0 0 0 7.5 22H19v-5"/></symbol>
+  <symbol id="i-rota" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></symbol>
+  <symbol id="i-winlink" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3.5 7.5l8.5 6 8.5-6"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5.5 21V4M5.5 4.5h11l-2.2 4 2.2 4h-11"/></symbol>
+  <symbol id="i-files" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 20h14"/></symbol>
+  <symbol id="i-antenna" viewBox="0 0 24 24"><path d="M12 21V10M8.5 21L12 10l3.5 11M7 6.8a7 7 0 0 1 10 0M9.3 9a3.6 3.6 0 0 1 5.4 0"/></symbol>
+  <symbol id="i-kit" viewBox="0 0 24 24"><rect x="3.5" y="7" width="17" height="13" rx="2"/><path d="M9 7V5h6v2M3.5 12.5h17M12 11v3"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="9" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M16 6.5a2.8 2.8 0 0 1 0 5.2M17.8 19a5.5 5.5 0 0 0-2.3-4.4"/></symbol>
+  <symbol id="i-training" viewBox="0 0 24 24"><path d="M2.5 9L12 5l9.5 4L12 13z"/><path d="M6.5 11v4.5c1.5 1.4 3.5 2 5.5 2s4-.6 5.5-2V11M21.5 9v5"/></symbol>
+
+  <!-- The message path. 560x400. Every state-dependent part reads a custom
+       property that .msgpath[data-state] sets (site.css section 23). -->
+  <symbol id="msgpath-scene" viewBox="0 0 560 400">
+    <rect class="mp-t" x="0" y="150" width="560" height="180" fill="url(#mp-dawnglow)" style="opacity:var(--mp-dawn,0)"/>
+    <rect class="mp-t" x="0" y="0" width="560" height="330" fill="url(#mp-rain)" style="opacity:var(--mp-storm,0)"/>
+    <!-- mountain and repeater -->
+    <path d="M132 330 C 200 318 238 150 280 122 C 322 150 360 318 428 330 Z" fill="url(#mp-hill)" stroke="#C5CEDF" stroke-opacity=".35" stroke-width="1"/>
+    <g fill="none" stroke="#DCE3EF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M270 124 L280 64 L290 124 M272.4 110 H287.6 M275 94 H285 M277.2 80 H282.8 M272.4 110 L285 94 M275 94 L287.6 110 M275 94 L282.8 80 M277.2 80 L285 94"/>
+      <path d="M280 64 V46"/>
+    </g>
+    <!-- ground -->
+    <rect x="0" y="330" width="560" height="70" fill="#040916" fill-opacity=".38"/>
+    <path d="M0 330.5 H560" stroke="#C5CEDF" stroke-opacity=".45" stroke-width="1"/>
+    <!-- power poles and wires -->
+    <g stroke="#AEBBD4" stroke-width="1.6" stroke-linecap="round" fill="none">
+      <path d="M112 330 V282 M102 288 H122"/><path d="M244 330 V282 M234 288 H254"/><path d="M336 330 V282 M326 288 H346"/>
+    </g>
+    <path class="mp-t" d="M0 293 Q56 303 112 288 Q178 303 244 288 Q290 303 336 288 L352 293" fill="none" stroke="#AEBBD4" stroke-width="1.4" style="opacity:var(--mp-power,0)"/>
+    <path class="mp-t" d="M0 293 Q56 303 112 288 Q146 304 162 326 M244 288 Q232 302 222 322 M244 288 Q290 303 336 288 L352 293" fill="none" stroke="#56627C" stroke-width="1.4" style="opacity:calc(1 - var(--mp-power,0))"/>
+    <!-- houses (lose power) -->
+    <g fill="#16233F" stroke="#8190AE" stroke-width="1.3">
+      <path d="M124 330 V304 L140 290 L156 304 V330 Z"/><path d="M164 330 V308 L178 296 L192 308 V330 Z"/><path d="M294 330 V306 L309 294 L324 306 V330 Z"/>
+    </g>
+    <g fill="#2A3857"><rect x="131" y="311" width="7" height="7"/><rect x="143" y="311" width="7" height="7"/><rect x="174" y="314" width="8" height="7"/><rect x="304" y="313" width="10" height="7"/></g>
+    <g class="mp-t" fill="#FFC857" style="opacity:var(--mp-power,0)"><rect x="131" y="311" width="7" height="7"/><rect x="143" y="311" width="7" height="7"/><rect x="174" y="314" width="8" height="7"/><rect x="304" y="313" width="10" height="7"/></g>
+    <!-- cell tower -->
+    <g fill="none" stroke="#AEBBD4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M206 330 L214 238 L222 330 M208.4 306 H219.6 M210.2 282 H217.8 M211.8 260 H216.2 M208.4 306 L217.8 282 M210.2 282 L219.6 306 M210.2 282 L216.2 260 M211.8 260 L217.8 282"/>
+    </g>
+    <g class="mp-t" fill="none" stroke="#AEBBD4" stroke-width="1.6" stroke-linecap="round" style="opacity:var(--mp-cell,0)">
+      <path d="M204 250 Q197 240 204 230"/><path d="M196 256 Q185 240 196 224"/><path d="M224 250 Q231 240 224 230"/><path d="M232 256 Q243 240 232 224"/>
+    </g>
+    <text class="mp-t mp-sub" x="214" y="222" text-anchor="middle" style="opacity:calc(1 - var(--mp-cell,0));font-size:calc(var(--mp-fs,17px) * .8)">Cell service out</text>
+    <!-- shelter -->
+    <rect x="20" y="282" width="84" height="48" fill="#1B2745" stroke="#8190AE" stroke-width="1.4"/>
+    <rect x="28" y="292" width="16" height="9" fill="#FFC857" fill-opacity=".8"/><rect x="80" y="292" width="16" height="9" fill="#FFC857" fill-opacity=".8"/>
+    <rect x="54" y="306" width="16" height="24" fill="#0A1328"/>
+    <path d="M96 282 V252" stroke="#DCE3EF" stroke-width="1.6" stroke-linecap="round"/>
+    <rect class="mp-t" x="17" y="279" width="90" height="54" fill="none" stroke="#FFC857" stroke-width="2" style="opacity:var(--mp-shelter,0)"/>
+    <!-- county EOC -->
+    <rect x="352" y="268" width="80" height="62" fill="#1B2745" stroke="#8190AE" stroke-width="1.4"/>
+    <g fill="#FFC857" fill-opacity=".8"><rect x="361" y="279" width="22" height="9"/><rect x="399" y="279" width="22" height="9"/><rect x="361" y="296" width="22" height="9"/></g>
+    <rect x="401" y="310" width="16" height="20" fill="#0A1328"/>
+    <path d="M420 268 V234" stroke="#DCE3EF" stroke-width="1.6" stroke-linecap="round"/>
+    <rect class="mp-t" x="349" y="265" width="86" height="68" fill="none" stroke="#FFC857" stroke-width="2" style="opacity:var(--mp-eoc,0)"/>
+    <!-- hospital -->
+    <rect x="452" y="252" width="88" height="78" fill="#1B2745" stroke="#8190AE" stroke-width="1.4"/>
+    <path d="M489 266 h14 v10 h10 v14 h-10 v10 h-14 v-10 h-10 v-14 h10 z" fill="#DCE3EF"/>
+    <rect x="489" y="310" width="14" height="20" fill="#0A1328"/>
+    <path d="M528 252 V224" stroke="#DCE3EF" stroke-width="1.6" stroke-linecap="round"/>
+    <rect class="mp-t" x="449" y="249" width="94" height="84" fill="none" stroke="#FFC857" stroke-width="2" style="opacity:var(--mp-hosp,0)"/>
+    <!-- the message: red arcs (with a soft under-stroke) -->
+    <g class="mp-t" fill="none" stroke-linecap="round" style="opacity:var(--mp-send,0)">
+      <path d="M96 252 Q150 112 280 46 Q392 96 420 234" stroke="#D0202A" stroke-opacity=".28" stroke-width="10"/>
+      <path d="M96 252 Q150 112 280 46 Q392 96 420 234" stroke="#E0303A" stroke-width="3"/>
+    </g>
+    <g class="mp-t" fill="none" stroke-linecap="round" style="opacity:var(--mp-relay,0)">
+      <path d="M420 234 Q474 168 528 224" stroke="#D0202A" stroke-opacity=".28" stroke-width="10"/>
+      <path d="M420 234 Q474 168 528 224" stroke="#E0303A" stroke-width="3"/>
+    </g>
+    <g fill="#FFC857">
+      <circle class="mp-t" cx="96" cy="252" r="4" style="opacity:var(--mp-m1,0)"/>
+      <circle class="mp-t" cx="280" cy="46" r="4" style="opacity:var(--mp-m2,0)"/>
+      <circle class="mp-t" cx="420" cy="234" r="4" style="opacity:var(--mp-send,0)"/>
+      <circle class="mp-t" cx="528" cy="224" r="4" style="opacity:var(--mp-relay,0)"/>
+    </g>
+    <!-- amber hop markers (28px) -->
+    <g class="mp-t" style="opacity:var(--mp-m1,0)"><circle cx="70" cy="238" r="14" fill="#FFC857"/><text class="mp-num" x="70" y="243.5" text-anchor="middle">1</text></g>
+    <g class="mp-t" style="opacity:var(--mp-m2,0)"><circle cx="308" cy="34" r="14" fill="#FFC857"/><text class="mp-num" x="308" y="39.5" text-anchor="middle">2</text></g>
+    <g class="mp-t" style="opacity:var(--mp-m3,0)"><circle cx="394" cy="222" r="14" fill="#FFC857"/><text class="mp-num" x="394" y="227.5" text-anchor="middle">3</text></g>
+    <g class="mp-t" style="opacity:var(--mp-m4,0)"><circle cx="542" cy="194" r="14" fill="#FFC857"/><text class="mp-num" x="542" y="199.5" text-anchor="middle">4</text></g>
+    <!-- place labels -->
+    <text class="mp-label" x="62" y="358" text-anchor="middle" style="font-size:var(--mp-fs,17px)">Shelter</text>
+    <text class="mp-label" x="387" y="358" text-anchor="middle" style="font-size:var(--mp-fs,17px)">County EOC</text>
+    <text class="mp-label" x="502" y="358" text-anchor="middle" style="font-size:var(--mp-fs,17px)">Hospital</text>
+    <text class="mp-label" x="262" y="24" text-anchor="end" style="font-size:var(--mp-fs,17px)">W7GBU repeater</text>
+    <text class="mp-sub" x="262" y="46" text-anchor="end" style="font-size:calc(var(--mp-fs,17px) * .88)">147.300 MHz</text>
+    <!-- "A scenario", drawn in the picture so any crop still says so -->
+    <g style="transform-box:fill-box;transform-origin:100% 0;transform:scale(var(--mp-pill,1))">
+      <rect x="434" y="12" width="114" height="30" rx="15" fill="#0E1A33" fill-opacity=".9" stroke="#FFC857" stroke-opacity=".75"/>
+      <circle cx="451" cy="27" r="4" fill="#FFC857"/>
+      <text class="mp-pilltext" x="461" y="32">A scenario</text>
+    </g>
+  </symbol>
+</svg>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="site-header">
+  <div class="masthead">
+    <div class="wrap masthead__bar">
+      <a class="brand" href="index.html"><img src="assets/img/seal-ares-acs-400.png" alt="" width="46" height="46"><span class="brand__name"><span>Spokane County</span> <strong>ARES-ACS</strong></span></a>
+      <nav class="nav" aria-label="Primary">
+        <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="primary-nav"><svg class="icon i-open" aria-hidden="true"><use href="#i-menu"/></svg><svg class="icon i-close" aria-hidden="true"><use href="#i-close"/></svg>Menu</button>
+        <ul class="nav__list" id="primary-nav">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="how-it-works.html" aria-current="page">How it works</a></li>
+          <li><a href="about.html">About ARES &amp; ACS</a></li>
+          <li><a href="members/index.html">For Members</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn--red site-header__join" href="index.html#join">Join the team</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- Opener: the story, told once and in one screen. It replaces the lede.
+       The numbered hops ARE the figure's legend; the picture says "A scenario". -->
+  <section class="how-open bg-storm" id="follow-a-message" aria-labelledby="page-title">
+    <div class="wrap how-open__grid">
+      <div class="how-open__text">
+        <h1 id="page-title">How it works</h1>
+        <p class="how-open__line"><span>It’s 2 AM.</span> The power’s out, and so is cell service.</p>
+        <p class="how-open__note" data-verify="true">A scenario, not a real event. It shows how the system is meant to work.</p>
+        <ol class="hops" data-verify="true" aria-label="One message, hop by hop">
+          <li><span class="hop" aria-hidden="true">1</span><p><b>The phones go quiet.</b> Ice brings the lines down overnight. At a warming shelter, a resident’s home oxygen concentrator has no power.</p></li>
+          <li><span class="hop" aria-hidden="true">2</span><p><b>A volunteer picks up the radio.</b> The shelter’s <abbr title="Auxiliary Communications" data-verify="true">ACS</abbr> operator writes an <abbr title="Incident Command System">ICS</abbr>-213 and reads it, word for word, to net control on W7GBU.</p></li>
+          <li><span class="hop" aria-hidden="true">3</span><p><b>The radio room copies it.</b> Another volunteer copies the message, logs it on an ICS-309 and hands it to the county’s Emergency Operations Center.</p></li>
+          <li><span class="hop" aria-hidden="true">4</span><p><b>The <abbr title="Emergency Operations Center">EOC</abbr> acts on it.</b> The request moves through the agency’s own channels. By morning it’s handled, and every hop is on paper.</p></li>
+        </ol>
+      </div>
+      <div class="how-open__side">
+        <figure class="msgpath-panel how-open__fig" data-verify="true">
+          <svg class="msgpath msgpath--to-eoc" data-state="relay" viewBox="0 0 560 400" role="img" aria-labelledby="mp-t mp-d">
+            <title id="mp-t">A scenario: one message, four hops</title>
+            <desc id="mp-d">Power and cell service are down. A red line carries the message from a shelter (1) to net control on the W7GBU repeater (2), then to the county radio room (3) and the EOC (4).</desc>
+            <use href="#msgpath-scene"/>
+            <g><circle cx="378" cy="317" r="14" fill="#FFC857"/><text class="mp-num" x="378" y="322.5" text-anchor="middle">4</text></g>
+          </svg>
+        </figure>
+        <p class="how-open__after">Radio still works. Because people practice.</p>
+      </div>
+    </div>
+  </section>
+  <div class="dawn-sky how-dawn" aria-hidden="true"></div>
+
+  <!-- 1. The weekly net: the settings box is the net's one home. -->
+  <section class="how-ch how-ch--first bg-dawn" id="nets" aria-labelledby="nets-title">
+    <div class="wrap">
+      <div class="how-row">
+        <div class="how-row__head">
+          <h2 id="nets-title">The weekly net</h2>
+          <p>A net is an on-air meeting. Ours is a directed net: net control calls each group in turn, so everyone gets heard.</p>
+        </div>
+        <div class="how-row__body">
+          <div class="netbox" id="weekly-net">
+            <p class="netbox__when">Every Tuesday, 8:00 PM</p>
+            <dl class="netbox__rows">
+              <div>
+                <dt>W7GBU</dt>
+                <dd>147.300 MHz, +600 kHz, 100 Hz tone</dd>
+                <dd><button class="btn btn--ghost btn--sm netbox__copy" type="button" data-copy data-copy-text="W7GBU 147.300 MHz, +600 kHz offset, 100 Hz tone"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy<span class="vh"> W7GBU settings</span></button></dd>
+              </div>
+              <div data-verify="true">
+                <dt>Alternate</dt>
+                <dd>146.880 MHz, −600 kHz, 123 Hz tone</dd>
+                <dd><button class="btn btn--ghost btn--sm netbox__copy" type="button" data-copy data-copy-text="Alternate repeater 146.880 MHz, -600 kHz offset, 123 Hz tone"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy<span class="vh"> alternate settings</span></button></dd>
+              </div>
+            </dl>
+          </div>
+          <div>
+            <p class="how-label" id="order-title">What happens, in order</p>
+            <ol class="seq" aria-labelledby="order-title">
+              <li><span class="hop" aria-hidden="true">1</span><p>Net control opens the net; emergency or priority traffic may break in at any time.</p></li>
+              <li><span class="hop" aria-hidden="true">2</span><p>Officials check in.</p></li>
+              <li><span class="hop" aria-hidden="true">3</span><p>Members check in.</p></li>
+              <li><span class="hop" aria-hidden="true">4</span><div><p>Visitors check in.</p><p class="seq__cue"><b>Visiting?</b> Wait for the call for visitors. Give your call sign slowly and phonetically, then your name and location. Not licensed? Just listen.</p></div></li>
+              <li><span class="hop" aria-hidden="true">5</span><p>Simplex, no-tone and cross-band stations, then relays.</p></li>
+              <li><span class="hop" aria-hidden="true">6</span><p>Traffic and late check-ins, then net control closes the net.</p></li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <div class="how-row" id="other-nets">
+        <div class="how-row__head"><h3>Other nets</h3></div>
+        <div class="how-row__body">
+          <ul class="lines">
+            <li data-verify="true"><b>Winlink nights:</b> 2nd and 4th Tuesdays; net control gives a <a href="members/exercises.html#winlink-assignments">Winlink assignment</a> during the net.</li>
+            <li data-verify="true"><b>Fifth Tuesdays:</b> the net starts on simplex, then moves to W7GBU.</li>
+            <li data-verify="true"><b>ACS GMRS net:</b> 3rd Tuesdays, 7:30 PM, for county volunteers with GMRS licenses.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. When the county calls -->
+  <section class="how-ch bg-day" id="activation" aria-labelledby="activation-title">
+    <div class="wrap">
+      <div class="redline" role="presentation"></div>
+      <div class="how-row">
+        <div class="how-row__head">
+          <h2 id="activation-title">When the county calls</h2>
+        </div>
+        <div class="how-row__body">
+          <p class="how-lede" id="who-calls-us">The county activates ACS members; <abbr title="Amateur Radio Emergency Service">ARES</abbr> members serve events and the National Weather Service without a call-out. <a class="textlink" href="about.html#ares-acs">ARES and ACS</a></p>
+          <p class="how-real" id="real-world" data-verify="true">It has happened for real: in the Gray and Oregon Road fires of August 2023, the group provided a mobile network unit for the incident command post and the Disaster Assistance Center.</p>
+          <ol class="seq" aria-label="An activation, step by step">
+            <li><span class="hop" aria-hidden="true">1</span><p><b>Request.</b> The county needs radio support.</p></li>
+            <li><span class="hop" aria-hidden="true">2</span><p data-verify="true"><b>Mission number.</b> The county gets a state mission number, which ties the activation to Washington’s <a href="about.html#legal-basis">emergency-worker protections</a>.</p></li>
+            <li><span class="hop" aria-hidden="true">3</span><p data-verify="true"><b>Activation message.</b> It goes to members registered for notices.</p></li>
+            <li><span class="hop" aria-hidden="true">4</span><p><b>Check in.</b> Available members check in with net control on W7GBU.</p></li>
+            <li><span class="hop" aria-hidden="true">5</span><p><b>Assignment.</b> Go to your assignment or a staging area.</p></li>
+            <li><span class="hop" aria-hidden="true">6</span><p><b>Release.</b> Served agencies and the emergency coordinator release members.</p></li>
+            <li><span class="hop" aria-hidden="true">7</span><p><b>Review.</b> Once every station is secured and home, leaders hold an action review within 72 hours.</p></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="how-row" id="alert-levels">
+        <div class="how-row__head">
+          <h3>Readiness levels</h3>
+          <p data-verify="true">Four levels tell members what to do. This site never shows a current level.</p>
+        </div>
+        <div class="how-row__body">
+          <ol class="levels" data-verify="true" aria-label="Readiness levels, from normal to deployed">
+            <li class="level">
+              <div class="level__head"><span class="hop" aria-hidden="true">1</span><p class="level__name">Inactive<small>Green</small></p></div>
+              <p class="level__means">Normal conditions</p>
+              <p class="level__do">Normal operations. Check and recharge batteries monthly.</p>
+            </li>
+            <li class="level">
+              <div class="level__head"><span class="hop" aria-hidden="true">2</span><p class="level__name">Alert<small>Yellow</small></p></div>
+              <p class="level__means">Something might happen</p>
+              <p class="level__do">Check radios, go-kits and supplies. Watch National Weather Service statements.</p>
+            </li>
+            <li class="level">
+              <div class="level__head"><span class="hop" aria-hidden="true">3</span><p class="level__name">Stand by<small>Orange</small></p></div>
+              <p class="level__means">Something has happened</p>
+              <p class="level__do">Load your go-kit. Monitor <abbr title="National Oceanic and Atmospheric Administration">NOAA</abbr> Weather Radio WXL86 (162.400 MHz) and W7GBU.</p>
+            </li>
+            <li class="level">
+              <div class="level__head"><span class="hop" aria-hidden="true">4</span><p class="level__name">Deploy<small>Red</small></p></div>
+              <p class="level__means">Full activation</p>
+              <p class="level__do">Follow the activation steps above.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="how-row" id="standing-order-1b">
+        <div class="how-row__head"><h3>When no one has called yet</h3></div>
+        <div class="how-row__body">
+          <p>If communications fail and there are no instructions, the Eastern Washington Section’s Standing Order 1b applies. Safety comes first: no one is asked to leave home or travel. Then send a Washington State Field Situation Report by Winlink.</p>
+          <p><a class="textlink ext" href="https://ag7qp.com/ares-acs" rel="noopener">Read Standing Order 1b<span class="vh"> (opens ag7qp.com)</span></a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. How a message moves (B: the "Follow one message" story is the opener). -->
+  <section class="how-ch bg-day" id="message-handling" aria-labelledby="messages-title">
+    <div class="wrap">
+      <div class="redline" role="presentation"></div>
+      <div class="how-row">
+        <div class="how-row__head">
+          <h2 id="messages-title">How a message moves</h2>
+        </div>
+        <div class="how-row__body">
+          <p class="how-lede"><b>If W7GBU is down,</b> messages move by the alternate repeater, simplex (radio to radio), HF radio or Winlink.</p>
+        </div>
+      </div>
+
+      <div class="how-row" id="ics-213">
+        <div class="how-row__head"><h3>Forms and logs</h3></div>
+        <div class="how-row__body">
+          <p>The <a href="members/documents.html#ics-213">ICS-213</a> is the Incident Command System’s standard message form. It travels by voice, on paper or inside Winlink. Keep it short: To, From, Subject, Date, Time, the message and who approved it. The reply goes on the same form.</p>
+          <p><b>Precedence:</b> Emergency, then Priority, Welfare and Routine.</p>
+          <ul class="lines" id="logs">
+            <li><b><a href="members/documents.html#ics-309">ICS-309</a> communications log:</b> every message sent or received. Winlink Express can build it.</li>
+            <li><b><a href="members/documents.html#ics-214">ICS-214</a> activity log:</b> what you did and when.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="how-row" id="winlink">
+        <div class="how-row__head"><h3>Winlink</h3></div>
+        <div class="how-row__body">
+          <p>Winlink is email by radio, with forms and attachments. It works with or without the internet. State and USGS forms are built in; reports can be plotted on a map. The group runs its own gateway, W7GBU-10.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Training and exercises: the rhythm, no dates (dates live on members/exercises.html). -->
+  <section class="how-ch bg-day" id="exercises" aria-labelledby="exercises-title">
+    <div class="wrap">
+      <div class="redline" role="presentation"></div>
+      <div class="how-row">
+        <div class="how-row__head">
+          <h2 id="exercises-title">Training and exercises</h2>
+        </div>
+        <div class="how-row__body">
+          <dl class="deflist deflist--2">
+            <div><dt>Every month</dt><dd><a href="index.html#visit">A workshop and a training meeting</a>.</dd></div>
+            <div><dt>October</dt><dd>The Simulated Emergency Test, the Great ShakeOut and the <span data-verify="true">State COMMEX</span>.</dd></div>
+            <div><dt>With partners</dt><dd>Joint exercises with other agencies, and EOC-to-EOC exercises across the county.</dd></div>
+            <div><dt>On the air</dt><dd>ARRL Field Day, Winter Field Day and SKYWARN Recognition Day.</dd></div>
+          </dl>
+          <p>Dates: <a class="textlink" href="members/exercises.html">Exercises &amp; events</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Roles members take, then the page's one filled button. -->
+  <section class="how-ch bg-day" id="roles" aria-labelledby="roles-title">
+    <div class="wrap">
+      <div class="redline" role="presentation"></div>
+      <div class="how-row">
+        <div class="how-row__head">
+          <h2 id="roles-title">Roles members take</h2>
+        </div>
+        <div class="how-row__body">
+          <table class="table table--stack how-roles">
+            <caption class="vh">Roles members take, and who each is open to</caption>
+            <thead><tr><th scope="col">Role</th><th scope="col">What you do</th><th scope="col">Open to</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Net control</th><td data-label="What you do">Run the net in turn; the Net Manager coaches first-timers.</td><td data-label="Open to">All members</td></tr>
+              <tr><th scope="row">Field or shelter operator</th><td data-label="What you do">Pass messages from a shelter, staging area or event post.</td><td data-label="Open to">ACS for shelters; all members for events</td></tr>
+              <tr><th scope="row">Radio room operator</th><td data-label="What you do">Staff the county radio room during an activation.</td><td data-label="Open to">ACS</td></tr>
+              <tr><th scope="row">Hospital team</th><td data-label="What you do">Keep backup hospital communications ready.</td><td data-label="Open to">ACS, with HIPAA training</td></tr>
+              <tr><th scope="row"><a href="members/exercises.html#public-service">Public-event operator</a></th><td data-label="What you do">Work a race course or parade route.</td><td data-label="Open to">All members</td></tr>
+              <tr><th scope="row">SKYWARN spotter</th><td data-label="What you do">Report severe weather to the National Weather Service.</td><td data-label="Open to">Anyone with <a href="members/documents.html#skywarn-training"><abbr title="National Weather Service">NWS</abbr> spotter training</a>; no license needed</td></tr>
+              <tr><th scope="row">Winlink operator</th><td data-label="What you do">Send forms and reports by radio email.</td><td data-label="Open to">All members</td></tr>
+              <tr><th scope="row">Mobile units and logistics</th><td data-label="What you do">Set up the trailer and mobile units; keep equipment ready.</td><td data-label="Open to">ACS Senior Radio Operators</td></tr>
+            </tbody>
+          </table>
+          <p class="how-close"><span>Ready?</span> <a class="btn btn--red btn--lg" href="index.html#join">Join the team</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer__bar">
+      <a class="footer__seal" href="index.html"><img src="assets/img/seal-ares-acs-400.png" alt="Spokane County ARES-ACS home" width="44" height="44" loading="lazy"></a>
+      <nav aria-label="Footer"><ul class="footer__links">
+        <li><a href="how-it-works.html">How it works</a></li>
+        <li><a href="about.html">About ARES &amp; ACS</a></li>
+        <li><a href="members/index.html">For Members</a></li>
+        <li><a class="ext" href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io<span class="vh"> (opens groups.io)</span></a></li>
+        <li><a href="about.html#contact">Contact</a></li>
+        <li>Privacy (coming)</li>
+      </ul></nav>
+    </div>
+    <div class="footer__bottom">
+      <p class="footer__emergency" data-verify="true">Volunteers, not first responders. In an emergency, call 911.</p>
+      <p class="footer__mock">© Spokane County ARES-ACS. Mockup — content to be verified before launch</p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

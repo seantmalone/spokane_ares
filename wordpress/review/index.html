@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Option B on WordPress</title>
+<meta name="description" content="Review of the WordPress build of Option B, Carry the Message, for spokares.org: the approach, what changed to fit WordPress, the content model and admin workflows, mockup versus WordPress for all six pages, reviewer scores and open issues.">
+<style>
+:root{color-scheme:light dark;--bg:#f5f5f3;--surface:#fff;--surface-2:#efefec;--ink:#18191c;--muted:#5b5e66;--line:#deded9;
+--accent:#2f55b5;--accent-rgb:47 85 181;--ok:#1d6b35;--ok-bg:#e7f3ea;--warn:#8a5a00;--warn-bg:#fbf1dc;--bad:#a3262a;--bad-bg:#fbe9e9;
+--shadow:0 1px 2px rgb(0 0 0/.06),0 8px 24px rgb(0 0 0/.06);--radius:10px;--callout:#eef2fb}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111214;--surface:#1a1b1e;--surface-2:#222327;--ink:#ebebe8;--muted:#a3a6ad;--line:#2e3035;
+--accent:#8eaaf3;--accent-rgb:142 170 243;--ok:#8fd6a2;--ok-bg:#16261b;--warn:#f0c46a;--warn-bg:#2a2212;--bad:#f19a9c;--bad-bg:#2c1718;
+--shadow:0 1px 2px rgb(0 0 0/.4),0 8px 24px rgb(0 0 0/.35);--callout:#1c2233}}
+:root[data-theme="dark"]{--bg:#111214;--surface:#1a1b1e;--surface-2:#222327;--ink:#ebebe8;--muted:#a3a6ad;--line:#2e3035;
+--accent:#8eaaf3;--accent-rgb:142 170 243;--ok:#8fd6a2;--ok-bg:#16261b;--warn:#f0c46a;--warn-bg:#2a2212;--bad:#f19a9c;--bad-bg:#2c1718;
+--shadow:0 1px 2px rgb(0 0 0/.4),0 8px 24px rgb(0 0 0/.35);--callout:#1c2233}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:68px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,.scroller:focus-visible,button:focus-visible,summary:focus-visible,.table-wrap:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+code{font:.86em ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--surface-2);padding:.05em .35em;border-radius:4px;overflow-wrap:anywhere}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+@media (max-width:600px){.wrap{padding:0 16px}}
+.skip{position:absolute;left:-9999px;top:8px;z-index:30;background:var(--surface);color:var(--ink);padding:8px 12px;border-radius:8px;border:1px solid var(--line)}
+.skip:focus{left:16px}
+.topbar{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:20px;height:54px}
+.topbar .name{font-weight:650;font-size:15px;margin-right:auto;white-space:nowrap}
+.topbar nav{display:flex;gap:16px;font-size:14px;overflow-x:auto;scrollbar-width:none}
+.topbar nav::-webkit-scrollbar{display:none}
+.topbar nav a{color:var(--muted);text-decoration:none;white-space:nowrap}
+.topbar nav a:hover{color:var(--ink)}
+@media (max-width:900px){.topbar .name{display:none}}
+.intro{padding:48px 0 4px}
+.eyebrow{margin:0 0 10px;font-size:13px;font-weight:600;color:var(--muted)}
+h1{font-size:clamp(30px,4vw,44px);line-height:1.1;letter-spacing:-.02em;margin:0 0 16px;font-weight:720;max-width:22ch}
+.lede{font-size:18px;color:var(--muted);max-width:72ch;margin:0 0 20px}
+.lede strong{color:var(--ink)}
+.callout{background:var(--callout);border-left:4px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;padding:14px 18px;margin:0 0 8px;max-width:90ch;font-size:15.5px}
+.callout p{margin:0}
+.callout p+p{margin-top:8px}
+h2{font-size:26px;letter-spacing:-.015em;margin:64px 0 6px}
+.s-intro{color:var(--muted);margin:0 0 18px;max-width:82ch;font-size:15px}
+h3{font-size:19px;letter-spacing:-.01em;margin:36px 0 8px}
+h4{font-size:15px;margin:0 0 8px}
+.muted{color:var(--muted)}
+.small{font-size:13.5px}
+.stats{list-style:none;padding:0;margin:26px 0 8px;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.stats li{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px}
+.stats b{display:block;font-size:26px;font-weight:720;letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.stats span{font-size:13px;color:var(--muted)}
+@media (max-width:1000px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:520px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.docs{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 0}
+.btn{display:inline-block;background:var(--accent);color:var(--surface);font-weight:650;text-decoration:none;border-radius:8px;padding:8px 14px;font-size:14.5px}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid rgb(var(--accent-rgb)/.5)}
+.btn:hover{filter:brightness(1.08)}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:900px){.cards{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px}
+.card p{margin:0 0 8px;font-size:14.5px}
+.card ul{margin:0;padding-left:18px;font-size:14px}
+.card li{margin:0 0 4px}
+.card .path{font:12.5px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);margin:0 0 8px}
+.flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin:22px 0 4px;padding:0;counter-reset:f}
+.flow li{list-style:none;position:relative;background:var(--surface);border:1px solid var(--line);padding:14px 16px 14px 16px;font-size:14px}
+.flow li:first-child{border-radius:var(--radius) 0 0 var(--radius)}
+.flow li:last-child{border-radius:0 var(--radius) var(--radius) 0}
+.flow li+li{border-left:0}
+.flow li b{display:block;font-size:15px;margin-bottom:2px}
+.flow li::before{counter-increment:f;content:counter(f);display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:rgb(var(--accent-rgb)/.14);color:var(--accent);font-size:12.5px;font-weight:700;margin-bottom:6px}
+@media (max-width:800px){.flow{grid-template-columns:minmax(0,1fr)}.flow li{border-radius:0!important}.flow li+li{border-left:1px solid var(--line);border-top:0}.flow li:first-child{border-radius:var(--radius) var(--radius) 0 0!important}.flow li:last-child{border-radius:0 0 var(--radius) var(--radius)!important}}
+.table-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+table{border-collapse:collapse}
+.t{width:100%;font-size:14px;min-width:720px}
+.t th,.t td{padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+.t thead th{font-size:12.5px;font-weight:600;color:var(--muted);background:var(--surface-2);line-height:1.3;vertical-align:bottom}
+.t tbody tr:last-child>*{border-bottom:0}
+.t tbody th{font-weight:600}
+.t tr.grp th{background:var(--surface-2);font-size:13px;color:var(--ink);padding-top:10px}
+.t .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.t caption{caption-side:bottom;text-align:left;font-size:13px;color:var(--muted);padding:10px 14px 12px}
+.tag{display:inline-block;font-size:11.5px;font-weight:650;border-radius:999px;padding:1px 8px;white-space:nowrap;border:1px solid transparent}
+.tag.ok{color:var(--ok);background:var(--ok-bg)}
+.tag.warn{color:var(--warn);background:var(--warn-bg)}
+.tag.bad{color:var(--bad);background:var(--bad-bg)}
+.tag.info{color:var(--accent);background:rgb(var(--accent-rgb)/.12)}
+.tag.neutral{color:var(--muted);background:var(--surface-2);border-color:var(--line)}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
+@media (max-width:900px){.cols{grid-template-columns:minmax(0,1fr)}}
+.jobs{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.jobs li{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 16px}
+.jobs .jn{font-weight:650}
+.jobs .jt{font-size:13px;color:var(--muted);text-align:right;white-space:nowrap}
+.jobs .js{grid-column:1/-1;font-size:14px;color:var(--muted)}
+.jobs .js b{color:var(--ink);font-weight:600}
+/* page comparisons */
+.page{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:22px;margin-top:22px}
+.page-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;margin-bottom:14px}
+.page-head h3{margin:0;font-size:22px}
+.page-head .plinks{font-size:14px;display:flex;gap:14px;flex-wrap:wrap}
+.hts{font-size:13px;color:var(--muted);margin-left:auto;font-variant-numeric:tabular-nums}
+.pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.mrow{display:grid;grid-template-columns:260px 260px minmax(0,1fr);gap:16px;margin-top:18px;align-items:start}
+@media (max-width:980px){.mrow{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.mrow .notes{grid-column:1/-1}}
+@media (max-width:640px){.pair{grid-template-columns:minmax(0,1fr)}}
+.frame{margin:0;min-width:0}
+.frame figcaption{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--muted);margin-bottom:6px}
+.frame figcaption b{color:var(--ink);font-weight:650}
+.scroller{display:block;height:540px;overflow-y:auto;overflow-x:hidden;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);overscroll-behavior:contain}
+.mrow .scroller{height:520px}
+.scroller img{display:block;width:100%;height:auto}
+.notes h4{margin-top:2px}
+.notes ul{margin:0;padding-left:18px;font-size:14px}
+.notes li{margin:0 0 6px}
+.syncbar{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted);margin:0 0 4px}
+/* admin gallery */
+.wf{margin-top:28px}
+.wf h3{margin:0 0 4px}
+.wf .s-intro{margin-bottom:12px}
+.gal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.gal.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:900px){.gal,.gal.two{grid-template-columns:minmax(0,1fr)}}
+.shot{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:10px;box-shadow:var(--shadow);min-width:0}
+.shot .scroller{height:auto;aspect-ratio:1440/900}
+.shot.phone img{width:62%;margin:0 auto}
+.shot figcaption{font-size:13px;color:var(--muted);margin-top:8px}
+.shot figcaption b{color:var(--ink)}
+/* reviews */
+.rev{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:1000px){.rev{grid-template-columns:minmax(0,1fr)}}
+.rev .card{display:flex;flex-direction:column;gap:8px}
+.score{display:flex;align-items:baseline;gap:10px}
+.score b{font-size:40px;font-weight:760;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.score span{color:var(--muted);font-size:14px}
+.rev h3{margin:0;font-size:18px}
+.rev .lens{font-size:13.5px;color:var(--muted);margin:0}
+.rev h4{margin:8px 0 4px;font-size:13.5px;text-transform:none}
+.bar{height:6px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.evidence{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+@media (max-width:760px){.evidence{grid-template-columns:minmax(0,1fr)}}
+.issues{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:900px){.issues{grid-template-columns:minmax(0,1fr)}}
+.issues ul{margin:0;padding-left:18px;font-size:14.5px}
+.issues li{margin:0 0 7px}
+footer{margin:72px 0 40px;padding-top:18px;border-top:1px solid var(--line);font-size:13.5px;color:var(--muted)}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar">
+  <div class="wrap">
+    <span class="name">spokares.org · Option B on WordPress</span>
+    <nav aria-label="Sections">
+      <a href="#approach">Approach</a>
+      <a href="#fit">Theme fit</a>
+      <a href="#content">Content model</a>
+      <a href="#pages">Pages</a>
+      <a href="#admin">Admin</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#open">Open issues</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+
+<section class="intro">
+  <p class="eyebrow">Spokane County ARES-ACS · WordPress build · 27 September 2026</p>
+  <h1>Option B, “Carry the Message”, as a WordPress site</h1>
+  <p class="lede">The owner chose Option B and asked for it as a WordPress theme, with an easy admin interface for the lists that change. This build is a block theme for the look, a small site plugin for the data and the admin forms, and a must-use plugin for security. <strong>The public pages match the mockup closely; the changing facts are kept in plain wp-admin forms, and the page layout is locked.</strong></p>
+  <div class="callout">
+    <p><b>Where it stands.</b> Built and tested on a local WordPress 7.1.2 site (PHP 8.4) with the round-3 content, “today” pinned to Sat, Sep 26, 2026. Three reviewers scored it before a fixer round: fidelity 9, editing 6, code and security 7. The fixer closed all 9 must-fix items. Nobody has re-scored it since, and the launch gate (the main editor doing the five jobs unaided) hasn’t run.</p>
+  </div>
+  <ul class="stats" aria-label="Key numbers">
+    <li><b>6</b><span>pages, same URLs as the mockup</span></li>
+    <li><b>7</b><span>server-rendered blocks print every list</span></li>
+    <li><b>5</b><span>editing jobs, four of them plain forms</span></li>
+    <li><b>3 of 4</b><span>plugin slots used (slot 4 empty)</span></li>
+    <li><b>50/50</b><span>dev checks pass (<code>checks.sh</code>)</span></li>
+    <li><b>9 · 6 · 7</b><span>fidelity · editing · code scores, before fixes</span></li>
+  </ul>
+  <div class="docs">
+    <a class="btn" href="../PLAN.md">PLAN.md</a>
+    <a class="btn ghost" href="../EDITING-GUIDE.md">EDITING-GUIDE.md</a>
+    <a class="btn ghost" href="../README.md">README.md</a>
+    <a class="btn ghost" href="../../design/round3/option-b-lines-down/index.html">Option B mockup</a>
+  </div>
+</section>
+
+<section id="approach" aria-labelledby="h-approach">
+  <h2 id="h-approach">The approach in brief</h2>
+  <p class="s-intro">Three pieces, so the data survives a theme change and deactivating the site plugin can’t switch security off. No build step: plain PHP, JSON, CSS and a few small scripts.</p>
+  <div class="cards">
+    <div class="card">
+      <h3 style="margin:0 0 4px;font-size:17px">Theme: the look</h3>
+      <p class="path">theme/spokares/</p>
+      <ul>
+        <li>B’s <code>site.css</code> ported nearly verbatim; B’s colours, type scale and spacing in <code>theme.json</code>; fonts self-hosted</li>
+        <li>Header, footer and members sub-nav as template parts editors can’t reach</li>
+        <li>Page patterns for Home, How it works and About; templates for the three members pages</li>
+        <li>Two fixed design blocks: the seal lockup and the message-path figure</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="margin:0 0 4px;font-size:17px">Site plugin: data and editing</h3>
+      <p class="path">plugins/spokares-core/</p>
+      <ul>
+        <li>Events and Documents post types; rota, net, meeting and tile settings</li>
+        <li>wp-admin forms, a “Site tasks” dashboard and the ARES Editor role</li>
+        <li>Seven dynamic blocks (<code>events</code>, <code>net</code>, <code>meetings</code>, <code>docs</code>, <code>toc</code>, <code>last-reviewed</code>, <code>asof</code>) that print B’s markup</li>
+        <li>The layout lock: the server refuses page saves that change anything but words</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="margin:0 0 4px;font-size:17px">Must-use plugin: the floor</h3>
+      <p class="path">mu-plugins/spokares-hardening/</p>
+      <ul>
+        <li>XML-RPC off, user enumeration blocked, feeds and author pages 404</li>
+        <li>Security headers, upload allowlists, DOCX/XLSX inspection, EXIF stripping</li>
+        <li>Two-factor enforcement, authenticated SMTP, the old-URL 301/410 map</li>
+        <li>Can’t be switched off from wp-admin (the old site was hacked)</li>
+      </ul>
+    </div>
+  </div>
+  <ol class="flow" aria-label="How a list reaches the page">
+    <li><b>Editor fills a form</b>Net rota, Events, Regular meetings, Documents or Hub tiles. Guard rails check call signs, phone numbers and never-publish words.</li>
+    <li><b>WordPress stores it</b>As an event or document post, or a small settings option. One home per fact.</li>
+    <li><b>A block renders it</b>On every page load, for today in Pacific time. Past events drop off; “Happening now” is worked out.</li>
+    <li><b>Visitors see B’s markup</b>Complete without JavaScript. Signed-in editors also see “Edit this list in …” links.</li>
+  </ol>
+</section>
+
+<section id="fit" aria-labelledby="h-fit">
+  <h2 id="h-fit">What works well as a theme, and what changed</h2>
+  <p class="s-intro">Every Option B component was mapped to a WordPress part (PLAN §2.1). Most carry over directly. The changes below were made because WordPress blocks can’t hold some of B’s markup, or because the round-3 review asked for them. PLAN §2.2 and §2.3 have the full list.</p>
+  <div class="table-wrap" tabindex="0" role="region" aria-label="Theme fit table">
+  <table class="t">
+    <thead><tr><th scope="col" style="width:22%">Option B part</th><th scope="col" style="width:38%">In WordPress</th><th scope="col">Effect on the feel</th></tr></thead>
+    <tbody>
+      <tr class="grp"><th colspan="3" scope="colgroup"><span class="tag ok">Works well</span> Better than the static mockup</th></tr>
+      <tr><th scope="row">Header, footer, members sub-nav</th><td>Template parts: one copy for every page, out of editors’ reach</td><td>Identical, including the sticky header and current-page marker</td></tr>
+      <tr><th scope="row">Weekly facts (net time, repeater, net weeks, meeting place)</th><td>One Net details form feeds Home’s “From home” card, How it works and the hub bar</td><td>Same words; they can no longer drift apart</td></tr>
+      <tr><th scope="row">Events, rota, meetings, document library</th><td>Server-rendered blocks reading the forms’ data</td><td>Same markup and classes; past events leave by themselves</td></tr>
+      <tr><th scope="row">About’s table of contents</th><td>Built from the page’s headings</td><td>Same sticky rail and phone menu; can’t go stale</td></tr>
+      <tr><th scope="row">Tables that stack on phones</th><td>Column labels added by the server</td><td>Same stacked cards, no labels to type</td></tr>
+      <tr><th scope="row">Members hub, Documents, Exercises</th><td>Theme templates with no page text; everything comes from forms</td><td>Same structure; nothing on them to break</td></tr>
+      <tr class="grp"><th colspan="3" scope="colgroup"><span class="tag warn">Works, with care</span></th></tr>
+      <tr><th scope="row">Page text on Home, How it works, About</th><td>Block editor with a server-side layout lock and most controls hidden</td><td>Editors change words, links, list items and the hero photo only</td></tr>
+      <tr><th scope="row">Menu collapse at 1020px</th><td>Core Navigation restyled as B’s drop-down</td><td>Same panel; the toggle reads “Close” when open. Re-test each major WordPress release</td></tr>
+      <tr><th scope="row">Page layout after setup</th><td>Home, How it works and About live in the database once created</td><td>Layout changes are an administrator job, mirrored in the pattern files</td></tr>
+      <tr class="grp"><th colspan="3" scope="colgroup"><span class="tag info">Changed for WordPress</span></th></tr>
+      <tr><th scope="row">Message-path figure</th><td>A fixed block showing one state; the “147.300 MHz” label removed</td><td>Same drawing; the frequency now appears once</td></tr>
+      <tr><th scope="row">Numbered amber markers</th><td>CSS counters instead of typed numbers</td><td>Identical; numbers follow reordering</td></tr>
+      <tr><th scope="row">Rich list items and definition lists</th><td>Core lists with a bold lead-in; groups of paragraphs</td><td>Same look; a new item needs its first words in bold</td></tr>
+      <tr><th scope="row">Non-breaking “8:00 PM”, “147.300 MHz”</th><td>No-break spaces added at render</td><td>Same line breaks (readiness cells left out so “Stand by” wraps like B)</td></tr>
+      <tr><th scope="row">Verify marks</th><td>Admin-only “Needs checking” flags</td><td>Nothing visible to readers</td></tr>
+      <tr><th scope="row">Scrollytelling, tap-to-define, hub live search, in-browser calendar</th><td>Dropped (unused in round 3 or replaced by server rendering)</td><td>Only the hub’s live search preview was visible; the library still filters instantly</td></tr>
+      <tr><th scope="row">Library filter <code>?cat=</code>; <code>.search</code> class</th><td><code>?section=</code> and <code>.searchbar</code> (WordPress reserves the others)</td><td>No visible change</td></tr>
+      <tr><th scope="row">Event text</th><td>Plain-text fields, so no <code>&lt;abbr&gt;</code> underlines; public-service rows sort dated first</td><td>Small: EC, SEC, NTS lose their dotted underline in event cards</td></tr>
+      <tr><th scope="row">Cancelled or moved meetings</th><td>Shown on Home and the hub</td><td>New words, only when a date changes</td></tr>
+      <tr class="grp"><th colspan="3" scope="colgroup"><span class="tag ok">Round-3 review fixes built in</span></th></tr>
+      <tr><td colspan="3">About prints “Last reviewed” only once a date is set · a “Radio settings” jump link on How it works · “Open” rota slots and the Simplex note are links · the Tuesday net first on phones · hub tiles swap ICS-309 for ICS-214 and skip “Soon” items · brighter small text on dark backgrounds · a grey hairline under members headings (red kept on library groups) · members pages no longer push the footer off the screen</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="content" aria-labelledby="h-content">
+  <h2 id="h-content">Content model and admin workflow</h2>
+  <p class="s-intro">Editors fill in forms; blocks print pages. Nothing that changes weekly is typed into page text. Events and documents are custom post types with plain forms (never the block editor); the rest are small settings stored as WordPress options.</p>
+  <div class="table-wrap" tabindex="0" role="region" aria-label="Content model">
+  <table class="t">
+    <thead><tr><th scope="col">What</th><th scope="col">Stored as</th><th scope="col">Edited on (wp-admin)</th><th scope="col">Shows on</th><th scope="col">Who</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Net control per Tuesday, Winlink assignments</th><td>Option <code>spk_rota</code></td><td>Net rota</td><td>Members hub rota; Exercises › Winlink assignments</td><td>Editors</td></tr>
+      <tr><th scope="row">Events and exercises</th><td>Post type <code>spk_event</code></td><td>Events › Add event</td><td>Exercises (Next up, Later this season, Public service, Past); hub “This week”</td><td>Editors</td></tr>
+      <tr><th scope="row">Meeting cancellations and moves</th><td>Option <code>spk_meetings</code></td><td>Events › Regular meetings</td><td>Home “Come visit”; hub next meeting</td><td>Editors</td></tr>
+      <tr><th scope="row">Documents (37 at launch, 7 sections)</th><td>Post type <code>spk_document</code> + section taxonomy</td><td>Documents › Add document</td><td>Documents & forms; hub search; <code>/docs/&lt;slug&gt;/</code> links</td><td>Editors</td></tr>
+      <tr><th scope="row">The four “Most used” tiles</th><td>Option <code>spk_tiles</code></td><td>Documents › Hub tiles</td><td>Members hub</td><td>Editors</td></tr>
+      <tr><th scope="row">Page words (Home, How it works, About)</th><td>Page content (blocks)</td><td>Pages, in the block editor</td><td>Those three pages</td><td>Editors (words only)</td></tr>
+      <tr><th scope="row">Repeater, tone, net time, net weeks</th><td>Options <code>spk_radio</code>, <code>spk_nets</code></td><td>Net rota › Net details</td><td>Home, How it works, hub bar and rota notes</td><td>Webmaster, or someone the EC names</td></tr>
+      <tr><th scope="row">Meeting days and times</th><td>Option <code>spk_meetings</code></td><td>Events › Meeting rules</td><td>Home, hub</td><td>Webmaster, or someone the EC names</td></tr>
+      <tr><th scope="row">groups.io addresses, meeting place</th><td>Option <code>spk_site</code></td><td>Settings › ARES site</td><td>Home, event defaults</td><td>Administrators</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="cols" style="margin-top:24px">
+    <div>
+      <h3 style="margin-top:0">The five jobs</h3>
+      <ul class="jobs">
+        <li><span class="jn">1 · Post the rota</span><span class="jt">monthly · target 3 min</span><span class="js">Dashboard › <b>Update the rota</b> › type a call sign, or pick Open / Not posted yet › <b>Save rota</b>. <b>Undo last save</b> if needed.</span></li>
+        <li><span class="jn">2 · Add an event</span><span class="jt">target 3 min</span><span class="js"><b>Add an event</b> › pick the kind › name, date, optional short line, where, tasks, links › <b>Publish</b>. Yearly repeats: <b>Duplicate</b>.</span></li>
+        <li><span class="jn">3 · Cancel or move a meeting</span><span class="jt">target 1 min</span><span class="js"><b>Cancel or move a meeting</b> › tick <b>Cancelled</b> or set <b>Moved to</b> › <b>Save</b>.</span></li>
+        <li><span class="jn">4 · Add or replace a document</span><span class="jt">target 3 min</span><span class="js"><b>Add a document</b> › name, section › tick the <b>Privacy check</b> to unlock the file chooser › <b>Publish</b>. Replace keeps the same link and removes the old file.</span></li>
+        <li><span class="jn">5 · Change page words</span><span class="jt">target 5 min</span><span class="js">Dashboard › <b>Home</b> › click and type › <b>Save</b>. The server refuses anything but word changes.</span></li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="margin-top:0">Accounts and guard rails</h3>
+      <div class="table-wrap">
+      <table class="t" style="min-width:0">
+        <tbody>
+          <tr><th scope="row">ARES Editor (2 named)</th><td>The five jobs. No Media, Posts, Appearance, Plugins, Users or Settings; can’t add, delete or re-template pages. E-mailed sign-in codes from day one; TOTP set up in person</td></tr>
+          <tr><th scope="row">Administrator (2)</th><td>Everything, including layout. TOTP and offline backup codes</td></tr>
+          <tr><th scope="row">Members, public</th><td>No accounts (registration off)</td></tr>
+          <tr><th scope="row">Call signs</th><td>“Frank AG7QP” saves AG7QP; a name alone isn’t saved, and the typing is kept</td></tr>
+          <tr><th scope="row">Never-publish words</th><td>County, hospital, SHARES, 800 MHz, talkgroups: the field is held back</td></tr>
+          <tr><th scope="row">Phones, e-mails</th><td>Asked to confirm (“This is a public agency number”)</td></tr>
+          <tr><th scope="row">Uploads</th><td>Privacy check first; upload only on Publish; replaced or trashed files leave the web</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pages" aria-labelledby="h-pages">
+  <h2 id="h-pages">Mockup and WordPress, page by page</h2>
+  <p class="s-intro">Left: the Option B mockup from <code>design/round3/option-b-lines-down/shots/</code>. Right: the WordPress site from <code>wordpress/shots/final/</code>. Scroll either frame; its partner follows. Heights are the full page in pixels at 1440 and at a true 390-wide phone. Some desktop mockup shots were taken in a 3,400px window, so they have empty space below the page.</p>
+  <label class="syncbar"><input type="checkbox" id="sync" checked> Scroll each pair together</label>
+
+  <article class="page" id="p-home" aria-labelledby="h-home">
+    <div class="page-head"><h3 id="h-home">Home</h3><span class="plinks"><a href="../../design/round3/option-b-lines-down/index.html">Mockup page</a></span><span class="hts">Desktop 2,902 → 2,902 · Phone 3,381 → 3,381</span></div>
+    <div class="pair" data-sync>
+      <figure class="frame"><figcaption><b>Mockup</b><a href="../../design/round3/option-b-lines-down/shots/home-desktop-full.png" target="_blank" rel="noopener">Full size</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="Home, mockup, desktop"><img src="../../design/round3/option-b-lines-down/shots/home-desktop-full.png" width="1440" height="3400" alt="Option B mockup of Home at 1440 wide" loading="lazy"></div></figure>
+      <figure class="frame"><figcaption><b>WordPress</b><a href="../shots/final/home-desktop.png" target="_blank" rel="noopener">Full size</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="Home, WordPress, desktop"><img src="../shots/final/home-desktop.png" width="1440" height="2902" alt="WordPress Home at 1440 wide" loading="lazy"></div></figure>
+    </div>
+    <div class="mrow">
+      <div class="mrow-pair" style="display:contents" data-sync>
+        <figure class="frame"><figcaption><b>Mockup · 390</b><a href="../../design/round3/option-b-lines-down/shots/home-mobile-390-true.png" target="_blank" rel="noopener">Full</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="Home, mockup, phone"><img src="../../design/round3/option-b-lines-down/shots/home-mobile-390-true.png" width="390" height="3381" alt="Option B mockup of Home on a phone" loading="lazy"></div></figure>
+        <figure class="frame"><figcaption><b>WordPress · 390</b><a href="../shots/final/home-mobile-390.png" target="_blank" rel="noopener">Full</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="Home, WordPress, phone"><img src="../shots/final/home-mobile-390.png" width="390" height="3381" alt="WordPress Home on a phone" loading="lazy"></div></figure>
+      </div>
+      <div class="notes">
+        <h4>Differences</h4>
+        <ul>
+          <li><span class="tag ok">Same</span> Pixel-identical apart from anti-aliasing, at both widths (fidelity review).</li>
+          <li>The hero photo now comes from the Media Library, so an editor can replace it.</li>
+          <li>“From home” and “In person” are printed from Net details and Regular meetings. A cancelled meeting shows as “Next: Sat, Nov 14 (Oct 10 cancelled)”.</li>
+          <li>Home never lists events, as in the mockup.</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="page" id="p-how" aria-labelledby="h-how">
+    <div class="page-head"><h3 id="h-how">How it works</h3><span class="plinks"><a href="../../design/round3/option-b-lines-down/how-it-works.html">Mockup page</a></span><span class="hts">Desktop 5,206 → 5,241 · Phone 7,376 → 7,412</span></div>
+    <div class="pair" data-sync>
+      <figure class="frame"><figcaption><b>Mockup</b><a href="../../design/round3/option-b-lines-down/shots/how-desktop-all.png" target="_blank" rel="noopener">Full size</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="How it works, mockup, desktop"><img src="../../design/round3/option-b-lines-down/shots/how-desktop-all.png" width="1440" height="5206" alt="Option B mockup of How it works at 1440 wide" loading="lazy"></div></figure>
+      <figure class="frame"><figcaption><b>WordPress</b><a href="../shots/final/how-desktop.png" target="_blank" rel="noopener">Full size</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="How it works, WordPress, desktop"><img src="../shots/final/how-desktop.png" width="1440" height="5241" alt="WordPress How it works at 1440 wide" loading="lazy"></div></figure>
+    </div>
+    <div class="mrow">
+      <div style="display:contents" data-sync>
+        <figure class="frame"><figcaption><b>Mockup · 390</b><a href="../../design/round3/option-b-lines-down/shots/how-mobile-390-true.png" target="_blank" rel="noopener">Full</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="How it works, mockup, phone"><img src="../../design/round3/option-b-lines-down/shots/how-mobile-390-true.png" width="390" height="7376" alt="Option B mockup of How it works on a phone" loading="lazy"></div></figure>
+        <figure class="frame"><figcaption><b>WordPress · 390</b><a href="../shots/final/how-mobile-390.png" target="_blank" rel="noopener">Full</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="How it works, WordPress, phone"><img src="../shots/final/how-mobile-390.png" width="390" height="7412" alt="WordPress How it works on a phone" loading="lazy"></div></figure>
+      </div>
+      <div class="notes">
+        <h4>Differences</h4>
+        <ul>
+          <li><span class="tag info">Review fix</span> A “Radio settings” jump link under the title. It helps on phones; on desktop it sits between the title and “It’s 2 AM”, which slightly interrupts the opener.</li>
+          <li><span class="tag info">Review fix</span> “147.300 MHz” is gone from the diagram, so the frequency appears once, in the settings box.</li>
+          <li>The settings box, Copy buttons and “Other nets” lines are printed from Net details.</li>
+          <li>Readiness “Stand by” wraps to three lines as in B (fixed after review).</li>
+          <li>Brighter small text on the dark opener, for contrast.</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="page" id="p-about" aria-labelledby="h-about">
+    <div class="page-head"><h3 id="h-about">About ARES &amp; ACS</h3><span class="plinks"><a href="../../design/round3/option-b-lines-down/about.html">Mockup page</a></span><span class="hts">Desktop 9,199 → 9,161 · Phone 11,705 → 11,643</span></div>
+    <div class="pair" data-sync>
+      <figure class="frame"><figcaption><b>Mockup</b><a href="../../design/round3/option-b-lines-down/shots/about-desktop-all.png" target="_blank" rel="noopener">Full size</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="About, mockup, desktop"><img src="../../design/round3/option-b-lines-down/shots/about-desktop-all.png" width="1440" height="9199" alt="Option B mockup of About at 1440 wide" loading="lazy"></div></figure>
+      <figure class="frame"><figcaption><b>WordPress</b><a href="../shots/final/about-desktop.png" target="_blank" rel="noopener">Full size</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="About, WordPress, desktop"><img src="../shots/final/about-desktop.png" width="1440" height="9161" alt="WordPress About at 1440 wide" loading="lazy"></div></figure>
+    </div>
+    <div class="mrow">
+      <div style="display:contents" data-sync>
+        <figure class="frame"><figcaption><b>Mockup · 390</b><a href="../../design/round3/option-b-lines-down/shots/about-mobile-390-true.png" target="_blank" rel="noopener">Full</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="About, mockup, phone"><img src="../../design/round3/option-b-lines-down/shots/about-mobile-390-true.png" width="390" height="11705" alt="Option B mockup of About on a phone" loading="lazy"></div></figure>
+        <figure class="frame"><figcaption><b>WordPress · 390</b><a href="../shots/final/about-mobile-390.png" target="_blank" rel="noopener">Full</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="About, WordPress, phone"><img src="../shots/final/about-mobile-390.png" width="390" height="11643" alt="WordPress About on a phone" loading="lazy"></div></figure>
+      </div>
+      <div class="notes">
+        <h4>Differences</h4>
+        <ul>
+          <li><span class="tag info">Review fix</span> “Last reviewed” prints only once someone sets a review date in the Page review box.</li>
+          <li>The table of contents is built from the page’s headings, so it can’t drift.</li>
+          <li>The PIO row’s amber “Open position” pill is back: the words are bold in the table cell and CSS draws the pill.</li>
+          <li>Stacked-table labels on phones come from the header row (“What it means”, where B typed “Means”).</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="page" id="p-members" aria-labelledby="h-members">
+    <div class="page-head"><h3 id="h-members">For members (hub)</h3><span class="plinks"><a href="../../design/round3/option-b-lines-down/members/index.html">Mockup page</a></span><span class="hts">Desktop 1,202 → 1,198 · Phone 2,165 → 2,159</span></div>
+    <div class="pair" data-sync>
+      <figure class="frame"><figcaption><b>Mockup</b> <span>3,400px window</span><a href="../../design/round3/option-b-lines-down/shots/members-desktop-full.png" target="_blank" rel="noopener">Full size</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="Members hub, mockup, desktop"><img src="../../design/round3/option-b-lines-down/shots/members-desktop-full.png" width="1440" height="3400" alt="Option B mockup of the members hub at 1440 wide" loading="lazy"></div></figure>
+      <figure class="frame"><figcaption><b>WordPress</b><a href="../shots/final/members-desktop.png" target="_blank" rel="noopener">Full size</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="Members hub, WordPress, desktop"><img src="../shots/final/members-desktop.png" width="1440" height="1198" alt="WordPress members hub at 1440 wide" loading="lazy"></div></figure>
+    </div>
+    <div class="mrow">
+      <div style="display:contents" data-sync>
+        <figure class="frame"><figcaption><b>Mockup · 390</b><a href="../../design/round3/option-b-lines-down/shots/members-mobile-390-true.png" target="_blank" rel="noopener">Full</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="Members hub, mockup, phone"><img src="../../design/round3/option-b-lines-down/shots/members-mobile-390-true.png" width="390" height="2165" alt="Option B mockup of the members hub on a phone" loading="lazy"></div></figure>
+        <figure class="frame"><figcaption><b>WordPress · 390</b><a href="../shots/final/members-mobile-390.png" target="_blank" rel="noopener">Full</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="Members hub, WordPress, phone"><img src="../shots/final/members-mobile-390.png" width="390" height="2159" alt="WordPress members hub on a phone" loading="lazy"></div></figure>
+      </div>
+      <div class="notes">
+        <h4>Differences</h4>
+        <ul>
+          <li><span class="tag info">Review fix</span> On phones the Tuesday net comes first.</li>
+          <li><span class="tag info">Review fix</span> The ICS-214 tile replaces ICS-309; the Simplex note and the “Open” slots are links.</li>
+          <li><span class="tag info">Review fix</span> Members headings get a thin grey rule instead of the red one: calmer, but a change in feel (owner decision).</li>
+          <li>The mockup’s page-height rule pushed the footer off the screen; it was removed, so the footer shows.</li>
+          <li>Every list here comes from Net rota, Events, Regular meetings and Hub tiles. The page has no text to edit.</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="page" id="p-documents" aria-labelledby="h-documents">
+    <div class="page-head"><h3 id="h-documents">Documents &amp; forms</h3><span class="plinks"><a href="../../design/round3/option-b-lines-down/members/documents.html">Mockup page</a></span><span class="hts">Desktop 3,760 → 3,760 · Phone 5,304 → 5,304</span></div>
+    <div class="pair" data-sync>
+      <figure class="frame"><figcaption><b>Mockup</b><a href="../../design/round3/option-b-lines-down/shots/documents-desktop-all.png" target="_blank" rel="noopener">Full size</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="Documents, mockup, desktop"><img src="../../design/round3/option-b-lines-down/shots/documents-desktop-all.png" width="1440" height="3760" alt="Option B mockup of Documents and forms at 1440 wide" loading="lazy"></div></figure>
+      <figure class="frame"><figcaption><b>WordPress</b><a href="../shots/final/documents-desktop.png" target="_blank" rel="noopener">Full size</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="Documents, WordPress, desktop"><img src="../shots/final/documents-desktop.png" width="1440" height="3760" alt="WordPress Documents and forms at 1440 wide" loading="lazy"></div></figure>
+    </div>
+    <div class="mrow">
+      <div style="display:contents" data-sync>
+        <figure class="frame"><figcaption><b>Mockup · 390</b><a href="../../design/round3/option-b-lines-down/shots/documents-mobile-390-true.png" target="_blank" rel="noopener">Full</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="Documents, mockup, phone"><img src="../../design/round3/option-b-lines-down/shots/documents-mobile-390-true.png" width="390" height="5304" alt="Option B mockup of Documents and forms on a phone" loading="lazy"></div></figure>
+        <figure class="frame"><figcaption><b>WordPress · 390</b><a href="../shots/final/documents-mobile-390.png" target="_blank" rel="noopener">Full</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="Documents, WordPress, phone"><img src="../shots/final/documents-mobile-390.png" width="390" height="5304" alt="WordPress Documents and forms on a phone" loading="lazy"></div></figure>
+      </div>
+      <div class="notes">
+        <h4>Differences</h4>
+        <ul>
+          <li><span class="tag ok">Same</span> Pixel-identical apart from anti-aliasing: rail, chips, 37 rows in 7 groups.</li>
+          <li>Search and section filters also work without JavaScript (<code>?q=</code>, <code>?section=</code>).</li>
+          <li>Rows link to stable <code>/docs/&lt;slug&gt;/</code> addresses that survive a file being replaced.</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="page" id="p-exercises" aria-labelledby="h-exercises">
+    <div class="page-head"><h3 id="h-exercises">Exercises &amp; events</h3><span class="plinks"><a href="../../design/round3/option-b-lines-down/members/exercises.html">Mockup page</a></span><span class="hts">Desktop 2,218 → 2,251 · Phone 4,013 → 4,066</span></div>
+    <div class="pair" data-sync>
+      <figure class="frame"><figcaption><b>Mockup</b> <span>3,400px window</span><a href="../../design/round3/option-b-lines-down/shots/exercises-desktop-full.png" target="_blank" rel="noopener">Full size</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="Exercises, mockup, desktop"><img src="../../design/round3/option-b-lines-down/shots/exercises-desktop-full.png" width="1440" height="3400" alt="Option B mockup of Exercises and events at 1440 wide" loading="lazy"></div></figure>
+      <figure class="frame"><figcaption><b>WordPress</b><a href="../shots/final/exercises-desktop.png" target="_blank" rel="noopener">Full size</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="Exercises, WordPress, desktop"><img src="../shots/final/exercises-desktop.png" width="1440" height="2251" alt="WordPress Exercises and events at 1440 wide" loading="lazy"></div></figure>
+    </div>
+    <div class="mrow">
+      <div style="display:contents" data-sync>
+        <figure class="frame"><figcaption><b>Mockup · 390</b><a href="../../design/round3/option-b-lines-down/shots/exercises-mobile-390-true.png" target="_blank" rel="noopener">Full</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="Exercises, mockup, phone"><img src="../../design/round3/option-b-lines-down/shots/exercises-mobile-390-true.png" width="390" height="4013" alt="Option B mockup of Exercises and events on a phone" loading="lazy"></div></figure>
+        <figure class="frame"><figcaption><b>WordPress · 390</b><a href="../shots/final/exercises-mobile-390.png" target="_blank" rel="noopener">Full</a></figcaption><div class="scroller" tabindex="0" role="region" aria-label="Exercises, WordPress, phone"><img src="../shots/final/exercises-mobile-390.png" width="390" height="4066" alt="WordPress Exercises and events on a phone" loading="lazy"></div></figure>
+      </div>
+      <div class="notes">
+        <h4>Differences</h4>
+        <ul>
+          <li>Next up cards, Later this season, Winlink assignments, public service and past exercises all come from the Events and Net rota forms.</li>
+          <li>The SET card’s extra form and ShakeOut’s DYFI link are back (fixed after review).</li>
+          <li><span class="tag warn">Small</span> Abbreviations in event text are plain (no dotted underline). The W1AW/7 link covers the whole event name. The WSDOT extra form reads “WSDOT Form 580-020…”.</li>
+          <li>Public-service rows sort dated first, then undated.</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+</section>
+
+<section id="admin" aria-labelledby="h-admin">
+  <h2 id="h-admin">The admin, workflow by workflow</h2>
+  <p class="s-intro">Screens as the ARES Editor sees them, unless marked. From <code>wordpress/shots/final/</code>, taken after the fixer round. Scroll inside a frame to see the whole screen, or open it full size.</p>
+
+  <div class="wf">
+    <h3>Start: the Dashboard, and the site while signed in</h3>
+    <p class="s-intro">The only Dashboard card is “Site tasks”: one button per job, what’s due, and who to ask. On the site, each list has a small “Edit this list in …” link that only signed-in editors see.</p>
+    <div class="gal two">
+      <figure class="shot"><div class="scroller" tabindex="0" role="region" aria-label="Dashboard screenshot"><img src="../shots/final/admin-dashboard.png" width="1440" height="945" alt="Dashboard with the Site tasks card" loading="lazy"></div><figcaption><b>Dashboard · Site tasks.</b> Net rota posted through Oct 27 with 2 open slots; next event; next meeting; 37 documents. <a href="../shots/final/admin-dashboard.png" target="_blank" rel="noopener">Full size</a></figcaption></figure>
+      <figure class="shot phone"><div class="scroller" tabindex="0" role="region" aria-label="Members hub as a signed-in editor"><img src="../shots/final/members-mobile-390-editor.png" width="390" height="2320" alt="Members hub on a phone, signed in, with Edit this list links" loading="lazy"></div><figcaption><b>Members hub, signed in, on a phone.</b> “Edit this list in …” links under each list; no gap above the sticky header. <a href="../shots/final/members-mobile-390-editor.png" target="_blank" rel="noopener">Full size</a></figcaption></figure>
+    </div>
+  </div>
+
+  <div class="wf">
+    <h3>Job 1: the net-control rota</h3>
+    <p class="s-intro">Thirteen Tuesdays, notes filled in from the net rules. One choice per row; Winlink boxes only on Winlink nights; “Shows” repeats what the public will see. Only changed rows are saved, and Undo restores the last save.</p>
+    <div class="gal two">
+      <figure class="shot"><div class="scroller" tabindex="0" role="region" aria-label="Net rota screenshot"><img src="../shots/final/admin-net-rota.png" width="1440" height="1110" alt="Net rota screen" loading="lazy"></div><figcaption><b>Net rota.</b> Call sign / Open / Not posted yet, Winlink assignment, Form and Note. <a href="../shots/final/admin-net-rota.png" target="_blank" rel="noopener">Full size</a></figcaption></figure>
+      <figure class="shot phone"><div class="scroller" tabindex="0" role="region" aria-label="Net rota on a phone"><img src="../shots/final/extra-net-rota-390.png" width="390" height="844" alt="Net rota on a phone with labelled boxes" loading="lazy"></div><figcaption><b>Net rota on a phone.</b> Every box labelled, no sideways scroll (fixed after review). <a href="../shots/final/extra-net-rota-390.png" target="_blank" rel="noopener">Full size</a></figcaption></figure>
+    </div>
+  </div>
+
+  <div class="wf">
+    <h3>Job 2: events and exercises</h3>
+    <p class="s-intro">Kind first; the form then shows only the fields that kind needs and says where the event will appear. Our own Save box: no Preview, Visibility or publish date. The list opens on Upcoming.</p>
+    <div class="gal">
+      <figure class="shot"><div class="scroller" tabindex="0" role="region" aria-label="Events list screenshot"><img src="../shots/final/admin-events.png" width="1440" height="1015" alt="Events list with Upcoming, Past and Drafts views" loading="lazy"></div><figcaption><b>All events.</b> Upcoming (12), Past (8), Drafts; When, Kind, Status, Needs checking. <a href="../shots/final/admin-events.png" target="_blank" rel="noopener">Full size</a></figcaption></figure>
+      <figure class="shot"><div class="scroller" tabindex="0" role="region" aria-label="Add event screenshot"><img src="../shots/final/admin-event-add.png" width="1440" height="900" alt="Add event form before a kind is picked" loading="lazy"></div><figcaption><b>Add event.</b> Kind, name, When, short line and the new Where field. <a href="../shots/final/admin-event-add.png" target="_blank" rel="noopener">Full size</a></figcaption></figure>
+      <figure class="shot"><div class="scroller" tabindex="0" role="region" aria-label="Edit event screenshot"><img src="../shots/final/admin-event-set.png" width="1440" height="1614" alt="Simulated Emergency Test event form, filled in" loading="lazy"></div><figcaption><b>An exercise, filled in.</b> “Where it shows” note, tasks one per line, links, extra form. <a href="../shots/final/admin-event-set.png" target="_blank" rel="noopener">Full size</a></figcaption></figure>
+    </div>
+  </div>
+
+  <div class="wf">
+    <h3>Job 3: meetings</h3>
+    <p class="s-intro">Editors cancel or move a single date. The regular pattern (week, day, time) is on Meeting rules, which only administrators or someone the EC names can open.</p>
+    <div class="gal two">
+      <figure class="shot"><div class="scroller" tabindex="0" role="region" aria-label="Regular meetings screenshot"><img src="../shots/final/admin-meetings.png" width="1440" height="1145" alt="Regular meetings: cancel or move one date" loading="lazy"></div><figcaption><b>Regular meetings.</b> Cancelled, Moved to and Note for the next five dates of each meeting. <a href="../shots/final/admin-meetings.png" target="_blank" rel="noopener">Full size</a></figcaption></figure>
+      <figure class="shot"><div class="scroller" tabindex="0" role="region" aria-label="Meeting rules screenshot"><img src="../shots/final/admin-meeting-rules.png" width="1440" height="2072" alt="Meeting rules screen, administrator view" loading="lazy"></div><figcaption><b>Meeting rules</b> <span class="tag info">Administrator</span> Week, day, times and whether a meeting shows on Home. <a href="../shots/final/admin-meeting-rules.png" target="_blank" rel="noopener">Full size</a></figcaption></figure>
+    </div>
+  </div>
+
+  <div class="wf">
+    <h3>Job 4: documents and hub tiles</h3>
+    <p class="s-intro">The file chooser is locked until the Privacy check is ticked, and nothing uploads until Publish. Replacing a file keeps the link and removes the old file from the web.</p>
+    <div class="gal">
+      <figure class="shot"><div class="scroller" tabindex="0" role="region" aria-label="Documents list screenshot"><img src="../shots/final/admin-documents.png" width="1440" height="1521" alt="Documents list with section, source, format, version and reviewed columns" loading="lazy"></div><figcaption><b>All documents.</b> Section, source, format, version, tile slot, last reviewed. <a href="../shots/final/admin-documents.png" target="_blank" rel="noopener">Full size</a></figcaption></figure>
+      <figure class="shot"><div class="scroller" tabindex="0" role="region" aria-label="Edit document screenshot"><img src="../shots/final/admin-document-ics-213.png" width="1440" height="900" alt="Edit document form for ICS 213" loading="lazy"></div><figcaption><b>A document.</b> Section, where the file is, the Privacy check, version and note; “More options” closed. <a href="../shots/final/admin-document-ics-213.png" target="_blank" rel="noopener">Full size</a></figcaption></figure>
+      <figure class="shot"><div class="scroller" tabindex="0" role="region" aria-label="Hub tiles screenshot"><img src="../shots/final/admin-tiles.png" width="1440" height="900" alt="Hub tiles screen with four slots" loading="lazy"></div><figcaption><b>Hub tiles.</b> Four slots; picking a document from another slot swaps the two. <a href="../shots/final/admin-tiles.png" target="_blank" rel="noopener">Full size</a></figcaption></figure>
+    </div>
+  </div>
+
+  <div class="wf">
+    <h3>Job 5: page words in the block editor</h3>
+    <p class="s-intro">Pages open with the site’s header and footer shown but not editable. Editors click and type. The inserter, Styles tab, Advanced panel and page status controls are hidden, and the server refuses any save that changes more than words.</p>
+    <div class="gal">
+      <figure class="shot"><div class="scroller" tabindex="0" role="region" aria-label="Home in the editor"><img src="../shots/final/admin-editor-home.png" width="1440" height="900" alt="Home in the block editor with the hero selected" loading="lazy"></div><figcaption><b>Home.</b> Hero selected: Replace, focal point and alt text only. <a href="../shots/final/admin-editor-home.png" target="_blank" rel="noopener">Full size</a></figcaption></figure>
+      <figure class="shot"><div class="scroller" tabindex="0" role="region" aria-label="How it works in the editor"><img src="../shots/final/admin-editor-how.png" width="1440" height="900" alt="How it works in the block editor" loading="lazy"></div><figcaption><b>How it works.</b> The editor shows the page as visitors see it; the words are editable, the figure is fixed. <a href="../shots/final/admin-editor-how.png" target="_blank" rel="noopener">Full size</a></figcaption></figure>
+      <figure class="shot"><div class="scroller" tabindex="0" role="region" aria-label="About in the editor with the Page panel"><img src="../shots/final/extra-editor-about-page-panel.png" width="1440" height="900" alt="About in the block editor with the Page review box" loading="lazy"></div><figcaption><b>About, Page panel.</b> No status, slug, template or trash rows; the Page review box. <a href="../shots/final/extra-editor-about-page-panel.png" target="_blank" rel="noopener">Full size</a></figcaption></figure>
+    </div>
+  </div>
+
+  <div class="wf">
+    <h3>Webmaster only: Net details</h3>
+    <p class="s-intro">Repeater, tone, net time and net weeks. A live preview prints every sentence these facts produce, and saving asks for confirmation. An editor without the grant gets a plain “ask the webmaster” page instead of WordPress’s error.</p>
+    <div class="gal two">
+      <figure class="shot"><div class="scroller" tabindex="0" role="region" aria-label="Net details screenshot"><img src="../shots/final/admin-net-details.png" width="1440" height="2103" alt="Net details screen with live preview, administrator view" loading="lazy"></div><figcaption><b>Net details</b> <span class="tag info">Administrator</span> Amateur-frequencies-only banner, fields and the live preview. <a href="../shots/final/admin-net-details.png" target="_blank" rel="noopener">Full size</a></figcaption></figure>
+      <figure class="shot"><div class="scroller" tabindex="0" role="region" aria-label="Net details refused for an editor"><img src="../shots/final/extra-net-details-editor-denied.png" width="1440" height="900" alt="Message telling an editor to ask the webmaster" loading="lazy"></div><figcaption><b>Net details, as an editor without the grant.</b> Names who to ask (fixed after review). <a href="../shots/final/extra-net-details-editor-denied.png" target="_blank" rel="noopener">Full size</a></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="reviews" aria-labelledby="h-reviews">
+  <h2 id="h-reviews">Reviewer scores</h2>
+  <p class="s-intro">Three independent reviewers worked on their own dev sites. The scores are out of 10 and were given <b>before</b> the fixer round; the “after” lines say what the fixer changed. Nobody has re-scored the build since.</p>
+  <div class="rev">
+    <div class="card">
+      <div class="score"><b>9</b><span>/ 10</span></div>
+      <div class="bar" aria-hidden="true"><i style="width:90%"></i></div>
+      <h3>Fidelity</h3>
+      <p class="lens">Does it keep B’s feel? Pixel diffs of 13 views, plus 1024 and 768 wide and the phone menu.</p>
+      <ul>
+        <li>Home and Documents identical at 1440 and 390; other pages within 60px in height.</li>
+        <li>Header, footer, sub-nav, library rail, chips and phone menu identical; self-hosted fonts render the same.</li>
+        <li>Every change is a documented WordPress constraint or a round-3 fix. “None of it breaks the feel.”</li>
+      </ul>
+      <h4>After the fixer round</h4>
+      <ul>
+        <li>Fixed: SET extra-form link, ShakeOut DYFI link, the “Open position” pill, the “Stand by” line breaks.</li>
+        <li>Still open: event abbreviations, W1AW/7 link span, the WSDOT form label, desktop jump-link placement, plain 404 and search pages.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="score"><b>6</b><span>/ 10</span></div>
+      <div class="bar" aria-hidden="true"><i style="width:60%"></i></div>
+      <h3>Volunteer editor</h3>
+      <p class="lens">Six jobs done as a new ARES Editor account, 80 screenshots, including trying to break it.</p>
+      <ul>
+        <li>The four forms (events, rota, documents, net details) are strong: plain words, “See it on …” links, working guard rails.</li>
+        <li>Weak: page settings around the block editor let a volunteer take a page off the site (password, template, Quick Edit), and a few controls didn’t respond (disabled call-sign box, multi-paragraph paste).</li>
+      </ul>
+      <h4>After the fixer round</h4>
+      <ul>
+        <li>Fixed: password, date, status and template are now kept by the server; Quick Edit and bulk Edit gone; Save box can’t be hidden; call-sign box and paste work; a Where field; Dashboard “Add” and “Replace” split.</li>
+        <li>Still open: no separate “What to bring” field; the launch gate with the real editor.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="score"><b>7</b><span>/ 10</span></div>
+      <div class="bar" aria-hidden="true"><i style="width:70%"></i></div>
+      <h3>Code, security and hosting</h3>
+      <p class="lens">PHPCS WordPress-Extra, PHP 8.3 compatibility, Plugin Check, 36 admin screens, anonymous probes.</p>
+      <ul>
+        <li>No REST routes or anonymous handlers, no direct SQL, late escaping, nonces and capability checks on every handler.</li>
+        <li>Anonymous REST 401, users 404, XML-RPC 403, security headers present; plugin set matches the plan.</li>
+        <li>Problems: orphaned document files findable by ID; CI gate failing; layout lock and event checks only held for UI edits; misleading “Save as draft”.</li>
+      </ul>
+      <h4>After the fixer round</h4>
+      <ul>
+        <li>Fixed: attachment pages 404; deleted documents take their file with them; CI passes 11/11; the lock now counts classes and inline styles; events re-checked on any publish.</li>
+        <li>Still open: <code>/readme.html</code> can only be denied at the web server.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="evidence">
+    <figure class="shot"><div class="scroller" tabindex="0" role="region" aria-label="Password-protected Home, found in review"><img src="../shots/review-editor/73-break-front-home-password-protected.png" width="1440" height="900" alt="Home replaced by an unstyled password form" loading="lazy"></div><figcaption><b>Found by the editor review:</b> a volunteer could password-protect Home. Now the server keeps the stored password and the control is hidden. <a href="../shots/review-editor/73-break-front-home-password-protected.png" target="_blank" rel="noopener">Full size</a></figcaption></figure>
+    <figure class="shot"><div class="scroller" tabindex="0" role="region" aria-label="About turned into the Exercises page, found in review"><img src="../shots/review-editor/79-break-front-about-now-exercises.png" width="1440" height="900" alt="The About address showing the Exercises page" loading="lazy"></div><figcaption><b>Found by the editor review:</b> a template change turned <code>/about/</code> into Exercises & events. Now the members templates aren’t offered to editors and the stored template is kept. <a href="../shots/review-editor/79-break-front-about-now-exercises.png" target="_blank" rel="noopener">Full size</a></figcaption></figure>
+  </div>
+</section>
+
+<section id="open" aria-labelledby="h-open">
+  <h2 id="h-open">Remaining issues and open questions</h2>
+  <p class="s-intro">Nothing here blocks further testing. The first group blocks launch.</p>
+  <div class="issues">
+    <div class="card">
+      <h3 style="margin:0 0 8px;font-size:17px"><span class="tag bad">Before launch</span></h3>
+      <ul>
+        <li><b>Launch gate:</b> AG7QP (or the first named editor) does the five jobs on the dev site with only the Editing guide, inside the target times. Every stumble becomes a fix.</li>
+        <li><b>Re-review</b> of the editor experience after the fixer round (the 6 predates the fixes).</li>
+        <li><b>Two-factor sign-in</b> tested on a real Enhance staging site; the ops scripts have only run against a fake host.</li>
+        <li><b>Round-3 blockers:</b> the net-scripts link exposes the roster (D14); <code>join@</code> isn’t live; the legal-basis text needs SCEM review; the role addresses, including <code>webmaster@spokares.org</code> shown in the admin, are proposals (D11).</li>
+        <li>An administrator reviews and publishes the 37 documents after the production import, and clears the “Needs checking” items.</li>
+        <li>Remove the footer’s “Mockup” line in the launch release; “Privacy (coming)” needs a privacy page.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="margin:0 0 8px;font-size:17px"><span class="tag warn">Ask Verpex</span></h3>
+      <ul>
+        <li>Web server kind (Apache, LiteSpeed or OpenLiteSpeed) and whether <code>.htaccess</code> deny rules are honoured.</li>
+        <li>Is <code>opcache.validate_timestamps</code> on? If not, deployed PHP doesn’t load until PHP restarts.</li>
+        <li>A web-server deny for <code>/readme.html</code> and <code>/license.txt</code>; <code>expose_php=Off</code>.</li>
+        <li><code>/wp-content/updraft/</code> blocked and upload folders not listable.</li>
+        <li>Does panel WordPress SSO bypass 2FA? Snapshot retention? A written AUP OK for the document library.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="margin:0 0 8px;font-size:17px"><span class="tag info">Decisions for the owner, EC and AG7QP</span></h3>
+      <ul>
+        <li>WordPress as the one source for events, the rota and meetings (D9).</li>
+        <li>Who besides the administrators may change Net details and Meeting rules.</li>
+        <li>DOCX/XLSX uploads (inspected) or PDF only.</li>
+        <li>Grey hairline under members headings (per the round-3 review), or keep B’s red rule.</li>
+        <li>Keep showing the alternate repeater on How it works, or hide it.</li>
+        <li>The old-URL re-point table (D15) and who reviews documents at launch.</li>
+        <li>The members pages’ fixed lines (“Bring to every exercise”, “Not posted here”) are git changes for an administrator. Confirm, or name which should become form fields.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="margin:0 0 8px;font-size:17px"><span class="tag neutral">Known limitations</span></h3>
+      <ul>
+        <li>Editors can’t add sections, table rows or pages; that is administrator work.</li>
+        <li>Home never lists events, by design. There is no per-event “What to bring” field.</li>
+        <li>A published document with a problem goes back to Draft; events keep their live version instead (documents deferred).</li>
+        <li>A file saved with a Draft document is reachable by its exact random address.</li>
+        <li>Small fidelity gaps listed under Exercises and How it works; the 404 and search pages are plain.</li>
+        <li>Rota, meetings and tiles are options: database backups cover them, WordPress exports don’t.</li>
+        <li>After launch (P2): a rota paste box, a calendar feed, settings export, and <code>page-sync</code>.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Documents: <a href="../PLAN.md">PLAN.md</a> (decisions and build contract) · <a href="../EDITING-GUIDE.md">EDITING-GUIDE.md</a> (for editors) · <a href="../README.md">README.md</a> (run, deploy, plugins) · <a href="../build-notes/plugin.md">build-notes/plugin.md</a> (fixer round) · <a href="../dev/README.md">dev/README.md</a> · <a href="../ops/README.md">ops/README.md</a> · <a href="../../design/round3/REVIEW.md">round-3 REVIEW.md</a></p>
+  <p>Screenshots: mockup from <code>design/round3/option-b-lines-down/shots/</code>; WordPress from <code>wordpress/shots/final/</code> (WordPress 7.1.2, PHP 8.4, seed data as of Sat, Sep 26, 2026); editor-review evidence from <code>wordpress/shots/review-editor/</code>.</p>
+</footer>
+
+</div>
+</main>
+
+<script>
+(function () {
+  var toggle = document.getElementById('sync');
+  document.querySelectorAll('[data-sync]').forEach(function (group) {
+    var frames = Array.prototype.slice.call(group.querySelectorAll('.scroller'));
+    var busy = false;
+    frames.forEach(function (el) {
+      el.addEventListener('scroll', function () {
+        if (busy || !toggle.checked) return;
+        busy = true;
+        var img = el.querySelector('img');
+        frames.forEach(function (other) {
+          if (other === el) return;
+          var oimg = other.querySelector('img');
+          var scale = (img && oimg && img.clientWidth) ? oimg.clientWidth / img.clientWidth : 1;
+          other.scrollTop = el.scrollTop * scale;
+        });
+        requestAnimationFrame(function () { busy = false; });
+      }, { passive: true });
+    });
+  });
+})();
+</script>
+</body>
+</html>

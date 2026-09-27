@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exercises &amp; events | Spokane County ARES-ACS</title>
+<meta name="description" content="What’s next for members: exercises, what to bring, Winlink assignments and public-service events.">
+<link rel="icon" href="../assets/img/seal-ares-acs-400.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;family=Schibsted+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css">
+<script>document.documentElement.classList.add('js'); if (location.hash) document.documentElement.style.scrollBehavior = 'auto'; /* deep links land instantly; site.js hashLanding() restores smooth scrolling */</script>
+<style>
+/* Members pages (option B, round 3): shared workspace pieces, repeated in each
+   members page on purpose. site.css is the system; page editors do not edit it.
+   Every members H2 hangs on the red message line, as the library groups do. */
+.m-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 20px; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 3px solid var(--red); }
+.m-head h2, .doc-group__head h2 { font-size: clamp(1.6rem, 1.3rem + .8vw, 2rem); }
+.m-sec + .m-sec { margin-top: var(--s5); }
+.m-label { margin: 0 0 6px; font: 600 15px/1.35 var(--sans); color: var(--ink-2); }
+.m-line { font-size: 16px; line-height: 1.55; }
+.m-line b { font-weight: 600; }
+.page-head { margin-bottom: var(--s4); }
+.workspace .table { background: transparent; }
+.table caption.vh { padding: 0; }
+
+/* Exercises: next events first (the WSDOT card, red-topped, is the page's one
+   filled action), then four compact reference blocks, two by two on wide screens. */
+.ex-bring { max-width: 80ch; }
+.ex-cards { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 24px; align-items: start; margin-top: 24px; }
+.ex-card { padding: 26px 28px 28px; }
+.ex-card h3 { font: 600 21px/1.3 var(--sans); letter-spacing: -.005em; }
+.ex-card > * + * { margin-top: 12px; }
+.ex-when { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; font: 600 16px/1.4 var(--sans); color: var(--ink-2); }
+.ex-card .ex-action { margin-top: 22px; }
+.ex-tasks { padding-left: 1.4em; }
+.ex-tasks li { padding-left: 4px; }
+.ex-tasks li + li { margin-top: 6px; }
+.ex-tasks li::marker { font-weight: 600; color: var(--ink-2); }
+.ex-after { margin-top: 24px; max-width: 80ch; }
+
+.ex-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s5) 64px; margin-top: var(--s5); align-items: start; }
+.ex-table th[scope="row"] { font-weight: 600; }
+.ex-later th[scope="row"] { width: 38%; white-space: nowrap; font-weight: 500; }
+.ex-later tr:first-child > * { border-top: 0; }
+.ex-winlink th[scope="row"] { white-space: nowrap; font-weight: 500; }
+.ex-howto { margin-bottom: 14px; font-size: 15.5px; color: var(--ink-2); }
+.ex-public td { white-space: nowrap; }
+.ex-tips { margin-top: 12px; font-size: 15.5px; }
+.ex-past { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.ex-past li { display: grid; grid-template-columns: 6.5em minmax(0, 1fr); gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--rule); font-size: 15.5px; line-height: 1.5; }
+.ex-past__when { font-weight: 600; color: var(--ink-2); font-variant-numeric: tabular-nums lining-nums; }
+
+@media (max-width: 1023px) {
+  .ex-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 900px) {
+  .ex-cards { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .ex-card { padding: 22px 20px 24px; }
+  .ex-later, .ex-later tbody, .ex-later tr, .ex-later th, .ex-later td { display: block; width: 100% !important; }
+  .ex-later tr { padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .ex-later th, .ex-later td { padding: 0 !important; border: 0; }
+  .ex-later th[scope="row"] { font-weight: 600; font-size: 14.5px; color: var(--ink-2); }
+  /* Winlink and public service: each row becomes a short block. */
+  .ex-winlink thead, .ex-public thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .ex-winlink, .ex-winlink tbody, .ex-public, .ex-public tbody { display: block; width: 100%; }
+  .ex-winlink tr, .ex-public tr { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .ex-winlink th, .ex-winlink td, .ex-public th, .ex-public td { display: block; padding: 0 !important; border: 0; }
+  .ex-winlink td[data-label="Form"] { order: 1; color: var(--ink-2); font-size: 14.5px; }
+  .ex-winlink td[data-label="Assignment"] { order: 2; flex: 1 1 100%; }
+  .ex-winlink tr.is-next { padding-inline: 12px; border-radius: 8px; background: var(--amber-wash); }
+  .table.ex-winlink tr.is-next > * { background: none; box-shadow: none; }
+  .ex-public th { flex: 1 1 100%; }
+  .ex-public td { font-size: 14.5px; color: var(--ink-2); white-space: normal; }
+  .ex-public td[data-label="Volunteer through"]::before { content: "Volunteer through "; }
+}
+</style>
+</head>
+<body class="members-page" data-root="../">
+<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="mp-hill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A3A5C"/><stop offset="1" stop-color="#16223D"/></linearGradient>
+    <linearGradient id="mp-dawnglow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3C29B" stop-opacity="0"/><stop offset="1" stop-color="#F3C29B" stop-opacity=".5"/></linearGradient>
+    <pattern id="mp-rain" width="60" height="48" patternUnits="userSpaceOnUse"><path d="M9 3 L5 11 M31 12 L27 20 M51 4 L47 12 M19 26 L15 34 M43 30 L39 38 M57 38 L53 46 M7 40 L3 48" stroke="#A9B8D6" stroke-opacity=".6" stroke-width="1.1" stroke-linecap="round"/></pattern>
+  </defs>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2"/><path d="M15.5 8.5V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7.5a2 2 0 0 0 2 2h2.5"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4M12 12.5v5.5M9.25 15.25h5.5"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></symbol>
+  <symbol id="i-radio" viewBox="0 0 24 24"><rect x="7" y="7.5" width="10" height="13.5" rx="2"/><path d="M10 7.5V3M9.5 11.5h5M9.5 14.5h5M9.5 17.5h2"/></symbol>
+  <symbol id="i-script" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 15h6M9 18h4"/></symbol>
+  <symbol id="i-form" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M4 8h16M9.5 8v13M12.5 12h4.5M12.5 16h4.5"/></symbol>
+  <symbol id="i-log" viewBox="0 0 24 24"><rect x="4.5" y="4" width="15" height="16.5" rx="1.5"/><path d="M4.5 9h15M4.5 14h15M9.5 4v16.5"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H19v14H7.5A2.5 2.5 0 0 0 5 19.5z"/><path d="M5 19.5A2.5 2.5 0 0 0 7.5 22H19v-5"/></symbol>
+  <symbol id="i-rota" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></symbol>
+  <symbol id="i-winlink" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3.5 7.5l8.5 6 8.5-6"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5.5 21V4M5.5 4.5h11l-2.2 4 2.2 4h-11"/></symbol>
+  <symbol id="i-files" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 20h14"/></symbol>
+  <symbol id="i-antenna" viewBox="0 0 24 24"><path d="M12 21V10M8.5 21L12 10l3.5 11M7 6.8a7 7 0 0 1 10 0M9.3 9a3.6 3.6 0 0 1 5.4 0"/></symbol>
+  <symbol id="i-kit" viewBox="0 0 24 24"><rect x="3.5" y="7" width="17" height="13" rx="2"/><path d="M9 7V5h6v2M3.5 12.5h17M12 11v3"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="9" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M16 6.5a2.8 2.8 0 0 1 0 5.2M17.8 19a5.5 5.5 0 0 0-2.3-4.4"/></symbol>
+  <symbol id="i-training" viewBox="0 0 24 24"><path d="M2.5 9L12 5l9.5 4L12 13z"/><path d="M6.5 11v4.5c1.5 1.4 3.5 2 5.5 2s4-.6 5.5-2V11M21.5 9v5"/></symbol>
+
+  <!-- The message path. 560x400. Every state-dependent part reads a custom
+       property that .msgpath[data-state] sets (site.css section 23). -->
+  <symbol id="msgpath-scene" viewBox="0 0 560 400">
+    <rect class="mp-t" x="0" y="150" width="560" height="180" fill="url(#mp-dawnglow)" style="opacity:var(--mp-dawn,0)"/>
+    <rect class="mp-t" x="0" y="0" width="560" height="330" fill="url(#mp-rain)" style="opacity:var(--mp-storm,0)"/>
+    <!-- mountain and repeater -->
+    <path d="M132 330 C 200 318 238 150 280 122 C 322 150 360 318 428 330 Z" fill="url(#mp-hill)" stroke="#C5CEDF" stroke-opacity=".35" stroke-width="1"/>
+    <g fill="none" stroke="#DCE3EF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M270 124 L280 64 L290 124 M272.4 110 H287.6 M275 94 H285 M277.2 80 H282.8 M272.4 110 L285 94 M275 94 L287.6 110 M275 94 L282.8 80 M277.2 80 L285 94"/>
+      <path d="M280 64 V46"/>
+    </g>
+    <!-- ground -->
+    <rect x="0" y="330" width="560" height="70" fill="#040916" fill-opacity=".38"/>
+    <path d="M0 330.5 H560" stroke="#C5CEDF" stroke-opacity=".45" stroke-width="1"/>
+    <!-- power poles and wires -->
+    <g stroke="#AEBBD4" stroke-width="1.6" stroke-linecap="round" fill="none">
+      <path d="M112 330 V282 M102 288 H122"/><path d="M244 330 V282 M234 288 H254"/><path d="M336 330 V282 M326 288 H346"/>
+    </g>
+    <path class="mp-t" d="M0 293 Q56 303 112 288 Q178 303 244 288 Q290 303 336 288 L352 293" fill="none" stroke="#AEBBD4" stroke-width="1.4" style="opacity:var(--mp-power,0)"/>
+    <path class="mp-t" d="M0 293 Q56 303 112 288 Q146 304 162 326 M244 288 Q232 302 222 322 M244 288 Q290 303 336 288 L352 293" fill="none" stroke="#56627C" stroke-width="1.4" style="opacity:calc(1 - var(--mp-power,0))"/>
+    <!-- houses (lose power) -->
+    <g fill="#16233F" stroke="#8190AE" stroke-width="1.3">
+      <path d="M124 330 V304 L140 290 L156 304 V330 Z"/><path d="M164 330 V308 L178 296 L192 308 V330 Z"/><path d="M294 330 V306 L309 294 L324 306 V330 Z"/>
+    </g>
+    <g fill="#2A3857"><rect x="131" y="311" width="7" height="7"/><rect x="143" y="311" width="7" height="7"/><rect x="174" y="314" width="8" height="7"/><rect x="304" y="313" width="10" height="7"/></g>
+    <g class="mp-t" fill="#FFC857" style="opacity:var(--mp-power,0)"><rect x="131" y="311" width="7" height="7"/><rect x="143" y="311" width="7" height="7"/><rect x="174" y="314" width="8" height="7"/><rect x="304" y="313" width="10" height="7"/></g>
+    <!-- cell tower -->
+    <g fill="none" stroke="#AEBBD4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M206 330 L214 238 L222 330 M208.4 306 H219.6 M210.2 282 H217.8 M211.8 260 H216.2 M208.4 306 L217.8 282 M210.2 282 L219.6 306 M210.2 282 L216.2 260 M211.8 260 L217.8 282"/>
+    </g>
+    <g class="mp-t" fill="none" stroke="#AEBBD4" stroke-width="1.6" stroke-linecap="round" style="opacity:var(--mp-cell,0)">
+      <path d="M204 250 Q197 240 204 230"/><path d="M196 256 Q185 240 196 224"/><path d="M224 250 Q231 240 224 230"/><path d="M232 256 Q243 240 232 224"/>
+    </g>
+    <text class="mp-t mp-sub" x="214" y="222" text-anchor="middle" style="opacity:calc(1 - var(--mp-cell,0));font-size:calc(var(--mp-fs,17px) * .8)">Cell service out</text>
+    <!-- shelter -->
+    <rect x="20" y="282" width="84" height="48" fill="#1B2745" stroke="#8190AE" stroke-width="1.4"/>
+    <rect x="28" y="292" width="16" height="9" fill="#FFC857" fill-opacity=".8"/><rect x="80" y="292" width="16" height="9" fill="#FFC857" fill-opacity=".8"/>
+    <rect x="54" y="306" width="16" height="24" fill="#0A1328"/>
+    <path d="M96 282 V252" stroke="#DCE3EF" stroke-width="1.6" stroke-linecap="round"/>
+    <rect class="mp-t" x="17" y="279" width="90" height="54" fill="none" stroke="#FFC857" stroke-width="2" style="opacity:var(--mp-shelter,0)"/>
+    <!-- county EOC -->
+    <rect x="352" y="268" width="80" height="62" fill="#1B2745" stroke="#8190AE" stroke-width="1.4"/>
+    <g fill="#FFC857" fill-opacity=".8"><rect x="361" y="279" width="22" height="9"/><rect x="399" y="279" width="22" height="9"/><rect x="361" y="296" width="22" height="9"/></g>
+    <rect x="401" y="310" width="16" height="20" fill="#0A1328"/>
+    <path d="M420 268 V234" stroke="#DCE3EF" stroke-width="1.6" stroke-linecap="round"/>
+    <rect class="mp-t" x="349" y="265" width="86" height="68" fill="none" stroke="#FFC857" stroke-width="2" style="opacity:var(--mp-eoc,0)"/>
+    <!-- hospital -->
+    <rect x="452" y="252" width="88" height="78" fill="#1B2745" stroke="#8190AE" stroke-width="1.4"/>
+    <path d="M489 266 h14 v10 h10 v14 h-10 v10 h-14 v-10 h-10 v-14 h10 z" fill="#DCE3EF"/>
+    <rect x="489" y="310" width="14" height="20" fill="#0A1328"/>
+    <path d="M528 252 V224" stroke="#DCE3EF" stroke-width="1.6" stroke-linecap="round"/>
+    <rect class="mp-t" x="449" y="249" width="94" height="84" fill="none" stroke="#FFC857" stroke-width="2" style="opacity:var(--mp-hosp,0)"/>
+    <!-- the message: red arcs (with a soft under-stroke) -->
+    <g class="mp-t" fill="none" stroke-linecap="round" style="opacity:var(--mp-send,0)">
+      <path d="M96 252 Q150 112 280 46 Q392 96 420 234" stroke="#D0202A" stroke-opacity=".28" stroke-width="10"/>
+      <path d="M96 252 Q150 112 280 46 Q392 96 420 234" stroke="#E0303A" stroke-width="3"/>
+    </g>
+    <g class="mp-t" fill="none" stroke-linecap="round" style="opacity:var(--mp-relay,0)">
+      <path d="M420 234 Q474 168 528 224" stroke="#D0202A" stroke-opacity=".28" stroke-width="10"/>
+      <path d="M420 234 Q474 168 528 224" stroke="#E0303A" stroke-width="3"/>
+    </g>
+    <g fill="#FFC857">
+      <circle class="mp-t" cx="96" cy="252" r="4" style="opacity:var(--mp-m1,0)"/>
+      <circle class="mp-t" cx="280" cy="46" r="4" style="opacity:var(--mp-m2,0)"/>
+      <circle class="mp-t" cx="420" cy="234" r="4" style="opacity:var(--mp-send,0)"/>
+      <circle class="mp-t" cx="528" cy="224" r="4" style="opacity:var(--mp-relay,0)"/>
+    </g>
+    <!-- amber hop markers (28px) -->
+    <g class="mp-t" style="opacity:var(--mp-m1,0)"><circle cx="70" cy="238" r="14" fill="#FFC857"/><text class="mp-num" x="70" y="243.5" text-anchor="middle">1</text></g>
+    <g class="mp-t" style="opacity:var(--mp-m2,0)"><circle cx="308" cy="34" r="14" fill="#FFC857"/><text class="mp-num" x="308" y="39.5" text-anchor="middle">2</text></g>
+    <g class="mp-t" style="opacity:var(--mp-m3,0)"><circle cx="394" cy="222" r="14" fill="#FFC857"/><text class="mp-num" x="394" y="227.5" text-anchor="middle">3</text></g>
+    <g class="mp-t" style="opacity:var(--mp-m4,0)"><circle cx="542" cy="194" r="14" fill="#FFC857"/><text class="mp-num" x="542" y="199.5" text-anchor="middle">4</text></g>
+    <!-- place labels -->
+    <text class="mp-label" x="62" y="358" text-anchor="middle" style="font-size:var(--mp-fs,17px)">Shelter</text>
+    <text class="mp-label" x="387" y="358" text-anchor="middle" style="font-size:var(--mp-fs,17px)">County EOC</text>
+    <text class="mp-label" x="502" y="358" text-anchor="middle" style="font-size:var(--mp-fs,17px)">Hospital</text>
+    <text class="mp-label" x="262" y="24" text-anchor="end" style="font-size:var(--mp-fs,17px)">W7GBU repeater</text>
+    <text class="mp-sub" x="262" y="46" text-anchor="end" style="font-size:calc(var(--mp-fs,17px) * .88)">147.300 MHz</text>
+    <!-- "A scenario", drawn in the picture so any crop still says so -->
+    <g style="transform-box:fill-box;transform-origin:100% 0;transform:scale(var(--mp-pill,1))">
+      <rect x="434" y="12" width="114" height="30" rx="15" fill="#0E1A33" fill-opacity=".9" stroke="#FFC857" stroke-opacity=".75"/>
+      <circle cx="451" cy="27" r="4" fill="#FFC857"/>
+      <text class="mp-pilltext" x="461" y="32">A scenario</text>
+    </g>
+  </symbol>
+</svg>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="site-header">
+  <div class="masthead">
+    <div class="wrap masthead__bar">
+      <a class="brand" href="../index.html"><img src="../assets/img/seal-ares-acs-400.png" alt="" width="46" height="46"><span class="brand__name"><span>Spokane County</span> <strong>ARES-ACS</strong></span></a>
+      <nav class="nav" aria-label="Primary">
+        <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="primary-nav"><svg class="icon i-open" aria-hidden="true"><use href="#i-menu"/></svg><svg class="icon i-close" aria-hidden="true"><use href="#i-close"/></svg>Menu</button>
+        <ul class="nav__list" id="primary-nav">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../how-it-works.html">How it works</a></li>
+          <li><a href="../about.html">About ARES &amp; ACS</a></li>
+          <li><a href="index.html" aria-current="page">For Members</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn--red site-header__join" href="../index.html#join">Join the team</a>
+    </div>
+  </div>
+</header>
+<div class="members-shell">
+  <nav class="member-nav" aria-label="Members">
+    <ul class="wrap member-nav__list">
+      <li><a href="index.html">This week</a></li>
+      <li><a href="exercises.html" aria-current="page">Exercises &amp; events</a></li>
+      <li><a href="documents.html">Documents &amp; forms</a></li>
+      <li><a href="../about.html#training-path">Task books</a></li>
+      <li><a class="ext" href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io<span class="vh"> (opens groups.io, members only)</span></a></li>
+    </ul>
+  </nav>
+  <main id="main" class="workspace">
+
+    <div class="page-head"><h1>Exercises &amp; events</h1></div>
+
+    <!-- 1. Next up: what to bring, the two next exercises, what to do after. -->
+    <section class="ex-next" aria-labelledby="next-up">
+      <div class="m-head"><h2 id="next-up">Next up</h2></div>
+      <p class="m-line ex-bring"><b>Bring to every exercise:</b> your <a href="documents.html#go-kits">go-kit</a>, charged batteries, a programmed handheld, and <a href="documents.html#ics-213">ICS-213</a>, <a href="documents.html#ics-213rr">213RR</a>, <a href="documents.html#ics-214">214</a> and <a href="documents.html#ics-309">309</a> forms.</p>
+
+      <div class="ex-cards">
+        <article class="card card--red ex-card" id="wsdot-2026" aria-labelledby="wsdot-title">
+          <h3 id="wsdot-title">ARES-ACS / <abbr title="Washington State Department of Transportation">WSDOT</abbr> exercise</h3>
+          <p class="ex-when"><time datetime="2026-09-26">Sat–Sun, Sep 26–27</time> <span class="ex-status" data-start="2026-09-26" data-end="2026-09-27"><span class="tag tag--now">Happening now</span></span></p>
+          <p>Extra form: <a href="documents.html#wsdot-580-020">WSDOT 580-020, Road and Bridge Assessment</a></p>
+          <p class="ex-action"><a class="btn btn--red ext" href="https://spokaneares-acs.groups.io/g/main" rel="noopener" data-verify="true">Exercise details on groups.io<span class="vh"> (opens groups.io, members only)</span></a></p>
+        </article>
+
+        <article class="card ex-card" id="set-2026" aria-labelledby="set-title">
+          <h3 id="set-title">Simulated Emergency Test</h3>
+          <p class="ex-when"><time datetime="2026-10-03">Sat, Oct 3</time></p>
+          <p>ARRL’s national exercise. The Section asks you to:</p>
+          <ol class="ex-tasks">
+            <li>Use Winlink to send a <a href="documents.html#wa-field-situation-report">WA State Field Situation Report</a> to your <abbr title="Emergency Coordinator">EC</abbr> and the <abbr title="Section Emergency Coordinator">SEC</abbr> (AG7QP).</li>
+            <li>Send an <abbr title="National Traffic System">NTS</abbr> message to the Section Manager (KA7LJQ) and the SEC.</li>
+            <li>Take photos of your station and operation.</li>
+            <li>Make as many contacts as you can under <abbr title="Parks on the Air">POTA</abbr> or <abbr title="Summits on the Air">SOTA</abbr> rules.</li>
+            <li>Send an after-action report, with a participant list, to the SEC.</li>
+          </ol>
+          <p><a class="ext" href="https://www.arrl.org/simulated-emergency-test">ARRL SET forms<span class="vh"> (opens ARRL)</span></a></p>
+        </article>
+      </div>
+
+      <p class="m-line ex-after"><b>After any exercise:</b> send your logs to the exercise lead. ACS members: get your yearly field operation signed off.</p>
+    </section>
+
+    <div class="ex-grid">
+
+      <!-- 2. Later this season: dated events after Next up (public service is below). -->
+      <section aria-labelledby="upcoming">
+        <div class="m-head"><h2 id="upcoming">Later this season</h2></div>
+        <table class="table ex-table ex-later">
+          <caption class="vh">Exercises and on-air events later this season</caption>
+          <thead class="vh"><tr><th scope="col">When</th><th scope="col">What</th></tr></thead>
+          <tbody>
+            <tr id="shakeout-2026" data-end="2026-10-15"><th scope="row">Thu, Oct 15, 10:15 AM</th><td data-verify="true"><a class="ext" href="https://www.shakeout.org/">Great ShakeOut<span class="vh"> (opens shakeout.org)</span></a>: send a <a class="ext" href="https://earthquake.usgs.gov/data/dyfi/"><abbr title="USGS Did You Feel It?">DYFI</abbr><span class="vh"> (opens USGS)</span></a> report by Winlink, marked as an exercise</td></tr>
+            <tr data-end="2026-10-17"><th scope="row">Sat, Oct 17, 9:00 AM–noon</th><td data-verify="true">SHARES training, for SHARES participants</td></tr>
+            <tr data-end="2026-10-24"><th scope="row">Sat, Oct 24</th><td data-verify="true">State COMMEX</td></tr>
+            <tr data-end="2026-11-25"><th scope="row">Nov 18–25</th><td data-verify="true">Washington operates as <a class="ext" href="https://www.arrl.org/america250-was">W1AW/7<span class="vh"> (opens ARRL)</span></a>: optional shifts</td></tr>
+            <tr data-end="2026-12-05"><th scope="row">Fri–Sat, Dec 4–5</th><td data-verify="true"><a class="ext" href="https://www.weather.gov/crh/skywarnrecognition">SKYWARN Recognition Day<span class="vh"> (opens the National Weather Service)</span></a></td></tr>
+            <tr data-end="2027-01-24"><th scope="row">Sat–Sun, Jan 23–24</th><td><a class="ext" href="https://winterfieldday.org/">Winter Field Day<span class="vh"> (opens winterfieldday.org)</span></a></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- 3. Winlink assignments: the only place the tasks appear (rows from data.js). -->
+      <section aria-labelledby="winlink-assignments">
+        <div class="m-head"><h2 id="winlink-assignments">Winlink assignments</h2></div>
+        <p class="m-line ex-howto">Answer on an ICS-213 unless another form is named. Send to NV2Z and AG7QP between 5:00 and 9:00 PM on the date shown. Radio preferred; Telnet OK.</p>
+        <table class="table table--dense ex-table ex-winlink">
+          <caption class="vh">Winlink assignments</caption>
+          <thead><tr><th scope="col">Date</th><th scope="col">Assignment</th><th scope="col">Form</th></tr></thead>
+          <tbody data-widget="winlink-table">
+            <tr class="is-next"><th scope="row"><time datetime="2026-10-13">Tue, Oct 13</time></th><td data-label="Assignment">Did You Feel It report (ShakeOut practice)</td><td data-label="Form">DYFI</td></tr>
+            <tr class=""><th scope="row"><time datetime="2026-10-27">Tue, Oct 27</time></th><td data-label="Assignment">A welfare message</td><td data-label="Form">Welfare Message / Quick Health &amp; Welfare</td></tr>
+            <tr class=""><th scope="row"><time datetime="2026-11-10">Tue, Nov 10</time></th><td data-label="Assignment">Where you expect to have Thanksgiving dinner</td><td data-label="Form">ICS-213</td></tr>
+            <tr class=""><th scope="row"><time datetime="2026-11-24">Tue, Nov 24</time></th><td data-label="Assignment">What you want Santa to bring you</td><td data-label="Form">ICS-213RR</td></tr>
+            <tr class=""><th scope="row"><time datetime="2026-12-08">Tue, Dec 8</time></th><td data-label="Assignment">Justify to Santa that you were good this year</td><td data-label="Form">ICS-213</td></tr>
+            <tr class=""><th scope="row"><time datetime="2026-12-22">Tue, Dec 22</time></th><td data-label="Assignment">Your New Year’s Eve plans</td><td data-label="Form">ICS-213</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- 4. Public-service events: who to volunteer through (call signs only). -->
+      <section aria-labelledby="public-service">
+        <div class="m-head"><h2 id="public-service">Public-service events</h2></div>
+        <table class="table table--dense ex-table ex-public">
+          <caption class="vh">Public-service events</caption>
+          <thead><tr><th scope="col">Event</th><th scope="col">When</th><th scope="col">Volunteer through</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Bloomsday</th><td data-label="When">Sun, May 2, 2027</td><td data-label="Volunteer through">NV2Z</td></tr>
+            <tr><th scope="row">Lilac Festival Armed Forces Torchlight Parade</th><td data-label="When">Date not posted</td><td data-label="Volunteer through">NV2Z</td></tr>
+            <tr data-verify="true"><th scope="row">Climb for the Cure</th><td data-label="When">Sun, Jun 13, 2027</td><td data-label="Volunteer through">NZ2S</td></tr>
+            <tr><th scope="row">Fun runs and bike races</th><td data-label="When">As requested</td><td data-label="Volunteer through">NV2Z</td></tr>
+          </tbody>
+        </table>
+        <p class="m-line ex-tips">First event? Read <a href="documents.html#public-service-tips">Preparing for public-service communications</a>.</p>
+      </section>
+
+      <!-- 5. Past exercises: one-off or notable only, month and year. -->
+      <section aria-labelledby="past">
+        <div class="m-head"><h2 id="past">Past exercises</h2></div>
+        <ul class="ex-past">
+          <li><span class="ex-past__when">2025</span> <span data-verify="true">Field Day in Spokane Valley as W7GBU</span></li>
+          <li><span class="ex-past__when">Oct 2022</span> <span>Rockford exercise</span></li>
+          <li><span class="ex-past__when">Dec 2019</span> <span data-verify="true">“Hazard City” hospital deployment exercise</span></li>
+          <li><span class="ex-past__when">Oct 2019</span> <span>Quarterly all-members exercise</span></li>
+          <li><span class="ex-past__when">Jul 2019</span> <span>Kootenai County exercise</span></li>
+          <li><span class="ex-past__when">Mar 2019</span> <span>EOC-to-EOC exercise: 20+ operators across the county</span></li>
+          <li><span class="ex-past__when">Mar 2018</span> <span>Fifth-Saturday multi-county exercise</span></li>
+          <li><span class="ex-past__when">Aug 2013</span> <span>EOC-to-EOC exercise</span></li>
+        </ul>
+      </section>
+
+    </div>
+
+  </main>
+</div>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer__bar">
+      <a class="footer__seal" href="../index.html"><img src="../assets/img/seal-ares-acs-400.png" alt="Spokane County ARES-ACS home" width="44" height="44" loading="lazy"></a>
+      <nav aria-label="Footer"><ul class="footer__links">
+        <li><a href="../how-it-works.html">How it works</a></li>
+        <li><a href="../about.html">About ARES &amp; ACS</a></li>
+        <li><a href="index.html">For Members</a></li>
+        <li><a class="ext" href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io<span class="vh"> (opens groups.io)</span></a></li>
+        <li><a href="../about.html#contact">Contact</a></li>
+        <li>Privacy (coming)</li>
+      </ul></nav>
+    </div>
+    <div class="footer__bottom">
+      <p class="footer__emergency" data-verify="true">Volunteers, not first responders. In an emergency, call 911.</p>
+      <p class="footer__mock">© Spokane County ARES-ACS. Mockup — content to be verified before launch</p>
+    </div>
+  </div>
+</footer>
+<script src="../assets/data.js"></script>
+<script src="../assets/site.js"></script>
+<script>
+/* Page-scoped (Exercises & events): keep the static schedule honest to today's
+   date from data.js (so ?today= works). The WSDOT status reads "Happening now"
+   during the exercise and "Starts …" before it; "Later this season" rows that
+   have ended drop off. site.js renders the Winlink table. */
+document.addEventListener('DOMContentLoaded', function () {
+  var S = window.SPOKARES; if (!S || !S.fn) return;
+  var F = S.fn, today = F.today();
+  Array.prototype.forEach.call(document.querySelectorAll('.ex-status[data-start]'), function (el) {
+    var start = el.getAttribute('data-start'), end = el.getAttribute('data-end') || start;
+    if (today < start) el.textContent = 'Starts ' + F.fmtDate(start, 'short');
+    else if (today > end) el.hidden = true;
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.ex-later tr[data-end]'), function (tr) {
+    tr.hidden = tr.getAttribute('data-end') < today;
+  });
+});
+</script>
+</body>
+</html>

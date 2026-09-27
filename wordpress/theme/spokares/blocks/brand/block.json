@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "spokares-theme/brand",
+	"title": "Site seal and name",
+	"category": "theme",
+	"icon": "shield",
+	"description": "The ARES-ACS seal and name, linked to Home. Used only in the header and footer.",
+	"textdomain": "spokares",
+	"attributes": {
+		"variant": { "type": "string", "default": "header", "enum": [ "header", "footer" ], "label": "Where it is used" }
+	},
+	"supports": {
+		"autoRegister": true,
+		"html": false,
+		"reusable": false,
+		"inserter": false,
+		"customClassName": false
+	},
+	"render": "file:./render.php"
+}

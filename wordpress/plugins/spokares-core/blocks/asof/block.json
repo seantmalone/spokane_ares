@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "spokares/asof",
+	"title": "Schedule as of",
+	"category": "spokares",
+	"icon": "calendar",
+	"description": "Today's date, for the members hub.",
+	"textdomain": "spokares-core",
+	"supports": {
+		"autoRegister": true,
+		"html": false,
+		"reusable": false,
+		"className": true
+	},
+	"usesContext": [
+		"postId"
+	],
+	"render": "file:./render.php"
+}

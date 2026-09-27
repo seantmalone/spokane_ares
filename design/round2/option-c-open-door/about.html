@@ -1,0 +1,1139 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+<title>About ARES &amp; ACS | Spokane County ARES-ACS</title>
+<meta name="description" content="What ARES and ACS are, why Spokane County has both, the legal basis, who we serve, how to join, training and task books, equipment, activations, history and FAQ.">
+<meta name="theme-color" content="#1E3557">
+<link rel="icon" href="assets/img/seal-ares-acs-400.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  /* =====================================================================
+     About-only layout (page-scoped, per DESIGN.md §5). Tokens only: no new
+     colours, fonts, shadows or radii. Components come from site.css.
+     ===================================================================== */
+
+  /* Intro: H1 + lede on the left, four audience doors into this page on the right */
+  .about-intro .intro-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); align-items: end; }
+  .read-guide { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 14px; align-items: center; margin-top: 20px; max-width: 34em; font-size: var(--fs-ui); line-height: 1.5; color: var(--ink-2); }
+  .read-guide b { color: var(--ink); }
+  .start-title { font-family: var(--font-display); font-weight: 700; font-size: 1.125rem; color: var(--dusk-deep); margin-bottom: 10px; }
+  .intro-doors .audience { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .intro-doors .audience li + li { border-left: 1px solid var(--line); }
+  .intro-doors .audience li:nth-child(3) { border-left: 0; }
+  .intro-doors .audience li:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .intro-doors .audience a { padding: 14px 16px; align-content: center; }
+  .intro-doors .audience b { font-size: 1.0625rem; }
+
+  /* TOC: the 27 sections are grouped into six parts so the list scans */
+  .toc-group { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-small); color: var(--ink-2); padding: 14px 12px 2px; }
+  .toc-title + .toc-group { padding-top: 0; }
+
+  /* Prose helpers */
+  .prose .lead-in { font-size: 1.0625em; }
+  .prose .sources-line { font-size: var(--fs-small); color: var(--ink-2); }
+  .mark-row { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 18px; align-items: start; }
+  .mark-row img { width: 64px; height: 64px; }
+  .prose .check-list-tight { padding-left: 0; }
+
+  /* "At a glance": a six-row summary sheet */
+  .at-glance { display: grid; grid-template-columns: 10.5em minmax(0, 1fr); gap: 0 20px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-card); padding: 4px 22px; font-size: var(--fs-ui); line-height: 1.5; }
+  .at-glance dt, .at-glance dd { margin: 0; padding: 13px 0; border-top: 1px solid var(--line); }
+  .at-glance dt:first-of-type, .at-glance dt:first-of-type + dd { border-top: 0; }
+  .at-glance dt { font-family: var(--font-display); font-weight: 700; font-size: 1.0625rem; color: var(--dusk-deep); line-height: 1.3; }
+
+  /* ARES vs ACS: the marks sit in the column heads */
+  .data-table--compare thead img { display: inline-block; width: 30px; height: 30px; margin-right: 8px; vertical-align: -8px; }
+
+  /* The legal basis: four numbered layers, federal to county */
+  .prose .layers { list-style: none; padding-left: 0; counter-reset: layer; }
+  .prose .layers > li { counter-increment: layer; position: relative; padding: 2px 0 22px 60px; margin-top: 0; }
+  .prose .layers > li + li { border-top: 1px solid var(--line); padding-top: 20px; }
+  .layers > li::before { content: counter(layer); position: absolute; left: 0; font-family: var(--font-display); font-weight: 800; font-stretch: 75%; font-size: 3rem; line-height: .9; color: var(--dusk); }
+  .prose .layers h3 { margin-top: 0; }
+  .layers li > * + * { margin-top: .6em; }
+  .layers ul { padding-left: 1.2em; }
+
+  /* Structure: two chains, one team */
+  .chains { margin-top: 24px; font-size: var(--fs-ui); line-height: 1.35; }
+  .chain-top { text-align: center; padding: 10px 16px; border: 2px dashed var(--dusk-line); border-radius: var(--r-card); background: #fff; color: var(--ink-2); }
+  .chain-top b { color: var(--ink); }
+  .chain-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }
+  .chain-name { font-family: var(--font-display); font-weight: 700; font-size: 1.0625rem; color: var(--dusk-deep); text-align: center; margin-bottom: 10px; }
+  .prose .chain ol { list-style: none; padding-left: 0; }
+  .prose .chain li { position: relative; margin-top: 0; padding: 10px 12px; border-radius: 10px; background: var(--dusk-tint); text-align: center; }
+  .prose .chain li + li { margin-top: 20px; }
+  .chain li + li::before { content: ""; position: absolute; left: 50%; top: -20px; height: 20px; border-left: 2px dashed var(--dusk); }
+  .prose .chain--county li { background: var(--pine-tint); }
+  .chain--county li + li::before { border-color: var(--pine); }
+  .chain li small { display: block; font-size: var(--fs-small); color: var(--ink-2); }
+  .chain-merge { display: block; width: 100%; height: 44px; color: var(--dusk); }
+  .chain-meet { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 14px; align-items: center; padding: 14px 18px; border: 2px solid var(--dusk); border-radius: var(--r-card); background: #fff; }
+  .chain-meet img { width: 52px; height: 52px; }
+  .chain-meet b { display: block; font-family: var(--font-display); font-size: 1.1875rem; color: var(--dusk-deep); line-height: 1.2; }
+  .chains figcaption { margin-top: 12px; font-size: var(--fs-small); color: var(--ink-2); line-height: 1.5; }
+
+  /* Membership: a 4-step ACS ladder, and requirements as checklists */
+  .prose .ladder { padding-left: 0; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .prose .ladder li { margin-top: 0; }
+  .ladder span { display: block; font-size: var(--fs-small); color: var(--ink-2); }
+  .prose .req { padding-left: 0; }
+  .prose .req li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 16px; align-items: baseline; margin-top: 0; line-height: 1.45; }
+  .req .how { font-size: var(--fs-small); color: var(--ink-2); text-align: right; white-space: nowrap; }
+  .req .how b { color: var(--ink); }
+  .prose h4 { font-size: 1.1875rem; color: var(--dusk-deep); }
+  .prose h4 .lvl-note { display: block; margin-top: 2px; font-family: var(--font-body); font-weight: 400; font-size: var(--fs-small); color: var(--ink-2); }
+
+  .prose .agency-door p { margin-top: 8px; }
+
+  /* Join steps table: big step numbers in the row head */
+  .join-table tbody th { width: 34%; }
+  .step-head { display: flex; align-items: baseline; gap: 10px; }
+  .step-no { display: inline-block; flex: none; min-width: .7em; font-family: var(--font-display); font-weight: 800; font-stretch: 75%; font-size: 2rem; line-height: 1; color: var(--dusk); vertical-align: -4px; }
+  .opt { font-weight: 400; color: var(--ink-2); font-size: var(--fs-small); }
+
+  /* Equipment: kits beside the photo frame */
+  .kit-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 20px; align-items: stretch; }
+  .kit-grid .stack > * + * { margin-top: 16px; }
+  .prose .card h3 { margin-top: 0; font-size: 1.1875rem; }
+  .prose .card p { font-size: var(--fs-ui); line-height: 1.55; }
+  .prose .card p + p { margin-top: 8px; }
+  .kit-grid .photo-needed { height: 100%; min-height: 240px; }
+
+  /* Activation: four stages in a row */
+  .prose .stages { padding-left: 0; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .prose .stages li { margin-top: 0; }
+  .stages .lvl { display: block; font-size: var(--fs-small); color: var(--ink-2); font-weight: 400; }
+
+  /* Where we meet: address beside the drawn map */
+  .meet-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 20px; align-items: start; }
+  .meet-grid address { font-style: normal; font-size: var(--fs-ui); line-height: 1.55; }
+  .meet-grid address b { display: block; font-family: var(--font-display); font-size: 1.1875rem; color: var(--dusk-deep); }
+  .next-dates { list-style: none; font-size: var(--fs-ui); }
+  .prose .next-dates { padding-left: 0; }
+  .prose .next-dates li { display: grid; grid-template-columns: 7.5em minmax(0, 1fr); gap: 12px; padding: 8px 0; margin-top: 0; border-top: 1px solid var(--line); }
+  .next-dates time { font-family: var(--font-display); font-weight: 700; color: var(--dusk); }
+
+  /* W7GBU story */
+  .prose > .callsign-block { margin-top: 12px; }
+  .honoree { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; color: var(--dusk-deep); }
+
+  /* History: the timeline component with years in the time column */
+  .prose .timeline { padding-left: 0; }
+  .prose .timeline li { margin-top: 0; }
+  .timeline .tl-time { font-size: 1rem; }
+  .timeline .tl-body p { font-size: var(--fs-ui); color: var(--ink); line-height: 1.5; margin-top: 0; }
+  .legacy-seal { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 14px; align-items: center; font-size: var(--fs-small); color: var(--ink-2); }
+  .legacy-seal img { width: 56px; height: 56px; }
+
+  /* Glossary: two columns on wide screens */
+  .prose .definition-list { display: grid; grid-template-columns: minmax(7em, 12em) minmax(0, 1fr); gap: 0 20px; font-size: var(--fs-ui); line-height: 1.5; }
+  .prose .definition-list dt, .prose .definition-list dd { margin: 0; padding: 10px 0; border-top: 1px solid var(--line); }
+
+  /* Contact */
+  .emergency-line { font-family: var(--font-display); font-weight: 700; font-size: 1.375rem; color: var(--ink); }
+
+  /* Part ends: a rule and "Back to top" close each of the six parts */
+  .prose > .part-end { margin-top: 2em; padding-top: 4px; border-top: 2px solid var(--ink); }
+  .part-end .back-to-top { margin-top: 0; }
+  .prose > .part-end + h2 { margin-top: 1.4em; }
+
+  /* The closing line */
+  .prose > .last-reviewed { margin-top: 2.4em; padding-top: 14px; border-top: 1px solid var(--line); }
+
+  @media (max-width: 1023px) {
+    /* Scripts off: the open TOC must not stick over the text */
+    .no-js .toc { position: static; }
+    .no-js .toc-details[open] .toc-panel { max-height: none; }
+    .toc-group { padding-left: 10px; }
+  }
+  @media (max-width: 960px) {
+    .about-intro .intro-grid { grid-template-columns: minmax(0, 1fr); align-items: start; }
+    .prose .stages { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 640px) {
+    /* Phones: "Jump to section" sits right under the intro (ia.md §9); it lists
+       the same four starting points, so the doors step aside. */
+    .intro-doors { display: none; }
+    .read-guide { grid-template-columns: 36px minmax(0, 1fr); }
+    .read-guide .icon-disc { width: 36px; height: 36px; }
+    .at-glance { grid-template-columns: minmax(0, 1fr); padding: 4px 16px; }
+    .at-glance dd { border-top: 0; padding-top: 0; }
+    .at-glance dt { padding-bottom: 2px; }
+    .mark-row { grid-template-columns: 48px minmax(0, 1fr); gap: 14px; }
+    .mark-row img { width: 48px; height: 48px; }
+    .prose .layers > li { padding-left: 44px; }
+    .layers > li::before { font-size: 2.25rem; }
+    .chain-cols { gap: 10px; }
+    .prose .chain li { padding: 8px 8px; font-size: var(--fs-small); }
+    .chain-meet { grid-template-columns: 40px minmax(0, 1fr); }
+    .chain-meet img { width: 40px; height: 40px; }
+    .prose .ladder, .prose .stages { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .prose .req li { grid-template-columns: minmax(0, 1fr); }
+    .req .how { text-align: left; white-space: normal; }
+    .kit-grid, .meet-grid { grid-template-columns: minmax(0, 1fr); }
+    .kit-grid .photo-needed { min-height: 0; aspect-ratio: 4 / 3; }
+    .prose .definition-list { grid-template-columns: minmax(0, 1fr); }
+    .prose .definition-list dd { border-top: 0; padding-top: 0; }
+    .prose .definition-list dt { padding-bottom: 2px; }
+    .step-no { font-size: 1.75rem; }
+  }
+</style>
+</head>
+<body data-root="">
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ======================= ICON SPRITE (copy verbatim into every page) ======================= -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4.5" height="7" rx="1.5"/><rect x="16.5" y="14" width="4.5" height="7" rx="1.5"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15.6 14.3A5 5 0 0 1 21 19"/></symbol>
+  <symbol id="i-tools" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></symbol>
+  <symbol id="i-door" viewBox="0 0 24 24"><path d="M6 21V4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5V21"/><path d="M3 21h18"/><circle cx="14.5" cy="12.5" r="1" fill="currentColor"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-radio" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="14" rx="2"/><path d="M9.5 7V2.5M10 11h4M10 14h4"/><circle cx="12" cy="17.6" r=".7" fill="currentColor"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-form" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2.8h6V4M8.5 10h7M8.5 14h7M8.5 18h4"/></symbol>
+  <symbol id="i-hospital" viewBox="0 0 24 24"><path d="M4 21V8l8-4 8 4v13M2.5 21h19M12 9v6M9 12h6"/></symbol>
+  <symbol id="i-weather" viewBox="0 0 24 24"><path d="M7 17a4.5 4.5 0 1 1 1-8.9A5.5 5.5 0 0 1 18.5 10 3.5 3.5 0 0 1 18 17"/><path d="M12.5 13l-2 4h3l-2 4"/></symbol>
+  <symbol id="i-antenna" viewBox="0 0 24 24"><path d="M12 10v11M8 21l4-11 4 11"/><circle cx="12" cy="8" r="1.5"/><path d="M8.5 4.5a5 5 0 0 0 0 7M15.5 4.5a5 5 0 0 1 0 7"/></symbol>
+  <symbol id="i-trailer" viewBox="0 0 24 24"><rect x="2.5" y="6" width="15" height="10" rx="1.5"/><path d="M17.5 13h4M10 6V3.5"/><circle cx="7" cy="17.5" r="1.8"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5z"/><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H20"/></symbol>
+  <symbol id="i-kit" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M12 11v5M9.5 13.5h5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></symbol>
+  <symbol id="i-message" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol>
+  <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 12h3l2-5 3 10 3-12 3 12 2-5h4"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></symbol>
+  <!-- Drawn locator for "Where we meet" (not a Google capture). Use: <svg viewBox="0 0 400 250" role="img" aria-label="…"><use href="#map-meet"/></svg> -->
+  <symbol id="map-meet" viewBox="0 0 400 250">
+    <rect width="400" height="250" fill="#E8EEF6"/>
+    <g stroke="#D0DAE7" stroke-width="19" fill="none">
+      <path d="M0 36H400M0 104H400M0 212H400M58 0V250M176 104V250M370 0V250"/>
+    </g>
+    <g stroke="#FFFFFF" stroke-width="15" fill="none">
+      <path d="M0 36H400M0 104H400M0 212H400M58 0V250M176 104V250M370 0V250"/>
+    </g>
+    <rect x="190" y="175" width="164" height="28" rx="3" fill="#FFFFFF" stroke="#B9C7DB" stroke-width="1.5"/>
+    <text x="272" y="193.5" text-anchor="middle" font-family="Atkinson Hyperlegible, Verdana, sans-serif" font-size="11.5" fill="#465163">Spokane County Courthouse</text>
+    <rect x="193" y="121" width="78" height="42" rx="3" fill="#E4EFEA" stroke="#2E5B4F" stroke-width="2"/>
+    <g font-family="Atkinson Hyperlegible, Verdana, sans-serif" font-size="12.5" fill="#465163">
+      <text x="248" y="40.5">W Boone Ave</text>
+      <text x="72" y="108.5" font-weight="700" fill="#1B2433">W Gardner Ave</text>
+      <text x="248" y="216.5">W Mallon Ave</text>
+      <text transform="translate(180.5 204) rotate(-90)" font-weight="700" fill="#1B2433">N Jefferson St</text>
+      <text transform="translate(62.5 196) rotate(-90)">N Adams St</text>
+      <text transform="translate(374.5 196) rotate(-90)">N Monroe St</text>
+    </g>
+    <g font-family="Atkinson Hyperlegible, Verdana, sans-serif">
+      <text x="196" y="60" font-size="13" font-weight="700" fill="#1E3557">Spokane County</text>
+      <text x="196" y="75" font-size="13" font-weight="700" fill="#1E3557">Emergency Management</text>
+      <text x="196" y="90" font-size="12" fill="#465163">1121 W Gardner Ave</text>
+    </g>
+    <path d="M232 94V112" stroke="#2F4E7E" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <g transform="translate(232 141)">
+      <path d="M0 0C-3 -6-11 -12-11 -21A11 11 0 0 1 11 -21C11 -12 3 -6 0 0Z" fill="#2F4E7E"/>
+      <circle cx="0" cy="-21" r="4" fill="#FFFFFF"/>
+    </g>
+    <g transform="translate(26 158)" font-family="Atkinson Hyperlegible, Verdana, sans-serif">
+      <circle r="13" fill="#FFFFFF" stroke="#B9C7DB" stroke-width="1.5"/>
+      <path d="M0 -8L4.5 4 0 1.5-4.5 4Z" fill="#1E3557"/>
+      <text y="28" text-anchor="middle" font-size="11" fill="#465163">N</text>
+    </g>
+  </symbol>
+</svg>
+<!-- ======================= /ICON SPRITE ======================= -->
+
+<!-- ======================= HEADER ======================= -->
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="index.html" aria-label="Spokane County ARES-ACS, home">
+      <img src="assets/img/seal-ares-acs-400.png" alt="" width="50" height="50">
+      <span class="brand-text"><span class="brand-county">Spokane County</span><span class="brand-name">ARES-ACS</span></span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <ul class="nav-list">
+        <li><a class="nav-link" href="index.html">Home</a></li>
+        <li><a class="nav-link" href="how-it-works.html">How it works</a></li>
+        <li><a class="nav-link" href="about.html" aria-current="page">About ARES &amp; ACS</a></li>
+        <li><a class="nav-link" href="members/index.html">For Members</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn--join header-join" href="index.html#join">Join the team</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <svg class="icon icon-open" aria-hidden="true"><use href="#i-menu"/></svg>
+      <svg class="icon icon-close" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
+  </div>
+</header>
+<!-- ======================= /HEADER ======================= -->
+
+<main id="main">
+
+  <!-- ============================================================= INTRO -->
+  <div class="page-intro about-intro">
+    <div class="wrap intro-grid">
+      <div>
+        <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li><span aria-current="page">About ARES &amp; ACS</span></li></ol></nav>
+        <h1>About ARES &amp; ACS</h1>
+        <p class="lede">Spokane County ARES-ACS is one team of licensed amateur radio volunteers with two affiliations: the ARRL’s Amateur Radio Emergency Service, and Spokane County Emergency Management’s own Auxiliary Communications program. This page explains both, in detail.</p>
+        <p class="read-guide"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-book"/></svg></span><span><b>Everything, in plain words.</b> Each section opens with the short version. Read that and move on, or keep going for the detail.</span></p>
+        <p class="meta-line"><span data-verify="true">Last reviewed <time datetime="2026-09-26">September 26, 2026</time>. Page owner: the Emergency Coordinator.</span></p>
+      </div>
+      <nav class="intro-doors" aria-labelledby="start-h">
+        <p class="start-title" id="start-h">Start with what you need</p>
+        <ul class="audience">
+          <li><a href="#licensing"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-headphones"/></svg></span><b>New to radio</b><span class="hint">Getting licensed</span></a></li>
+          <li><a href="#membership"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-radio"/></svg></span><b>Licensed ham</b><span class="hint">Membership: two paths</span></a></li>
+          <li><a href="#training-path"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-book"/></svg></span><b>Member</b><span class="hint">The training path</span></a></li>
+          <li><a href="#for-agencies"><span class="icon-disc icon-disc--pine" aria-hidden="true"><svg class="icon"><use href="#i-shield"/></svg></span><b>Agency partner</b><span class="hint">For agencies and partners</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <div class="wrap doc-layout">
+
+    <!-- ============================================================= TOC -->
+    <!-- Hand-written so it works with scripts off. site.js (data-widget="toc") adds the
+         scroll-spy, the dusk-tint active pill, the H3 reveal and the mobile disclosure. -->
+    <nav class="toc" id="contents" aria-label="On this page" data-widget="toc">
+      <details class="toc-details" open>
+        <summary>Jump to section <span class="current"></span><svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary>
+        <div class="toc-panel">
+          <p class="toc-title">On this page</p>
+          <p class="toc-group" id="toc-g1">What we are</p>
+          <ol class="toc-list" aria-labelledby="toc-g1">
+            <li><a href="#at-a-glance">At a glance</a></li>
+            <li><a href="#what-is-ares">What ARES is</a></li>
+            <li><a href="#what-is-acs">What ACS is, and RACES</a></li>
+            <li><a href="#two-hats">Two hats, one team</a></li>
+            <li><a href="#auxcomm">And AUXCOMM?</a></li>
+            <li><a href="#mission">Our mission</a></li>
+            <li><a href="#what-we-are-not">What we are not</a></li>
+          </ol>
+          <p class="toc-group" id="toc-g2">Rules and partners</p>
+          <ol class="toc-list" aria-labelledby="toc-g2">
+            <li><a href="#legal-basis">The legal basis</a></li>
+            <li><a href="#who-we-serve">Who we serve</a></li>
+            <li><a href="#for-agencies">For agencies and partners</a></li>
+            <li><a href="#agreements">Agreements</a></li>
+            <li><a href="#structure">Structure</a></li>
+            <li><a href="#leadership">Leadership</a></li>
+          </ol>
+          <p class="toc-group" id="toc-g3">Joining and training</p>
+          <ol class="toc-list" aria-labelledby="toc-g3">
+            <li><a href="#membership">Membership: two paths</a>
+              <ol>
+                <li><a href="#ares-path">Path 1: ARES</a></li>
+                <li><a href="#acs-path">Path 2: ACS</a></li>
+              </ol>
+            </li>
+            <li><a href="#join-steps">Joining, step by step</a></li>
+            <li><a href="#training-path">The training path</a>
+              <ol>
+                <li><a href="#acs-task-book">ACS Position Task Book</a></li>
+                <li><a href="#arrl-task-book">ARRL ARES Task Book</a></li>
+              </ol>
+            </li>
+            <li><a href="#commitment">What it takes</a></li>
+            <li><a href="#equipment">Equipment</a></li>
+            <li><a href="#activation">How activations work</a></li>
+          </ol>
+          <p class="toc-group" id="toc-g4">Licensing and meetings</p>
+          <ol class="toc-list" aria-labelledby="toc-g4">
+            <li><a href="#licensing">Getting licensed</a></li>
+            <li><a href="#where-we-meet">Where and when we meet</a></li>
+          </ol>
+          <p class="toc-group" id="toc-g5">Our story</p>
+          <ol class="toc-list" aria-labelledby="toc-g5">
+            <li><a href="#w7gbu">The W7GBU story</a></li>
+            <li><a href="#history">History in brief</a></li>
+          </ol>
+          <p class="toc-group" id="toc-g6">Reference</p>
+          <ol class="toc-list" aria-labelledby="toc-g6">
+            <li><a href="#faq">Questions and answers</a></li>
+            <li><a href="#glossary">Glossary</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ol>
+          <p class="toc-foot"><a href="#main">Back to top</a></p>
+        </div>
+      </details>
+    </nav>
+
+    <!-- ============================================================= ARTICLE -->
+    <article class="prose" id="about-article">
+
+      <!-- ========================== PART 1: WHAT WE ARE ========================== -->
+
+      <h2 id="at-a-glance" class="h-anchor">At a glance <a class="anchor" href="#at-a-glance" aria-label="Link to this section: At a glance">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>We’re licensed amateur radio volunteers who back up Spokane County’s communications when normal systems are overloaded or down. Anyone can listen on Tuesday nights; joining takes an FCC Technician license.</p></div>
+      <dl class="at-glance">
+        <dt>Who we are</dt>
+        <dd>Licensed amateur radio (“ham”) volunteers who provide backup communications when normal systems are overloaded or down.</dd>
+        <dt>Two hats</dt>
+        <dd><b>ARES</b>, a national ARRL program open to any licensed ham; and <b>ACS</b>, Spokane County Emergency Management’s volunteer communications unit, which requires a county background check.</dd>
+        <dt>Who we serve</dt>
+        <dd>Spokane County Emergency Management (primary), the National Weather Service in Spokane, area hospitals, the American Red Cross (through a national agreement) and community events.</dd>
+        <dt>What we’re not</dt>
+        <dd>First responders. We support the agencies that are.</dd>
+        <dt>How to start</dt>
+        <dd>Listen to the Tuesday 8 PM net on <span class="freq">147.300 MHz</span>, or come to a meeting. On the air, we’re <button type="button" class="term" aria-expanded="false" aria-controls="t-w7gbu">W7GBU</button><span class="term-def" id="t-w7gbu" role="note"><b>W7GBU</b>The group’s call sign, honoring Ira “Dean” Bula.</span>. To join, you need an FCC Technician license or higher.</dd>
+        <dt>Where we meet</dt>
+        <dd>Spokane County Emergency Management, 1121 W Gardner Ave, Spokane.</dd>
+      </dl>
+
+      <h2 id="what-is-ares" class="h-anchor">What ARES is <a class="anchor" href="#what-is-ares" aria-label="Link to this section: What ARES is">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>ARES is the ARRL’s national volunteer program for emergency communications. Any licensed ham, Technician class or higher, can join, and ARRL membership isn’t required.</p></div>
+      <div class="mark-row">
+        <img src="assets/img/ARES_logo.png" width="64" height="64" alt="ARRL Amateur Radio Emergency Service emblem">
+        <p class="lead-in"><b>ARES</b> stands for the <b>Amateur Radio Emergency Service</b>. It’s a national program of the <b>ARRL</b>, the national association for amateur radio in the United States.</p>
+      </div>
+      <p>ARES “consists of licensed amateurs who have voluntarily registered their qualifications and equipment, with their local ARES leadership, for communications duty in the public service when disaster strikes.”</p>
+      <p>In Spokane County, ARES members:</p>
+      <ul>
+        <li>serve at community events such as Bloomsday and the Torchlight Parade;</li>
+        <li>report “ground truth” to the National Weather Service and to Spokane County Emergency Management;</li>
+        <li>hold training nets, workshops and exercises;</li>
+        <li>can do all of this <b>without an emergency being declared</b> and “without approval from anyone,” in the words of the group’s orientation.</li>
+      </ul>
+      <p>ARES is organized by ARRL <b>sections</b>. Spokane County belongs to the <b>Eastern Washington Section</b>, and within it to <b>ARES District 9</b>. The county unit is led by an <b>Emergency Coordinator (EC)</b>, appointed through the Section, with <b>Assistant Emergency Coordinators (AECs)</b> for specific jobs.</p>
+      <div class="callout callout--good">
+        <p class="callout-label"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Good to know</p>
+        <p><b>Who can join:</b> any FCC-licensed amateur, Technician class or higher. ARRL membership is not required to join. See <a href="#ares-path">Path 1: ARES</a> for when the ARRL does ask for it.</p>
+      </div>
+
+      <h2 id="what-is-acs" class="h-anchor">What ACS is, and what happened to RACES <a class="anchor" href="#what-is-acs" aria-label="Link to this section: What ACS is, and what happened to RACES">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p><span data-verify="true">ACS is Spokane County Emergency Management’s own volunteer radio unit.</span> Its members pass a background check so they can work in sensitive places, and RACES, the older name you may still see, is now part of ACS.</p></div>
+      <div class="mark-row">
+        <img src="assets/img/ACS_logo-500.png" width="64" height="64" alt="Spokane Auxiliary Communications (ACS) seal">
+        <p class="lead-in"><b>ACS</b> is the <b data-verify="true">Auxiliary Communications</b> program of <b>Spokane County Emergency Management (SCEM)</b>. It’s the county’s own volunteer radio unit.</p>
+      </div>
+      <p>ACS members are licensed amateurs who “have voluntarily registered their qualifications and equipment <b>and undergone a background check</b>, with their local county Emergency Management.” Because of that check, “these volunteers can operate in sensitive areas such as emergency operations centers, incident command posts, hospitals and shelters.” ACS members also train on, and may use, county communications equipment.</p>
+      <h3>What about RACES?</h3>
+      <p>RACES, the <b>Radio Amateur Civil Emergency Service</b>, is the FCC’s provision that lets amateurs operate for government during emergencies (see <a href="#legal-basis">The legal basis</a>). For many years the group was known as <b>Spokane County ARES/RACES</b>.</p>
+      <p>In 2019 the county set up ACS on the federal Auxiliary Communications (AUXCOMM) model, and RACES “is now incorporated into ACS.” You may still see “ARES/RACES” on older documents and on the W7GBU license.</p>
+      <div class="callout callout--plain" data-verify="true">
+        <p class="callout-label">A note on the name</p>
+        <p>Sources spell ACS out several ways: Auxiliary Communication System, Systems, Service or Services. The group’s seal says <b>“Spokane Auxiliary Communications”</b>, and that is the wording this site uses.</p>
+      </div>
+
+      <h2 id="two-hats" class="h-anchor">Two hats, one team: why Spokane has both <a class="anchor" href="#two-hats" aria-label="Link to this section: Two hats, one team">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>ARES and ACS are the same people, on the same Tuesday net, with the same leaders. The difference is who can call on you and where you can work.</p></div>
+      <blockquote class="quote">“ARES and ACS operate in similar fashion. Often you can’t tell which is which, because they do many of the same things.”<cite>New Member Orientation</cite></blockquote>
+      <p>The same people train together, run the same Tuesday net and share the same leaders: <span data-verify="true">the county’s Emergency Coordinator is appointed through the ARRL Section and also serves as the county’s RACES/ACS officer</span>. The difference is <b>who can call on you</b> and <b>where you can work</b>.</p>
+      <div class="table-wrap">
+        <table class="data-table data-table--compare table--stack">
+          <caption>ARES and ACS, side by side<small>Same people, two registrations. You choose ARES only, or both.</small></caption>
+          <thead>
+            <tr>
+              <th scope="col"><span class="sr-only">Topic</span></th>
+              <th scope="col"><img src="assets/img/ARES_logo.png" width="30" height="30" alt="">ARES</th>
+              <th scope="col"><img src="assets/img/ACS_logo-500.png" width="30" height="30" alt="">ACS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Sponsored by</th><td data-label="ARES">ARRL, a private national association</td><td data-label="ACS">Spokane County Emergency Management, a government agency</td></tr>
+            <tr><th scope="row">Who can join</th><td data-label="ARES">Any licensed amateur (Technician or higher)</td><td data-label="ACS">Licensed amateurs who file the county volunteer application and <b>pass a Sheriff’s Office background check</b></td></tr>
+            <tr><th scope="row">Who activates it</th><td data-label="ARES">Can serve events, training and the National Weather Service without approval from anyone; supports the Red Cross under a national agreement</td><td data-label="ACS">Activated by the agency having jurisdiction: <b>Spokane County Emergency Management</b></td></tr>
+            <tr><th scope="row">Where members serve</th><td data-label="ARES">Public events, weather spotting, home and field stations</td><td data-label="ACS">Also <b>emergency operations centers, incident command posts, hospitals and shelters</b>, where sensitive information is handled</td></tr>
+            <tr><th scope="row">Paperwork</th><td data-label="ARES">Spokane County ARES Membership Application (includes a county non-disclosure agreement)</td><td data-label="ACS">The ARES application <b>plus</b> the county Volunteer Emergency Worker Application</td></tr>
+            <tr><th scope="row">Qualification</th><td data-label="ARES">ARRL ARES Task Book: Basic, Intermediate, Advanced</td><td data-label="ACS">ACS Position Task Book: New Member, Radio Operator (RADO), Senior Radio Operator <span class="nowrap">(S-RADO)</span>, Leadership</td></tr>
+            <tr><th scope="row">ID</th><td data-label="ARES"><span aria-hidden="true">—</span><span class="sr-only">Not applicable</span></td><td data-label="ACS">A county ACS identification card at the Radio Operator level</td></tr>
+            <tr><th scope="row">Legal footing</th><td data-label="ARES">Normal FCC amateur rules; national ARRL agreements with FEMA, the Red Cross, the NWS and others</td><td data-label="ACS">Registered county emergency workers under Washington law (RCW 38.52, WAC 118-04); RACES operation under FCC rule 97.407</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><b>You choose:</b> ARES only, or both. The group’s own join page puts it plainly:</p>
+      <blockquote class="quote">“Even [if] you don’t or can’t qualify for ACS, our ARES group welcomes you, and you can still volunteer for many events.”<cite>The group’s join page</cite></blockquote>
+      <p><a class="link-action" href="#structure"><svg class="icon" aria-hidden="true"><use href="#i-people"/></svg>See how the two chains meet in one team</a></p>
+
+      <h2 id="auxcomm" class="h-anchor">And AUXCOMM? <a class="anchor" href="#auxcomm" aria-label="Link to this section: And AUXCOMM?">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>AUXCOMM is a federal qualification from CISA, not a third organization you join. Spokane’s ACS was modelled on it.</p></div>
+      <p><b>AUXCOMM</b> (Auxiliary Communications) is a <b>federal</b> designation from the Cybersecurity and Infrastructure Security Agency (CISA). An <b>Auxiliary Communicator (AUXC)</b> has met the requirements to serve in the Communications Unit of the Incident Command System.</p>
+      <p>Spokane’s ACS was modelled on it, and the AUXCOMM course is encouraged for ACS Senior Radio Operators. Some members took the course in 2019.</p>
+      <p>It’s a qualification, not a third organization you join.</p>
+
+      <h2 id="mission" class="h-anchor">Our mission <a class="anchor" href="#mission" aria-label="Link to this section: Our mission">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>We support the communications needs of the agencies we serve with trained amateur radio operators. That matters most early in an emergency, when normal systems may be overloaded or fail.</p></div>
+      <blockquote class="quote">“The mission of Spokane County ARES/RACES is to support and enhance the telecommunications needs of its served agencies with the versatile talents and flexible resources of trained and competent amateur radio operators, thereby serving the public interest in times of emergency or special need.”<cite>Spokane County ARES/RACES Plan (unchanged since 2004)</cite></blockquote>
+      <p>In one line: “Our group concentrates on emergency and civil communications to support the safety of Spokane County residents.”</p>
+      <p><b>Why it matters.</b> “During the early phases of any area-wide emergency … it can be assumed that the existing communications systems used by most agencies … may become severely overloaded and may fail completely.” Volunteer radio operators “may be called upon to supplement existing systems … or when it is necessary to supply communications services where no established links exist.”</p>
+
+      <h2 id="what-we-are-not" class="h-anchor">What we are not <a class="anchor" href="#what-we-are-not" aria-label="Link to this section: What we are not">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>We aren’t first responders, a replacement for 911, or a source of public alerts. We back up the agencies that respond, when they ask.</p></div>
+      <div class="callout callout--not">
+        <ul>
+          <li><b>Not first responders.</b> “Nothing in this order suggests that anyone becomes first responders if a disaster strikes. ARES is an auxiliary support function. We should always do what our local Emergency Management Agency requests we do.” (EWA Standing Order 1b)</li>
+          <li><b>Not a replacement for 911</b> or for the county’s own radio systems. We back them up when asked.</li>
+          <li><b>Not a public alert service.</b> For public alerts, register with <a href="https://www.spokanecounty.gov/3007/Alert-Spokane" rel="noopener">ALERT Spokane<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens spokanecounty.gov)</span></a>.</li>
+          <li><b>Not a source of official incident information.</b> Follow Spokane County Emergency Management and the National Weather Service.</li>
+        </ul>
+      </div>
+
+      <div class="part-end"><a class="back-to-top" href="#main"><svg class="icon" aria-hidden="true"><use href="#i-chevron-up"/></svg>Back to top</a></div>
+
+      <!-- ========================== PART 2: RULES AND PARTNERS ========================== -->
+      <!-- REVIEW: SCEM must review the legal basis before launch; it must not overstate
+           what protection volunteers have (organization.md §6). -->
+
+      <h2 id="legal-basis" class="h-anchor">The legal basis, in plain English <a class="anchor" href="#legal-basis" aria-label="Link to this section: The legal basis">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>Four layers of rules shape what we do: federal radio rules, federal RACES rules, Washington’s emergency-worker law and the county’s emergency plan. <span data-verify="true">Legal protection comes from being a registered county emergency worker on an activity with a state mission number.</span></p></div>
+      <ol class="layers">
+        <li>
+          <h3>Federal: FCC amateur radio rules (47 CFR Part 97)</h3>
+          <p>Every member holds an FCC amateur license, and the group’s club station, <b>W7GBU</b>, is licensed to the “Spokane County ARES RACES Support Group.” <span data-verify="true">Part 97 sets how amateurs may operate, including that they can’t be paid for it and must identify with their call signs.</span></p>
+        </li>
+        <li>
+          <h3>Federal: RACES (47 CFR 97.407)</h3>
+          <p>RACES lets amateurs operate for civil-defense (emergency management) agencies. In plain terms:</p>
+          <ul>
+            <li>RACES stations and operators must be <b>certified by the civil-defense organization</b> they serve.</li>
+            <li>RACES traffic is limited to <b>authorized civil-defense communications</b>.</li>
+            <li>RACES drills and tests are capped: <b>one hour a week</b>, or <b>72 hours</b> up to twice a year with approval.</li>
+          </ul>
+        </li>
+        <li>
+          <h3>State: Washington emergency-worker law (RCW 38.52 and WAC 118-04)</h3>
+          <ul>
+            <li>RCW 38.52 lets counties run emergency management organizations and defines an <b>emergency worker</b> as someone registered with one and holding its ID card.</li>
+            <li>WAC 118-04 (amended effective December 27, 2025) says: “Registration is a prerequisite for eligibility of emergency workers for benefits and legal protection.” “Communications” is one of the defined classes of emergency worker. The county’s Volunteer Emergency Worker Application is the registration.</li>
+            <li>Coverage is tied to state <button type="button" class="term" aria-expanded="false" aria-controls="t-mission">mission numbers</button><span class="term-def" id="t-mission" role="note"><b>Mission number</b>A state number for an activation or exercise that ties it to Washington’s emergency-worker protections.</span>. That’s why the county obtains a mission number before volunteers serve a government agency.</li>
+          </ul>
+        </li>
+        <li>
+          <h3>County: the Spokane County Comprehensive Emergency Management Plan (March 2021)</h3>
+          <ul>
+            <li>The <b>Sheriff</b> is Director of Emergency Management.</li>
+            <li>ACS is a supporting agency for <button type="button" class="term" aria-expanded="false" aria-controls="t-esf2">ESF-2</button><span class="term-def" id="t-esf2" role="note"><b>ESF-2</b>Emergency Support Function 2, communications, in the county’s emergency plan.</span> (communications) and for ESF-5, 6, 8 and 9.</li>
+            <li data-verify="true">Spokane County Emergency Management serves the unincorporated county, Spokane Valley and 11 other cities and towns through an inter-local agreement. The <b>City of Spokane</b> has run its own emergency management office since 2020.</li>
+          </ul>
+        </li>
+      </ol>
+      <div class="callout callout--plain" data-verify="true">
+        <p class="callout-label"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>What this means for you</p>
+        <p>Protection comes from being a <b>registered county emergency worker</b> (the ACS path) <b>on an activity with a state mission number</b>. ARES-only activities, such as community events, aren’t county activations. Ask at orientation if you’re unsure.</p>
+      </div>
+      <div class="callout callout--legal">
+        <p class="callout-label"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Read the rules yourself</p>
+        <ul class="link-list">
+          <li><a href="https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-97" rel="noopener">47 CFR Part 97<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens ecfr.gov)</span></a></li>
+          <li><a href="https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-97/subpart-E/section-97.407" rel="noopener">47 CFR 97.407 (RACES)<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens ecfr.gov)</span></a></li>
+          <li><a href="https://app.leg.wa.gov/rcw/default.aspx?cite=38.52" rel="noopener">RCW 38.52<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens leg.wa.gov)</span></a></li>
+          <li data-verify="true"><a href="https://app.leg.wa.gov/wac/default.aspx?cite=118-04" rel="noopener">WAC 118-04<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens leg.wa.gov)</span></a></li>
+        </ul>
+      </div>
+
+      <h2 id="who-we-serve" class="h-anchor">Who we serve <a class="anchor" href="#who-we-serve" aria-label="Link to this section: Who we serve">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>Spokane County Emergency Management is our primary served agency; it activates ACS and runs the application, background check and ID cards. We also work with the National Weather Service, area hospitals, the Red Cross and community events.</p></div>
+      <div class="served-lead">
+        <img src="assets/img/SCDEM_Logo-600.png" width="76" height="76" alt="Spokane County Emergency Management seal">
+        <p><b>Spokane County Emergency Management</b>, part of the Spokane County Sheriff’s Office, is our <b>primary served agency</b> and the agency having jurisdiction. It activates ACS, runs the application and background check, issues ID cards, and provides the radio room, trailer and mobile units.</p>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table table--stack">
+          <caption>Our partners, and how we work together</caption>
+          <thead><tr><th scope="col">Partner</th><th scope="col">How we work together</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">National Weather Service, Spokane</th><td data-label="How we work together">SKYWARN weather spotting and severe-weather nets. <span data-verify="true">The group has run a station at the NWS office for SKYWARN Recognition Day every year since 1999.</span></td></tr>
+            <tr><th scope="row">Greater Spokane area hospitals</th><td data-label="How we work together">Backup radio and computer equipment kept in place and working, coordinated by the AEC for hospitals.</td></tr>
+            <tr><th scope="row">American Red Cross</th><td data-label="How we work together">Service under the national ARRL–Red Cross agreement.</td></tr>
+            <tr><th scope="row">Spokane County Community Organizations Active in Disaster (COAD)</th><td data-label="How we work together">The group reports on its work at COAD meetings.</td></tr>
+            <tr><th scope="row">Washington Emergency Management Division</th><td data-label="How we work together">State mission numbers, statewide exercises (State COMMEX, <button type="button" class="term" aria-expanded="false" aria-controls="t-eoc">EOC</button><span class="term-def" id="t-eoc" role="note"><b>EOC</b>Emergency operations center.</span>-to-EOC).</td></tr>
+            <tr><th scope="row">Community event organizers</th><td data-label="How we work together">Bloomsday, the Lilac Festival Armed Forces Torchlight Parade, Climb for the Cure, fun runs and bike races.</td></tr>
+            <tr><th scope="row">Inland Empire VHF Radio Amateurs (IEVHFRA)</th><td data-label="How we work together">A written agreement for a backup repeater and packet paths (see <a href="#agreements">Agreements</a>); the club also co-sponsors license classes.</td></tr>
+            <tr data-verify="true"><th scope="row">Neighboring county groups</th><td data-label="How we work together">Stevens, Lincoln, Pend Oreille and Ferry counties, and Kootenai County, Idaho: mutual aid and joint exercises (for example with Kootenai County in 2019).</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p data-verify="true">Also in the same county volunteer family: CERT and other Spokane County Emergency Management volunteer programs use the same county application and background check.</p>
+
+      <h2 id="for-agencies" class="h-anchor">For agencies and partners <a class="anchor" href="#for-agencies" aria-label="Link to this section: For agencies and partners">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>Government agencies request amateur radio support through Spokane County Emergency Management, which activates the team. Event organizers can reach our public-events coordinator.</p></div>
+      <h3>The relationship with Spokane County Emergency Management</h3>
+      <p>Spokane County Emergency Management is the agency having jurisdiction for ACS. It activates ACS members, and the county’s emergency plan names ACS as a supporting agency for communications (ESF-2). <span data-verify="true">Before volunteers serve a government agency, the county obtains a state mission number.</span></p>
+      <h3>What we bring</h3>
+      <p>When normal systems are overloaded or down, our members staff the county’s radio room and communications trailer and pass messages by voice and by <button type="button" class="term" aria-expanded="false" aria-controls="t-winlink">Winlink</button><span class="term-def" id="t-winlink" role="note"><b>Winlink</b>Email by radio.</span> radio email. ACS members have passed a Sheriff’s Office background check, so they can work in emergency operations centers, incident command posts, hospitals and shelters.</p>
+      <h3>Agreements</h3>
+      <p>A written agreement with the Inland Empire VHF Radio Amateurs covers a backup repeater and packet paths, and the ARRL’s national agreements with FEMA, the American Red Cross and the National Weather Service apply to every ARES group. The detail is in <a href="#agreements">Agreements</a>.</p>
+      <aside class="agency-door" aria-labelledby="agency-h">
+        <h3 id="agency-h">Request support, or ask a question</h3>
+        <p>Government agencies go through Spokane County Emergency Management. For everything else, write to the emergency coordinator at <a href="mailto:ec@spokares.org" data-verify="true">ec@spokares.org</a>.</p>
+        <p class="scope">We’re an auxiliary support function. Our members are volunteers, not first responders.</p>
+        <div class="actions">
+          <a class="btn btn--pine" href="#contact">Contact the emergency coordinator</a>
+          <a class="link-action" href="how-it-works.html#activation">How activation works</a>
+          <a class="link-action" href="#agreements">Our agreements</a>
+        </div>
+      </aside>
+
+      <h2 id="agreements" class="h-anchor">Agreements <a class="anchor" href="#agreements" aria-label="Link to this section: Agreements">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>Locally, a written agreement with the Inland Empire VHF Radio Amateurs gives us a backup repeater and packet paths. Nationally, the ARRL’s agreements with FEMA, the Red Cross, the National Weather Service and others apply to every ARES group.</p></div>
+      <h3>Local, written: MOU with the Inland Empire VHF Radio Amateurs</h3>
+      <p class="sources-line">Revision 5, May 6, 2023</p>
+      <ul>
+        <li>The ARES/ACS/RACES group is “the primary center for Emergency Operations,” activated at the request of Spokane County Emergency Management, and the <b>W7GBU <span class="freq">147.300 MHz</span></b> repeater is the primary facility.</li>
+        <li><b>IEVHFRA provides backup:</b> <span data-verify="true">its <span class="freq">146.880 MHz</span> repeater</span> if the primary is down or overloaded, a second repeater for specialised nets (for example weather reports), and packet and UHF paths so <button type="button" class="term" aria-expanded="false" aria-controls="t-ics213">ICS-213</button><span class="term-def" id="t-ics213" role="note"><b>ICS-213</b>The Incident Command System’s general message form. The ICS-213RR is its resource request.</span> and ICS-213RR forms can reach Winlink gateways.</li>
+        <li>Both sides agree to announce exercises in advance so no one mistakes a drill for a real emergency (“to prevent a ‘War of the Worlds’ panic”).</li>
+        <li data-verify="true">Contacts are to be reviewed every year.</li>
+      </ul>
+      <h3>National, through the ARRL</h3>
+      <p>These apply to ARES groups nationwide:</p>
+      <ul>
+        <li>FEMA memorandum of agreement (2023)</li>
+        <li>American Red Cross memorandum of understanding (renewed April 2021)</li>
+        <li>National Weather Service SKYWARN (1986)</li>
+        <li data-verify="true">Also: Salvation Army (SATERN), National VOAD, and Radio Relay International (2025)</li>
+      </ul>
+
+      <h2 id="structure" class="h-anchor">Structure <a class="anchor" href="#structure" aria-label="Link to this section: Structure">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>Two chains meet in one team: the ARRL’s ARES chain and the county government chain. The county’s Emergency Coordinator sits where they meet.</p></div>
+      <figure class="chains">
+        <p class="chain-top"><b>FCC (47 CFR Part 97)</b> licenses every operator and the W7GBU club station</p>
+        <div class="chain-cols">
+          <div class="chain">
+            <p class="chain-name">ARES chain (ARRL)</p>
+            <ol>
+              <li>ARRL</li>
+              <li>Northwestern Division</li>
+              <li>Eastern Washington Section<small>Section Manager, Section EC</small></li>
+              <li>ARES District 9<small>District EC</small></li>
+            </ol>
+          </div>
+          <div class="chain chain--county">
+            <p class="chain-name">County chain (government)</p>
+            <ol>
+              <li>FEMA / CISA<small>ICS, NIMS, AUXCOMM</small></li>
+              <li>Washington Emergency Management Division</li>
+              <li>Spokane County Emergency Management<small>The Sheriff is Director</small></li>
+              <li>ACS<small>RACES folded in</small></li>
+            </ol>
+          </div>
+        </div>
+        <svg class="chain-merge" viewBox="0 0 100 44" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M25 0 C25 26 50 18 50 44 M75 0 C75 26 50 18 50 44" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="6 5" vector-effect="non-scaling-stroke"/></svg>
+        <div class="chain-meet">
+          <img src="assets/img/seal-ares-acs-400.png" width="52" height="52" alt="">
+          <p><b>Spokane County Emergency Coordinator and AECs</b>One team of volunteers, Spokane County ARES-ACS.</p>
+        </div>
+        <figcaption><span data-verify="true">The county’s Emergency Coordinator is appointed through the ARRL Section and also serves as the county’s RACES/ACS officer.</span> <span data-verify="true">A county Emergency Management Communications Specialist develops and maintains the ACS program.</span></figcaption>
+      </figure>
+
+      <h2 id="leadership" class="h-anchor">Leadership <a class="anchor" href="#leadership" aria-label="Link to this section: Leadership">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>Leaders are listed by role and call sign, never by personal contact details. The Public Information Officer position is open.</p></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <caption>Spokane County unit</caption>
+          <thead><tr><th scope="col">Role</th><th scope="col">Call sign</th></tr></thead>
+          <tbody>
+            <tr data-verify="true"><th scope="row">Emergency Coordinator; website admin (also the county’s RACES/ACS officer)</th><td class="callsign">W7TSC</td></tr>
+            <tr data-verify="true"><th scope="row">AEC, Public Events; W7GBU-10 Winlink gateway manager; Winlink coordinator</th><td class="callsign">NV2Z</td></tr>
+            <tr data-verify="true"><th scope="row">AEC, Hospital Coordinator</th><td class="callsign">K7MHG</td></tr>
+            <tr data-verify="true"><th scope="row">AEC, Logistics &amp; Comms; W7GBU license trustee</th><td class="callsign">K7DSR</td></tr>
+            <tr data-verify="true"><th scope="row">AEC, Net Manager</th><td class="callsign">AG7QP</td></tr>
+            <tr data-verify="true"><th scope="row">Public Information Officer</th><td><span class="tag tag--open">Open position</span> <a href="#contact">Interested? Tell us.</a></td></tr>
+            <tr data-verify="true"><th scope="row">SKYWARN representatives</th><td class="callsign">AA7RT, W7UWC</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <caption>Above the unit</caption>
+          <thead><tr><th scope="col">Role</th><th scope="col">Call sign</th></tr></thead>
+          <tbody>
+            <tr data-verify="true"><th scope="row">ARRL Eastern Washington Section Manager</th><td class="callsign">KA7LJQ</td></tr>
+            <tr data-verify="true"><th scope="row">ARRL Eastern Washington Section Emergency Coordinator</th><td class="callsign">AG7QP</td></tr>
+            <tr data-verify="true"><th scope="row">ARES District 9 Emergency Coordinator</th><td class="callsign">WA7EC</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="part-end"><a class="back-to-top" href="#main"><svg class="icon" aria-hidden="true"><use href="#i-chevron-up"/></svg>Back to top</a></div>
+
+      <!-- ========================== PART 3: JOINING AND TRAINING ========================== -->
+
+      <h2 id="membership" class="h-anchor">Membership: two paths <a class="anchor" href="#membership" aria-label="Link to this section: Membership: two paths">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>There are two registrations: ARES, open to any licensed ham, and ACS, which adds the county application and a background check. You can do the first alone, or both.</p></div>
+      <div class="callout callout--good">
+        <p class="callout-label"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Good to know</p>
+        <p><span data-verify="true">There are no membership dues.</span> The FCC charges a $35 application fee for a new license; that goes to the FCC, not to us.</p>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table table--stack">
+          <caption>Membership levels, from ARES to ACS Leadership<small>The full requirements for each ACS level are in <a href="#training-path">The training path</a>.</small></caption>
+          <thead><tr><th scope="col">Level</th><th scope="col">What it means</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">ARES member</th><td data-label="What it means">Any licensed amateur, Technician class or higher, who files the ARES application. Serve at events, training, weather spotting and Red Cross support.</td></tr>
+            <tr><th scope="row">ACS New Member</th><td data-label="What it means">An ARES member who has filed the county application, passed the background check and attended orientation. Up to a year to finish the New Member requirements.</td></tr>
+            <tr><th scope="row">ACS Radio Operator (RADO)</th><td data-label="What it means">New Member requirements complete. You receive your county ACS identification card.</td></tr>
+            <tr><th scope="row">ACS Senior Radio Operator <span class="nowrap">(S-RADO)</span></th><td data-label="What it means">Adds a General class license, Winlink, setting up the Mobile Network Units, and leading or assisting on operations.</td></tr>
+            <tr><th scope="row">ACS Leadership</th><td data-label="What it means">Adds the FEMA leadership courses. Leaders develop the yearly training plan and run training and activities.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 id="ares-path" class="h-anchor">Path 1: ARES <a class="anchor" href="#ares-path" aria-label="Link to this section: Path 1: ARES">#</a></h3>
+      <p><b>Who:</b> any licensed amateur, Technician class or higher.</p>
+      <p><b>What to do:</b></p>
+      <ol>
+        <li>Fill out the <b>Spokane County ARES Membership Application</b> (version 2024-11-07). It includes a <b>Spokane County Emergency Management non-disclosure agreement</b>, because members may see information that isn’t public. <a href="members/documents.html#ares-application">Get the application</a></li>
+        <li>Bring it to a meeting and hand it to the Emergency Coordinator or an AEC, or send it to <a href="mailto:join@spokares.org" data-verify="true">join@spokares.org</a>.</li>
+        <li>Download the <b>ARRL ARES Task Book</b> (July 2024) to track your training. <a href="https://www.arrl.org/files/file/ARES%20Taskbook%20July%202024.pdf" rel="noopener">ARRL ARES Task Book<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens arrl.org, PDF)</span></a></li>
+      </ol>
+      <p><b>About ARRL membership:</b> it isn’t required to join ARES. The ARRL’s <b>July 2025 ARES Plan</b> does require it for the <b>Intermediate</b> level and above, and for Emergency Coordinator and AEC appointments.</p>
+      <p><b>What the application asks:</b> your call sign and license class, contact details, an emergency contact, your availability (days, nights, weekends), station capabilities (HF, VHF, UHF; home and portable power), digital skills such as Winlink, and vehicles.</p>
+
+      <h3 id="acs-path" class="h-anchor">Path 2: ACS (optional) <a class="anchor" href="#acs-path" aria-label="Link to this section: Path 2: ACS">#</a></h3>
+      <p><b>Who:</b> ARES members who want the county to be able to call on them, and who are comfortable with a background check.</p>
+      <p><b>What to do:</b></p>
+      <ol>
+        <li>Submit the ARES application (above).</li>
+        <li>Submit the county’s <b>Volunteer Emergency Worker Application</b> (Spokane County FormCenter 276). <a href="https://www.spokanecounty.gov/FormCenter/Emergency-Management-31/Volunteer-Emergency-Worker-Application-276" rel="noopener">County application<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens spokanecounty.gov)</span></a></li>
+        <li>Pass the <b>Sheriff’s Office background check.</b> The county assigns you a <b>volunteer number</b>.</li>
+        <li>Attend <b>New Member Orientation</b> <span data-verify="true">(held regularly; ask us for the next date)</span>.</li>
+        <li>You’re an ACS <b>New Member</b> “for a period normally not to exceed one year” while you complete the New Member requirements. If a required course isn’t offered in your first year, the requirement is extended until it is.</li>
+        <li>When they’re complete, you advance to <b>Radio Operator (RADO)</b> and receive your <b>ACS identification card</b>.</li>
+      </ol>
+      <blockquote class="quote">“Personal exemptions for some of the listed requirements may be granted by ACS leaders on a case-by-case basis.”<cite>ACS Position Task Book</cite></blockquote>
+
+      <h2 id="join-steps" class="h-anchor">Joining, step by step <a class="anchor" href="#join-steps" aria-label="Link to this section: Joining, step by step">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>Get licensed, join ARES, get connected, then qualify for ACS if you want to. Steps 0 to 2 are for everyone; step 3 is optional.</p></div>
+      <div class="table-wrap">
+        <table class="data-table table--stack join-table">
+          <caption>The four steps, with the detail<small>The same path as on the home page.</small></caption>
+          <thead><tr><th scope="col">Step</th><th scope="col">Details</th></tr></thead>
+          <tbody>
+            <tr><th scope="row"><span class="step-head"><span class="step-no" aria-hidden="true">0</span><span><span class="sr-only">Step 0: </span>Get licensed</span></span></th><td data-label="Details">FCC Technician license or higher. See <a href="#licensing">Getting licensed</a>.</td></tr>
+            <tr><th scope="row"><span class="step-head"><span class="step-no" aria-hidden="true">1</span><span><span class="sr-only">Step 1: </span>Join ARES</span></span></th><td data-label="Details">ARES application (2024-11-07), plus the ARRL ARES Task Book.</td></tr>
+            <tr><th scope="row"><span class="step-head"><span class="step-no" aria-hidden="true">2</span><span><span class="sr-only">Step 2: </span>Get connected</span></span></th><td data-label="Details">Apply to join the groups.io list at <a href="https://spokaneares-acs.groups.io/g/main" rel="noopener">spokaneares-acs.groups.io<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io)</span></a> (a moderator approves each new member; the archive, files and wiki are members-only). Check into the Tuesday net. Come to a Third Thursday meeting or Second Saturday workshop.</td></tr>
+            <tr><th scope="row"><span class="step-head"><span class="step-no" aria-hidden="true">3</span><span><span class="sr-only">Step 3: </span>Qualify for ACS <span class="opt">(optional)</span></span></span></th><td data-label="Details">County application, background check, orientation, New Member requirements, then Radio Operator and your ID card.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><a class="btn btn--primary" href="index.html#join">Join the team</a></p>
+
+      <h2 id="training-path" class="h-anchor">The training path <a class="anchor" href="#training-path" aria-label="Link to this section: The training path">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>Task books list what each level asks of you, and they’re how you show you’ve done it. ACS members follow the ACS Position Task Book; the ARRL has its own ARES levels, and the courses count toward both.</p></div>
+      <p class="lead-in">Position task books list the knowledge, skills and experience for each level, and they’re how you <b>show</b> you’ve done it: a course certificate, or a signature from an authorized evaluator.</p>
+      <div class="callout callout--good">
+        <p class="callout-label"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Good to know</p>
+        <p><b>A tip from the Section:</b> print your task books and keep them in a three-ring binder. As you finish each item, note the date, get the sign-off and file the paperwork just after that level’s pages.</p>
+      </div>
+
+      <h3 id="acs-task-book" class="h-anchor">ACS Position Task Book (version 2024-08-09) <a class="anchor" href="#acs-task-book" aria-label="Link to this section: ACS Position Task Book">#</a></h3>
+      <p>Items may be signed off by the Emergency Coordinator or any AEC; each <b>level</b> is signed off by the Emergency Coordinator. Each item below is <b>Required</b>, <b>Encouraged</b> or <b>Optional</b> at that level.</p>
+      <ol class="steps-inline ladder" aria-label="The four ACS levels">
+        <li><b>New Member</b><span>Normally up to one year</span></li>
+        <li><b>Radio Operator (RADO)</b><span>County ID card issued</span></li>
+        <li><b>Senior Radio Operator <span class="nowrap">(S-RADO)</span></b><span>General license</span></li>
+        <li><b>Leadership</b><span>Runs training</span></li>
+      </ol>
+
+      <h4>Level 1: New Member<span class="lvl-note">Normally up to one year</span></h4>
+      <ul class="checklist req">
+        <li><span>Understand the organization, mission and objectives (New Member Orientation)</span><span class="how"><b>Required</b>, once</span></li>
+        <li><span>FEMA <b>IS-100.c</b> Introduction to the Incident Command System</span><span class="how"><b>Required</b>, once</span></li>
+        <li><span>FEMA <b>IS-200.c</b> Basic ICS for Initial Response</span><span class="how"><b>Required</b>, once</span></li>
+        <li><span>FEMA <b>IS-700.b</b> Introduction to the National Incident Management System</span><span class="how"><b>Required</b>, once</span></li>
+        <li><span>FEMA <b>IS-800.d</b> National Response Framework, An Introduction</span><span class="how"><b>Required</b>, once</span></li>
+        <li><span>ARRL <b>Basic EmComm</b> course (about 10–20 hours online)</span><span class="how"><b>Required</b>, once</span></li>
+        <li><span>Check into ACS/ARES nets</span><span class="how"><b>Required</b> monthly; weekly encouraged</span></li>
+        <li><span>Attend meetings or training (Third Thursdays, Second Saturdays)</span><span class="how"><b>Required</b> quarterly; monthly encouraged</span></li>
+        <li><span>Personal preparedness kit (24-hour minimum; 72-hour preferred)</span><span class="how"><b>Required</b>, yearly</span></li>
+        <li><span>Radio deployment kit</span><span class="how"><b>Required</b>, yearly</span></li>
+        <li><span>Program repeater and <button type="button" class="term" aria-expanded="false" aria-controls="t-simplex">simplex</button><span class="term-def" id="t-simplex" role="note"><b>Simplex</b>Radio to radio, without a repeater (a relay station on a high site).</span> channels into your handheld</span><span class="how"><b>Required</b>, yearly</span></li>
+        <li><span>Register with <b>ALERT Spokane</b> and keep it current</span><span class="how"><b>Required</b>, once</span></li>
+        <li><span>HIPAA training (at orientation, or a 12-minute video)</span><span class="how"><b>Required</b>, once</span></li>
+        <li><span>Keep an <b>ICS-309</b> message log during all ACS radio operations</span><span class="how"><b>Required</b>, ongoing</span></li>
+        <li><span>Take part in a field operation (activation, exercise or public-service event)</span><span class="how"><b>Required</b>, yearly</span></li>
+        <li><span>SKYWARN spotter basic training</span><span class="how"><b>Encouraged</b>, every two years</span></li>
+      </ul>
+      <div class="callout callout--plain">
+        <p class="callout-label">In plain English</p>
+        <p>FEMA courses are free online and need a <b>FEMA Student ID (SID)</b>. <a href="https://cdp.dhs.gov/femasid" rel="noopener">Get a FEMA SID<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens cdp.dhs.gov)</span></a>. Save your SID: you need it for every exam.</p>
+        <p class="sources-line">ALERT Spokane moved to the Regroup platform in April 2026; the 2024 task book still says “Code Red.”</p>
+      </div>
+
+      <h4>Level 2: Radio Operator (RADO)<span class="lvl-note">County ID card issued on advancement</span></h4>
+      <ul class="checklist req">
+        <li><span>Keep up all New Member requirements</span><span class="how"><b>Required</b>, ongoing</span></li>
+        <li><span>Serve as <button type="button" class="term" aria-expanded="false" aria-controls="t-netcontrol">net control</button><span class="term-def" id="t-netcontrol" role="note"><b>Net control</b>The station that runs a net, an organized on-air meeting. Net control calls stations in turn so everyone gets heard.</span> on an ACS/ARES net (actual, event, exercise or regular)</span><span class="how"><b>Required</b>, yearly</span></li>
+        <li><span>Keep an <b>ICS-214</b> activity log during exercises and activations</span><span class="how"><b>Required</b>, ongoing</span></li>
+        <li><span>Show competency in the county Communications Room and trailer</span><span class="how"><b>Required</b>, once</span></li>
+        <li><span>ARRL <b>Intermediate EmComm</b> course</span><span class="how"><b>Required</b>, once</span></li>
+        <li><span>First Aid/CPR (scheduled through Spokane County Emergency Management)</span><span class="how"><b>Required</b>, every two years</span></li>
+        <li><span>Red Cross familiarity training (“under development”)</span><span class="how"><b>Encouraged</b>, once</span></li>
+      </ul>
+
+      <h4>Level 3: Senior Radio Operator <span class="nowrap">(S-RADO)</span></h4>
+      <ul class="checklist req">
+        <li><span>General class amateur license</span><span class="how"><b>Required</b>, maintain</span></li>
+        <li><span>Winlink: send and receive over VHF (and HF when capable); take part in the twice-monthly exercise</span><span class="how"><b>Required</b>, yearly</span></li>
+        <li><span>Set up and take down the Mobile Network Units (hitch and trailer)</span><span class="how"><b>Required</b>, once</span></li>
+        <li><span>Lead or assist on an exercise, activation or event</span><span class="how"><b>Required</b>, yearly</span></li>
+        <li><span>AUXCOMM course</span><span class="how"><b>Encouraged</b>, once</span></li>
+        <li><span>SHARES data practice (only for holders of a SHARES call sign)</span><span class="how"><b>Encouraged</b>, quarterly</span></li>
+        <li><span>Field shelter setup; regional portable repeater systems</span><span class="how"><b>Encouraged</b>, every three years</span></li>
+        <li><span>COMT (Communications Unit Technician) course</span><span class="how"><b>Optional</b>, once</span></li>
+        <li><span>ARRL Advanced EmComm</span><span class="how">“Not yet available”</span></li>
+      </ul>
+
+      <h4>Level 4: Leadership</h4>
+      <ul class="checklist req">
+        <li><span>Keep up all New Member requirements</span><span class="how"><b>Required</b>, ongoing</span></li>
+        <li><span>FEMA IS-120, IS-230, IS-235, IS-240, IS-241, IS-242, IS-244 and IS-288</span><span class="how"><b>Required</b>, once each</span></li>
+        <li><span>Radio support for a public event, or a service to the agency having jurisdiction</span><span class="how"><b>Required</b>, yearly</span></li>
+        <li><span>ARRL PR-101; ICS-300; ICS-400; COML; INCM</span><span class="how"><b>Optional</b>, once each</span></li>
+      </ul>
+      <p>Leaders develop the yearly training plan and run training and activities.</p>
+      <ul class="link-list">
+        <li><a href="members/documents.html#acs-task-book">ACS Task Book (DOCX)</a></li>
+        <li><a href="https://ag7qp.com/acs-task-book" rel="noopener">The Section’s task book guide<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens ag7qp.com)</span></a></li>
+      </ul>
+
+      <h3 id="arrl-task-book" class="h-anchor">ARRL ARES Task Book (July 2024) and levels <a class="anchor" href="#arrl-task-book" aria-label="Link to this section: ARRL ARES Task Book">#</a></h3>
+      <div class="table-wrap">
+        <table class="data-table table--stack">
+          <caption>ARRL ARES levels<small>From the ARRL ARES Plan, July 2025.</small></caption>
+          <thead><tr><th scope="col">ARRL level</th><th scope="col">Adds</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Basic</th><td data-label="Adds">FEMA IS-100, 200, 700 and 800; ARRL Basic EmComm; the Level 1 task book</td></tr>
+            <tr><th scope="row">Intermediate</th><td data-label="Adds">ARRL Intermediate EmComm; full ARRL membership</td></tr>
+            <tr><th scope="row">Advanced</th><td data-label="Adds">FEMA IS-230, 240, 241, 242, 244 and 288. Required for Emergency Coordinators, AECs, District ECs and Section ECs</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The FEMA and EmComm courses count toward both task books.</p>
+
+      <h2 id="commitment" class="h-anchor">What it takes, month to month <a class="anchor" href="#commitment" aria-label="Link to this section: What it takes, month to month">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>The ACS minimum is one net check-in a month, one meeting or workshop a quarter and one field operation a year. Weekly check-ins and monthly meetings are encouraged.</p></div>
+      <ul class="figures">
+        <li class="figure"><span class="display-num" aria-hidden="true">1</span><div><b><span class="sr-only">1 </span>net check-in a month</b><span>Weekly is encouraged.</span></div></li>
+        <li class="figure"><span class="display-num" aria-hidden="true">1</span><div><b><span class="sr-only">1 </span>meeting or workshop a quarter</b><span>Monthly is encouraged.</span></div></li>
+        <li class="figure"><span class="display-num" aria-hidden="true">1</span><div><b><span class="sr-only">1 </span>field operation a year</b><span>An activation, an exercise or a public-service event.</span></div></li>
+        <li class="figure"><span class="display-num" aria-hidden="true">2</span><div><b><span class="sr-only">2 </span>kits, kept ready</b><span>A personal kit and a radio kit, and your handheld programmed.</span></div></li>
+      </ul>
+      <blockquote class="quote">If you want to learn more and learn faster, volunteer. “Don’t wait to be asked, instead ‘Ask what I can do?’ Because it’s the relationships you develop while working with others that will be most important in an emergency. As one wag said, ‘An emergency is a poor time to be handing out business cards.’”<cite>New Member Orientation</cite></blockquote>
+
+      <h2 id="equipment" class="h-anchor">Equipment <a class="anchor" href="#equipment" aria-label="Link to this section: Equipment">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>Members provide their own radios, and there’s no required brand or model. What matters is that your gear works, you know how to use it, and it runs without the grid.</p></div>
+      <div class="kit-grid">
+        <div class="stack">
+          <div class="card">
+            <h3>Personal preparedness kit</h3>
+            <p>What you need to look after yourself during a deployment: food, water, hygiene items, clothing and medication. You’ll usually work in some kind of shelter, so a tent isn’t required.</p>
+            <p><b>24 hours minimum; 72 hours preferred.</b> Required yearly for ACS New Members.</p>
+          </div>
+          <div class="card">
+            <h3>Radio deployment kit</h3>
+            <p>Radios, spare batteries, antenna, coax, connectors and small tools, plus some portable power.</p>
+            <p><b>At minimum, 2 meters and 70 centimeters for 24 to 72 hours.</b> HF (80, 60, 40 and 20 meters) and digital modes (Winlink, Fldigi) are encouraged.</p>
+          </div>
+        </div>
+        <div class="photo-needed">
+          <svg class="icon" aria-hidden="true"><use href="#i-camera"/></svg>
+          <p><b>PHOTO NEEDED</b>A personal kit and a radio go-kit laid out flat, overhead, 4:3</p>
+        </div>
+      </div>
+      <div class="callout callout--good" data-verify="true">
+        <p class="callout-label"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Good to know</p>
+        <p>Fill out an <b>ICS-213RR</b> describing everything in your go-kit and give a copy to whoever authorizes your deployment. “If it’s not documented, you can’t claim it!”</p>
+      </div>
+      <p><b>Forms to carry:</b> several copies each of the ICS-213, ICS-213RR, ICS-214a and ICS-309, plus the ARRL Radiogram. <a href="members/documents.html#forms">Forms</a></p>
+      <p><b>Field guides:</b> the national <b>AUXFOG</b> and <b>NIFOG</b> (free PDFs or phone apps from <a href="https://www.cisa.gov/safecom/field-operations-guides" rel="noopener">CISA<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens cisa.gov)</span></a>), and the <b>Spokane County ACSFOG</b>, which members get from groups.io.</p>
+      <p data-verify="true"><b>Station gear:</b> whatever you bring to an incident “must be in good condition and capable of supplying at least 72 hours of continuous service.”</p>
+      <p data-verify="true"><b>Getting there:</b> members are expected to have transportation to meetings, events, drills and activations: their own vehicle, a ride, or public transit.</p>
+      <p><a class="link-action" href="https://ag7qp.com/go-kits" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-kit"/></svg>Go-kit guide for short, longer and long deployments<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens ag7qp.com)</span></a></p>
+
+      <h2 id="activation" class="h-anchor">How activations work <a class="anchor" href="#activation" aria-label="Link to this section: How activations work">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>Members get ready in stages, and the county decides when to deploy us. The stages are for members to know what to do; this site never shows a current level.</p></div>
+      <ol class="steps-inline stages" aria-label="Activation, in four stages">
+        <li><b>Something might happen</b><span class="lvl">Yellow</span>Check your kits; monitor.</li>
+        <li><b>Something has happened</b><span class="lvl">Orange</span>Load the car; monitor W7GBU (<span class="freq">147.300</span>) and NOAA Weather Radio WXL86 (<span class="freq">162.400</span>).</li>
+        <li><b>Deploy</b><span class="lvl">Red</span>Spokane County Emergency Management activates ACS; <span data-verify="true">an activation message goes out</span>; check in with net control on W7GBU; go to your assignment or staging area.</li>
+        <li><b>Release and review</b>Agencies and the EC release members; leaders hold an action review within 72 hours.</li>
+      </ol>
+      <div class="callout callout--plain">
+        <p class="callout-label">If nothing’s been said yet</p>
+        <p>Follow Eastern Washington Standing Order 1b: stay safe, stay home, and report what you see by Winlink.</p>
+      </div>
+      <p>These are readiness levels for members. This site never shows a “current” level.</p>
+      <p><a class="link-action" href="how-it-works.html#activation"><svg class="icon" aria-hidden="true"><use href="#i-flag"/></svg>How activation works, in full</a></p>
+
+      <div class="part-end"><a class="back-to-top" href="#main"><svg class="icon" aria-hidden="true"><use href="#i-chevron-up"/></svg>Back to top</a></div>
+
+      <!-- ========================== PART 4: LICENSING AND MEETINGS ========================== -->
+
+      <h2 id="licensing" class="h-anchor">Getting licensed <a class="anchor" href="#licensing" aria-label="Link to this section: Getting licensed">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>Start with an FCC Technician license; every question in the exam pool is published in advance. Study on your own, in a local class or online, then book an exam session.</p></div>
+      <p class="lead-in">The amateur radio exam works like the written test for a driver’s license, with one big difference: <b>every question in the pool is published in advance.</b></p>
+      <p><b>What you need:</b> an FCC <b>Technician</b> license to start. Senior ACS roles need a <b>General</b> license later.</p>
+      <h3>Three ways to study</h3>
+      <ul>
+        <li><b>On your own:</b> free practice sites such as <a href="https://hamstudy.org/" rel="noopener">HamStudy.org<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (external site)</span></a> and HamExam.org drill the real questions.</li>
+        <li><b>With a class:</b> local classes use the syllabi of <b>AD7FO</b>, managed by AG7QP; <span data-verify="true">they’re typically sponsored by Spokane County Emergency Management, the VHF Club and local ARES</span>. The 2027 class schedule is due to be published in November 2026. <a href="https://ag7qp.com/licenses" rel="noopener">License classes<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens ag7qp.com)</span></a></li>
+        <li><b>Online classes and videos:</b> ARRL study guides and video series, and other free online courses.</li>
+      </ul>
+      <h3>Where to take the exam</h3>
+      <div class="table-wrap" data-verify="true">
+        <table class="data-table table--stack">
+          <caption>Exam sessions near Spokane<small>Check the session’s own page before you go.</small></caption>
+          <thead><tr><th scope="col">Option</th><th scope="col">When</th><th scope="col">Where</th><th scope="col">Cost</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">After a local license class</th><td data-label="When">At the end of class day</td><td data-label="Where">The class location</td><td data-label="Cost">$15 exam fee (to the ARRL VEC)</td></tr>
+            <tr><th scope="row"><a href="http://wa7dre.org/testing/" rel="noopener">Washington Digital Radio Enthusiasts<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (external site)</span></a> (Laurel VEC)</th><td data-label="When">Usually the 3rd Wednesday, 6 PM</td><td data-label="Where">Action Recycling, 1027 E Marietta Ave, Spokane</td><td data-label="Cost">No examiner fee</td></tr>
+            <tr><th scope="row"><a href="https://k7id.org/fcc-testing/" rel="noopener">Kootenai Amateur Radio Society<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (external site)</span></a></th><td data-label="When">2nd Monday, 5:30 PM (not in December)</td><td data-label="Where">Kootenai County Office of Emergency Management, 1662 W Wyoming Ave, Hayden, ID</td><td data-label="Cost">$15</td></tr>
+            <tr><th scope="row">Online</th><td data-label="When">Many sessions</td><td data-label="Where"><a href="https://hamstudy.org/sessions/glaarg" rel="noopener">GLAARG, booked through HamStudy<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (external site)</span></a></td><td data-label="Cost">See the session</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><b>Plus:</b> the <b>FCC’s $35 application fee</b> for a new license, whichever session you choose. <b>Under 18?</b> Through the ARRL VEC, the exam fee is $5 and the ARRL reimburses the $35 FCC fee for a new license.</p>
+      <p><b>Bring:</b> a photo ID, your <b>FRN</b> (FCC Registration Number; get it before exam day), a copy of your license if upgrading, and optionally a non-programmable calculator.</p>
+      <div class="callout callout--good">
+        <p class="callout-label"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Can I help before I’m licensed?</p>
+        <p>Yes. Listen to the net (no license needed), come to meetings and workshops, and take <a href="https://www.weather.gov/otx/Current_Spotter_Training" rel="noopener">SKYWARN spotter training<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens weather.gov)</span></a> from the National Weather Service.</p>
+      </div>
+
+      <h2 id="where-we-meet" class="h-anchor">Where and when we meet <a class="anchor" href="#where-we-meet" aria-label="Link to this section: Where and when we meet">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>Everything in person happens at Spokane County Emergency Management, 1121 W Gardner Ave, next to the courthouse. The net is on the air every Tuesday at 8:00 PM.</p></div>
+      <div class="meet-grid">
+        <div class="stack">
+          <address><b>Spokane County Emergency Management</b>(the “DEM building”)<br>1121 W Gardner Ave, Spokane, WA 99260<br>Next to the Spokane County Courthouse, near N Jefferson St and W Gardner Ave.</address>
+          <!-- Parking, entrance and after-hours access: unknown (D13 #19). No text until confirmed. -->
+          <div>
+            <p class="small"><b>Next dates</b></p>
+            <ul class="next-dates">
+              <li><time datetime="2026-10-10" data-next="workshop" data-format="short">Sat, Oct 10</time><span>Second Saturday Workshop</span></li>
+              <li data-verify="true"><time datetime="2026-10-15" data-next="third-thursday" data-format="short">Thu, Oct 15</time><span>Third Thursday training meeting</span></li>
+              <li><time datetime="2026-11-14" data-next="workshop" data-index="1" data-format="short">Sat, Nov 14</time><span>Second Saturday Workshop</span></li>
+              <li data-verify="true"><time datetime="2026-11-19" data-next="third-thursday" data-index="1" data-format="short">Thu, Nov 19</time><span>Third Thursday training meeting</span></li>
+            </ul>
+          </div>
+        </div>
+        <figure class="map-frame">
+          <svg viewBox="0 0 400 250" role="img" aria-label="Drawn map: Spokane County Emergency Management is on the south side of W Gardner Ave, just east of N Jefferson St, with the Spokane County Courthouse directly south of it."><use href="#map-meet"/></svg>
+          <figcaption><span>Drawn locator, not to scale.</span><span>1121 W Gardner Ave</span></figcaption>
+        </figure>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table table--stack">
+          <caption>The regular schedule</caption>
+          <thead><tr><th scope="col">What</th><th scope="col">When</th><th scope="col">Notes</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Tuesday net</th><td data-label="When">Every Tuesday, 8:00 PM, on the air</td><td data-label="Notes">W7GBU, <span class="freq">147.300 MHz</span>, +600 kHz, 100 Hz tone</td></tr>
+            <tr><th scope="row">Second Saturday Workshop</th><td data-label="When">2nd Saturday, 9:00 AM–noon</td><td data-label="Notes">Hands-on</td></tr>
+            <tr><th scope="row">Winlink workshop</th><td data-label="When"><span data-verify="true">2nd Saturday, 12:30–3:30 PM</span></td><td data-label="Notes">Open to everyone</td></tr>
+            <tr><th scope="row">Third Thursday training meeting</th><td data-label="When"><span data-verify="true">3rd Thursday, evenings</span></td><td data-label="Notes">The monthly meeting</td></tr>
+            <tr data-verify="true"><th scope="row">New Member Orientation</th><td data-label="When">Held regularly (usually a 4th Tuesday, 6:00 PM)</td><td data-label="Notes">Ends with a Comm Room tour and the 8 PM net. Ask us for the next date.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <blockquote class="quote">“All meetings are held at the DEM. Changes are announced on the weekly ARES-ACS Net.”</blockquote>
+      <p><a class="link-action" href="index.html#visit-meeting"><svg class="icon" aria-hidden="true"><use href="#i-door"/></svg>Plan your first visit</a></p>
+
+      <div class="part-end"><a class="back-to-top" href="#main"><svg class="icon" aria-hidden="true"><use href="#i-chevron-up"/></svg>Back to top</a></div>
+
+      <!-- ========================== PART 5: OUR STORY ========================== -->
+
+      <h2 id="w7gbu" class="h-anchor">The W7GBU story <a class="anchor" href="#w7gbu" aria-label="Link to this section: The W7GBU story">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>Our call sign honors Ira “Dean” Bula, a Spokane ham who helped a generation of newcomers find their way. The group applied for his call to serve as an inspiration to members.</p></div>
+      <p class="callsign-block" aria-hidden="true">W7GBU</p>
+      <p class="honoree">Ira “Dean” Bula, W7GBU</p>
+      <p>Our call sign, <b>W7GBU</b>, identifies the group’s repeater and stations. It honors <b>Ira “Dean” Bula</b>.</p>
+      <blockquote class="quote">“Dean was considered a symbol of the best we can be … He was a courtly gentleman, polite, friendly, approachable, knowledgeable, kind, patiently available and a good storyteller.”</blockquote>
+      <p>For years Dean dispensed “technical wisdom and friendly advice” from behind the sales counter at Northwest Electronics, and he was active in local clubs and public service. Every morning he led an informal round table on the 147.30 MHz repeater, where a new generation of newly licensed hams found him. It became known as <b>the 7:30 Bunch</b>, <span data-verify="true">and it still meets on weekday mornings as the “0730 Bunch”</span>.</p>
+      <p>When the county retired the repeater’s old call sign, the <b>Spokane County ARES-RACES Support Group</b> was formed to apply for Dean’s call, “not just as a sentimental memorial … but much more importantly, to serve as an inspiration to members.”</p>
+      <p class="pullquote">“He was a person who made a difference in Spokane by making others feel like they could make a difference themselves.”</p>
+      <p><b>Today:</b> W7GBU is a club license held by the Spokane County ARES RACES Support Group; the license trustee is K7DSR.</p>
+
+      <h2 id="history" class="h-anchor">History in brief <a class="anchor" href="#history" aria-label="Link to this section: History in brief">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>The Tuesday 8 PM net and the Third Thursday meeting appear in the earliest website records, from 2004, and both still run. In 2019 the county set up ACS, and RACES was folded into it.</p></div>
+      <div class="legacy-seal">
+        <img src="assets/img/Spokane_County_ARES_RACES_logo_dash.png" width="56" height="56" alt="The earlier Spokane County ARES-RACES seal">
+        <p>The group’s earlier seal, from the ARES/RACES years.</p>
+      </div>
+      <ol class="timeline">
+        <li data-verify="true"><span class="tl-time">Since 1999</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p>A SKYWARN Recognition Day station at the National Weather Service office in Spokane every year.</p></div></li>
+        <li><span class="tl-time">2004</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p>The earliest website records show the Tuesday 8 PM net and the monthly Third Thursday meeting, both still running in 2026.</p></div></li>
+        <li><span class="tl-time">2004–2015</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p>“Spokane County ARES/RACES,” with a written plan attached to the county’s emergency plan.</p></div></li>
+        <li><span class="tl-time">2017</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p>The FCC grants W7GBU’s current club license to the Spokane County ARES RACES Support Group; Second Saturday workshops begin.</p></div></li>
+        <li><span class="tl-time">2018</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p>Workshops move to the Spokane County Emergency Management building at 1121 W Gardner; groups.io is in use as the member hub.</p></div></li>
+        <li><span class="tl-time">2019</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p>The county sets up ACS on the AUXCOMM model; an EOC-to-EOC exercise puts more than 20 operators on the air across the county.</p></div></li>
+        <li><span class="tl-time">2021</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p>The county’s emergency plan names ACS as a supporting agency for communications.</p></div></li>
+        <li><span class="tl-time">2023</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p>A new written agreement with the Inland Empire VHF Radio Amateurs; <span data-verify="true">members provide a mobile network unit during the Gray and Oregon Road fires</span>.</p></div></li>
+        <li><span class="tl-time">2026</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p>“Spokane County ARES-ACS”: new net scripts, the ACS task book and a new website.</p></div></li>
+      </ol>
+      <p><b>Signature events through the years:</b> Bloomsday and the Torchlight Parade; Field Day (including joint Field Days with the VHF Club on Mt. Spokane); the annual <button type="button" class="term" aria-expanded="false" aria-controls="t-set">Simulated Emergency Test</button><span class="term-def" id="t-set" role="note"><b>SET</b>Simulated Emergency Test, the ARRL’s annual national exercise.</span>.</p>
+
+      <div class="part-end"><a class="back-to-top" href="#main"><svg class="icon" aria-hidden="true"><use href="#i-chevron-up"/></svg>Back to top</a></div>
+
+      <!-- ========================== PART 6: REFERENCE ========================== -->
+
+      <h2 id="faq" class="h-anchor">Frequently asked questions <a class="anchor" href="#faq" aria-label="Link to this section: Frequently asked questions">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>You don’t need a license to listen or visit, and <span data-verify="true">there are no membership dues</span>. ARES alone is fine; ACS is optional.</p></div>
+      <div class="faq">
+        <details><summary>Do I need a license to get involved?<svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary><div class="answer"><p>To transmit and to join, yes: an FCC Technician license or higher. To listen to the net, come to meetings and workshops, or train as a SKYWARN spotter, no.</p></div></details>
+        <details><summary>Do I need my own radio?<svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary><div class="answer"><p>Not to visit. To listen, any radio or scanner that receives 147.300 MHz works. Members provide their own gear; there’s no required brand or model. Ask at a Second Saturday workshop what’s worth buying.</p></div></details>
+        <details><summary>Does it cost anything?<svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary><div class="answer"><p><span data-verify="true">There are no membership dues.</span> The FCC charges $35 for a new license, and some exam sessions charge a small fee. The FEMA and ARRL EmComm courses are online; the FEMA courses are free.</p></div></details>
+        <details><summary>Do I have to join both ARES and ACS?<svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary><div class="answer"><p>No. ARES alone is fine. ACS adds the county application and background check, and lets the county call on you for work in emergency operations centers, hospitals and shelters.</p></div></details>
+        <details><summary>Am I a first responder?<svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary><div class="answer"><p>No. “ARES is an auxiliary support function.” We support the agencies that respond, when they ask.</p></div></details>
+        <details><summary>How much time does it take?<svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary><div class="answer"><p>The ACS minimum is one net check-in a month, one meeting or workshop a quarter, and one field operation a year, plus the first-year courses. Weekly check-ins and monthly meetings are encouraged. See <a href="#commitment">What it takes</a>.</p></div></details>
+        <details><summary>What’s the background check?<svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary><div class="answer"><p>The Spokane County Sheriff’s Office runs it after you submit the county’s Volunteer Emergency Worker Application. The county then assigns you a volunteer number.</p></div></details>
+        <details><summary>Will I be sent somewhere dangerous?<svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary><div class="answer"><p>Your personal and family safety come first. Under the Section’s Standing Order 1b, “no one is asked to leave their homes or travel.” Assignments come from the county, through our leaders.</p></div></details>
+        <details><summary>Is ARRL membership required?<svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary><div class="answer"><p>Not to join. The ARRL requires it for its Intermediate and Advanced ARES levels and for EC and AEC appointments.</p></div></details>
+        <details><summary>What’s the difference between the net and the meeting?<svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary><div class="answer"><p>The <b>net</b> is on the air every Tuesday at 8 PM. The <b>meetings</b> are in person at Spokane County Emergency Management: the Third Thursday training meeting and the Second Saturday Workshop.</p></div></details>
+        <details><summary>I’m not a “tech person.” Is that OK?<svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary><div class="answer"><p>Yes. Net control is taught, the Net Manager coaches new net controls, and workshops are hands-on. The digital side is there when you want it.</p></div></details>
+        <details><summary>I represent an agency. How do we request support?<svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary><div class="answer"><p>Government agencies request amateur radio support through Spokane County Emergency Management, which activates ACS. Event organizers can contact our public-events coordinator. See <a href="#for-agencies">For agencies and partners</a> and <a href="#contact">Contact</a>.</p></div></details>
+        <details><summary>Where do members find scripts, forms and the schedule?<svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary><div class="answer"><p>On the <a href="members/index.html">For Members</a> pages. Member-only files, such as the ACS field guide and the roster, are on groups.io.</p></div></details>
+      </div>
+
+      <h2 id="glossary" class="h-anchor">Glossary <a class="anchor" href="#glossary" aria-label="Link to this section: Glossary">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>Emergency radio comes with a lot of abbreviations. Here they are in plain words, and the dotted-underlined terms on this site open the same definitions.</p></div>
+      <dl class="definition-list">
+        <dt>AEC</dt><dd>Assistant Emergency Coordinator.</dd>
+        <dt>AHJ</dt><dd>Agency having jurisdiction; for ACS, Spokane County Emergency Management.</dd>
+        <dt>ARES</dt><dd>Amateur Radio Emergency Service, the ARRL’s volunteer emergency program.</dd>
+        <dt>ARRL</dt><dd>The national association for amateur radio in the United States.</dd>
+        <dt>ACS</dt><dd data-verify="true">Auxiliary Communications, Spokane County Emergency Management’s volunteer radio program.</dd>
+        <dt>ACSFOG / AUXFOG / NIFOG</dt><dd>Field operating guides: Spokane’s ACS guide (members only), and the national Auxiliary Communications and Interoperability guides from CISA.</dd>
+        <dt>AUXCOMM / AUXC</dt><dd>The federal Auxiliary Communications designation / an Auxiliary Communicator in the ICS Communications Unit.</dd>
+        <dt>COMMEX</dt><dd>A communications exercise, such as Washington’s State COMMEX.</dd>
+        <dt>DEC / EC / SEC / SM</dt><dd>District Emergency Coordinator / Emergency Coordinator / Section Emergency Coordinator / Section Manager (ARRL roles).</dd>
+        <dt>DYFI</dt><dd>“Did You Feel It?”, the USGS earthquake report.</dd>
+        <dt>EOC / ICP</dt><dd>Emergency operations center / incident command post.</dd>
+        <dt>ESF-2</dt><dd>Emergency Support Function 2, communications, in the county’s emergency plan.</dd>
+        <dt>GMRS</dt><dd>General Mobile Radio Service, a licensed (non-amateur) radio service.</dd>
+        <dt>HT</dt><dd>A handheld transceiver (“handie-talkie”).</dd>
+        <dt>ICS / NIMS</dt><dd>The Incident Command System / National Incident Management System.</dd>
+        <dt>ICS-213 / 213RR / 214 / 309</dt><dd>General message / resource request / activity log / communications log forms.</dd>
+        <dt>Mission number</dt><dd>A state number for an activation or exercise that ties it to Washington’s emergency-worker protections.</dd>
+        <dt>MNU</dt><dd>Mobile Network Unit, county communications equipment on a hitch or trailer.</dd>
+        <dt>Net / NCS</dt><dd>An organized on-air meeting / its net control station.</dd>
+        <dt>NTS / Radiogram</dt><dd>The National Traffic System and its standard message format.</dd>
+        <dt>Offset / tone</dt><dd>Repeater settings. W7GBU listens 600 kHz above 147.300 MHz and needs a 100 Hz tone.</dd>
+        <dt>PTB</dt><dd>Position task book.</dd>
+        <dt>RACES</dt><dd>Radio Amateur Civil Emergency Service, now part of ACS in Spokane County.</dd>
+        <dt>RADO / <span class="nowrap">S-RADO</span></dt><dd>Radio Operator / Senior Radio Operator, ACS task-book levels.</dd>
+        <dt>Repeater / simplex</dt><dd>A relay station on a high site / radio to radio without one.</dd>
+        <dt>SCEM (DEM)</dt><dd>Spokane County Emergency Management.</dd>
+        <dt>SET</dt><dd>Simulated Emergency Test, the ARRL’s annual national exercise.</dd>
+        <dt>SHARES</dt><dd>A federal HF radio program for national security and emergency preparedness communications; its details are not public.</dd>
+        <dt>SKYWARN / SRD</dt><dd>The National Weather Service’s volunteer spotter program / SKYWARN Recognition Day.</dd>
+        <dt>Winlink</dt><dd>Email by radio.</dd>
+        <dt>W7GBU</dt><dd>The group’s call sign, honoring Ira “Dean” Bula.</dd>
+      </dl>
+
+      <h2 id="contact" class="h-anchor">Contact <a class="anchor" href="#contact" aria-label="Link to this section: Contact">#</a></h2>
+      <div class="short-version"><span class="sv-label">The short version</span><p>Write to the role address for what you need; it reaches whoever holds the role. Or come in person on a meeting day, or check in on the Tuesday net.</p></div>
+      <p data-verify="true">We don’t list personal phone numbers or e-mail addresses. Use these role addresses; they reach whoever holds the role.</p>
+      <div class="table-wrap">
+        <table class="data-table">
+          <caption>Role addresses</caption>
+          <thead><tr><th scope="col">For</th><th scope="col">Address</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Joining, applications, orientation dates</th><td><a href="mailto:join@spokares.org" data-verify="true">join@spokares.org</a></td></tr>
+            <tr><th scope="row">Agencies, partners and the emergency coordinator</th><td><a href="mailto:ec@spokares.org" data-verify="true">ec@spokares.org</a></td></tr>
+            <tr><th scope="row">This website</th><td><a href="mailto:webmaster@spokares.org" data-verify="true">webmaster@spokares.org</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><b>In person:</b> any Third Thursday training meeting or Second Saturday workshop at Spokane County Emergency Management, 1121 W Gardner Ave.</p>
+      <p><b>On the air:</b> the Tuesday 8 PM net on W7GBU, <span class="freq">147.300 MHz</span>. Visitors are welcome to check in.</p>
+      <p><b>Members:</b> <a href="https://spokaneares-acs.groups.io/g/main" rel="noopener">the groups.io list<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io)</span></a></p>
+      <p class="emergency-line">In an emergency, call 911.</p>
+
+      <p class="last-reviewed" data-verify="true">Last reviewed <time datetime="2026-09-26">September 26, 2026</time>. Page owner: the Emergency Coordinator. Spotted something out of date? Write to <a href="mailto:webmaster@spokares.org">webmaster@spokares.org</a>.</p>
+      <div class="part-end"><a class="back-to-top" href="#main"><svg class="icon" aria-hidden="true"><use href="#i-chevron-up"/></svg>Back to top</a></div>
+    </article>
+  </div>
+</main>
+
+<!-- ======================= FOOTER, top-level pages ======================= -->
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="assets/img/seal-ares-acs-400.png" alt="" width="60" height="60">
+        <div>
+          <span class="footer-name">Spokane County ARES-ACS</span>
+          <p>Volunteer amateur radio emergency communications for Spokane County. Formerly Spokane County ARES/RACES.</p>
+          <address>Spokane County Emergency Management<br>1121 W Gardner Ave, Spokane, WA 99260</address>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h2>New to radio</h2>
+        <ul>
+          <li><a href="how-it-works.html">How it works</a></li>
+          <li><a href="about.html">About ARES &amp; ACS</a></li>
+          <li><a href="about.html#licensing">Get licensed</a></li>
+          <li><a href="index.html#visit">Visit a meeting</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Licensed hams</h2>
+        <ul>
+          <li><a href="index.html#join">Join the team</a></li>
+          <li><a href="index.html#visit-listen">Listen on Tuesday night</a></li>
+          <li><a href="members/documents.html#ares-application">The ARES application</a></li>
+          <li><a href="about.html#training-path">The training path</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Members</h2>
+        <ul>
+          <li><a href="members/index.html">For Members (this week)</a></li>
+          <li><a href="members/documents.html">Documents &amp; downloads</a></li>
+          <li><a href="members/exercises.html">Exercises &amp; events</a></li>
+          <li><a href="members/documents.html#forms">Forms</a></li>
+          <li><a href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io (members)<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io)</span></a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Agency partners</h2>
+        <ul>
+          <li><a href="about.html#who-we-serve">Who we serve</a></li>
+          <li><a href="about.html#for-agencies">For agencies and partners</a></li>
+          <li><a href="about.html#agreements">Agreements</a></li>
+          <li><a href="how-it-works.html#activation">How activation works</a></li>
+          <li><a href="about.html#contact">Contact the emergency coordinator</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-affil">
+      <div class="marks">
+        <img src="assets/img/ARES_logo.png" alt="ARRL Amateur Radio Emergency Service emblem" width="44" height="44">
+        <img src="assets/img/ACS_logo-500.png" alt="Spokane Auxiliary Communications (ACS) seal" width="44" height="44">
+        <img src="assets/img/SCDEM_Logo-600.png" alt="Spokane County Emergency Management seal" width="44" height="44">
+      </div>
+      <p>An ARRL Amateur Radio Emergency Service group, serving Spokane County Emergency Management.</p>
+    </div>
+    <div class="footer-fine">
+      <p data-verify="true">A volunteer group, not an emergency service. In an emergency, call 911.</p>
+      <p class="fine-links"><a href="#">Privacy</a><span>© Spokane County ARES-ACS</span></p>
+      <p class="mockup-note">Mockup — content to be verified before launch</p>
+    </div>
+  </div>
+</footer>
+<!-- ======================= /FOOTER ======================= -->
+
+<script src="assets/data.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

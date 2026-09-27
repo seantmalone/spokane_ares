@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documents &amp; downloads | Spokane County ARES-ACS</title>
+<meta name="description" content="Net scripts, applications, task books, ICS and ARRL forms, go-kit guides and training material for Spokane County ARES-ACS.">
+<link rel="icon" href="../assets/img/seal-ares-acs-400.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;family=Schibsted+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css">
+<script>document.documentElement.classList.add('js')</script>
+<style>
+/* Members pages (option B): shared workspace pieces. Page-scoped on purpose;
+   site.css is the system and is not edited by page builders. */
+.ws-section + .ws-section, .ws-row + .ws-section, .ws-section + .ws-row, .ws-row + .ws-row { margin-top: var(--s5); }
+.ws-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 24px; margin-bottom: 18px; }
+.ws-head h2 { font-size: clamp(1.7rem, 1.35rem + .9vw, 2.2rem); }
+.ws-head p { font-size: 15.5px; color: var(--ink-2); max-width: 60ch; }
+.ws-head a { font-weight: 600; font-size: 15.5px; }
+.ws-row { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 24px 28px; align-items: start; }
+.ws-row--even { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.ws-row > .ws-section + .ws-section { margin-top: 0; }
+.page-head .crumbs [aria-current] { color: var(--ink); font-weight: 600; }
+.panel > * + * { margin-top: 12px; }
+.panel .table caption { padding-bottom: 8px; }
+.links-line { display: flex; flex-wrap: wrap; gap: 4px 22px; font-size: 15.5px; }
+.links-line a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
+.note-line { font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+.note-line b { color: var(--ink); font-weight: 600; }
+.workspace .table a { color: var(--ink); text-decoration-color: var(--red-ink); }
+@media (max-width: 1200px) {
+  .ws-row, .ws-row--even { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .workspace { padding-inline: 16px; padding-bottom: 64px; }
+  .panel { padding: 18px 16px; }
+  .ws-section + .ws-section, .ws-row + .ws-section, .ws-section + .ws-row, .ws-row + .ws-row { margin-top: var(--s4); }
+}
+
+/* ---------- Documents library (members/documents.html) ---------- */
+.docs-most .quick { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.doc-tools { display: grid; gap: 14px; margin-bottom: var(--s5); padding: 20px 22px 16px; background: #fff; border: 1px solid var(--rule); border-radius: var(--r-card); }
+.doc-tools__label { font: 600 15px/1.35 var(--sans); color: var(--ink); }
+.doc-tools .search { gap: 8px; }
+.doc-tools .search__field { flex-basis: 180px; }
+.doc-tools .search .btn { min-height: 52px; border-radius: 10px; }
+.doc-tools .chips { gap: 6px; }
+.doc-tools .chip { padding: 6px 14px; font-size: 14.5px; }
+.doc-countline { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 20px; padding-top: 10px; border-top: 1px solid var(--rule); }
+.doc-countline a { display: inline-flex; align-items: center; min-height: 44px; margin-block: -10px; font-size: 14.5px; font-weight: 600; }
+.doc-jump { display: none; }
+html:not(.js) .doc-jump { display: block; font-size: 15px; }
+html:not(.js) .doc-jump ul { display: flex; flex-wrap: wrap; gap: 4px 16px; list-style: none; margin: 6px 0 0; padding: 0; }
+html:not(.js) .doc-jump a { display: inline-flex; min-height: 44px; align-items: center; }
+html:not(.js) .doc-tools .chips { display: none; }
+.doc-table { table-layout: fixed; }
+.doc-table thead th:nth-child(1) { width: 29%; }
+.doc-table thead th:nth-child(2) { width: auto; }
+.doc-table thead th:nth-child(3) { width: 11.5%; }
+.doc-table thead th:nth-child(4) { width: 12.5%; }
+.doc-table thead th:nth-child(5) { width: 17%; }
+.doc-table tbody th { font-weight: 400; }
+.doc-table td, .doc-table th { overflow-wrap: anywhere; }
+.doc-table .fmt { white-space: normal; overflow-wrap: normal; }
+.doc-table .src { overflow-wrap: normal; }
+.doc-table .src { white-space: normal; align-items: flex-start; }
+.doc-table .src::before { margin-top: 5px; }
+.doc-ver { font-variant-numeric: lining-nums proportional-nums; color: var(--ink-2); font-size: 14.5px; }
+.doc-table td:nth-child(2) { font-size: 15px; line-height: 1.5; }
+.doc-table .doc-note { font-size: 13.5px; }
+.docs-most { margin-bottom: var(--s5); }
+.docs-most[hidden] { display: none; }
+.doc-title .doc-dl { width: 17px; height: 17px; margin-right: 6px; vertical-align: -3px; color: var(--red-ink); }
+.doc-note a { color: var(--ink-2); }
+.doc-table tr:target > *, .doc-table tr.is-target > * { background: var(--amber-wash); }
+.doc-table tr:target > :first-child, .doc-table tr.is-target > :first-child { box-shadow: inset 3px 0 0 var(--amber); padding-left: 10px; }
+.docs-end .status-key dt { padding-top: 2px; }
+.docs-end ul { margin: 10px 0 0; padding-left: 1.1em; font-size: 16px; line-height: 1.55; }
+.docs-end li + li { margin-top: 8px; }
+.docs-foot { margin-top: var(--s4); font-size: 14.5px; color: var(--off); }
+/* The five-column library needs about 840px. Below that it uses the same
+   labelled-card layout that .table--stack gives phones (site.css section 16). */
+@media (max-width: 1180px) {
+  .doc-table { table-layout: auto; }
+  .doc-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .doc-table, .doc-table tbody, .doc-table tr, .doc-table th, .doc-table td { display: block; width: 100% !important; }
+  .doc-table tr { padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .doc-table th, .doc-table td { border: 0; padding: 3px 0 !important; box-shadow: none !important; }
+  .doc-table td[data-label] { position: relative; padding-left: 8.5rem !important; min-height: 1.6em; }
+  .doc-table td[data-label]::before { content: attr(data-label); position: absolute; left: 0; top: 5px; width: 8rem; font: 600 13px/1.5 var(--sans); color: var(--muted); }
+  .doc-table tbody th { font-size: 16.5px; }
+  .doc-table tr:target, .doc-table tr.is-target { background: var(--amber-wash); padding-inline: 10px; border-radius: 8px; }
+  .doc-table tr:target > *, .doc-table tr.is-target > * { background: none; }
+}
+@media (max-width: 1100px) {
+  .docs-most .quick { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .docs-most .quick { grid-template-columns: minmax(0, 1fr); }
+  .doc-tools { padding: 16px; }
+  /* Category chips become one swipeable row on phones. */
+  .doc-tools .chips { flex-wrap: nowrap; overflow-x: auto; margin-inline: -16px; padding: 2px 16px 6px; scrollbar-width: none; scroll-snap-type: x proximity; }
+  .doc-tools .chips::-webkit-scrollbar { display: none; }
+  .doc-tools .chips li { flex: none; scroll-snap-align: start; }
+  .doc-table .doc-ver { font-size: 15px; }
+  .doc-table td[data-label] { padding-left: 7rem !important; }
+  .doc-table td[data-label]::before { width: 6.5rem; }
+  .status-key { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .status-key dd + dt { margin-top: 10px; }
+}
+</style>
+</head>
+<body class="members-page" data-root="../">
+<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="mp-hill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A3A5C"/><stop offset="1" stop-color="#16223D"/></linearGradient>
+    <linearGradient id="mp-dawnglow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3C29B" stop-opacity="0"/><stop offset="1" stop-color="#F3C29B" stop-opacity=".5"/></linearGradient>
+    <pattern id="mp-rain" width="60" height="48" patternUnits="userSpaceOnUse"><path d="M9 3 L5 11 M31 12 L27 20 M51 4 L47 12 M19 26 L15 34 M43 30 L39 38 M57 38 L53 46 M7 40 L3 48" stroke="#A9B8D6" stroke-opacity=".6" stroke-width="1.1" stroke-linecap="round"/></pattern>
+  </defs>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2"/><path d="M15.5 8.5V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7.5a2 2 0 0 0 2 2h2.5"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4M12 12.5v5.5M9.25 15.25h5.5"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></symbol>
+  <symbol id="i-radio" viewBox="0 0 24 24"><rect x="7" y="7.5" width="10" height="13.5" rx="2"/><path d="M10 7.5V3M9.5 11.5h5M9.5 14.5h5M9.5 17.5h2"/></symbol>
+  <symbol id="i-script" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 15h6M9 18h4"/></symbol>
+  <symbol id="i-form" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M4 8h16M9.5 8v13M12.5 12h4.5M12.5 16h4.5"/></symbol>
+  <symbol id="i-log" viewBox="0 0 24 24"><rect x="4.5" y="4" width="15" height="16.5" rx="1.5"/><path d="M4.5 9h15M4.5 14h15M9.5 4v16.5"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H19v14H7.5A2.5 2.5 0 0 0 5 19.5z"/><path d="M5 19.5A2.5 2.5 0 0 0 7.5 22H19v-5"/></symbol>
+  <symbol id="i-rota" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></symbol>
+  <symbol id="i-winlink" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3.5 7.5l8.5 6 8.5-6"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5.5 21V4M5.5 4.5h11l-2.2 4 2.2 4h-11"/></symbol>
+  <symbol id="i-files" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 20h14"/></symbol>
+  <symbol id="i-antenna" viewBox="0 0 24 24"><path d="M12 21V10M8.5 21L12 10l3.5 11M7 6.8a7 7 0 0 1 10 0M9.3 9a3.6 3.6 0 0 1 5.4 0"/></symbol>
+  <symbol id="i-kit" viewBox="0 0 24 24"><rect x="3.5" y="7" width="17" height="13" rx="2"/><path d="M9 7V5h6v2M3.5 12.5h17M12 11v3"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="9" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M16 6.5a2.8 2.8 0 0 1 0 5.2M17.8 19a5.5 5.5 0 0 0-2.3-4.4"/></symbol>
+  <symbol id="i-training" viewBox="0 0 24 24"><path d="M2.5 9L12 5l9.5 4L12 13z"/><path d="M6.5 11v4.5c1.5 1.4 3.5 2 5.5 2s4-.6 5.5-2V11M21.5 9v5"/></symbol>
+
+  <!-- The message path. 560x400. Every state-dependent part reads a custom
+       property that .msgpath[data-state] sets (site.css section 23). -->
+  <symbol id="msgpath-scene" viewBox="0 0 560 400">
+    <rect class="mp-t" x="0" y="150" width="560" height="180" fill="url(#mp-dawnglow)" style="opacity:var(--mp-dawn,0)"/>
+    <rect class="mp-t" x="0" y="0" width="560" height="330" fill="url(#mp-rain)" style="opacity:var(--mp-storm,0)"/>
+    <!-- mountain and repeater -->
+    <path d="M132 330 C 200 318 238 150 280 122 C 322 150 360 318 428 330 Z" fill="url(#mp-hill)" stroke="#C5CEDF" stroke-opacity=".35" stroke-width="1"/>
+    <g fill="none" stroke="#DCE3EF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M270 124 L280 64 L290 124 M272.4 110 H287.6 M275 94 H285 M277.2 80 H282.8 M272.4 110 L285 94 M275 94 L287.6 110 M275 94 L282.8 80 M277.2 80 L285 94"/>
+      <path d="M280 64 V46"/>
+    </g>
+    <!-- ground -->
+    <rect x="0" y="330" width="560" height="70" fill="#040916" fill-opacity=".38"/>
+    <path d="M0 330.5 H560" stroke="#C5CEDF" stroke-opacity=".45" stroke-width="1"/>
+    <!-- power poles and wires -->
+    <g stroke="#AEBBD4" stroke-width="1.6" stroke-linecap="round" fill="none">
+      <path d="M112 330 V282 M102 288 H122"/><path d="M244 330 V282 M234 288 H254"/><path d="M336 330 V282 M326 288 H346"/>
+    </g>
+    <path class="mp-t" d="M0 293 Q56 303 112 288 Q178 303 244 288 Q290 303 336 288 L352 293" fill="none" stroke="#AEBBD4" stroke-width="1.4" style="opacity:var(--mp-power,0)"/>
+    <path class="mp-t" d="M0 293 Q56 303 112 288 Q146 304 162 326 M244 288 Q232 302 222 322 M244 288 Q290 303 336 288 L352 293" fill="none" stroke="#56627C" stroke-width="1.4" style="opacity:calc(1 - var(--mp-power,0))"/>
+    <!-- houses (lose power) -->
+    <g fill="#16233F" stroke="#8190AE" stroke-width="1.3">
+      <path d="M124 330 V304 L140 290 L156 304 V330 Z"/><path d="M164 330 V308 L178 296 L192 308 V330 Z"/><path d="M294 330 V306 L309 294 L324 306 V330 Z"/>
+    </g>
+    <g fill="#2A3857"><rect x="131" y="311" width="7" height="7"/><rect x="143" y="311" width="7" height="7"/><rect x="174" y="314" width="8" height="7"/><rect x="304" y="313" width="10" height="7"/></g>
+    <g class="mp-t" fill="#FFC857" style="opacity:var(--mp-power,0)"><rect x="131" y="311" width="7" height="7"/><rect x="143" y="311" width="7" height="7"/><rect x="174" y="314" width="8" height="7"/><rect x="304" y="313" width="10" height="7"/></g>
+    <!-- cell tower -->
+    <g fill="none" stroke="#AEBBD4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M206 330 L214 238 L222 330 M208.4 306 H219.6 M210.2 282 H217.8 M211.8 260 H216.2 M208.4 306 L217.8 282 M210.2 282 L219.6 306 M210.2 282 L216.2 260 M211.8 260 L217.8 282"/>
+    </g>
+    <g class="mp-t" fill="none" stroke="#AEBBD4" stroke-width="1.6" stroke-linecap="round" style="opacity:var(--mp-cell,0)">
+      <path d="M204 250 Q197 240 204 230"/><path d="M196 256 Q185 240 196 224"/><path d="M224 250 Q231 240 224 230"/><path d="M232 256 Q243 240 232 224"/>
+    </g>
+    <text class="mp-t mp-sub" x="214" y="222" text-anchor="middle" style="opacity:calc(1 - var(--mp-cell,0));font-size:calc(var(--mp-fs,17px) * .8)">Cell service out</text>
+    <!-- shelter -->
+    <rect x="20" y="282" width="84" height="48" fill="#1B2745" stroke="#8190AE" stroke-width="1.4"/>
+    <rect x="28" y="292" width="16" height="9" fill="#FFC857" fill-opacity=".8"/><rect x="80" y="292" width="16" height="9" fill="#FFC857" fill-opacity=".8"/>
+    <rect x="54" y="306" width="16" height="24" fill="#0A1328"/>
+    <path d="M96 282 V252" stroke="#DCE3EF" stroke-width="1.6" stroke-linecap="round"/>
+    <rect class="mp-t" x="17" y="279" width="90" height="54" fill="none" stroke="#FFC857" stroke-width="2" style="opacity:var(--mp-shelter,0)"/>
+    <!-- county EOC -->
+    <rect x="352" y="268" width="80" height="62" fill="#1B2745" stroke="#8190AE" stroke-width="1.4"/>
+    <g fill="#FFC857" fill-opacity=".8"><rect x="361" y="279" width="22" height="9"/><rect x="399" y="279" width="22" height="9"/><rect x="361" y="296" width="22" height="9"/></g>
+    <rect x="401" y="310" width="16" height="20" fill="#0A1328"/>
+    <path d="M420 268 V234" stroke="#DCE3EF" stroke-width="1.6" stroke-linecap="round"/>
+    <rect class="mp-t" x="349" y="265" width="86" height="68" fill="none" stroke="#FFC857" stroke-width="2" style="opacity:var(--mp-eoc,0)"/>
+    <!-- hospital -->
+    <rect x="452" y="252" width="88" height="78" fill="#1B2745" stroke="#8190AE" stroke-width="1.4"/>
+    <path d="M489 266 h14 v10 h10 v14 h-10 v10 h-14 v-10 h-10 v-14 h10 z" fill="#DCE3EF"/>
+    <rect x="489" y="310" width="14" height="20" fill="#0A1328"/>
+    <path d="M528 252 V224" stroke="#DCE3EF" stroke-width="1.6" stroke-linecap="round"/>
+    <rect class="mp-t" x="449" y="249" width="94" height="84" fill="none" stroke="#FFC857" stroke-width="2" style="opacity:var(--mp-hosp,0)"/>
+    <!-- the message: red arcs (with a soft under-stroke) -->
+    <g class="mp-t" fill="none" stroke-linecap="round" style="opacity:var(--mp-send,0)">
+      <path d="M96 252 Q150 112 280 46 Q392 96 420 234" stroke="#D0202A" stroke-opacity=".28" stroke-width="10"/>
+      <path d="M96 252 Q150 112 280 46 Q392 96 420 234" stroke="#E0303A" stroke-width="3"/>
+    </g>
+    <g class="mp-t" fill="none" stroke-linecap="round" style="opacity:var(--mp-relay,0)">
+      <path d="M420 234 Q474 168 528 224" stroke="#D0202A" stroke-opacity=".28" stroke-width="10"/>
+      <path d="M420 234 Q474 168 528 224" stroke="#E0303A" stroke-width="3"/>
+    </g>
+    <g fill="#FFC857">
+      <circle class="mp-t" cx="96" cy="252" r="4" style="opacity:var(--mp-m1,0)"/>
+      <circle class="mp-t" cx="280" cy="46" r="4" style="opacity:var(--mp-m2,0)"/>
+      <circle class="mp-t" cx="420" cy="234" r="4" style="opacity:var(--mp-send,0)"/>
+      <circle class="mp-t" cx="528" cy="224" r="4" style="opacity:var(--mp-relay,0)"/>
+    </g>
+    <!-- amber hop markers (28px) -->
+    <g class="mp-t" style="opacity:var(--mp-m1,0)"><circle cx="70" cy="238" r="14" fill="#FFC857"/><text class="mp-num" x="70" y="243.5" text-anchor="middle">1</text></g>
+    <g class="mp-t" style="opacity:var(--mp-m2,0)"><circle cx="308" cy="34" r="14" fill="#FFC857"/><text class="mp-num" x="308" y="39.5" text-anchor="middle">2</text></g>
+    <g class="mp-t" style="opacity:var(--mp-m3,0)"><circle cx="394" cy="222" r="14" fill="#FFC857"/><text class="mp-num" x="394" y="227.5" text-anchor="middle">3</text></g>
+    <g class="mp-t" style="opacity:var(--mp-m4,0)"><circle cx="542" cy="194" r="14" fill="#FFC857"/><text class="mp-num" x="542" y="199.5" text-anchor="middle">4</text></g>
+    <!-- place labels -->
+    <text class="mp-label" x="62" y="358" text-anchor="middle" style="font-size:var(--mp-fs,17px)">Shelter</text>
+    <text class="mp-label" x="387" y="358" text-anchor="middle" style="font-size:var(--mp-fs,17px)">County EOC</text>
+    <text class="mp-label" x="502" y="358" text-anchor="middle" style="font-size:var(--mp-fs,17px)">Hospital</text>
+    <text class="mp-label" x="262" y="24" text-anchor="end" style="font-size:var(--mp-fs,17px)">W7GBU repeater</text>
+    <text class="mp-sub" x="262" y="46" text-anchor="end" style="font-size:calc(var(--mp-fs,17px) * .88)">147.300 MHz</text>
+    <!-- "A scenario", drawn in the picture so any crop still says so -->
+    <g style="transform-box:fill-box;transform-origin:100% 0;transform:scale(var(--mp-pill,1))">
+      <rect x="434" y="12" width="114" height="30" rx="15" fill="#0E1A33" fill-opacity=".9" stroke="#FFC857" stroke-opacity=".75"/>
+      <circle cx="451" cy="27" r="4" fill="#FFC857"/>
+      <text class="mp-pilltext" x="461" y="32">A scenario</text>
+    </g>
+  </symbol>
+</svg>
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="site-header">
+  <div class="utility">
+    <div class="wrap utility__bar">
+      <p class="utility__net" data-widget="next-net-line"><b class="u-label">The net:</b> Tuesdays at 8:00 PM <span class="u-more">on W7GBU 147.300 MHz, +600 kHz, 100 Hz tone.</span></p>
+      <button class="utility__copy" type="button" data-copy aria-label="Copy radio settings"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg><span>Copy<span class="u-label-long"> radio settings</span></span></button>
+      <span class="utility__sep" aria-hidden="true"></span>
+      <a class="utility__members" href="index.html">For Members</a>
+    </div>
+  </div>
+  <div class="masthead">
+    <div class="wrap masthead__bar">
+      <a class="brand" href="../index.html"><img src="../assets/img/seal-ares-acs-400.png" alt="" width="46" height="46"><span class="brand__name"><span>Spokane County</span> <strong>ARES-ACS</strong></span></a>
+      <nav class="nav" aria-label="Primary">
+        <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="primary-nav"><svg class="icon i-open" aria-hidden="true"><use href="#i-menu"/></svg><svg class="icon i-close" aria-hidden="true"><use href="#i-close"/></svg>Menu</button>
+        <ul class="nav__list" id="primary-nav">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../how-it-works.html">How it works</a></li>
+          <li><a href="../about.html">About ARES &amp; ACS</a></li>
+          <li><a href="index.html" aria-current="page">For Members</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn--red site-header__join" href="../index.html#join">Join the team</a>
+    </div>
+  </div>
+</header>
+<div class="members-shell">
+  <nav class="member-nav" aria-label="Members">
+    <div class="member-nav__inner">
+      <div class="member-nav__net" data-widget="next-net-mini">
+        <p class="member-nav__net-title">Tuesday net</p>
+        <p class="member-nav__net-main" data-slot="main">Every Tuesday, 2000</p>
+        <p class="member-nav__net-sub" data-slot="sub">W7GBU 147.300, +600 kHz, 100 Hz</p>
+        <p class="member-nav__net-sub" data-slot="flag" hidden></p>
+      </div>
+      <ul class="member-nav__list">
+        <li><a href="index.html">Overview (this week)</a></li>
+        <li><span class="member-nav__label" id="mn-operate">Operate</span>
+          <ul aria-labelledby="mn-operate">
+            <li><a href="#">Nets &amp; net control</a></li>
+            <li><a href="#">Winlink &amp; digital</a></li>
+            <li><a href="#">Repeaters &amp; programming</a></li>
+          </ul>
+        </li>
+        <li><span class="member-nav__label" id="mn-prepare">Prepare</span>
+          <ul aria-labelledby="mn-prepare">
+            <li><a href="exercises.html">Exercises &amp; events</a></li>
+            <li><a href="#">Training &amp; task books</a></li>
+            <li><a href="#">Go-kits &amp; readiness</a></li>
+          </ul>
+        </li>
+        <li><span class="member-nav__label" id="mn-reference">Reference</span>
+          <ul aria-labelledby="mn-reference">
+            <li><a href="documents.html" aria-current="page">Documents &amp; downloads</a></li>
+            <li><a href="documents.html#forms">Forms</a></li>
+            <li><a href="#">Contacts &amp; roles</a></li>
+          </ul>
+        </li>
+        <li class="member-nav__ext"><a class="ext" href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io<span class="vh"> (opens groups.io, members only)</span></a><small>Member-only files, calendar and list</small></li>
+      </ul>
+    </div>
+  </nav>
+  <main id="main" class="workspace">
+    <div class="page-head">
+      <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../index.html">Home</a></li><li><a href="index.html">For Members</a></li><li><span aria-current="page">Documents &amp; downloads</span></li></ol></nav>
+      <h1>Documents &amp; downloads</h1>
+      <p class="lede">Scripts, forms, task books and guides. Official forms, like the <button class="term" type="button" aria-expanded="false" aria-controls="t-ics213">ICS-213</button><span class="term-def" id="t-ics213" role="note">The standard message form of the Incident Command System. It travels by voice, on paper or by radio email.</span>, open at their source, so you always get the current version. Member-only files are on groups.io.</p>
+      <p class="page-head__meta">74 entries in 8 categories. Every entry shows its format, version or date, and source.</p>
+    </div>
+
+    <div class="ws-section" id="library" data-doc-library>
+      <div class="doc-tools" id="search">
+        <label class="doc-tools__label" for="doc-q">Search the library</label>
+        <form class="search" role="search" data-doc-search action="documents.html" method="get">
+          <div class="search__field"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><input id="doc-q" type="search" name="q" placeholder="Try preamble, 213 or task book" autocomplete="off"></div>
+          <button class="btn btn--ink" type="submit">Search</button>
+        </form>
+        <ul class="chips" aria-label="Filter by category">
+            <li><button class="chip" type="button" data-cat-chip="" aria-pressed="true">All <span class="chip__n">74</span></button></li>
+            <li><button class="chip" type="button" data-cat-chip="net-ops" aria-pressed="false">Net operations <span class="chip__n">6</span></button></li>
+            <li><button class="chip" type="button" data-cat-chip="join" aria-pressed="false">Join &amp; qualify <span class="chip__n">8</span></button></li>
+            <li><button class="chip" type="button" data-cat-chip="forms" aria-pressed="false">Forms <span class="chip__n">13</span></button></li>
+            <li><button class="chip" type="button" data-cat-chip="training" aria-pressed="false">Training &amp; presentations <span class="chip__n">21</span></button></li>
+            <li><button class="chip" type="button" data-cat-chip="readiness" aria-pressed="false">Go-kits &amp; readiness <span class="chip__n">7</span></button></li>
+            <li><button class="chip" type="button" data-cat-chip="digital" aria-pressed="false">Winlink &amp; digital <span class="chip__n">8</span></button></li>
+            <li><button class="chip" type="button" data-cat-chip="reference" aria-pressed="false">Reference &amp; SOPs <span class="chip__n">9</span></button></li>
+            <li><button class="chip" type="button" data-cat-chip="history" aria-pressed="false">History &amp; archive <span class="chip__n">2</span></button></li>
+        </ul>
+        <nav class="doc-jump" aria-label="Library categories"><b>Jump to a category</b><ul><li><a href="#net-ops">Net operations</a></li><li><a href="#join">Join &amp; qualify</a></li><li><a href="#forms">Forms</a></li><li><a href="#training">Training &amp; presentations</a></li><li><a href="#readiness">Go-kits &amp; readiness</a></li><li><a href="#digital">Winlink &amp; digital</a></li><li><a href="#reference">Reference &amp; SOPs</a></li><li><a href="#history">History &amp; archive</a></li></ul></nav>
+        <div class="doc-countline">
+          <p class="doc-count" aria-live="polite" data-doc-count>Showing all 74 documents.</p>
+          <a href="#status-key">What the source badges mean</a>
+        </div>
+      </div>
+      <section class="ws-section docs-most" id="most-used" aria-labelledby="most-title">
+        <div class="ws-head"><h2 id="most-title">Most used</h2><p>Jump straight to the entry. This list steps aside while you search or filter.</p></div>
+        <ul class="quick">
+            <li><a class="tile" href="#net-preamble-weekly"><svg class="icon" aria-hidden="true"><use href="#i-script"/></svg><span class="tile__label">Weekly net preamble and script</span><span class="tile__hint">DOCX, 2026-03-04</span></a></li>
+          <li><a class="tile" href="#ares-application"><svg class="icon" aria-hidden="true"><use href="#i-form"/></svg><span class="tile__label">ARES membership application</span><span class="tile__hint">DOCX, 2024-11-07</span></a></li>
+          <li><a class="tile" href="#acs-task-book"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><span class="tile__label">ACS Position Task Book</span><span class="tile__hint">DOCX, 2024-08-09</span></a></li>
+          <li><a class="tile" href="#ics-213"><svg class="icon" aria-hidden="true"><use href="#i-form"/></svg><span class="tile__label">ICS 213 General Message</span><span class="tile__hint">Official: FEMA, v3</span></a></li>
+          <li><a class="tile" href="#ics-309"><svg class="icon" aria-hidden="true"><use href="#i-log"/></svg><span class="tile__label">ICS 309 Communications Log</span><span class="tile__hint">Generate it in Winlink Express</span></a></li>
+          <li><a class="tile" href="#arrl-radiogram"><svg class="icon" aria-hidden="true"><use href="#i-form"/></svg><span class="tile__label">ARRL Radiogram</span><span class="tile__hint">Official: ARRL, fillable PDF</span></a></li>
+          <li><a class="tile" href="#sop-1b"><svg class="icon" aria-hidden="true"><use href="#i-flag"/></svg><span class="tile__label">Standing Order 1b</span><span class="tile__hint">EWA Section, 2026-01-16</span></a></li>
+          <li><a class="tile" href="#acsfog"><svg class="icon" aria-hidden="true"><use href="#i-files"/></svg><span class="tile__label">ACSFOG field guide</span><span class="tile__hint">Members only, groups.io</span></a></li>
+        </ul>
+      </section>
+
+        <section class="doc-group" id="net-ops" data-doc-group aria-labelledby="g-net-ops">
+          <div class="doc-group__head"><h2 id="g-net-ops">Net operations</h2><p>Scripts and guides for the Tuesday net and its variants.</p></div>
+          <div class="table-wrap">
+            <table class="table table--dense table--stack doc-table">
+              <caption class="vh">Net operations: 6 documents</caption>
+              <thead><tr><th scope="col">Document</th><th scope="col">What it’s for</th><th scope="col">Format</th><th scope="col">Version or date</th><th scope="col">Source</th></tr></thead>
+              <tbody>
+                <tr id="net-preamble-weekly" data-doc="net-preamble-weekly" data-verify="true"><th scope="row"><a class="doc-title" href="#"><svg class="icon doc-dl" aria-hidden="true"><use href="#i-download"/></svg><span class="vh">Download the </span>Weekly net preamble and script<span class="vh"> (DOCX, version 2026-03-04)</span></a><span class="doc-note">Interim copy: <a class="ext" href="https://ag7qp.com/spokane-county-ares-acs" rel="noopener">ag7qp.com<span class="vh"> (opens ag7qp.com)</span></a></span></th><td data-label="What it’s for">What net control reads each Tuesday, with pauses for cross-band stations and the Winlink-night inserts.<span class="doc-note">The public copy will send contact changes and net reports to a role address instead of a personal e-mail.</span></td><td data-label="Format"><span class="fmt">DOCX</span></td><td data-label="Version" class="doc-ver">2026-03-04</td><td data-label="Source"><span class="src src--ours">Spokane County ARES-ACS</span></td></tr>
+                <tr id="net-preamble-simplex" data-doc="net-preamble-simplex" data-verify="true"><th scope="row"><a class="doc-title" href="#"><svg class="icon doc-dl" aria-hidden="true"><use href="#i-download"/></svg><span class="vh">Download the </span>Simplex net preamble and script (5th Tuesdays)<span class="vh"> (DOCX, version 2026-03-04)</span></a><span class="doc-note">Interim copy: <a class="ext" href="https://ag7qp.com/spokane-county-ares-acs" rel="noopener">ag7qp.com<span class="vh"> (opens ag7qp.com)</span></a></span></th><td data-label="What it’s for">Five call-sign groups, read-backs of stations heard, then the move to the repeater.</td><td data-label="Format"><span class="fmt">DOCX</span></td><td data-label="Version" class="doc-ver">2026-03-04</td><td data-label="Source"><span class="src src--ours">Spokane County ARES-ACS</span></td></tr>
+                <tr id="net-preamble-gmrs" data-doc="net-preamble-gmrs" data-verify="true"><th scope="row"><a class="doc-title" href="#"><svg class="icon doc-dl" aria-hidden="true"><use href="#i-download"/></svg><span class="vh">Download the </span>ACS GMRS net preamble and script<span class="vh"> (DOCX, version 2025-08-19)</span></a><span class="doc-note">Interim copy: <a class="ext" href="https://ag7qp.com/spokane-county-ares-acs" rel="noopener">ag7qp.com<span class="vh"> (opens ag7qp.com)</span></a></span></th><td data-label="What it’s for">The script for the 3rd-Tuesday GMRS net.</td><td data-label="Format"><span class="fmt">DOCX</span></td><td data-label="Version" class="doc-ver">2025-08-19</td><td data-label="Source"><span class="src src--ours">Spokane County ARES-ACS</span></td></tr>
+                <tr id="ncs-principles" data-doc="ncs-principles"><th scope="row"><a class="doc-title" href="#">Principles of a Net Control Station</a></th><td data-label="What it’s for">Keep track of stations, handle the highest precedence first, and what to do when a traffic net bogs down.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver">K7BFL, 2000; posted 2017</td><td data-label="Source"><span class="src src--page">Page on this site</span></td></tr>
+                <tr id="repeater-etiquette" data-doc="repeater-etiquette" data-verify="true"><th scope="row"><a class="doc-title" href="#">Repeater etiquette on W7GBU</a></th><td data-label="What it’s for">How to identify, break in and keep the emergency repeater open and orderly.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver">2017; trustee corrected</td><td data-label="Source"><span class="src src--page">Page on this site</span></td></tr>
+                <tr id="net-roster" data-doc="net-roster"><th scope="row"><a class="doc-title ext" href="https://spokaneares-acs.groups.io/g/main/files" rel="noopener">Net roster<span class="vh"> (opens groups.io, members only)</span></a></th><td data-label="What it’s for">The member roster net control uses. Members only; never posted on this site.</td><td data-label="Format"><span class="fmt">groups.io</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--groupsio">Members only, groups.io</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="doc-group" id="join" data-doc-group aria-labelledby="g-join">
+          <div class="doc-group__head"><h2 id="g-join">Join &amp; qualify</h2><p>Applications, task books and orientation.</p></div>
+          <div class="table-wrap">
+            <table class="table table--dense table--stack doc-table">
+              <caption class="vh">Join &amp; qualify: 8 documents</caption>
+              <thead><tr><th scope="col">Document</th><th scope="col">What it’s for</th><th scope="col">Format</th><th scope="col">Version or date</th><th scope="col">Source</th></tr></thead>
+              <tbody>
+                <tr id="ares-application" data-doc="ares-application" data-verify="true"><th scope="row"><a class="doc-title" href="#"><svg class="icon doc-dl" aria-hidden="true"><use href="#i-download"/></svg><span class="vh">Download the </span>Spokane County ARES Membership Application<span class="vh"> (DOCX, version 2024-11-07)</span></a><span class="doc-note">Interim copy: <a class="ext" href="https://ag7qp.com/ares-acs" rel="noopener">ag7qp.com<span class="vh"> (opens ag7qp.com)</span></a></span></th><td data-label="What it’s for">The ARES application. It includes the Spokane County Emergency Management non-disclosure agreement.<span class="doc-note">A fillable PDF is planned. Bring it to a meeting or send it to the membership role address.</span></td><td data-label="Format"><span class="fmt">DOCX</span></td><td data-label="Version" class="doc-ver">2024-11-07</td><td data-label="Source"><span class="src src--ours">Spokane County ARES-ACS</span></td></tr>
+                <tr id="county-application" data-doc="county-application"><th scope="row"><a class="doc-title ext" href="https://www.spokanecounty.gov/FormCenter/Emergency-Management-31/Volunteer-Emergency-Worker-Application-276" rel="noopener">Volunteer Emergency Worker Application (for ACS)<span class="vh"> (opens spokanecounty.gov)</span></a></th><td data-label="What it’s for">The county application for ACS. It starts the Sheriff’s Office background check.</td><td data-label="Format"><span class="fmt">Online form</span></td><td data-label="Version" class="doc-ver">Spokane County FormCenter 276</td><td data-label="Source"><span class="src src--official">Official: Spokane County</span></td></tr>
+                <tr id="acs-task-book" data-doc="acs-task-book" data-verify="true"><th scope="row"><a class="doc-title" href="#"><svg class="icon doc-dl" aria-hidden="true"><use href="#i-download"/></svg><span class="vh">Download the </span>ACS Position Task Book<span class="vh"> (DOCX, version 2024-08-09)</span></a><span class="doc-note">Interim copy: <a class="ext" href="https://ag7qp.com/acs-task-book" rel="noopener">ag7qp.com<span class="vh"> (opens ag7qp.com)</span></a></span></th><td data-label="What it’s for">New Member, Radio Operator (RADO), Senior Radio Operator (S-RADO) and Leadership requirements. Print it and keep it in a binder with your sign-offs.<span class="doc-note">The 2024 text still calls ALERT Spokane “Code Red”; it moved to Regroup in April 2026.</span></td><td data-label="Format"><span class="fmt">DOCX</span></td><td data-label="Version" class="doc-ver">2024-08-09</td><td data-label="Source"><span class="src src--ours">Spokane County ARES-ACS</span></td></tr>
+                <tr id="arrl-ares-task-book" data-doc="arrl-ares-task-book"><th scope="row"><a class="doc-title ext" href="https://www.arrl.org/files/file/ARES%20Taskbook%20July%202024.pdf" rel="noopener">ARRL ARES Position Task Book<span class="vh"> (opens arrl.org)</span></a></th><td data-label="What it’s for">The national ARES task book: Basic, Intermediate and Advanced levels.</td><td data-label="Format"><span class="fmt">PDF (fillable) / DOC</span></td><td data-label="Version" class="doc-ver">July 2024</td><td data-label="Source"><span class="src src--official">Official: ARRL</span></td></tr>
+                <tr id="arrl-ares-plan" data-doc="arrl-ares-plan" data-verify="true"><th scope="row"><a class="doc-title ext" href="https://www.arrl.org/ares" rel="noopener">ARRL ARES Plan<span class="vh"> (opens arrl.org)</span></a></th><td data-label="What it’s for">The national ARES program plan: levels, training and appointments.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver">July 2025</td><td data-label="Source"><span class="src src--official">Official: ARRL</span></td></tr>
+                <tr id="orientation-guide" data-doc="orientation-guide"><th scope="row"><a class="doc-title ext" href="https://ag7qp.com/new-members-orientation" rel="noopener">New Member Orientation guide<span class="vh"> (opens ag7qp.com)</span></a></th><td data-label="What it’s for">The orientation class in writing: the two organizations, qualifying, field guides and hands-on training.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver">2026</td><td data-label="Source"><span class="src src--section">EWA Section (ag7qp.com)</span></td></tr>
+                <tr id="ares-task-book-helps" data-doc="ares-task-book-helps"><th scope="row"><a class="doc-title ext" href="https://ag7qp.com/ares-task-book" rel="noopener">ARES Task Book helps (Section guide)<span class="vh"> (opens ag7qp.com)</span></a></th><td data-label="What it’s for">The Section Emergency Coordinator’s walk-through of the ARRL task book.<span class="doc-note">That page links an older (2024-09-15) application; use the 2024-11-07 version.</span></td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver">2026</td><td data-label="Source"><span class="src src--section">EWA Section (ag7qp.com)</span></td></tr>
+                <tr id="fema-sid" data-doc="fema-sid"><th scope="row"><a class="doc-title ext" href="https://cdp.dhs.gov/femasid" rel="noopener">FEMA Student ID (SID) sign-up<span class="vh"> (opens cdp.dhs.gov)</span></a></th><td data-label="What it’s for">You need a SID before you can take the FEMA IS course exams. Save it.</td><td data-label="Format"><span class="fmt">Online form</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--official">Official: FEMA</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="doc-group" id="forms" data-doc-group aria-labelledby="g-forms">
+          <div class="doc-group__head"><h2 id="g-forms">Forms</h2><p>ICS, state and ARRL forms, always from the official source.</p></div>
+          <div class="table-wrap">
+            <table class="table table--dense table--stack doc-table">
+              <caption class="vh">Forms: 13 documents</caption>
+              <thead><tr><th scope="col">Document</th><th scope="col">What it’s for</th><th scope="col">Format</th><th scope="col">Version or date</th><th scope="col">Source</th></tr></thead>
+              <tbody>
+                <tr id="ics-213" data-doc="ics-213"><th scope="row"><a class="doc-title ext" href="https://training.fema.gov/emiweb/is/icsresource/icsforms/" rel="noopener">ICS 213 General Message<span class="vh"> (opens training.fema.gov)</span></a><span class="doc-note"><a class="ext" href="https://ag7qp.com/ics-213" rel="noopener">How to write an ICS-213<span class="vh"> (opens ag7qp.com)</span></a></span></th><td data-label="What it’s for">The standard message form. Also built into Winlink Express.</td><td data-label="Format"><span class="fmt">PDF</span></td><td data-label="Version" class="doc-ver">v3</td><td data-label="Source"><span class="src src--official">Official: FEMA</span></td></tr>
+                <tr id="ics-213rr" data-doc="ics-213rr"><th scope="row"><a class="doc-title ext" href="https://training.fema.gov/emiweb/is/icsresource/icsforms/" rel="noopener">ICS 213RR Resource Request Message<span class="vh"> (opens training.fema.gov)</span></a></th><td data-label="What it’s for">For requesting resources. Tip: keep one filled out that lists your go-kit.</td><td data-label="Format"><span class="fmt">PDF</span></td><td data-label="Version" class="doc-ver">v3</td><td data-label="Source"><span class="src src--official">Official: FEMA</span></td></tr>
+                <tr id="ics-214" data-doc="ics-214"><th scope="row"><a class="doc-title ext" href="https://training.fema.gov/emiweb/is/icsresource/icsforms/" rel="noopener">ICS 214 Activity Log<span class="vh"> (opens training.fema.gov)</span></a></th><td data-label="What it’s for">Keep one during every exercise and activation (required at RADO).</td><td data-label="Format"><span class="fmt">PDF</span></td><td data-label="Version" class="doc-ver">v3.1</td><td data-label="Source"><span class="src src--official">Official: FEMA</span></td></tr>
+                <tr id="ics-214a" data-doc="ics-214a" data-verify="true"><th scope="row"><span class="doc-title">ICS 214a Individual Log</span></th><td data-label="What it’s for">A personal activity log. Keep copies in your go-kit.</td><td data-label="Format"><span class="fmt">PDF</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--official">Official: source being chosen</span></td></tr>
+                <tr id="ics-309" data-doc="ics-309" data-verify="true"><th scope="row"><span class="doc-title">ICS 309 Communications Log</span><span class="doc-note"><a class="ext" href="https://www.youtube.com/watch?v=VmVJpoPmQvc" rel="noopener">Generate an ICS-309 in Winlink Express (video)<span class="vh"> (opens youtube.com)</span></a><br><a class="ext" href="https://old.hawaiiares.net/set2022/9.%20ICS-309%20Guidance.pdf" rel="noopener">ICS-309 guidance (Hawaii ARES)<span class="vh"> (opens old.hawaiiares.net)</span></a></span></th><td data-label="What it’s for">The radio operator’s message log, kept during all ACS radio operations. Winlink Express can generate it for you.</td><td data-label="Format"><span class="fmt">PDF</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--official">Official: source being chosen</span></td></tr>
+                <tr id="ics-205" data-doc="ics-205"><th scope="row"><a class="doc-title ext" href="https://training.fema.gov/emiweb/is/icsresource/icsforms/" rel="noopener">ICS 205 Incident Radio Communications Plan<span class="vh"> (opens training.fema.gov)</span></a></th><td data-label="What it’s for">The blank form. Filled-in plans for real incidents are never posted publicly.</td><td data-label="Format"><span class="fmt">PDF</span></td><td data-label="Version" class="doc-ver">v3.1</td><td data-label="Source"><span class="src src--official">Official: FEMA</span></td></tr>
+                <tr id="ics-201" data-doc="ics-201"><th scope="row"><a class="doc-title ext" href="https://training.fema.gov/emiweb/is/icsresource/icsforms/" rel="noopener">ICS 201 Incident Briefing<span class="vh"> (opens training.fema.gov)</span></a></th><td data-label="What it’s for">The initial incident briefing form.</td><td data-label="Format"><span class="fmt">PDF</span></td><td data-label="Version" class="doc-ver">v3</td><td data-label="Source"><span class="src src--official">Official: FEMA</span></td></tr>
+                <tr id="arrl-radiogram" data-doc="arrl-radiogram"><th scope="row"><a class="doc-title ext" href="https://www.arrl.org/files/media/Group/Fillable%20Radiogram%20Form.pdf" rel="noopener">ARRL Radiogram (fillable)<span class="vh"> (opens arrl.org)</span></a></th><td data-label="What it’s for">The National Traffic System message form.</td><td data-label="Format"><span class="fmt">PDF</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--official">Official: ARRL</span></td></tr>
+                <tr id="wa-ics-213rr" data-doc="wa-ics-213rr" data-verify="true"><th scope="row"><a class="doc-title ext" href="https://mil.wa.gov/asset/5ba420f505d91" rel="noopener">Washington State ICS-213RR<span class="vh"> (opens mil.wa.gov)</span></a></th><td data-label="What it’s for">The state resource-request form used in state exercises.</td><td data-label="Format"><span class="fmt">PDF</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--official">Official: Washington Military Department</span></td></tr>
+                <tr id="wa-field-situation-report" data-doc="wa-field-situation-report"><th scope="row"><a class="doc-title ext" href="https://winlink.org/" rel="noopener">Washington State Field Situation Report<span class="vh"> (opens winlink.org)</span></a></th><td data-label="What it’s for">A snapshot of phones, power, water, broadcast and internet at your location. In Winlink Express under Templates, Standard Forms, WA State Forms. There is no official PDF.</td><td data-label="Format"><span class="fmt">Winlink form</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--official">Official: Winlink</span></td></tr>
+                <tr id="wa-isnap" data-doc="wa-isnap"><th scope="row"><a class="doc-title ext" href="https://winlink.org/" rel="noopener">Washington State ISNAP (Incident Snapshot)<span class="vh"> (opens winlink.org)</span></a></th><td data-label="What it’s for">Incident snapshot for counties and tribal nations. In Winlink Express; no official PDF.</td><td data-label="Format"><span class="fmt">Winlink form</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--official">Official: Winlink</span></td></tr>
+                <tr id="wsdot-580-020" data-doc="wsdot-580-020"><th scope="row"><a class="doc-title ext" href="https://wsdot.wa.gov/publications/fulltext/forms/580-020.pdf" rel="noopener">WSDOT Form 580-020, Road and Bridge Assessment<span class="vh"> (opens wsdot.wa.gov)</span></a></th><td data-label="What it’s for">Washington State Department of Transportation road and bridge assessment form.</td><td data-label="Format"><span class="fmt">PDF</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--official">Official: WSDOT</span></td></tr>
+                <tr id="fema-ics-forms" data-doc="fema-ics-forms"><th scope="row"><a class="doc-title ext" href="https://training.fema.gov/emiweb/is/icsresource/icsforms/" rel="noopener">All FEMA ICS forms<span class="vh"> (opens training.fema.gov)</span></a></th><td data-label="What it’s for">FEMA’s index of every ICS form, always the current versions.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--official">Official: FEMA</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="doc-group" id="training" data-doc-group aria-labelledby="g-training">
+          <div class="doc-group__head"><h2 id="g-training">Training &amp; presentations</h2><p>Courses, study aids and workshop decks.</p></div>
+          <div class="table-wrap">
+            <table class="table table--dense table--stack doc-table">
+              <caption class="vh">Training &amp; presentations: 21 documents</caption>
+              <thead><tr><th scope="col">Document</th><th scope="col">What it’s for</th><th scope="col">Format</th><th scope="col">Version or date</th><th scope="col">Source</th></tr></thead>
+              <tbody>
+                <tr id="is-100" data-doc="is-100"><th scope="row"><a class="doc-title ext" href="https://training.fema.gov/is/courseoverview.aspx?code=IS-100.c&amp;lang=en" rel="noopener">FEMA IS-100.c: Introduction to the Incident Command System<span class="vh"> (opens training.fema.gov)</span></a></th><td data-label="What it’s for">Free online. Required once for new members.</td><td data-label="Format"><span class="fmt">Online course</span></td><td data-label="Version" class="doc-ver">IS-100.c</td><td data-label="Source"><span class="src src--official">Official: FEMA</span></td></tr>
+                <tr id="is-200" data-doc="is-200"><th scope="row"><a class="doc-title ext" href="https://training.fema.gov/is/courseoverview.aspx?code=IS-200.c&amp;lang=en" rel="noopener">FEMA IS-200.c: Basic ICS for Initial Response<span class="vh"> (opens training.fema.gov)</span></a></th><td data-label="What it’s for">Free online. Required once for new members.</td><td data-label="Format"><span class="fmt">Online course</span></td><td data-label="Version" class="doc-ver">IS-200.c</td><td data-label="Source"><span class="src src--official">Official: FEMA</span></td></tr>
+                <tr id="is-700" data-doc="is-700"><th scope="row"><a class="doc-title ext" href="https://training.fema.gov/is/courseoverview.aspx?code=IS-700.b&amp;lang=en" rel="noopener">FEMA IS-700.b: An Introduction to NIMS<span class="vh"> (opens training.fema.gov)</span></a></th><td data-label="What it’s for">Free online. Required once for new members.</td><td data-label="Format"><span class="fmt">Online course</span></td><td data-label="Version" class="doc-ver">IS-700.b</td><td data-label="Source"><span class="src src--official">Official: FEMA</span></td></tr>
+                <tr id="is-800" data-doc="is-800"><th scope="row"><a class="doc-title ext" href="https://training.fema.gov/is/courseoverview.aspx?code=IS-800.d&amp;lang=en" rel="noopener">FEMA IS-800.d: National Response Framework, An Introduction<span class="vh"> (opens training.fema.gov)</span></a></th><td data-label="What it’s for">Free online. Required once for new members.</td><td data-label="Format"><span class="fmt">Online course</span></td><td data-label="Version" class="doc-ver">IS-800.d</td><td data-label="Source"><span class="src src--official">Official: FEMA</span></td></tr>
+                <tr id="arrl-basic-emcomm" data-doc="arrl-basic-emcomm"><th scope="row"><a class="doc-title ext" href="https://learn.arrl.org/courses/67044" rel="noopener">ARRL Basic EmComm course<span class="vh"> (opens learn.arrl.org)</span></a></th><td data-label="What it’s for">Three modules, about 10 to 20 hours. Required once for new members.</td><td data-label="Format"><span class="fmt">Online course</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--official">Official: ARRL</span></td></tr>
+                <tr id="arrl-intermediate-emcomm" data-doc="arrl-intermediate-emcomm"><th scope="row"><a class="doc-title ext" href="https://learn.arrl.org/courses/68230" rel="noopener">ARRL Intermediate EmComm course<span class="vh"> (opens learn.arrl.org)</span></a></th><td data-label="What it’s for">Required once at RADO. 35-question final; 74% to pass.</td><td data-label="Format"><span class="fmt">Online course</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--official">Official: ARRL</span></td></tr>
+                <tr id="fema-study-helps" data-doc="fema-study-helps"><th scope="row"><a class="doc-title ext" href="https://ag7qp.com/fema-course-study-helps" rel="noopener">FEMA course study helps<span class="vh"> (opens ag7qp.com)</span></a></th><td data-label="What it’s for">Tips for passing the FEMA IS exams, including how to get extra time.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--section">EWA Section (ag7qp.com)</span></td></tr>
+                <tr id="hipaa-video" data-doc="hipaa-video" data-verify="true"><th scope="row"><a class="doc-title ext" href="https://youtu.be/9ryH0P5MCdk" rel="noopener">HIPAA training video (12 minutes)<span class="vh"> (opens youtu.be)</span></a></th><td data-label="What it’s for">Covers the HIPAA requirement if you miss it at orientation.</td><td data-label="Format"><span class="fmt">Video</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--official">Video linked from the ACS Task Book</span></td></tr>
+                <tr id="skywarn-training" data-doc="skywarn-training"><th scope="row"><a class="doc-title ext" href="https://www.weather.gov/otx/Current_Spotter_Training" rel="noopener">SKYWARN spotter training<span class="vh"> (opens weather.gov)</span></a></th><td data-label="What it’s for">NWS Spokane spotter classes, in person or online. Encouraged every two years.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--official">Official: NWS Spokane</span></td></tr>
+                <tr id="ratpac" data-doc="ratpac"><th scope="row"><a class="doc-title ext" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTVywG1s025_zsAaKrn8Lr_DPGT6tGV0SVsV5LEdBA91dFCYk_LP8S3kXhMcD9vXFM3Cg-q468jf6Nd/pubhtml" rel="noopener">RATPAC video presentations<span class="vh"> (opens docs.google.com)</span></a></th><td data-label="What it’s for">A library of recorded emergency-communications presentations.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--official">Official: RATPAC</span></td></tr>
+                <tr id="anderson-powerpoles" data-doc="anderson-powerpoles"><th scope="row"><a class="doc-title ext" href="https://www.arrl.org/files/file/Public%20Service/TrainingModules/Technical/Anderson%20powerpole.pdf" rel="noopener">A guide to Anderson Powerpoles<span class="vh"> (opens arrl.org)</span></a></th><td data-label="What it’s for">Make your own DC power connections.</td><td data-label="Format"><span class="fmt">PDF</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--official">Official: ARRL</span></td></tr>
+                <tr id="deck-safety-deployments" data-doc="deck-safety-deployments"><th scope="row"><span class="doc-title">Maintaining and Improving Safety on ARES Deployments</span><span class="doc-note">By N7LL</span></th><td data-label="What it’s for">Presented January 19, 2023.</td><td data-label="Format"><span class="fmt">Presentation</span></td><td data-label="Version" class="doc-ver">2023-01-19</td><td data-label="Source"><span class="src src--recovering">Coming back</span></td></tr>
+                <tr id="deck-five-knots" data-doc="deck-five-knots"><th scope="row"><span class="doc-title">Five knots you should know</span></th><td data-label="What it’s for">A presentation from the old library (no description was published).</td><td data-label="Format"><span class="fmt">Presentation</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--recovering">Coming back</span></td></tr>
+                <tr id="deck-ida" data-doc="deck-ida"><th scope="row"><span class="doc-title">Initial Damage Assessment and the Winlink IDA form</span></th><td data-label="What it’s for">How Spokane County ARES-ACS will react to and use the Initial Damage Assessment Winlink form.<span class="doc-note">To be checked against the current state form before it returns.</span></td><td data-label="Format"><span class="fmt">Presentation</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--recovering">Coming back</span></td></tr>
+                <tr id="deck-radio-go-kit" data-doc="deck-radio-go-kit"><th scope="row"><span class="doc-title">Radio go-kit presentation</span><span class="doc-note">By N7GCO</span></th><td data-label="What it’s for">A presentation on radio go-kits.</td><td data-label="Format"><span class="fmt">Presentation</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--recovering">Coming back</span></td></tr>
+                <tr id="deck-emergency-modules" data-doc="deck-emergency-modules"><th scope="row"><span class="doc-title">Emergency modules</span><span class="doc-note">By N7GCO</span></th><td data-label="What it’s for">A comprehensive approach to preparing for emergencies. The author gave permission to host it.</td><td data-label="Format"><span class="fmt">Presentation</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--recovering">Coming back</span></td></tr>
+                <tr id="deck-power" data-doc="deck-power"><th scope="row"><span class="doc-title">How to power your radio when the lights go out</span><span class="doc-note">By WA7AQH</span></th><td data-label="What it’s for">Battery technologies and solar power for your station.</td><td data-label="Format"><span class="fmt">Presentation</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--recovering">Coming back</span></td></tr>
+                <tr id="deck-packet-101" data-doc="deck-packet-101"><th scope="row"><span class="doc-title">Intro to packet communications 101</span><span class="doc-note">By K7PKT</span></th><td data-label="What it’s for">An introduction to packet radio.</td><td data-label="Format"><span class="fmt">Presentation</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--recovering">Coming back</span></td></tr>
+                <tr id="deck-cross-band" data-doc="deck-cross-band"><th scope="row"><span class="doc-title">Cross-band repeaters</span><span class="doc-note">By AD7DD</span></th><td data-label="What it’s for">Theory, use cases and setup.</td><td data-label="Format"><span class="fmt">Presentation</span></td><td data-label="Version" class="doc-ver">2017</td><td data-label="Source"><span class="src src--recovering">Coming back</span></td></tr>
+                <tr id="deck-go-kits-2017" data-doc="deck-go-kits-2017"><th scope="row"><span class="doc-title">Go-kits (quick-reaction packs)</span><span class="doc-note">By AD7DD</span></th><td data-label="What it’s for">Go-kits, quick-reaction packs and bug-out bags.</td><td data-label="Format"><span class="fmt">Presentation</span></td><td data-label="Version" class="doc-ver">2017</td><td data-label="Source"><span class="src src--recovering">Coming back</span></td></tr>
+                <tr id="traffic-handler" data-doc="traffic-handler" data-verify="true"><th scope="row"><span class="doc-title">Traffic Handler (mentor program, PDF and MP3)</span></th><td data-label="What it’s for">Traffic-handling training material from the old mentor program.</td><td data-label="Format"><span class="fmt">PDF + MP3</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--recovering">Coming back</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="doc-group" id="readiness" data-doc-group aria-labelledby="g-readiness">
+          <div class="doc-group__head"><h2 id="g-readiness">Go-kits &amp; readiness</h2><p>Kit lists, alert levels and alert registration.</p></div>
+          <div class="table-wrap">
+            <table class="table table--dense table--stack doc-table">
+              <caption class="vh">Go-kits &amp; readiness: 7 documents</caption>
+              <thead><tr><th scope="col">Document</th><th scope="col">What it’s for</th><th scope="col">Format</th><th scope="col">Version or date</th><th scope="col">Source</th></tr></thead>
+              <tbody>
+                <tr id="go-kits" data-doc="go-kits"><th scope="row"><a class="doc-title ext" href="https://ag7qp.com/go-kits" rel="noopener">Go-kit guide: 2-6 hours, 12-24 hours, 24-72+ hours<span class="vh"> (opens ag7qp.com)</span></a></th><td data-label="What it’s for">What goes in a personal kit and a radio kit for short, longer and long deployments, including the forms to carry.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver">2026</td><td data-label="Source"><span class="src src--section">EWA Section (ag7qp.com)</span></td></tr>
+                <tr id="equipment-lists" data-doc="equipment-lists"><th scope="row"><a class="doc-title" href="#">Personal and station equipment lists</a></th><td data-label="What it’s for">Five-hour and overnight kits, and station gear by assignment. Station gear should run for at least 72 hours.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver">2017; being refreshed</td><td data-label="Source"><span class="src src--page">Page on this site</span></td></tr>
+                <tr id="alert-levels" data-doc="alert-levels"><th scope="row"><a class="doc-title" href="../how-it-works.html#alert-levels">Alert levels explained (Green, Yellow, Orange, Red)</a></th><td data-label="What it’s for">What each level asks of members. A reference, not a live status.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver">2017</td><td data-label="Source"><span class="src src--page">Page on this site</span></td></tr>
+                <tr id="alert-spokane" data-doc="alert-spokane"><th scope="row"><a class="doc-title ext" href="https://www.spokanecounty.gov/3007/Alert-Spokane" rel="noopener">Register with ALERT Spokane<span class="vh"> (opens spokanecounty.gov)</span></a></th><td data-label="What it’s for">The county’s public alert system. Registration is a New Member requirement.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver">Regroup platform since April 2026</td><td data-label="Source"><span class="src src--official">Official: Spokane County</span></td></tr>
+                <tr id="ready-kit" data-doc="ready-kit"><th scope="row"><a class="doc-title ext" href="https://www.ready.gov/kit" rel="noopener">Build a household emergency kit<span class="vh"> (opens ready.gov)</span></a></th><td data-label="What it’s for">Ready.gov’s supply list for home.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--official">Official: Ready.gov</span></td></tr>
+                <tr id="programming-radios" data-doc="programming-radios"><th scope="row"><a class="doc-title ext" href="https://ag7qp.com/programming-radios" rel="noopener">Radio programming cheat sheets<span class="vh"> (opens ag7qp.com)</span></a></th><td data-label="What it’s for">Keypad programming for common handhelds and mobiles. Bring your HT and its manual to orientation.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--section">EWA Section (ag7qp.com)</span></td></tr>
+                <tr id="gps-conversion" data-doc="gps-conversion" data-verify="true"><th scope="row"><span class="doc-title">GPS coordinates conversion</span></th><td data-label="What it’s for">Converting between latitude and longitude formats.</td><td data-label="Format"><span class="fmt">Document</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--recovering">Coming back</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="doc-group" id="digital" data-doc-group aria-labelledby="g-digital">
+          <div class="doc-group__head"><h2 id="g-digital">Winlink &amp; digital</h2><p>Email over radio, packet and digital modes.</p></div>
+          <div class="table-wrap">
+            <table class="table table--dense table--stack doc-table">
+              <caption class="vh">Winlink &amp; digital: 8 documents</caption>
+              <thead><tr><th scope="col">Document</th><th scope="col">What it’s for</th><th scope="col">Format</th><th scope="col">Version or date</th><th scope="col">Source</th></tr></thead>
+              <tbody>
+                <tr id="winlink-intro" data-doc="winlink-intro"><th scope="row"><a class="doc-title ext" href="https://ag7qp.com/winlink" rel="noopener">Winlink: getting started<span class="vh"> (opens ag7qp.com)</span></a></th><td data-label="What it’s for">Account setup, sending by Telnet, then by radio; plus Winlink’s mapping of Field Situation Reports.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--section">EWA Section (ag7qp.com)</span></td></tr>
+                <tr id="winlink-express" data-doc="winlink-express"><th scope="row"><a class="doc-title ext" href="https://winlink.org/WinlinkExpress" rel="noopener">Winlink Express (software)<span class="vh"> (opens winlink.org)</span></a></th><td data-label="What it’s for">The Winlink client. Use the service code PUBLIC EMCOMM.</td><td data-label="Format"><span class="fmt">Software</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--official">Official: Winlink</span></td></tr>
+                <tr id="winlink-mapping" data-doc="winlink-mapping" data-verify="true"><th scope="row"><a class="doc-title ext" href="https://winlink.org/sites/default/files/RMSE_FORMS/winlink_mapping_enabled_forms.pdf" rel="noopener">Winlink map-enabled forms (guide)<span class="vh"> (opens winlink.org)</span></a></th><td data-label="What it’s for">How reports sent to a callsign can be shown on a map in Winlink Express.</td><td data-label="Format"><span class="fmt">PDF</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--official">Official: Winlink</span></td></tr>
+                <tr id="winlink-practice-2022" data-doc="winlink-practice-2022"><th scope="row"><span class="doc-title">Winlink practice exercises</span></th><td data-label="What it’s for">Winlink practice exercises from 2022.</td><td data-label="Format"><span class="fmt">Document</span></td><td data-label="Version" class="doc-ver">2022</td><td data-label="Source"><span class="src src--recovering">Coming back</span></td></tr>
+                <tr id="deck-winlink-scripting" data-doc="deck-winlink-scripting"><th scope="row"><span class="doc-title">Scripting in Winlink 101</span></th><td data-label="What it’s for">From a Second Saturday digital workshop.</td><td data-label="Format"><span class="fmt">Presentation</span></td><td data-label="Version" class="doc-ver">2018-01-13</td><td data-label="Source"><span class="src src--recovering">Coming back</span></td></tr>
+                <tr id="deck-ardop" data-doc="deck-ardop"><th scope="row"><span class="doc-title">ARDOP 101 for Winlink</span></th><td data-label="What it’s for">A quick introduction to ARDOP for Winlink.</td><td data-label="Format"><span class="fmt">Presentation</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--recovering">Coming back</span></td></tr>
+                <tr id="signalink-packet" data-doc="signalink-packet"><th scope="row"><span class="doc-title">Packet with a SignaLink sound card (UZ7HO SoundModem)</span></th><td data-label="What it’s for">SoundModem and EasyTerm as a packet station.</td><td data-label="Format"><span class="fmt">Document</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--recovering">Coming back</span></td></tr>
+                <tr id="i-am-safe" data-doc="i-am-safe" data-verify="true"><th scope="row"><a class="doc-title ext" href="https://ag7qp.com/ares-acs" rel="noopener">“I Am Safe” messaging: procedures<span class="vh"> (opens ag7qp.com)</span></a></th><td data-label="What it’s for">Welfare messages from a disaster area. Developed by the Seattle Emergency Communication Hubs, Seattle ACS, Radio Relay International and the Winlink Development Team.</td><td data-label="Format"><span class="fmt">DOCX</span></td><td data-label="Version" class="doc-ver">July 2023</td><td data-label="Source"><span class="src src--section">EWA Section (ag7qp.com)</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="doc-group" id="reference" data-doc-group aria-labelledby="g-reference">
+          <div class="doc-group__head"><h2 id="g-reference">Reference &amp; SOPs</h2><p>Standing orders, field guides, agreements and rules.</p></div>
+          <div class="table-wrap">
+            <table class="table table--dense table--stack doc-table">
+              <caption class="vh">Reference &amp; SOPs: 9 documents</caption>
+              <thead><tr><th scope="col">Document</th><th scope="col">What it’s for</th><th scope="col">Format</th><th scope="col">Version or date</th><th scope="col">Source</th></tr></thead>
+              <tbody>
+                <tr id="sop-1b" data-doc="sop-1b"><th scope="row"><a class="doc-title ext" href="https://ag7qp.com/ares-acs" rel="noopener">Eastern Washington Section Standing Order 1b<span class="vh"> (opens ag7qp.com)</span></a></th><td data-label="What it’s for">What to do if something happens and you have no instructions from your EC or the agency having jurisdiction.</td><td data-label="Format"><span class="fmt">PDF</span></td><td data-label="Version" class="doc-ver">2026-01-16</td><td data-label="Source"><span class="src src--section">EWA Section (ag7qp.com)</span></td></tr>
+                <tr id="field-guides" data-doc="field-guides"><th scope="row"><a class="doc-title ext" href="https://www.cisa.gov/safecom/field-operations-guides" rel="noopener">AUXFOG and NIFOG field operations guides<span class="vh"> (opens cisa.gov)</span></a></th><td data-label="What it’s for">Free national field guides from CISA SAFECOM, as PDFs or phone apps.</td><td data-label="Format"><span class="fmt">PDF / app</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--official">Official: CISA SAFECOM</span></td></tr>
+                <tr id="acsfog" data-doc="acsfog"><th scope="row"><a class="doc-title ext" href="https://spokaneares-acs.groups.io/g/main/files" rel="noopener">Spokane County ACS Field Operating Guide (ACSFOG)<span class="vh"> (opens groups.io, members only)</span></a></th><td data-label="What it’s for">Half-page and full-page versions, with phone-install instructions. Members only; never posted here.</td><td data-label="Format"><span class="fmt">groups.io</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--groupsio">Members only, groups.io</span></td></tr>
+                <tr id="ics-213-howto" data-doc="ics-213-howto"><th scope="row"><a class="doc-title ext" href="https://ag7qp.com/ics-213" rel="noopener">How to write an ICS-213<span class="vh"> (opens ag7qp.com)</span></a></th><td data-label="What it’s for">Block-by-block instructions, dates as MM/DD/YYYY and 24-hour times with L or Z.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--section">EWA Section (ag7qp.com)</span></td></tr>
+                <tr id="ievhfra-mou" data-doc="ievhfra-mou"><th scope="row"><a class="doc-title" href="../about.html#agreements">MOU with the Inland Empire VHF Radio Amateurs (Rev. 5)</a></th><td data-label="What it’s for">Backup repeater (146.880), a second repeater for specialised nets, and packet paths into Winlink.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver">2023-05-06</td><td data-label="Source"><span class="src src--page">Page on this site</span></td></tr>
+                <tr id="part-97" data-doc="part-97"><th scope="row"><a class="doc-title ext" href="https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-97" rel="noopener">47 CFR Part 97 (Amateur Radio Service rules)<span class="vh"> (opens ecfr.gov)</span></a></th><td data-label="What it’s for">The FCC rules, including 97.407 on RACES.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver">current</td><td data-label="Source"><span class="src src--official">Official: eCFR</span></td></tr>
+                <tr id="public-service-tips" data-doc="public-service-tips"><th scope="row"><a class="doc-title ext" href="https://ag7qp.com/preparing-for-public-service-communications" rel="noopener">Preparing for public-service communications<span class="vh"> (opens ag7qp.com)</span></a></th><td data-label="What it’s for">Nine tips for your first event shift.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--section">EWA Section (ag7qp.com)</span></td></tr>
+                <tr id="rfi-resources" data-doc="rfi-resources"><th scope="row"><a class="doc-title" href="#">RFI resources</a><span class="doc-note">By N7GCO</span></th><td data-label="What it’s for">Finding and fixing radio-frequency interference.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver">2021</td><td data-label="Source"><span class="src src--page">Page on this site</span></td></tr>
+                <tr id="radio-amateur-code" data-doc="radio-amateur-code"><th scope="row"><a class="doc-title" href="#">The Radio Amateur’s Code</a></th><td data-label="What it’s for">Considerate, loyal, progressive, friendly, balanced, patriotic.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver">1928, modernised</td><td data-label="Source"><span class="src src--page">Page on this site</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="doc-group" id="history" data-doc-group aria-labelledby="g-history">
+          <div class="doc-group__head"><h2 id="g-history">History &amp; archive</h2><p>Kept for the record.</p></div>
+          <div class="table-wrap">
+            <table class="table table--dense table--stack doc-table">
+              <caption class="vh">History &amp; archive: 2 documents</caption>
+              <thead><tr><th scope="col">Document</th><th scope="col">What it’s for</th><th scope="col">Format</th><th scope="col">Version or date</th><th scope="col">Source</th></tr></thead>
+              <tbody>
+                <tr id="ares-races-plan" data-doc="ares-races-plan" data-verify="true"><th scope="row"><span class="doc-title">Spokane County ARES/RACES Plan (Master 7.13)</span></th><td data-label="What it’s for">The group’s last written plan. Kept for the record; names, structure and agreements are out of date.</td><td data-label="Format"><span class="fmt">PDF</span></td><td data-label="Version" class="doc-ver">about 2013</td><td data-label="Source"><span class="src src--historical">Historical</span></td></tr>
+                <tr id="w7gbu-story" data-doc="w7gbu-story"><th scope="row"><a class="doc-title" href="../about.html#w7gbu">The W7GBU story</a></th><td data-label="What it’s for">Why our call sign honors Ira “Dean” Bula.</td><td data-label="Format"><span class="fmt">Web page</span></td><td data-label="Version" class="doc-ver"><span aria-hidden="true">—</span><span class="vh">No version listed</span></td><td data-label="Source"><span class="src src--page">Page on this site</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      <div class="card doc-empty" data-doc-empty hidden>
+        <p class="card__title">Nothing matches “<span data-doc-empty-q></span>”.</p>
+        <p>Try a shorter word, or look on groups.io for member-only files.</p>
+        <p class="links-line"><a href="#" data-doc-clear>Clear search</a><a class="ext" href="https://spokaneares-acs.groups.io/g/main/files" rel="noopener">groups.io files<span class="vh"> (opens groups.io, members only)</span></a></p>
+      </div>
+    </div>
+
+    <div class="ws-row ws-row--even docs-end">
+      <section class="ws-section" id="not-here" aria-labelledby="nh-title">
+        <div class="ws-head"><h2 id="nh-title">Can’t find it?</h2></div>
+        <div class="panel">
+          <p class="note-line">Some things are deliberately not on this site:</p>
+          <ul>
+            <li><b>The net roster and the ACSFOG</b> are on groups.io Files, for members only.</li>
+            <li><b>County, hospital, SHARES and 800 MHz radio details</b> are For Official Use Only under the county’s non-disclosure agreement. They’re in the ACSFOG, never here.</li>
+            <li><b>Older presentations</b> from the previous website are being recovered. Ones that are ready are marked “Coming back”.</li>
+          </ul>
+          <p class="links-line"><a class="ext" href="https://spokaneares-acs.groups.io/g/main/files" rel="noopener">groups.io Files<span class="vh"> (opens groups.io, members only)</span></a><a href="mailto:webmaster@spokares.org" data-verify="true">Tell us a link is broken</a></p>
+        </div>
+      </section>
+      <section class="ws-section" id="status-key" aria-labelledby="sk-title">
+        <div class="ws-head"><h2 id="sk-title">What the source badges mean</h2></div>
+        <div class="panel">
+          <dl class="status-key">
+            <dt><span class="src src--ours">Spokane County ARES-ACS</span></dt><dd>Available. Our current version, hosted here.</dd>
+            <dt><span class="src src--official">Official</span></dt><dd>Opens the issuing agency’s own copy (FEMA, ARRL, county, state), so you always get the current version.</dd>
+            <dt><span class="src src--section">EWA Section</span></dt><dd>Maintained by the Eastern Washington Section; opens ag7qp.com.</dd>
+            <dt><span class="src src--page">Page on this site</span></dt><dd>A page on this website.</dd>
+            <dt><span class="src src--groupsio">Members only</span></dt><dd>Opens groups.io; you need to be an approved member.</dd>
+            <dt><span class="src src--recovering">Coming back</span></dt><dd>Being recovered from the old website. Not available yet.</dd>
+            <dt><span class="src src--historical">Historical</span></dt><dd>Kept for the record. Not current guidance.</dd>
+          </dl>
+        </div>
+      </section>
+    </div>
+    <p class="docs-foot">Every entry shows a version or date. Forms link to their official source. <span data-verify="true">Last reviewed September 2026.</span></p>
+  </main>
+</div>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <a class="brand" href="../index.html"><img src="../assets/img/seal-ares-acs-400.png" alt="" width="46" height="46" loading="lazy"><span class="brand__name"><span>Spokane County</span> <strong>ARES-ACS</strong></span></a>
+        <div class="footer__lines">
+          <p class="footer__mission">Volunteer amateur radio emergency communications for Spokane County.</p>
+          <p>Formerly Spokane County ARES/RACES.</p>
+          <p>Meetings at Spokane County Emergency Management, 1121 W. Gardner Ave, Spokane, WA 99260.</p>
+        </div>
+        <div class="marks footer__marks">
+          <img class="mark--ares" src="../assets/img/ARES_logo.png" alt="ARRL Amateur Radio Emergency Service emblem" width="44" height="44" loading="lazy">
+          <img class="marks__seal-bg" src="../assets/img/ACS_logo-500.png" alt="Spokane Auxiliary Communications (ACS) seal" width="48" height="48" loading="lazy">
+          <img src="../assets/img/SCDEM_Logo-600.png" alt="Spokane County Emergency Management seal" width="48" height="48" loading="lazy">
+        </div>
+        <p class="footer__lines small">An ARRL Amateur Radio Emergency Service group, serving Spokane County Emergency Management.</p>
+      </div>
+      <div>
+        <h2>New to radio</h2>
+        <ul>
+          <li><a href="../how-it-works.html">How it works</a></li>
+          <li><a href="../about.html">About ARES &amp; ACS</a></li>
+          <li><a href="../about.html#licensing">Get licensed</a></li>
+          <li><a href="../index.html#visit">Listen to the Tuesday net</a></li>
+          <li><a class="ext" href="https://www.weather.gov/otx/Current_Spotter_Training" rel="noopener">SKYWARN spotter training<span class="vh"> (opens weather.gov)</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Licensed hams</h2>
+        <ul>
+          <li><a href="../index.html#join">Join the team</a></li>
+          <li><a href="../index.html#visit">Visit a meeting</a></li>
+          <li><a href="documents.html#ares-application">ARES application</a></li>
+          <li><a class="ext" href="https://spokaneares-acs.groups.io/g/main" rel="noopener">Apply to join groups.io<span class="vh"> (opens groups.io)</span></a></li>
+          <li><a class="ext" href="https://www.spokanecounty.gov/FormCenter/Emergency-Management-31/Volunteer-Emergency-Worker-Application-276" rel="noopener">County ACS application<span class="vh"> (opens spokanecounty.gov)</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Members</h2>
+        <ul>
+          <li><a href="index.html">For Members: this week</a></li>
+          <li><a href="documents.html">Documents &amp; downloads</a></li>
+          <li><a href="exercises.html">Exercises &amp; events</a></li>
+          <li><a href="documents.html#forms">Forms</a></li>
+          <li><a class="ext" href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io (members)<span class="vh"> (opens groups.io)</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Agency partners</h2>
+        <ul>
+          <li><a href="../about.html#for-agencies">For served agencies</a></li>
+          <li><a href="../about.html#who-we-serve">Who we serve</a></li>
+          <li><a href="../about.html#agreements">Agreements</a></li>
+          <li><a href="../how-it-works.html#activation">How activation works</a></li>
+          <li><a href="../about.html#contact">Contact the emergency coordinator</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p class="footer__emergency" data-verify="true">A volunteer group, not an emergency service. In an emergency, call 911.</p>
+      <ul>
+        <li><a href="#">Privacy</a></li>
+        <li>© Spokane County ARES-ACS</li>
+      </ul>
+      <p class="footer__mock">Mockup — content to be verified before launch</p>
+    </div>
+  </div>
+</footer>
+<script src="../assets/data.js"></script>
+<script src="../assets/site.js"></script>
+<script>
+/* Page-scoped helpers for the library (site.js does the filtering).
+   1. The Forms item in the members menu, and any in-page link to a category
+      or a document, selects or reveals it even when a filter is active.
+   2. Quick tiles jump to a row and move focus there. */
+document.addEventListener('DOMContentLoaded', function () {
+  var lib = document.querySelector('[data-doc-library]'); if (!lib || !window.SPOKARES) return;
+  /* Most used is the library's resting state: it hides while a search or a
+     category filter is active, so results sit right under the controls. */
+  var most = document.getElementById('most-used'), count = lib.querySelector('[data-doc-count]');
+  function sync() { if (most && count) most.hidden = !/^Showing all/.test(count.textContent); }
+  if (count && 'MutationObserver' in window) new MutationObserver(sync).observe(count, { childList: true, characterData: true, subtree: true });
+  sync();
+  function reveal(id) {
+    var el = document.getElementById(id); if (!el) return;
+    var chip = lib.querySelector('[data-cat-chip="' + id + '"]');
+    if (chip) { chip.click(); }
+    else if (el.hasAttribute('data-doc') && el.hidden) {
+      var clear = lib.querySelector('[data-doc-clear]');
+      if (clear) clear.click();
+    }
+    sync();
+    go(el);
+  }
+  function go(el) {
+    Array.prototype.forEach.call(lib.querySelectorAll('.is-target'), function (x) { x.classList.remove('is-target'); });
+    if (el.hasAttribute('data-doc')) el.classList.add('is-target');
+    el.scrollIntoView({ block: 'start' });
+    if (el.hasAttribute('data-doc')) { el.setAttribute('tabindex', '-1'); el.focus({ preventScroll: true }); }
+    try { history.replaceState(null, '', '#' + el.id); } catch (e) {}
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[href*="#"]'); if (!a || a.hasAttribute('data-doc-clear')) return;
+    var url = new URL(a.href, location.href);
+    if (url.pathname !== location.pathname || !url.hash || url.hash === '#') return;
+    var id = decodeURIComponent(url.hash.slice(1)), el = document.getElementById(id);
+    if (!el || !(el.hasAttribute('data-doc') || el.hasAttribute('data-doc-group'))) return;
+    e.preventDefault(); reveal(id);
+  });
+  /* Arriving with a document hash (from the hub's quick links): highlight it. */
+  var h = decodeURIComponent(location.hash.slice(1));
+  if (h && h !== 'forms') { var t = document.getElementById(h); if (t && t.hasAttribute('data-doc')) setTimeout(function () { t.scrollIntoView({ block: 'start' }); }, 60); }
+  if (h === 'forms') setTimeout(function () { var g = document.getElementById('forms'); if (g) g.scrollIntoView({ block: 'start' }); }, 60);
+});
+</script>
+</body>
+</html>

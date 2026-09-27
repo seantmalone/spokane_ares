@@ -1,0 +1,25 @@
+<!-- wp:template-part {"slug":"header","tagName":"header","className":"site-header"} /-->
+
+<!-- wp:group {"tagName":"main","anchor":"main","className":"bg-day plain-page","layout":{"type":"default"}} -->
+<main class="wp-block-group bg-day plain-page" id="main"><!-- wp:group {"className":"wrap","layout":{"type":"default"}} -->
+<div class="wp-block-group wrap"><!-- wp:heading {"level":1,"className":"plain-page__title"} -->
+<h1 class="wp-block-heading plain-page__title">Search results</h1>
+<!-- /wp:heading -->
+
+<!-- wp:query {"queryId":1,"query":{"inherit":true,"perPage":20},"className":"results","layout":{"type":"default"}} -->
+<div class="wp-block-query results"><!-- wp:post-template {"className":"results__list","layout":{"type":"default"}} -->
+<!-- wp:post-title {"level":2,"isLink":true,"className":"results__title"} /-->
+
+<!-- wp:post-excerpt {"className":"results__excerpt","excerptLength":30} /-->
+<!-- /wp:post-template -->
+
+<!-- wp:query-no-results -->
+<!-- wp:paragraph {"className":"plain-page__line"} -->
+<p class="plain-page__line">Try <a href="/">Home</a>, <a href="/how-it-works/">How it works</a>, <a href="/about/">About ARES &amp; ACS</a> or <a href="/members/">For members</a>.</p>
+<!-- /wp:paragraph -->
+<!-- /wp:query-no-results --></div>
+<!-- /wp:query --></div>
+<!-- /wp:group --></main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer","className":"site-footer"} /-->

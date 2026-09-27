@@ -1,0 +1,120 @@
+[
+ {
+  "option": "option-b-lines-down",
+  "pages": [
+   {
+    "page": "index.html",
+    "words": 259,
+    "h2": 3,
+    "ctas": 2,
+    "h_desktop": 2902,
+    "h_mobile": 3511
+   },
+   {
+    "page": "how-it-works.html",
+    "words": 909,
+    "h2": 5,
+    "ctas": 3,
+    "h_desktop": 5206,
+    "h_mobile": 7587
+   },
+   {
+    "page": "about.html",
+    "words": 1274,
+    "h2": 9,
+    "ctas": 2,
+    "h_desktop": 9199,
+    "h_mobile": 12051
+   },
+   {
+    "page": "members/index.html",
+    "words": 124,
+    "h2": 3,
+    "ctas": 2,
+    "h_desktop": 1202,
+    "h_mobile": 2276
+   },
+   {
+    "page": "members/documents.html",
+    "words": 549,
+    "h2": 8,
+    "ctas": 1,
+    "h_desktop": 3760,
+    "h_mobile": 5439
+   },
+   {
+    "page": "members/exercises.html",
+    "words": 427,
+    "h2": 5,
+    "ctas": 1,
+    "h_desktop": 2218,
+    "h_mobile": 4125
+   }
+  ],
+  "total_words": 3542,
+  "repeated_shingles": 6,
+  "repeated_shingle_ratio": 0.002,
+  "key_fact_page_counts": {
+   "repeater 147.300": 3,
+   "meeting address": 1,
+   "Tuesday net time": 3,
+   "ARES vs ACS explainer": 0,
+   "join steps": 5,
+   "county application": 3,
+   "ICS-213": 4,
+   "task book": 3,
+   "WSDOT exercise": 3,
+   "groups.io": 4
+  },
+  "key_fact_pages": {
+   "repeater 147.300": [
+    "how-it-works.html",
+    "index.html",
+    "members/index.html"
+   ],
+   "meeting address": [
+    "index.html"
+   ],
+   "Tuesday net time": [
+    "how-it-works.html",
+    "index.html",
+    "members/index.html"
+   ],
+   "ARES vs ACS explainer": [],
+   "join steps": [
+    "about.html",
+    "how-it-works.html",
+    "index.html",
+    "members/documents.html",
+    "members/exercises.html"
+   ],
+   "county application": [
+    "about.html",
+    "index.html",
+    "members/documents.html"
+   ],
+   "ICS-213": [
+    "how-it-works.html",
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ],
+   "task book": [
+    "about.html",
+    "members/documents.html",
+    "members/index.html"
+   ],
+   "WSDOT exercise": [
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ],
+   "groups.io": [
+    "index.html",
+    "members/documents.html",
+    "members/exercises.html",
+    "members/index.html"
+   ]
+  }
+ }
+]

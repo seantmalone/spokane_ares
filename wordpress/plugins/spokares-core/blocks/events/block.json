@@ -1,0 +1,59 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "spokares/events",
+	"title": "Events list",
+	"category": "spokares",
+	"icon": "calendar-alt",
+	"description": "Exercises, events and past exercises. Edit them on the Events screen.",
+	"textdomain": "spokares-core",
+	"attributes": {
+		"view": {
+			"type": "string",
+			"default": "upcoming",
+			"enum": [
+				"upcoming",
+				"next-up",
+				"later",
+				"public-service",
+				"past"
+			],
+			"label": "What to show"
+		},
+		"types": {
+			"type": "string",
+			"default": "exercise,training",
+			"label": "Kinds (comma-separated)"
+		},
+		"limit": {
+			"type": "integer",
+			"default": 2,
+			"label": "How many"
+		},
+		"days": {
+			"type": "integer",
+			"default": 60,
+			"label": "Days ahead (upcoming)"
+		},
+		"cardTypes": {
+			"type": "string",
+			"default": "exercise",
+			"label": "Next-up kinds (later)"
+		},
+		"cardLimit": {
+			"type": "integer",
+			"default": 2,
+			"label": "Next-up cards (later)"
+		}
+	},
+	"supports": {
+		"autoRegister": true,
+		"html": false,
+		"reusable": false,
+		"className": true
+	},
+	"usesContext": [
+		"postId"
+	],
+	"render": "file:./render.php"
+}

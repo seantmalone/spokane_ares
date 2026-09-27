@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js'); if (location.hash) document.documentElement.style.scrollBehavior = 'auto'; /* deep links land instantly; site.js restores smooth scrolling */</script>
+<title>For Members | Spokane County ARES-ACS</title>
+<meta name="description" content="This week's exercises and meeting, the Tuesday net rota and the most-used documents for Spokane County ARES-ACS members.">
+<meta name="theme-color" content="#1E3557">
+<link rel="icon" href="../assets/img/seal-ares-acs-400.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+  /* members/index.html only. Shared members layout: a white intro band (H1 + the page's tool), then
+     "ledger" rows: heading on the left, content on the right, hairlines between. The same rules sit
+     in documents.html and exercises.html; promote them to site.css once all three settle. */
+  .m-intro { padding-block: clamp(24px, 3.4vw, 44px); }
+  .m-intro h1 { font-size: clamp(2.25rem, 1.6rem + 2.4vw, 3.5rem); }
+  .m-intro .meta-line { margin-top: 8px; }
+  .m-intro-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 34rem); gap: 20px 48px; align-items: end; }
+  .ledger { padding-bottom: var(--section-y); }
+  .ledger-row { display: grid; grid-template-columns: 15rem minmax(0, 1fr); gap: 14px 48px; padding-block: clamp(28px, 3.4vw, 44px); border-top: 1px solid var(--line); }
+  .ledger-row:first-child { border-top: 0; }
+  .ledger-row > h2 { font-size: clamp(1.625rem, 1.3rem + .9vw, 2.125rem); }
+
+  /* Hub search: live matches float over the page instead of pushing it down */
+  .m-search { position: relative; }
+  .m-search .suggest { position: absolute; left: 0; right: 0; z-index: 5; box-shadow: var(--shadow-float); }
+
+  /* This week: a date column and a what column, two groups side by side */
+  .week-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 48px; }
+  .week-grid h3 { font-family: var(--font-body); font-size: var(--fs-ui); font-weight: 700; letter-spacing: 0; color: var(--ink-2); }
+  .when-list { list-style: none; margin-top: 8px; border-top: 1px solid var(--line); }
+  .when-list li { display: grid; grid-template-columns: 6.75rem minmax(0, 1fr); gap: 12px; padding-block: 10px; border-bottom: 1px solid var(--line); font-size: var(--fs-ui); line-height: 1.4; }
+  .when-list .when { font-family: var(--font-display); font-weight: 700; font-stretch: 85%; font-size: 1.125rem; line-height: 1.3; color: var(--dusk); }
+  .when-list b { display: block; }
+  .when-list .sub { color: var(--ink-2); font-size: var(--fs-small); }
+  .week-grid .link-action { margin-top: 6px; }
+
+  /* Tuesday net: the settings line, then the one bold thing on the hub, five Tuesdays side by side */
+  .net-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+  .net-line p { font-size: 1.125rem; }
+  .net-line .freq { color: var(--dusk-deep); }
+  .net-line .nowrap { white-space: nowrap; }
+  .rota-board { margin-top: 20px; }
+  .rota-board table { display: block; width: 100%; }
+  .rota-board thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .rota-board tbody { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+  .rota-board tr { position: relative; display: flex; flex-direction: column; min-height: 9.5rem; padding: 14px 16px 16px; background: var(--white); border: 1px solid var(--dusk-line); border-radius: var(--r-card); }
+  .rota-board th, .rota-board td { display: block; padding: 0; border: 0; text-align: left; }
+  .rota-board th { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-family: var(--font-display); font-weight: 700; font-stretch: 88%; font-size: 1.125rem; line-height: 1.25; color: var(--ink); }
+  .rota-board td[data-label="Net control"] { margin-top: 16px; font-size: 1.5rem; font-weight: 700; line-height: 1.15; color: var(--dusk-deep); }
+  .rota-board td[data-label="Note"] { margin-top: auto; padding-top: 12px; font-size: var(--fs-small); line-height: 1.35; color: var(--ink-2); }
+  .rota-board tr.is-next { background: var(--dusk); border-color: var(--dusk); }
+  .rota-board tr.is-next .tag { position: absolute; top: -13px; left: 14px; }   /* a tab on the card's top edge, so every call sign sits at the same height */
+  .rota-board tr.is-next th, .rota-board tr.is-next td, .rota-board tr.is-next a { color: #fff; }
+  .rota-board tr.is-next a { text-decoration-color: rgba(255, 255, 255, .6); }
+  .rota-board tr.is-next :focus-visible { outline-color: var(--lamp); box-shadow: 0 0 0 2px var(--dusk); }
+  .rota-board tr.is-open { background: var(--pine-tint); border: 2px dashed var(--pine); padding: 13px 15px 15px; }
+  .rota-board .slot-open { color: var(--pine-deep); }
+  .open-line { margin-top: 14px; font-size: var(--fs-ui); color: var(--ink-2); }
+
+  /* Most used: four label-only tiles */
+  .tiles .tile { align-items: center; min-height: 72px; }
+  .tiles .tile .icon-disc { grid-row: auto; }
+
+  @media (max-width: 1100px) {
+    .ledger-row { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 960px) {
+    .m-intro-grid { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 700px) {
+    .week-grid { grid-template-columns: minmax(0, 1fr); }
+    /* The board becomes a list: date on the left, call sign and note on the right */
+    .rota-board tbody { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+    .rota-board tr, .rota-board tr.is-open { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 2px 12px; min-height: 0; padding-block: 10px 12px; }
+    .rota-board tr.is-open { padding-block: 9px 11px; }
+    .rota-board th { grid-row: span 2; align-content: start; }
+    .rota-board td[data-label="Net control"] { margin-top: 0; font-size: 1.25rem; }
+    .rota-board td[data-label="Note"] { margin-top: 0; padding-top: 0; }
+    .rota-board td[data-label="Note"]:empty { display: none; }
+    .rota-board tr.is-next { margin-top: 6px; }
+    .rota-board tr.is-next .tag { position: static; }
+    .rota-board tr.is-next th { align-content: start; }
+  }
+  @media (max-width: 640px) {
+    .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .tiles .tile { min-height: 60px; padding: 10px 12px; gap: 2px 10px; grid-template-columns: 32px minmax(0, 1fr); }
+    .tiles .tile .icon-disc { width: 32px; height: 32px; }
+    .tiles .tile .icon { width: 20px; height: 20px; }
+  }
+</style>
+</head>
+<body data-root="../">
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ICON SPRITE (copy verbatim from _chrome.html) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4.5" height="7" rx="1.5"/><rect x="16.5" y="14" width="4.5" height="7" rx="1.5"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15.6 14.3A5 5 0 0 1 21 19"/></symbol>
+  <symbol id="i-tools" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></symbol>
+  <symbol id="i-door" viewBox="0 0 24 24"><path d="M6 21V4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5V21"/><path d="M3 21h18"/><circle cx="14.5" cy="12.5" r="1" fill="currentColor"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-radio" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="14" rx="2"/><path d="M9.5 7V2.5M10 11h4M10 14h4"/><circle cx="12" cy="17.6" r=".7" fill="currentColor"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-form" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2.8h6V4M8.5 10h7M8.5 14h7M8.5 18h4"/></symbol>
+  <symbol id="i-hospital" viewBox="0 0 24 24"><path d="M4 21V8l8-4 8 4v13M2.5 21h19M12 9v6M9 12h6"/></symbol>
+  <symbol id="i-weather" viewBox="0 0 24 24"><path d="M7 17a4.5 4.5 0 1 1 1-8.9A5.5 5.5 0 0 1 18.5 10 3.5 3.5 0 0 1 18 17"/><path d="M12.5 13l-2 4h3l-2 4"/></symbol>
+  <symbol id="i-antenna" viewBox="0 0 24 24"><path d="M12 10v11M8 21l4-11 4 11"/><circle cx="12" cy="8" r="1.5"/><path d="M8.5 4.5a5 5 0 0 0 0 7M15.5 4.5a5 5 0 0 1 0 7"/></symbol>
+  <symbol id="i-trailer" viewBox="0 0 24 24"><rect x="2.5" y="6" width="15" height="10" rx="1.5"/><path d="M17.5 13h4M10 6V3.5"/><circle cx="7" cy="17.5" r="1.8"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5z"/><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H20"/></symbol>
+  <symbol id="i-kit" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M12 11v5M9.5 13.5h5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></symbol>
+  <symbol id="i-message" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol>
+  <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 12h3l2-5 3 10 3-12 3 12 2-5h4"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></symbol>
+  <!-- Drawn locator for "Where we meet" (not a Google capture). Use: <svg viewBox="0 0 400 250" role="img" aria-label="…"><use href="#map-meet"/></svg> -->
+  <symbol id="map-meet" viewBox="0 0 400 250">
+    <rect width="400" height="250" fill="#E8EEF6"/>
+    <g stroke="#D0DAE7" stroke-width="19" fill="none">
+      <path d="M0 36H400M0 104H400M0 212H400M58 0V250M176 104V250M370 0V250"/>
+    </g>
+    <g stroke="#FFFFFF" stroke-width="15" fill="none">
+      <path d="M0 36H400M0 104H400M0 212H400M58 0V250M176 104V250M370 0V250"/>
+    </g>
+    <rect x="190" y="175" width="164" height="28" rx="3" fill="#FFFFFF" stroke="#B9C7DB" stroke-width="1.5"/>
+    <text x="272" y="193.5" text-anchor="middle" font-family="Atkinson Hyperlegible, Verdana, sans-serif" font-size="11.5" fill="#465163">Spokane County Courthouse</text>
+    <rect x="193" y="121" width="78" height="42" rx="3" fill="#E4EFEA" stroke="#2E5B4F" stroke-width="2"/>
+    <g font-family="Atkinson Hyperlegible, Verdana, sans-serif" font-size="12.5" fill="#465163">
+      <text x="248" y="40.5">W Boone Ave</text>
+      <text x="72" y="108.5" font-weight="700" fill="#1B2433">W Gardner Ave</text>
+      <text x="248" y="216.5">W Mallon Ave</text>
+      <text transform="translate(180.5 204) rotate(-90)" font-weight="700" fill="#1B2433">N Jefferson St</text>
+      <text transform="translate(62.5 196) rotate(-90)">N Adams St</text>
+      <text transform="translate(374.5 196) rotate(-90)">N Monroe St</text>
+    </g>
+    <g font-family="Atkinson Hyperlegible, Verdana, sans-serif">
+      <text x="196" y="60" font-size="13" font-weight="700" fill="#1E3557">Spokane County</text>
+      <text x="196" y="75" font-size="13" font-weight="700" fill="#1E3557">Emergency Management</text>
+      <text x="196" y="90" font-size="12" fill="#465163">1121 W Gardner Ave</text>
+    </g>
+    <path d="M232 94V112" stroke="#2F4E7E" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <g transform="translate(232 141)">
+      <path d="M0 0C-3 -6-11 -12-11 -21A11 11 0 0 1 11 -21C11 -12 3 -6 0 0Z" fill="#2F4E7E"/>
+      <circle cx="0" cy="-21" r="4" fill="#FFFFFF"/>
+    </g>
+    <g transform="translate(26 158)" font-family="Atkinson Hyperlegible, Verdana, sans-serif">
+      <circle r="13" fill="#FFFFFF" stroke="#B9C7DB" stroke-width="1.5"/>
+      <path d="M0 -8L4.5 4 0 1.5-4.5 4Z" fill="#1E3557"/>
+      <text y="28" text-anchor="middle" font-size="11" fill="#465163">N</text>
+    </g>
+  </symbol>
+</svg>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="../index.html" aria-label="Spokane County ARES-ACS, home">
+      <img src="../assets/img/seal-ares-acs-400.png" alt="" width="50" height="50">
+      <span class="brand-text"><span class="brand-county">Spokane County</span><span class="brand-name">ARES-ACS</span></span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <ul class="nav-list">
+        <li><a class="nav-link" href="../index.html">Home</a></li>
+        <li><a class="nav-link" href="../how-it-works.html">How it works</a></li>
+        <li><a class="nav-link" href="../about.html">About ARES &amp; ACS</a></li>
+        <li><a class="nav-link" href="../members/index.html" aria-current="page">For Members</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn--join header-join" href="../index.html#join">Join the team</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <svg class="icon icon-open" aria-hidden="true"><use href="#i-menu"/></svg>
+      <svg class="icon icon-close" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
+  </div>
+</header>
+<nav class="pillbar subnav" aria-label="Members">
+  <div class="wrap">
+    <ul class="subnav-list">
+      <li><a class="pill" href="index.html" aria-current="page">This week</a></li>
+      <li><a class="pill" href="exercises.html">Exercises &amp; events</a></li>
+      <li><a class="pill" href="documents.html">Documents &amp; forms</a></li>
+      <li><a class="pill" href="../about.html#training-path">Task books</a></li>
+      <li><a class="pill pill--ext" href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io, members only)</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="main">
+  <!-- Round 3 hub: a switchboard. H1, as-of line and search; then This week, Tuesday net, Most used.
+       Dated items render from data.js (page script below + site.js rota widget); the markup is the
+       no-JS fallback as of Sat, Sep 26, 2026. -->
+  <div class="page-intro m-intro">
+    <div class="wrap m-intro-grid">
+      <div>
+        <h1>For members</h1>
+        <p class="meta-line">As of <span data-slot="asof">Sat, Sep 26, 2026</span></p>
+      </div>
+      <div class="m-search" id="search" data-widget="doc-search">
+        <form class="search-box" role="search" action="documents.html" method="get">
+          <label for="hub-q">Search documents and forms</label>
+          <div class="search-field"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><input id="hub-q" name="q" type="search" placeholder="ICS-213, net script, task book" autocomplete="off"></div>
+          <button class="btn btn--primary" type="submit">Search</button>
+        </form>
+        <ul class="suggest" hidden></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap ledger">
+    <section class="ledger-row" id="this-week" aria-labelledby="wk-h">
+      <h2 id="wk-h">This week</h2>
+      <div class="week-grid">
+        <div>
+          <h3 id="wk-ex">Exercises</h3>
+          <ul class="when-list" aria-labelledby="wk-ex" data-hub-exercises>
+            <li><span class="when">Now</span><span><b>ARES-ACS / WSDOT exercise</b><span class="sub">through Sun, Sep 27</span></span></li>
+            <li><span class="when">Sat, Oct 3</span><span><b>Simulated Emergency Test</b></span></li>
+          </ul>
+          <a class="link-action" href="exercises.html#next-up">What to bring</a>
+        </div>
+        <div>
+          <h3 id="wk-meet">Next meeting</h3>
+          <ul class="when-list" aria-labelledby="wk-meet" data-hub-meeting>
+            <li><span class="when">Sat, Oct 10</span><span><b>Second Saturday Workshop</b><span class="sub">9:00 AM</span></span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="ledger-row" id="rota" aria-labelledby="rota-h">
+      <h2 id="rota-h">Tuesday net</h2>
+      <div>
+        <div class="net-line" data-status-scope>
+          <p><b>8:00 PM</b> on <span class="freq">W7GBU 147.300 MHz</span>, <span class="nowrap">+600 kHz</span>, <span class="nowrap">100 Hz</span></p>
+          <button type="button" class="btn btn--outline btn--small" data-copy="radio"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy settings</button>
+          <span class="status-msg" role="status"></span>
+        </div>
+        <div class="rota-board">
+          <table class="rota" aria-labelledby="rota-h">
+            <thead><tr><th scope="col">Tuesday</th><th scope="col">Net control</th><th scope="col">Note</th></tr></thead>
+            <tbody data-widget="rota" data-past="false">
+<tr class=" is-next" data-verify="true"><th scope="row" data-label="Tuesday">Tue, Sep 29 <span class="tag tag--net">Next</span></th><td data-label="Net control"><span class="callsign">NZ2S</span></td><td data-label="Note">Simplex</td></tr>
+<tr class="is-open"><th scope="row" data-label="Tuesday">Tue, Oct 6</th><td data-label="Net control"><a class="slot-open" href="#rota-open">Open</a></td><td data-label="Note"></td></tr>
+<tr class="" data-verify="true"><th scope="row" data-label="Tuesday">Tue, Oct 13</th><td data-label="Net control"><span class="callsign">AE7RJ</span></td><td data-label="Note"><a href="../members/exercises.html#winlink-assignments">Winlink night</a></td></tr>
+<tr class="" data-verify="true"><th scope="row" data-label="Tuesday">Tue, Oct 20</th><td data-label="Net control"><span class="callsign">WA7LNC</span></td><td data-label="Note">GMRS net, 7:30 PM</td></tr>
+<tr class="is-open" data-verify="true"><th scope="row" data-label="Tuesday">Tue, Oct 27</th><td data-label="Net control"><a class="slot-open" href="#rota-open">Open</a></td><td data-label="Note"><a href="../members/exercises.html#winlink-assignments">Winlink night</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="open-line" id="rota-open">Open slot? Tell the Net Manager (<span class="callsign">AG7QP</span>) on the net or on <a href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io)</span></a>.</p>
+      </div>
+    </section>
+
+    <section class="ledger-row" id="quick-links" aria-labelledby="ql-h">
+      <h2 id="ql-h">Most used</h2>
+      <ul class="tiles">
+        <li><a class="tile" href="documents.html#net-scripts"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-doc"/></svg></span><b>Net script</b></a></li>
+        <li><a class="tile" href="documents.html#ics-213"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-form"/></svg></span><b>ICS-213</b></a></li>
+        <li><a class="tile" href="documents.html#ics-309"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-form"/></svg></span><b>ICS-309</b></a></li>
+        <li><a class="tile" href="documents.html#acs-task-book"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-book"/></svg></span><b>ACS Task Book</b></a></li>
+      </ul>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-main">
+      <p class="footer-brand"><img src="../assets/img/seal-ares-acs-400.png" alt="" width="44" height="44">Spokane County ARES-ACS</p>
+      <nav aria-label="Footer">
+        <ul class="footer-links">
+          <li><a href="../how-it-works.html">How it works</a></li>
+          <li><a href="../about.html">About ARES &amp; ACS</a></li>
+          <li><a href="../members/index.html">For Members</a></li>
+          <li><a href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io)</span></a></li>
+          <li><a href="../about.html#contact">Contact</a></li>
+          <li><span class="soon">Privacy (coming)</span></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-fine">
+      <p class="safety">Volunteers, not first responders. In an emergency, call 911.</p>
+      <p>© Spokane County ARES-ACS. Mockup — content to be verified before launch</p>
+    </div>
+  </div>
+</footer>
+<script src="../assets/data.js"></script>
+<script src="../assets/site.js"></script>
+<script>
+/* members/index.html: page-only enhancement (runs after site.js widgets; ES5 like site.js).
+   1. This week: the next two exercises and the next meeting, from data.js.
+   2. Rota: Open slots become invitations that link to the line under the board, and the
+      table keeps its row and cell roles although CSS lays it out as a grid. */
+document.addEventListener('DOMContentLoaded', function () {
+  var S = window.SPOKARES, SPO = window.SPO;
+  if (!S || !S.fn || !SPO) return;
+  var F = S.fn, esc = SPO.esc, fmt = SPO.fmt, today = SPO.now().date;
+
+  function row(when, title, sub, verify) {
+    return '<li' + (verify ? ' data-verify="true"' : '') + '><span class="when">' + esc(when) + '</span><span><b>' + esc(title) + '</b>' +
+      (sub ? '<span class="sub">' + esc(sub) + '</span>' : '') + '</span></li>';
+  }
+
+  var exBox = document.querySelector('[data-hub-exercises]');
+  if (exBox) {
+    var ex = F.upcoming({ from: today, days: 180, types: ['exercise', 'training'], limit: 2 });
+    if (ex.length) exBox.innerHTML = ex.map(function (x) {
+      var sub = x.endDate ? 'through ' + fmt(x.endDate) : (x.time ? SPO.time(x.time) + (x.endTime ? '–' + SPO.time(x.endTime) : '') : '');
+      return row(x.inProgress ? 'Now' : fmt(x.date), x.title, sub, x.verify);
+    }).join('');
+  }
+
+  var meetBox = document.querySelector('[data-hub-meeting]');
+  if (meetBox) {
+    var ms = F.nextMeetings(today, 1).filter(function (m) { return m.id !== 'winlink-workshop' && m.dates.length; });
+    ms.sort(function (a, b) { return a.dates[0] < b.dates[0] ? -1 : 1; });
+    var m = ms[0];
+    if (m) meetBox.innerHTML = row(fmt(m.dates[0]), m.name, m.start ? SPO.time(m.start) : m.displayTime, m.verify);
+  }
+
+  var body = document.querySelector('tbody[data-widget="rota"]');
+  if (body) {
+    Array.prototype.forEach.call(body.rows, function (tr) {
+      var cell = tr.cells[1];
+      if (cell && !cell.querySelector('a') && cell.textContent.replace(/\s+/g, '') === 'Open') {
+        tr.classList.add('is-open');
+        cell.innerHTML = '<a class="slot-open" href="#rota-open">Open</a>';
+      }
+    });
+    var table = body.parentNode;
+    table.setAttribute('role', 'table');
+    Array.prototype.forEach.call(table.querySelectorAll('thead, tbody'), function (g) { g.setAttribute('role', 'rowgroup'); });
+    Array.prototype.forEach.call(table.querySelectorAll('tr'), function (tr) { tr.setAttribute('role', 'row'); });
+    Array.prototype.forEach.call(table.querySelectorAll('thead th'), function (c) { c.setAttribute('role', 'columnheader'); });
+    Array.prototype.forEach.call(body.querySelectorAll('th'), function (c) { c.setAttribute('role', 'rowheader'); });
+    Array.prototype.forEach.call(body.querySelectorAll('td'), function (c) { c.setAttribute('role', 'cell'); });
+  }
+});
+</script>
+</body>
+</html>

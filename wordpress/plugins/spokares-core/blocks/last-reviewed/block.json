@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "spokares/last-reviewed",
+	"title": "Last reviewed",
+	"category": "spokares",
+	"icon": "clock",
+	"description": "\"Last reviewed\" and the page owner, from the Page review box. Prints nothing until a date is set.",
+	"textdomain": "spokares-core",
+	"supports": {
+		"autoRegister": true,
+		"html": false,
+		"reusable": false,
+		"className": true
+	},
+	"usesContext": [
+		"postId"
+	],
+	"render": "file:./render.php"
+}

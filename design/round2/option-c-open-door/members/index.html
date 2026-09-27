@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+<title>For Members | Spokane County ARES-ACS</title>
+<meta name="description" content="This week's net and net control, exercises, Winlink assignments, scripts, forms and task books for Spokane County ARES-ACS members.">
+<meta name="theme-color" content="#1E3557">
+<link rel="icon" href="../assets/img/seal-ares-acs-400.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+  /* members/index.html only: page layout (per DESIGN.md §5, no new colours, fonts or radii) */
+  .page-intro--desk { padding-block: clamp(24px, 3vw, 40px) clamp(24px, 3vw, 36px); }
+  .desk-intro { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1fr); gap: 20px clamp(32px, 5vw, 72px); align-items: end; }
+  .desk-intro .lede { margin-top: 12px; }
+  .desk-intro .meta-line { margin-top: 10px; }
+  .desk-search .suggest { position: relative; z-index: 5; }
+  .desk-week { padding-top: clamp(24px, 3vw, 40px); }
+  .week-foot { justify-content: space-between; margin-top: 4px; }
+  .week-foot p { display: flex; flex-wrap: wrap; align-items: center; gap: 0 12px; }
+  .week-foot b { color: var(--ink); }
+  #quick-links { margin-top: clamp(40px, 5vw, 56px); }
+  .dir-groups { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  .dir-groups h3 { font-size: 1.0625rem; color: var(--ink-2); font-stretch: 95%; padding-bottom: 8px; margin-bottom: 10px; border-bottom: 2px solid var(--dusk); }
+  .dir-groups .dir-grid { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .dir-card b .icon { color: var(--dusk); width: 22px; height: 22px; }
+  .dir-extra { margin-top: 16px; font-size: var(--fs-ui); color: var(--ink-2); }
+  .radio-note { margin-top: 12px; font-size: var(--fs-small); color: var(--ink-2); max-width: 60em; }
+  .desk-tables { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 56px); align-items: start; }
+  .desk-tables h2 { font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem); }
+  .desk-tables .intro { margin-top: 8px; font-size: var(--fs-ui); color: var(--ink-2); max-width: 36em; }
+  .desk-tables .table-wrap { margin-top: 16px; }
+  .desk-tables .callout { margin: 16px 0 0; font-size: var(--fs-ui); }
+  .desk-tables .link-list { margin-top: 8px; font-size: var(--fs-ui); }
+  .howto { margin-top: 12px; }
+  .cadence { border-top: 2px solid var(--ink); }
+  .cadence { margin-top: 20px; }
+  .cadence-row { display: grid; grid-template-columns: 136px minmax(0, 1fr); gap: 4px 20px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .cadence-row h3 { font-size: 1.1875rem; color: var(--dusk); padding-top: 6px; }
+  .cadence-row .checklist li:last-child { border-bottom: 0; }
+  .help-roles { margin-top: 14px; font-size: var(--fs-ui); color: var(--ink-2); }
+  .help-roles a { white-space: nowrap; }
+  .gio-note { margin-top: 20px; }
+  .gio-table tbody th { font-weight: 400; }
+  .gio-table tbody th b { color: var(--dusk-deep); }
+  #groups-io .intro { max-width: 34em; }
+  @media (max-width: 960px) {
+    .desk-intro, .desk-tables { grid-template-columns: minmax(0, 1fr); }
+    .dir-groups { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    .dir-groups .dir-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 640px) {
+    .dir-groups .dir-grid { grid-template-columns: minmax(0, 1fr); }
+    .cadence-row { grid-template-columns: minmax(0, 1fr); padding: 12px 0 4px; }
+    .cadence-row h3 { padding-top: 0; }
+    .week-foot { padding-block: 10px; }
+  }
+</style>
+</head>
+<body data-root="../">
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ======================= ICON SPRITE (copy verbatim into every page) ======================= -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4.5" height="7" rx="1.5"/><rect x="16.5" y="14" width="4.5" height="7" rx="1.5"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15.6 14.3A5 5 0 0 1 21 19"/></symbol>
+  <symbol id="i-tools" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></symbol>
+  <symbol id="i-door" viewBox="0 0 24 24"><path d="M6 21V4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5V21"/><path d="M3 21h18"/><circle cx="14.5" cy="12.5" r="1" fill="currentColor"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-radio" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="14" rx="2"/><path d="M9.5 7V2.5M10 11h4M10 14h4"/><circle cx="12" cy="17.6" r=".7" fill="currentColor"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-form" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2.8h6V4M8.5 10h7M8.5 14h7M8.5 18h4"/></symbol>
+  <symbol id="i-hospital" viewBox="0 0 24 24"><path d="M4 21V8l8-4 8 4v13M2.5 21h19M12 9v6M9 12h6"/></symbol>
+  <symbol id="i-weather" viewBox="0 0 24 24"><path d="M7 17a4.5 4.5 0 1 1 1-8.9A5.5 5.5 0 0 1 18.5 10 3.5 3.5 0 0 1 18 17"/><path d="M12.5 13l-2 4h3l-2 4"/></symbol>
+  <symbol id="i-antenna" viewBox="0 0 24 24"><path d="M12 10v11M8 21l4-11 4 11"/><circle cx="12" cy="8" r="1.5"/><path d="M8.5 4.5a5 5 0 0 0 0 7M15.5 4.5a5 5 0 0 1 0 7"/></symbol>
+  <symbol id="i-trailer" viewBox="0 0 24 24"><rect x="2.5" y="6" width="15" height="10" rx="1.5"/><path d="M17.5 13h4M10 6V3.5"/><circle cx="7" cy="17.5" r="1.8"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5z"/><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H20"/></symbol>
+  <symbol id="i-kit" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M12 11v5M9.5 13.5h5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></symbol>
+  <symbol id="i-message" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol>
+  <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 12h3l2-5 3 10 3-12 3 12 2-5h4"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></symbol>
+  <!-- Drawn locator for "Where we meet" (not a Google capture). Use: <svg viewBox="0 0 400 250" role="img" aria-label="…"><use href="#map-meet"/></svg> -->
+  <symbol id="map-meet" viewBox="0 0 400 250">
+    <rect width="400" height="250" fill="#E8EEF6"/>
+    <g stroke="#D0DAE7" stroke-width="19" fill="none">
+      <path d="M0 36H400M0 104H400M0 212H400M58 0V250M176 104V250M370 0V250"/>
+    </g>
+    <g stroke="#FFFFFF" stroke-width="15" fill="none">
+      <path d="M0 36H400M0 104H400M0 212H400M58 0V250M176 104V250M370 0V250"/>
+    </g>
+    <rect x="190" y="175" width="164" height="28" rx="3" fill="#FFFFFF" stroke="#B9C7DB" stroke-width="1.5"/>
+    <text x="272" y="193.5" text-anchor="middle" font-family="Atkinson Hyperlegible, Verdana, sans-serif" font-size="11.5" fill="#465163">Spokane County Courthouse</text>
+    <rect x="193" y="121" width="78" height="42" rx="3" fill="#E4EFEA" stroke="#2E5B4F" stroke-width="2"/>
+    <g font-family="Atkinson Hyperlegible, Verdana, sans-serif" font-size="12.5" fill="#465163">
+      <text x="248" y="40.5">W Boone Ave</text>
+      <text x="72" y="108.5" font-weight="700" fill="#1B2433">W Gardner Ave</text>
+      <text x="248" y="216.5">W Mallon Ave</text>
+      <text transform="translate(180.5 204) rotate(-90)" font-weight="700" fill="#1B2433">N Jefferson St</text>
+      <text transform="translate(62.5 196) rotate(-90)">N Adams St</text>
+      <text transform="translate(374.5 196) rotate(-90)">N Monroe St</text>
+    </g>
+    <g font-family="Atkinson Hyperlegible, Verdana, sans-serif">
+      <text x="196" y="60" font-size="13" font-weight="700" fill="#1E3557">Spokane County</text>
+      <text x="196" y="75" font-size="13" font-weight="700" fill="#1E3557">Emergency Management</text>
+      <text x="196" y="90" font-size="12" fill="#465163">1121 W Gardner Ave</text>
+    </g>
+    <path d="M232 94V112" stroke="#2F4E7E" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <g transform="translate(232 141)">
+      <path d="M0 0C-3 -6-11 -12-11 -21A11 11 0 0 1 11 -21C11 -12 3 -6 0 0Z" fill="#2F4E7E"/>
+      <circle cx="0" cy="-21" r="4" fill="#FFFFFF"/>
+    </g>
+    <g transform="translate(26 158)" font-family="Atkinson Hyperlegible, Verdana, sans-serif">
+      <circle r="13" fill="#FFFFFF" stroke="#B9C7DB" stroke-width="1.5"/>
+      <path d="M0 -8L4.5 4 0 1.5-4.5 4Z" fill="#1E3557"/>
+      <text y="28" text-anchor="middle" font-size="11" fill="#465163">N</text>
+    </g>
+  </symbol>
+</svg>
+<!-- ======================= /ICON SPRITE ======================= -->
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="../index.html" aria-label="Spokane County ARES-ACS, home">
+      <img src="../assets/img/seal-ares-acs-400.png" alt="" width="50" height="50">
+      <span class="brand-text"><span class="brand-county">Spokane County</span><span class="brand-name">ARES-ACS</span></span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <ul class="nav-list">
+        <li><a class="nav-link" href="../index.html">Home</a></li>
+        <li><a class="nav-link" href="../how-it-works.html">How it works</a></li>
+        <li><a class="nav-link" href="../about.html">About ARES &amp; ACS</a></li>
+        <li><a class="nav-link" href="../members/index.html" aria-current="page">For Members</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn--join header-join" href="../index.html#join">Join the team</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <svg class="icon icon-open" aria-hidden="true"><use href="#i-menu"/></svg>
+      <svg class="icon icon-close" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
+  </div>
+</header>
+<nav class="pillbar subnav" aria-label="Members" data-widget="subnav">
+  <div class="wrap">
+    <details class="subnav-details" open>
+      <summary class="subnav-summary"><span class="subnav-summary-label">Members menu</span><span class="sr-only">, current page:</span> <span class="current">Overview (this week)</span><svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary>
+      <div class="subnav-inner">
+        <ul class="subnav-list">
+          <li><a class="pill" href="index.html" aria-current="page">Overview (this week)</a></li>
+          <li class="subnav-group"><span class="subnav-label" aria-hidden="true">Operate</span><ul aria-label="Operate">
+              <li><a class="pill" href="#">Nets &amp; net control</a></li>
+              <li><a class="pill" href="#">Winlink &amp; digital</a></li>
+              <li><a class="pill" href="#">Repeaters &amp; programming</a></li>
+            </ul>
+          </li>
+          <li class="subnav-group"><span class="subnav-label" aria-hidden="true">Prepare</span><ul aria-label="Prepare">
+              <li><a class="pill" href="exercises.html">Exercises &amp; events</a></li>
+              <li><a class="pill" href="#">Training &amp; task books</a></li>
+              <li><a class="pill" href="#">Go-kits &amp; readiness</a></li>
+            </ul>
+          </li>
+          <li class="subnav-group"><span class="subnav-label" aria-hidden="true">Reference</span><ul aria-label="Reference">
+              <li><a class="pill" href="documents.html">Documents &amp; downloads</a></li>
+              <li><a class="pill" href="documents.html#forms">Forms</a></li>
+              <li><a class="pill" href="#">Contacts &amp; roles</a></li>
+            </ul>
+          </li>
+          <li><a class="pill pill--ext" href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io, members only)</span></a></li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</nav>
+
+<main id="main">
+  <div class="page-intro page-intro--desk">
+    <div class="wrap desk-intro">
+      <div>
+        <h1>For members</h1>
+        <p class="lede">This week’s net, exercises and assignments, plus the scripts, forms and task books you reach for. Everything here is public; member-only files stay on groups.io.</p>
+        <p class="meta-line">Schedule as of <span data-slot="asof">Sat, Sep 26, 2026</span>.</p>
+      </div>
+      <!-- Search: a plain GET form to documents.html?q= (works without JS); site.js adds live matches -->
+      <div class="desk-search" id="search" data-widget="doc-search">
+        <form class="search-box" role="search" action="documents.html" method="get">
+          <label for="hub-q">Find a document</label>
+          <div class="search-field"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><input id="hub-q" name="q" type="search" placeholder="e.g. preamble, ICS-213, task book" autocomplete="off"></div>
+          <button class="btn btn--primary" type="submit">Search</button>
+        </form>
+        <ul class="suggest" hidden></ul>
+        <p class="popular">Popular: <a href="documents.html?q=preamble">Net script</a><a href="documents.html?q=213">ICS-213</a><a href="documents.html?q=task%20book">ACS Task Book</a><a href="documents.html?q=winlink">Winlink</a><a href="documents.html?q=go-kit">Go-kit</a><a href="documents.html#ares-application">ARES application</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- THIS WEEK (members variant, 24-hour times). Rendered by site.js from assets/data.js.
+       The fallback below is the same widget as of meta.asOf (Sat, Sep 26, 2026). -->
+  <div class="section section--cloud desk-week">
+    <div class="wrap">
+      <section class="week-card week-card--wide" id="this-week" aria-labelledby="wk-h">
+        <div class="week-head"><h2 id="wk-h">This week</h2><span class="asof">As of <span data-slot="asof">Sat, Sep 26, 2026</span></span></div>
+        <div class="week-body" data-widget="week" data-variant="members"><!--FB:week-->
+<div class="week-col"><div class="net"><p class="date-block" aria-hidden="true"><span class="dow">Tue</span><span class="num">29</span><span class="mon">Sep</span></p><div><h3 class="net-title">Tuesday net, 2000<span class="sr-only">, Tuesday, September 29</span></h3><div class="net-lines"><p>Net control: <b class="callsign">NZ2S</b></p><p class="net-flag" data-verify="true">Fifth Tuesday: the net starts on simplex, then moves to W7GBU.</p><p>Members check in at least once a month.</p></div></div></div><div class="settings" data-status-scope=""><p class="freq-line"><span class="freq">W7GBU 147.300 MHz</span>, +600 kHz, 100 Hz tone</p><a class="btn btn--outline btn--small" href="https://spokaneares-acs.groups.io/g/main/calendar"><svg class="icon" aria-hidden="true"><use href="#i-calendar"></use></svg>Calendar on groups.io</a></div><p class="tiny" style="margin-top:10px"><a href="documents.html#net-preamble-weekly">Weekly script</a> <a href="documents.html#net-preamble-simplex">Simplex script</a></p></div><div class="week-col"><div class="coming"><h3>Net control, next four Tuesdays</h3><ul class="mini-rota"><li data-verify="true"><span class="when">Tue, Sep 29</span><span><span class="who callsign">NZ2S</span><small class="muted"> Simplex</small></span></li><li><span class="when">Tue, Oct 6</span><span><a class="open" href="https://spokaneares-acs.groups.io/g/main">Open: volunteer on groups.io</a></span></li><li data-verify="true"><span class="when">Tue, Oct 13</span><span><span class="who callsign">AE7RJ</span><small class="muted"> Winlink night</small></span></li><li data-verify="true"><span class="when">Tue, Oct 20</span><span><span class="who callsign">WA7LNC</span><small class="muted"> GMRS net 1930</small></span></li></ul><p class="tiny muted" style="margin-top:8px">Open slot: tell the Net Manager (AG7QP) on the net or through groups.io if you can take it.</p></div></div><div class="week-col"><div class="coming"><h3>Coming up</h3><ul class="coming-list"><li><a href="exercises.html#next-up"><span class="when">Now</span><span class="what">ARES-ACS and WSDOT exercise<small>Happening now, through Sun, Sep 27</small></span></a></li><li><a href="exercises.html#upcoming"><span class="when">Sat, Oct 10</span><span class="what">Second Saturday Workshop<small>0900–1200, Winlink workshop after</small></span></a></li><li><a href="#winlink"><span class="when">Tue, Oct 13</span><span class="what">Winlink assignment<small>Did You Feel It (DYFI) report, 1700–2100</small></span></a></li><li data-verify="true"><a href="exercises.html#upcoming"><span class="when">Thu, Oct 15</span><span class="what">Third Thursday training meeting<small>Evening, at SCEM</small></span></a></li></ul></div></div>
+<!--/FB:week--></div>
+        <div class="week-links week-foot" data-open-slots>
+          <p><b>Open net-control slots:</b> <span data-slots-text>Tue, Oct 6 and Tue, Oct 27.</span></p>
+          <a href="#rota-open">Take a slot</a>
+        </div>
+      </section>
+
+      <section class="desk-block" id="quick-links" aria-labelledby="ql-h">
+        <div class="section-head section-head--row" style="margin-bottom:16px">
+          <div><h2 id="ql-h">Most used</h2></div>
+          <a class="link-action" href="documents.html">All documents and forms</a>
+        </div>
+        <ul class="tiles">
+          <li><a class="tile" href="documents.html#net-preamble-weekly"><span class="icon-disc"><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg></span><b>Net script</b><span>Weekly preamble, 2026-03-04, DOCX</span></a></li>
+          <li><a class="tile" href="#rota"><span class="icon-disc"><svg class="icon" aria-hidden="true"><use href="#i-radio"/></svg></span><b>Net control rota</b><span>Who has the net, and open slots</span></a></li>
+          <li><a class="tile" href="#winlink"><span class="icon-disc"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span><b>Winlink assignment</b><span data-tile-winlink>Next: Oct 13, DYFI report</span></a></li>
+          <li><a class="tile" href="documents.html#ics-213"><span class="icon-disc"><svg class="icon" aria-hidden="true"><use href="#i-form"/></svg></span><b>ICS-213 message</b><span>FEMA form, plus how to fill it in</span></a></li>
+          <li><a class="tile" href="documents.html#ics-309"><span class="icon-disc"><svg class="icon" aria-hidden="true"><use href="#i-form"/></svg></span><b>ICS-309 comm log</b><span>Keep it during every ACS operation</span></a></li>
+          <li><a class="tile" href="documents.html#acs-task-book"><span class="icon-disc"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg></span><b>ACS Task Book</b><span>v2024-08-09, DOCX</span></a></li>
+          <li><a class="tile" href="exercises.html"><span class="icon-disc"><svg class="icon" aria-hidden="true"><use href="#i-flag"/></svg></span><b>Exercises &amp; events</b><span data-tile-exercises>WSDOT now; SET Oct 3; ShakeOut Oct 15</span></a></li>
+          <li><a class="tile" href="https://spokaneares-acs.groups.io/g/main/files" rel="noopener"><span class="icon-disc icon-disc--pine"><svg class="icon" aria-hidden="true"><use href="#i-people"/></svg></span><b>groups.io files<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io, members only)</span></b><span>ACSFOG, roster, exercise plans (members only)</span></a></li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <!-- DIRECTORY: mirrors the members menu, with the IA groups made visible -->
+  <section class="section section--white" id="sections" aria-labelledby="sections-h">
+    <div class="wrap">
+      <div class="section-head"><h2 id="sections-h">Everything for members</h2><p>The members menu, with what’s in each part.</p></div>
+      <div class="dir-groups">
+        <div>
+          <h3 id="g-operate">Operate</h3>
+          <ul class="dir-grid" aria-labelledby="g-operate">
+            <li><a class="dir-card" href="#"><b><svg class="icon" aria-hidden="true"><use href="#i-radio"/></svg>Nets &amp; net control</b><span class="desc">Net schedule, the full rota, current scripts and the NCS guide.</span></a></li>
+            <li><a class="dir-card" href="#"><b><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg>Winlink &amp; digital</b><span class="desc">Assignments, the Saturday workshop, setup and forms.</span></a></li>
+            <li><a class="dir-card" href="#"><b><svg class="icon" aria-hidden="true"><use href="#i-antenna"/></svg>Repeaters &amp; programming</b><span class="desc">W7GBU and alternate settings, programming cheat sheets, etiquette.</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 id="g-prepare">Prepare</h3>
+          <ul class="dir-grid" aria-labelledby="g-prepare">
+            <li><a class="dir-card" href="exercises.html"><b><svg class="icon" aria-hidden="true"><use href="#i-flag"/></svg>Exercises &amp; events</b><span class="desc">What’s coming, what to do, and after-action steps.</span></a></li>
+            <li><a class="dir-card" href="#"><b><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Training &amp; task books</b><span class="desc">ACS and ARRL task books, FEMA and ARRL courses, orientation.</span></a></li>
+            <li><a class="dir-card" href="#"><b><svg class="icon" aria-hidden="true"><use href="#i-kit"/></svg>Go-kits &amp; readiness</b><span class="desc">Kit lists, alert levels explained, ALERT Spokane.</span></a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 id="g-reference">Reference</h3>
+          <ul class="dir-grid" aria-labelledby="g-reference">
+            <li><a class="dir-card" href="documents.html"><b><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg>Documents &amp; downloads</b><span class="desc">Every script, form, guide and presentation, searchable.</span></a></li>
+            <li><a class="dir-card" href="documents.html#forms"><b><svg class="icon" aria-hidden="true"><use href="#i-form"/></svg>Forms</b><span class="desc">ICS, state and ARRL forms from their official sources.</span></a></li>
+            <li><a class="dir-card" href="#"><b><svg class="icon" aria-hidden="true"><use href="#i-people"/></svg>Contacts &amp; roles</b><span class="desc">Who does what, by role and call sign, and where things go.</span></a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="dir-extra">Member-only files, the calendar and the e-mail list are on <a href="#groups-io">groups.io</a>.</p>
+    </div>
+  </section>
+
+  <!-- RADIO SETTINGS: amateur facts only -->
+  <section class="section section--cloud" id="radio" aria-labelledby="radio-h">
+    <div class="wrap">
+      <div class="section-head section-head--row" style="margin-bottom:16px">
+        <div><h2 id="radio-h">Radio settings</h2></div>
+        <a class="link-action" href="#">Repeaters &amp; programming</a>
+      </div>
+      <div class="radio-strip">
+        <div data-status-scope><p class="rs-name">W7GBU (primary)</p><p class="rs-freq">147.300 MHz</p><p class="rs-meta">+600 kHz, 100 Hz tone. The Tuesday net and emergency operations.</p><button type="button" class="btn btn--primary btn--small" data-copy="radio" style="margin-top:10px"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy W7GBU settings</button> <span class="status-msg" role="status"></span></div>
+        <div data-verify="true"><p class="rs-name">Alternate (IEVHFRA)</p><p class="rs-freq">146.880 MHz</p><p class="rs-meta">−600 kHz, 123 Hz tone. If W7GBU is down or overloaded.</p></div>
+        <div><p class="rs-name">NOAA Weather Radio</p><p class="rs-freq">162.400 MHz</p><p class="rs-meta">WXL86, receive only.</p></div>
+      </div>
+      <p class="radio-note">County, hospital and SHARES channels are never posted here. They’re in the ACSFOG on groups.io.</p>
+
+      <div class="desk-tables" style="margin-top:clamp(40px,5vw,64px)">
+        <section id="rota" aria-labelledby="rota-h">
+          <h2 id="rota-h">Net control rota</h2>
+          <p class="intro">Members take turns as net control for the Tuesday net. Members should check in at least once each month.</p>
+          <div class="table-wrap">
+            <table class="data-table table--stack rota">
+              <caption>Tuesday net control, September to October 2026</caption>
+              <thead><tr><th scope="col">Date</th><th scope="col">Net control</th><th scope="col">Notes</th></tr></thead>
+              <tbody data-widget="rota" data-names="true"><!--FB:rota-->
+<tr class="is-past"><th scope="row" data-label="Date">Tue, Sep 22</th><td data-label="Net control"><span class="who callsign">KE7RAP</span> <span class="name">Bob Peterson</span></td><td data-label="Notes">Winlink night; Past</td></tr><tr class=" is-next" data-verify="true"><th scope="row" data-label="Date">Tue, Sep 29 <span class="tag tag--net">Next</span></th><td data-label="Net control"><span class="who callsign">NZ2S</span> <span class="name">Jeff Banke</span></td><td data-label="Notes">Fifth Tuesday: simplex</td></tr><tr class=""><th scope="row" data-label="Date">Tue, Oct 6</th><td data-label="Net control"><span class="slot-open">Open</span> <a href="#rota-open">I can take it</a></td><td data-label="Notes"></td></tr><tr class="" data-verify="true"><th scope="row" data-label="Date">Tue, Oct 13</th><td data-label="Net control"><span class="who callsign">AE7RJ</span> <span class="name">Randall Jones</span></td><td data-label="Notes">Winlink night</td></tr><tr class="" data-verify="true"><th scope="row" data-label="Date">Tue, Oct 20</th><td data-label="Net control"><span class="who callsign">WA7LNC</span> <span class="name">Gordon Grove</span></td><td data-label="Notes">ACS GMRS net at 1930</td></tr><tr class="" data-verify="true"><th scope="row" data-label="Date">Tue, Oct 27</th><td data-label="Net control"><span class="slot-open">Open</span> <a href="#rota-open">I can take it</a></td><td data-label="Notes">Winlink night</td></tr>
+<!--/FB:rota--></tbody>
+            </table>
+          </div>
+          <div class="callout callout--good" id="rota-open">
+            <p class="callout-label"><svg class="icon" aria-hidden="true"><use href="#i-radio"/></svg>Taking a slot</p>
+            <p>Open slot? Tell the Net Manager (<span class="callsign">AG7QP</span>) on the Tuesday net, or post on <a href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io<span class="sr-only"> (opens groups.io)</span></a>. First time? The Net Manager coaches new net controls, and the script walks you through every step.</p>
+            <p data-verify="true"><b>After your net:</b> send your net report (the net’s duration and the call signs that checked in) as soon as you can, to the address in the current script.</p>
+          </div>
+          <ul class="link-list">
+            <li><a href="documents.html#net-preamble-weekly">Weekly script</a></li>
+            <li><a href="documents.html#ncs-principles">Principles of a Net Control Station</a></li>
+            <li><a href="#">Full rota and net schedule</a></li>
+          </ul>
+        </section>
+
+        <section id="winlink" aria-labelledby="winlink-h">
+          <h2 id="winlink-h">Winlink assignments</h2>
+          <div class="callout callout--plain howto">
+            <p class="callout-label"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg>How to respond</p>
+            <p>Answer on an <b>ICS-213</b> unless another form is named. Send to <b class="callsign">NV2Z</b> and <b class="callsign">AG7QP</b> between <b>1700 and 2100</b> on the date shown. Radio is preferred; Telnet is acceptable.</p>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table table--stack">
+              <caption>Winlink nights, 2nd and 4th Tuesdays</caption>
+              <thead><tr><th scope="col">Date</th><th scope="col">Assignment</th><th scope="col">Form</th></tr></thead>
+              <tbody data-widget="winlink"><!--FB:winlink-->
+<tr class="is-past"><th scope="row" data-label="Date">Tue, Sep 22</th><td data-label="Assignment">Identify steps, actions and precautions you should take in extreme cold.</td><td data-label="Form">Quick Message (past)</td></tr><tr class=" is-next"><th scope="row" data-label="Date">Tue, Oct 13 <span class="tag tag--net">Next</span></th><td data-label="Assignment">Submit a Did You Feel It report. Be sure to mark it as an exercise.</td><td data-label="Form">Did You Feel It (DYFI) report</td></tr><tr class=""><th scope="row" data-label="Date">Tue, Oct 27</th><td data-label="Assignment">Submit a welfare message.</td><td data-label="Form">Welfare Message / Quick Health &amp; Welfare</td></tr><tr class=""><th scope="row" data-label="Date">Tue, Nov 10</th><td data-label="Assignment">Report where you expect to have Thanksgiving dinner.</td><td data-label="Form">ICS-213</td></tr><tr class=""><th scope="row" data-label="Date">Tue, Nov 24</th><td data-label="Assignment">Request what you want Santa to bring you.</td><td data-label="Form">ICS-213RR</td></tr><tr class=""><th scope="row" data-label="Date">Tue, Dec 8</th><td data-label="Assignment">Give Santa a justification for your being good this year.</td><td data-label="Form">ICS-213</td></tr><tr class=""><th scope="row" data-label="Date">Tue, Dec 22</th><td data-label="Assignment">What are your New Year’s Eve plans?</td><td data-label="Form">ICS-213</td></tr>
+<!--/FB:winlink--></tbody>
+            </table>
+          </div>
+          <ul class="link-list">
+            <li><a href="documents.html#winlink-intro">Winlink: getting started</a></li>
+            <li data-verify="true"><a href="exercises.html#upcoming">Winlink workshop, 2nd Saturdays, 1230–1530</a></li>
+            <li><a href="#">Winlink &amp; digital</a></li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <!-- STANDING REQUIREMENTS (a reference, not a tracker) + WHO TO ASK -->
+  <section class="section section--white" aria-label="Staying current, and who to ask">
+    <div class="wrap desk-tables">
+      <section id="requirements" aria-labelledby="req-h">
+        <h2 id="req-h">Staying current</h2>
+        <p class="intro">What the ACS Task Book asks of members, by how often. A reference, not a tracker: nothing here is saved.</p>
+        <div class="cadence">
+          <div class="cadence-row"><h3>Every month</h3><ul class="checklist"><li>Check into a net (weekly encouraged).</li></ul></div>
+          <div class="cadence-row"><h3>Every quarter</h3><ul class="checklist"><li>Attend a Third Thursday meeting or a Second Saturday workshop (monthly encouraged).</li></ul></div>
+          <div class="cadence-row"><h3>Every year</h3><ul class="checklist">
+            <li>Take part in one field operation: an activation, an exercise or a public-service event.</li>
+            <li>Check your personal kit (24 hours minimum, 72 preferred) and your radio kit (2 m and 70 cm for 24 to 72 hours).</li>
+            <li>Program the repeater and simplex channels into your handheld.</li>
+            <li><b>Radio Operators and up:</b> serve as net control at least once.</li>
+            <li><b>Senior Radio Operators:</b> send and receive Winlink; lead or assist an exercise, activation or event.</li>
+          </ul></div>
+          <div class="cadence-row"><h3>Always</h3><ul class="checklist">
+            <li>Keep an <b>ICS-309</b> during ACS radio operations; keep an <b>ICS-214</b> during exercises and activations (RADO and up).</li>
+            <li>Keep your <a href="https://www.spokanecounty.gov/3007/Alert-Spokane" rel="noopener">ALERT Spokane<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens spokanecounty.gov)</span></a> registration current. It now runs on Regroup.</li>
+          </ul></div>
+          <div class="cadence-row"><h3>Every two years</h3><ul class="checklist">
+            <li>First Aid/CPR (RADO and up).</li>
+            <li>SKYWARN spotter training (encouraged).</li>
+          </ul></div>
+        </div>
+        <ul class="link-list">
+          <li><a href="../about.html#acs-task-book">Full task-book levels</a></li>
+          <li><a href="#">Training &amp; task books</a></li>
+        </ul>
+      </section>
+
+      <section id="help" aria-labelledby="help-h">
+        <h2 id="help-h">Who to ask</h2>
+        <p class="intro">By task, with the role and call sign to ask for on the net or on groups.io.</p>
+        <div class="table-wrap">
+          <table class="data-table table--stack">
+            <caption class="sr-only">Who to ask, by task</caption>
+            <thead><tr><th scope="col">I want to…</th><th scope="col">Role</th><th scope="col">Call sign</th></tr></thead>
+            <tbody>
+              <tr data-verify="true"><th scope="row" data-label="I want to…">Take a net-control slot, fix the rota</th><td data-label="Role">AEC, Net Manager</td><td data-label="Call sign"><span class="callsign">AG7QP</span></td></tr>
+              <tr data-verify="true"><th scope="row" data-label="I want to…">Ask about Winlink or an assignment</th><td data-label="Role">AEC, Public Events; Winlink coordinator</td><td data-label="Call sign"><span class="callsign">NV2Z</span></td></tr>
+              <tr data-verify="true"><th scope="row" data-label="I want to…">Volunteer for Bloomsday or the Torchlight Parade</th><td data-label="Role">AEC, Public Events</td><td data-label="Call sign"><span class="callsign">NV2Z</span></td></tr>
+              <tr data-verify="true"><th scope="row" data-label="I want to…">Ask about the radio room, trailer or programming</th><td data-label="Role">AEC, Logistics &amp; Comms</td><td data-label="Call sign"><span class="callsign">K7DSR</span></td></tr>
+              <tr data-verify="true"><th scope="row" data-label="I want to…">Ask about the hospital team</th><td data-label="Role">AEC, Hospital Coordinator</td><td data-label="Call sign"><span class="callsign">K7MHG</span></td></tr>
+              <tr data-verify="true"><th scope="row" data-label="I want to…">Get a task-book level signed off</th><td data-label="Role">Emergency Coordinator</td><td data-label="Call sign"><span class="callsign">W7TSC</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="help-roles" data-verify="true">Role addresses: <a href="mailto:join@spokares.org">join@spokares.org</a> (applications, orientation), <a href="mailto:ec@spokares.org">ec@spokares.org</a> (the emergency coordinator) and <a href="mailto:webmaster@spokares.org">webmaster@spokares.org</a> (this site). Something wrong on this page? Tell the webmaster.</p>
+      </section>
+    </div>
+  </section>
+
+  <!-- ON GROUPS.IO (members only; linked, never copied) -->
+  <section class="section section--cloud" id="groups-io" aria-labelledby="gio-h">
+    <div class="wrap desk-tables">
+      <div>
+        <h2 id="gio-h">On groups.io</h2>
+        <p class="intro">Our groups.io group is the member hub: the e-mail list, calendar, files and wiki. A moderator approves each new member, and the archive, files and wiki are members-only.</p>
+        <div class="callout callout--legal gio-note">
+          <p class="callout-label"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>Keep it off public sites</p>
+          <p>Never copy ACSFOG content, county channels or the roster onto a public site or social media. Channels and procedures are covered by the county’s non-disclosure agreement, and the roster holds members’ personal details.</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table table--stack gio-table">
+          <caption class="sr-only">What’s on groups.io</caption>
+          <thead><tr><th scope="col">What</th><th scope="col">Where</th></tr></thead>
+          <tbody>
+            <tr><th scope="row" data-label="What"><b>Files:</b> the Spokane ACS Field Operating Guide (ACSFOG, half- and full-page), the net roster, exercise plans</th><td data-label="Where"><a href="https://spokaneares-acs.groups.io/g/main/files" rel="noopener">Files<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io)</span></a></td></tr>
+            <tr><th scope="row" data-label="What"><b>Calendar:</b> meetings, nets and events</th><td data-label="Where"><a href="https://spokaneares-acs.groups.io/g/main/calendar" rel="noopener">Calendar<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io)</span></a></td></tr>
+            <tr data-verify="true"><th scope="row" data-label="What"><b>Subgroups:</b> Digital-Modes, HamWan, Hospital-Coordination, Leadership, SHARES, Winlink, WinterFieldDay (some are restricted)</th><td data-label="Where"><a href="https://spokaneares-acs.groups.io/g/main/subgroups" rel="noopener">Subgroups<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io)</span></a></td></tr>
+            <tr><th scope="row" data-label="What"><b>Not a member yet?</b></th><td data-label="Where"><a href="https://spokaneares-acs.groups.io/g/main" rel="noopener">Apply to join<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io)</span></a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="../assets/img/seal-ares-acs-400.png" alt="" width="60" height="60">
+        <div>
+          <span class="footer-name">Spokane County ARES-ACS</span>
+          <p>Volunteer amateur radio emergency communications for Spokane County. Formerly Spokane County ARES/RACES.</p>
+          <address>Spokane County Emergency Management<br>1121 W Gardner Ave, Spokane, WA 99260</address>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h2>New to radio</h2>
+        <ul>
+          <li><a href="../how-it-works.html">How it works</a></li>
+          <li><a href="../about.html">About ARES &amp; ACS</a></li>
+          <li><a href="../about.html#licensing">Get licensed</a></li>
+          <li><a href="../index.html#visit">Visit a meeting</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Licensed hams</h2>
+        <ul>
+          <li><a href="../index.html#join">Join the team</a></li>
+          <li><a href="../index.html#visit-listen">Listen on Tuesday night</a></li>
+          <li><a href="../members/documents.html#ares-application">The ARES application</a></li>
+          <li><a href="../about.html#training-path">The training path</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Members</h2>
+        <ul>
+          <li><a href="../members/index.html">For Members (this week)</a></li>
+          <li><a href="../members/documents.html">Documents &amp; downloads</a></li>
+          <li><a href="../members/exercises.html">Exercises &amp; events</a></li>
+          <li><a href="../members/documents.html#forms">Forms</a></li>
+          <li><a href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io (members)<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io)</span></a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Agency partners</h2>
+        <ul>
+          <li><a href="../about.html#who-we-serve">Who we serve</a></li>
+          <li><a href="../about.html#for-agencies">For agencies and partners</a></li>
+          <li><a href="../about.html#agreements">Agreements</a></li>
+          <li><a href="../how-it-works.html#activation">How activation works</a></li>
+          <li><a href="../about.html#contact">Contact the emergency coordinator</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-affil">
+      <div class="marks">
+        <img src="../assets/img/ARES_logo.png" alt="ARRL Amateur Radio Emergency Service emblem" width="44" height="44">
+        <img src="../assets/img/ACS_logo-500.png" alt="Spokane Auxiliary Communications (ACS) seal" width="44" height="44">
+        <img src="../assets/img/SCDEM_Logo-600.png" alt="Spokane County Emergency Management seal" width="44" height="44">
+      </div>
+      <p>An ARRL Amateur Radio Emergency Service group, serving Spokane County Emergency Management.</p>
+    </div>
+    <div class="footer-fine">
+      <p data-verify="true">A volunteer group, not an emergency service. In an emergency, call 911.</p>
+      <p class="fine-links"><a href="#">Privacy</a><span>© Spokane County ARES-ACS</span></p>
+      <p class="mockup-note">Mockup — content to be verified before launch</p>
+    </div>
+  </div>
+</footer>
+<script src="../assets/data.js"></script>
+<script src="../assets/site.js"></script>
+<script>
+/* members/index.html: page-only enhancement (runs after site.js widgets; ES5 like site.js) */
+document.addEventListener('DOMContentLoaded', function () {
+
+  var S = window.SPOKARES, SPO = window.SPO;
+  if (!S || !SPO || !S.fn) return;
+  var F = S.fn;
+  function ids(sel) { return document.querySelector(sel); }
+  var today = SPO.now().date, next = SPO.nextNet().net;
+
+  /* Open net-control slots from the rota (from the next net on) */
+  var slots = ids('[data-open-slots]');
+  if (slots && next) {
+    var open = [], last = null;
+    for (var i = 0; i < S.rota.length; i++) {
+      var r = S.rota[i];
+      if (r.date >= next.date) { last = r.date; if (r.open) open.push(SPO.fmt(r.date)); }
+    }
+    var txt = ids('[data-slots-text]'), label = slots.querySelector('b'), link = slots.querySelector('a');
+    if (open.length) {
+      label.textContent = open.length === 1 ? 'Open net-control slot:' : 'Open net-control slots:';
+      txt.textContent = (open.length > 1 ? open.slice(0, -1).join(', ') + ' and ' + open[open.length - 1] : open[0]) + '.';
+    } else if (last) {
+      label.textContent = 'Net control:';
+      txt.textContent = 'every slot is taken through ' + SPO.fmt(last) + '.';
+      link.textContent = 'See the rota'; link.setAttribute('href', '#rota');
+    } else {
+      label.textContent = 'Net control:';
+      txt.textContent = 'the next rota is posted on groups.io.';
+      link.textContent = 'See the rota'; link.setAttribute('href', '#rota');
+    }
+  }
+
+  /* Tile hints: next Winlink assignment, next three exercises */
+  var wl = SPO.nextWinlink(), tw = ids('[data-tile-winlink]');
+  if (tw) tw.textContent = wl ? 'Next: ' + SPO.fmt(wl.date, 'day') + ', ' + wl.form.replace(/ \(DYFI\) report$/, '').replace(/^Did You Feel It$/, 'DYFI report') : 'Schedule and how to respond';
+  var SHORT = { 'wsdot-2026': 'WSDOT', 'set-2026': 'SET', 'shakeout-2026': 'ShakeOut', 'commex-2026': 'COMMEX' };
+  var ex = F.upcoming({ from: today, days: 120, types: ['exercise'] }).filter(function (x) { return !/^shares/.test(x.id); }).slice(0, 3);
+  var te = ids('[data-tile-exercises]');
+  if (te && ex.length) te.textContent = ex.map(function (x) { return (SHORT[x.id] || x.title) + (x.inProgress ? ' now' : ' ' + SPO.fmt(x.date, 'day')); }).join('; ');
+});
+</script>
+</body>
+</html>

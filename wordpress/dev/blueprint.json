@@ -1,0 +1,69 @@
+{
+ "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+ "meta": {
+  "title": "spokares.org dev environment",
+  "description": "PLAN.md §6.10. Start it with wordpress/dev/start.sh <PORT>, which mounts the theme, the plugin, the must-use plugin and wordpress/dev, drops the theme/plugin steps when those are missing, and passes --php/--wp from preferredVersions. No login step: front-end screenshots are logged out; sign in with ?dev_login=1 (admin) or ?dev_login=editor.",
+  "author": "spokares dev environment"
+ },
+ "preferredVersions": {
+  "php": "8.4",
+  "wp": "7.1.2"
+ },
+ "steps": [
+  {
+   "step": "defineWpConfigConsts",
+   "consts": {
+    "WP_ENVIRONMENT_TYPE": "local",
+    "SPOKARES_DEV": true,
+    "WP_DEVELOPMENT_MODE": "theme",
+    "DISALLOW_FILE_EDIT": true,
+    "DISALLOW_UNFILTERED_HTML": true,
+    "SPOKARES_TODAY": "2026-09-26",
+    "WP_DEBUG": true,
+    "WP_DEBUG_LOG": "/spokares-log/debug.log",
+    "WP_DEBUG_DISPLAY": false
+   }
+  },
+  {
+   "step": "setSiteOptions",
+   "options": {
+    "blogname": "Spokane County ARES-ACS",
+    "blogdescription": "Volunteer emergency radio for Spokane County",
+    "timezone_string": "America/Los_Angeles",
+    "date_format": "M j, Y",
+    "time_format": "g:i A",
+    "start_of_week": 0,
+    "permalink_structure": "/%postname%/",
+    "users_can_register": 0,
+    "default_comment_status": "closed",
+    "default_ping_status": "closed"
+   }
+  },
+  {
+   "step": "installPlugin",
+   "pluginData": {
+    "resource": "wordpress.org/plugins",
+    "slug": "two-factor"
+   },
+   "options": {
+    "activate": true
+   }
+  },
+  {
+   "step": "runPHP",
+   "code": "<?php define( 'SPOKARES_DEV_SETUP', true ); require '/spokares-dev/setup/mu.php';"
+  },
+  {
+   "step": "activateTheme",
+   "themeFolderName": "spokares"
+  },
+  {
+   "step": "activatePlugin",
+   "pluginPath": "spokares-core/spokares-core.php"
+  },
+  {
+   "step": "runPHP",
+   "code": "<?php require '/wordpress/wp-load.php'; require '/spokares-dev/setup/setup.php';"
+  }
+ ]
+}

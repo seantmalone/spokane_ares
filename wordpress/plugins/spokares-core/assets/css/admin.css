@@ -1,0 +1,161 @@
+/*
+ * spokares-core admin styles: plugin screens, the event and document forms,
+ * the Site tasks widget, and the trimmed profile for editors.
+ * Admin only; the site's look belongs to the theme.
+ */
+
+/* ---------- shared ---------- */
+.spk-screen .spk-lede { font-size: 14px; margin: 8px 0 16px; }
+.spk-screen .spk-saved { margin-left: 12px; color: #50575e; }
+.spk-banner { padding: 10px 14px; border-left: 4px solid; background: #fff; margin: 12px 0 16px; font-weight: 600; }
+.spk-banner--red { border-color: #b32d2e; background: #fcf0f1; color: #8a2424; }
+.spk-banner--amber { border-color: #dba617; background: #fcf9e8; color: #614a00; font-weight: 400; }
+.spk-field-error,
+input.spk-field-error,
+textarea.spk-field-error,
+select.spk-field-error { outline: 2px solid #d63638 !important; outline-offset: 1px; }
+.spk-card.spk-field-error, fieldset.spk-field-error { box-shadow: 0 0 0 2px #d63638; }
+.spk-row-error > * { background: #fcf0f1 !important; }
+.spk-error-text { display: block; margin-top: 4px; color: #b32d2e; font-weight: 600; }
+.spk-confirm { display: block; margin-top: 6px; padding: 6px 8px; background: #fcf9e8; border: 1px solid #dba617; border-radius: 3px; }
+.spk-flag { color: #b32d2e; font-weight: 600; }
+.spk-danger { color: #b32d2e; }
+.spk-choice { display: inline-block; margin: 0 14px 6px 0; white-space: nowrap; }
+.spk-card { border: 1px solid #c3c4c7; background: #fff; border-radius: 4px; padding: 10px 16px 12px; margin: 0 0 16px; }
+.spk-card > legend { padding: 0 6px; font-weight: 600; font-size: 14px; }
+.spk-field { margin: 0 0 16px; }
+.spk-field > label:first-child, .spk-field > legend, .spk-label { display: block; font-weight: 600; margin-bottom: 4px; }
+.spk-field .description, .spk-card .description { color: #50575e; }
+.spk-never { padding: 8px 12px; background: #fcf0f1; border-left: 4px solid #d63638; font-weight: 600; }
+.spk-section-title { font-size: 1.2em; margin: 18px 0 10px; }
+.spk-more { margin: 0 0 16px; border: 1px solid #dcdcde; background: #fff; border-radius: 4px; padding: 8px 14px; }
+.spk-more > summary { cursor: pointer; font-weight: 600; padding: 4px 0; }
+.spk-more[open] > summary { margin-bottom: 10px; }
+.spk-admin-only > summary::after { content: " (administrators)"; font-weight: 400; color: #50575e; }
+.spk-table th, .spk-table td { vertical-align: top; }
+.spk-submit { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.spk-more a { text-decoration: underline; }
+.spk-card .spk-choice input, .spk-rota-table .spk-choice input { margin-top: 0; }
+
+/* ---------- save box ---------- */
+.spk-savebox .spk-status { margin: 0 0 10px; font-weight: 600; }
+.spk-savebox .spk-save-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+.spk-savebox .spk-unpublish .button-link { color: #50575e; text-decoration: underline; }
+.spk-savebox .spk-trash { margin: 14px 0 4px; }
+.spk-savebox .submitdelete { color: #b32d2e; }
+.spk-savebox .spk-trash-file { margin: 0; font-size: 12px; }
+
+/* ---------- rota: one line per Tuesday on a desktop screen ---------- */
+.spk-rota-table td, .spk-rota-table th { vertical-align: middle; }
+.spk-rota-table th[scope="row"] { font-weight: 600; white-space: nowrap; }
+.spk-rota-table th[scope="row"] .spk-kind { display: block; font-weight: 400; color: #50575e; font-size: 12px; }
+.spk-rota-table fieldset { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 0; }
+.spk-rota-table .spk-choice { margin: 0; }
+.spk-rota-table .spk-call { width: 7.5em; margin: 0 4px 0 -4px; text-transform: uppercase; }
+.spk-rota-table input:disabled,
+.spk-rota-table input.is-off { background: #f0f0f1; color: #8c8f94; border-color: #dcdcde; cursor: text; }
+.spk-rota-table .spk-shows.is-bad { color: #b32d2e; white-space: normal; }
+.spk-ask { margin: -8px 0 14px; }
+.spk-rota-table .spk-shows { font-weight: 600; white-space: nowrap; font-size: 13px; }
+.spk-rota-table .spk-wl-task { width: 100%; min-width: 11em; }
+.spk-rota-table .spk-form-select { max-width: 170px; }
+.spk-rota-table .spk-form-other { display: block; margin-top: 4px; width: 100%; max-width: 170px; }
+.spk-rota-table .spk-form-other[hidden] { display: none; }
+.spk-rota-table .spk-note input { width: 100%; min-width: 7em; }
+.spk-rota-more { margin: 10px 0; }
+@media (min-width: 1300px) {
+	.spk-rota-table td.spk-nc { min-width: 400px; }
+}
+
+/* ---------- net details ---------- */
+.spk-weeks { display: inline-flex; gap: 12px; margin-right: 12px; }
+.spk-preview { background: #fff; border: 1px solid #c3c4c7; border-left: 4px solid #2271b1; padding: 8px 16px 12px; margin: 20px 0; max-width: 900px; }
+.spk-preview dt { font-weight: 600; margin-top: 10px; }
+.spk-preview dd { margin: 2px 0 0; font-family: Georgia, serif; font-size: 15px; }
+.spk-preview ul { margin: 4px 0 0; list-style: disc; padding-left: 18px; }
+
+/* ---------- meetings ---------- */
+.spk-meetings-table tbody.spk-meeting { border-top: 2px solid #c3c4c7; }
+.spk-rule-grid { display: flex; flex-wrap: wrap; gap: 12px 24px; margin: 8px 0 12px; }
+.spk-months { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 8px 0; }
+.spk-months legend { font-weight: 600; margin-bottom: 4px; }
+.spk-rule { max-width: 900px; }
+
+/* ---------- events & documents forms ---------- */
+.spk-kind-box { margin-top: 8px; }
+.spk-places { margin: 10px 0 0; padding: 6px 10px; background: #f0f6fc; border-left: 3px solid #72aee6; color: #1d2327; }
+.spk-savebox .spk-unpublish-note { margin: 2px 0 0; font-size: 12px; color: #50575e; }
+.spk-event-form, .spk-doc-form { margin-top: 18px; max-width: 900px; }
+.spk-when .spk-dates p { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.spk-links .spk-link-row label, .spk-sublinks label { display: inline-block; margin-right: 12px; }
+.spk-privacy { background: #fcf9e8; border: 1px solid #dba617; padding: 8px 10px; border-radius: 3px; }
+.spk-upload, .spk-link { margin-top: 10px; }
+.spk-sublinks .spk-wide { width: 7em; }
+[data-kinds][hidden], [data-source][hidden] { display: none !important; }
+
+/* ---------- Site tasks ---------- */
+#spokares_site_tasks .inside { margin: 0; padding: 0 12px 12px; }
+.spk-tasks .spk-task { padding: 12px 0; border-bottom: 1px solid #f0f0f1; }
+.spk-tasks .spk-task h3 { font-size: 14px; margin: 0 0 6px; display: flex; align-items: center; gap: 8px; }
+.spk-tasks .spk-task p { margin: 4px 0 8px 30px; }
+.spk-task__n { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #ffc857; color: #0e1a33; font-size: 12px; font-weight: 700; }
+.spk-attention { margin-top: 12px; padding: 8px 12px; background: #fff4d6; border-left: 4px solid #dba617; }
+.spk-attention h3 { margin: 4px 0; font-size: 13px; }
+.spk-attention ul { margin: 4px 0 4px 18px; list-style: disc; }
+.spk-stuck { margin: 12px 0 0; color: #50575e; }
+
+/* ---------- editors: shorter profile (name, e-mail, password, two-factor) ---------- */
+.spk-editor.profile-php .user-rich-editing-wrap,
+.spk-editor.profile-php .user-syntax-highlighting-wrap,
+.spk-editor.profile-php .user-comment-shortcuts-wrap,
+.spk-editor.profile-php .user-admin-bar-front-wrap,
+.spk-editor.profile-php .user-language-wrap,
+.spk-editor.profile-php .user-url-wrap,
+.spk-editor.profile-php .user-description-wrap,
+.spk-editor.profile-php .user-profile-picture,
+.spk-editor.profile-php .application-passwords,
+.spk-editor.profile-php .user-admin-color-wrap { display: none; }
+.spk-editor.profile-php h2:has(+ table .user-description-wrap) { display: none; }
+
+@media (max-width: 782px) {
+	.spk-rota-table { table-layout: fixed; width: 100%; }
+	.spk-rota-table thead { display: none; }
+	.spk-rota-table tr { display: block; border-bottom: 2px solid #c3c4c7; }
+	.spk-rota-table th, .spk-rota-table td { display: block; box-sizing: border-box; width: auto; max-width: 100%; }
+	/* The column headings are hidden on a phone, so each box says what it is. */
+	.spk-rota-table td[data-label]:not([data-label=""])::before { content: attr(data-label); display: block; margin-bottom: 4px; font-weight: 600; font-size: 12px; color: #50575e; }
+	.spk-rota-table td[data-label=""] { display: none; }
+	.spk-rota-table .spk-wl-task, .spk-rota-table .spk-note input, .spk-rota-table .spk-form-select, .spk-rota-table .spk-form-other { min-width: 0; max-width: 100%; width: 100%; box-sizing: border-box; }
+	.spk-rota-table td.spk-nc { min-width: 0; }
+	.spk-screen .spk-saved { display: block; margin: 6px 0 0; }
+}
+
+/* Buttons and the links beside them. */
+.spk-tasks .spk-task p .button + a,
+.spk-tasks .spk-task p a + a { margin-left: 12px; }
+
+/* ---------- block editor, pages, for editors (spk-editor = not an administrator) ----------
+   The page is words only: no block inserter, no Styles tab, no Advanced panel
+   (HTML element, link relation, CSS class, anchor), and none of the switches
+   or pickers that change a block's look (the Cover's fixed/repeated
+   background and resolution, the Table's header/footer sections). The server
+   refuses those changes anyway; hiding them keeps "undo the last change"
+   from being guesswork. The hero photo's focal point and alt text stay. */
+.spk-editor.post-type-page .editor-document-tools__inserter-toggle,
+.spk-editor.post-type-page .block-editor-block-inspector__advanced,
+.spk-editor.post-type-page .block-editor-block-inspector [role="tab"][id$="-styles"],
+.spk-editor.post-type-page .block-editor-block-inspector [role="tabpanel"][id$="-styles-view"],
+.spk-editor.post-type-page .block-editor-block-inspector .components-toggle-control,
+.spk-editor.post-type-page .block-editor-block-inspector .components-tools-panel-item:has(.components-select-control),
+.spk-editor.post-type-page .block-editor-block-inspector .components-tools-panel-header .components-dropdown-menu { display: none !important; }
+
+/* WordPress draws an empty "Meta Boxes" drawer under the canvas when a page
+   has only side boxes (the Page review box). Hide it while it holds none. */
+.edit-post-meta-boxes-main:not(:has(.postbox)) { display: none; }
+
+/* List screens: room for the names. */
+.post-type-spk_document .wp-list-table .column-title { width: 28%; }
+.post-type-spk_event .wp-list-table .column-title { width: 34%; }
+.post-type-spk_event .wp-list-table .column-spk_when { width: 18%; }
+.spk-net input.spk-freq { width: 8em; }
+.spk-meetings-table td, .spk-meetings-table th, .spk-tiles-table td, .spk-tiles-table th { vertical-align: middle; }

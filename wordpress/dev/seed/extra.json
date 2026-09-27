@@ -1,0 +1,91 @@
+{
+ "_about": "Facts the round-3 pages show that data.js holds only as page text (PLAN.md §6.10). Each entry names the file it was copied from; nothing here is new. Slugs of the two undated public-service rows are row anchors only (B gave those rows no id).",
+ "events": [
+  {
+   "id": "lilac-torchlight-parade",
+   "title": "Lilac Festival Armed Forces Torchlight Parade",
+   "type": "public-service",
+   "dateMode": "not-posted",
+   "contact": { "callsign": "NV2Z" },
+   "menuOrder": 10,
+   "src": "design/round3/_shared/copy-members-exercises.md (Public-service events); design/round3/option-b-lines-down/members/exercises.html"
+  },
+  {
+   "id": "fun-runs-bike-races",
+   "title": "Fun runs and bike races",
+   "type": "public-service",
+   "dateMode": "as-requested",
+   "contact": { "callsign": "NV2Z" },
+   "menuOrder": 20,
+   "src": "design/round3/_shared/copy-members-exercises.md (Public-service events); design/round3/option-b-lines-down/members/exercises.html"
+  }
+ ],
+ "eventOverrides": {
+  "set-2026": {
+   "summary": "ARRL’s national exercise. The Section asks you to:",
+   "extraForm": "wa-field-situation-report",
+   "src": "design/round3/option-b-lines-down/members/exercises.html (#set-2026 card; task 1 links documents.html#wa-field-situation-report, which the event form gives as its Extra form)"
+  },
+  "wsdot-2026": {
+   "mainLabel": "Exercise details on groups.io",
+   "src": "design/round3/option-b-lines-down/members/exercises.html (#wsdot-2026 card button; the URL is data.js detailsHref, the groups.io main page)"
+  }
+ },
+ "keepPast": {
+  "ids": [ "wsdot-2026" ],
+  "src": "PLAN.md §6.10 (spk_keep_past '1' only on wsdot-2026)"
+ },
+ "meetings": {
+  "_src": "design/round3/option-b-lines-down/index.html (#visit): Home lists the workshop and the Third Thursday meeting; the Winlink workshop appears only inside the workshop's line (show_home false).",
+  "workshop": {
+   "show_home": true,
+   "home_extra": "then a Winlink workshop, 12:30–3:30 PM",
+   "src": "design/round3/option-b-lines-down/index.html (#visit, a data-verify span)"
+  },
+  "winlink-workshop": {
+   "show_home": false
+  },
+  "third-thursday": {
+   "show_home": true,
+   "time_text": "evenings",
+   "src": "design/round3/option-b-lines-down/index.html (#visit, a data-verify span; data.js displayTime 'Evening')"
+  }
+ },
+ "tiles": {
+  "slots": [
+   { "doc": "net-scripts", "label": "Net script", "icon": "script" },
+   { "doc": "ics-213", "label": "ICS-213", "icon": "form" },
+   { "doc": "ics-214", "label": "ICS-214", "icon": "log" },
+   { "doc": "acs-task-book", "label": "ACS Task Book", "icon": "book" }
+  ],
+  "src": "PLAN.md §2.3 (REVIEW fix: tiles open files, no tile for a Soon item, ICS-214 replaces ICS-309)"
+ },
+ "pages": {
+  "home": {
+   "excerpt": "Licensed amateur radio volunteers who back up Spokane County Emergency Management’s communications. Visitors welcome on the Tuesday 8:00 PM net.",
+   "src": "design/round3/option-b-lines-down/index.html <meta name=description> (copy-index.md Meta description)"
+  },
+  "how-it-works": {
+   "excerpt": "How the Tuesday net runs, how the county activates volunteers, how a message moves, and how members train.",
+   "src": "design/round3/option-b-lines-down/how-it-works.html <meta name=description> (copy-how-it-works.md)"
+  },
+  "about": {
+   "excerpt": "What ARES and ACS are, the legal basis, who we serve, leadership, how to join, task books, licensing and history.",
+   "owner": "Emergency Coordinator",
+   "reviewed": "",
+   "src": "design/round3/option-b-lines-down/about.html <meta name=description>; copy-about.md (Page owner: Emergency Coordinator; the review date is left for the owner)"
+  },
+  "members": {
+   "excerpt": "This week’s exercises, the Tuesday net rota and the most-used documents for Spokane County ARES-ACS members.",
+   "src": "design/round3/option-b-lines-down/members/index.html <meta name=description>"
+  },
+  "documents": {
+   "excerpt": "Net scripts, applications, task books, forms and guides for Spokane County ARES-ACS members.",
+   "src": "design/round3/option-b-lines-down/members/documents.html <meta name=description> (copy-members-documents.md)"
+  },
+  "exercises": {
+   "excerpt": "What’s next for members: exercises, what to bring, Winlink assignments and public-service events.",
+   "src": "design/round3/option-b-lines-down/members/exercises.html <meta name=description> (copy-members-exercises.md)"
+  }
+ }
+}

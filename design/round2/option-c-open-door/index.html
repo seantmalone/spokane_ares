@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+<title>Spokane County ARES-ACS | Volunteer emergency radio for Spokane County</title>
+<meta name="description" content="Licensed amateur radio volunteers providing backup communications for Spokane County Emergency Management, the National Weather Service, area hospitals and community events. Visitors welcome on the Tuesday 8 PM net.">
+<meta name="theme-color" content="#1E3557">
+<link rel="icon" href="assets/img/seal-ares-acs-400.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  /* Home-only tweaks (page-scoped, per DESIGN.md) */
+  .home-join .section-head { margin-bottom: 16px; align-items: center; }
+  .home-join .section-head--row > div:first-child { max-width: 33rem; }
+  .home-join .takes .link-action { margin-top: 8px; }
+</style>
+</head>
+<body data-root="">
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ICON SPRITE (copy verbatim from _chrome.html) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4.5" height="7" rx="1.5"/><rect x="16.5" y="14" width="4.5" height="7" rx="1.5"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15.6 14.3A5 5 0 0 1 21 19"/></symbol>
+  <symbol id="i-tools" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></symbol>
+  <symbol id="i-door" viewBox="0 0 24 24"><path d="M6 21V4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5V21"/><path d="M3 21h18"/><circle cx="14.5" cy="12.5" r="1" fill="currentColor"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-radio" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="14" rx="2"/><path d="M9.5 7V2.5M10 11h4M10 14h4"/><circle cx="12" cy="17.6" r=".7" fill="currentColor"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-form" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2.8h6V4M8.5 10h7M8.5 14h7M8.5 18h4"/></symbol>
+  <symbol id="i-hospital" viewBox="0 0 24 24"><path d="M4 21V8l8-4 8 4v13M2.5 21h19M12 9v6M9 12h6"/></symbol>
+  <symbol id="i-weather" viewBox="0 0 24 24"><path d="M7 17a4.5 4.5 0 1 1 1-8.9A5.5 5.5 0 0 1 18.5 10 3.5 3.5 0 0 1 18 17"/><path d="M12.5 13l-2 4h3l-2 4"/></symbol>
+  <symbol id="i-antenna" viewBox="0 0 24 24"><path d="M12 10v11M8 21l4-11 4 11"/><circle cx="12" cy="8" r="1.5"/><path d="M8.5 4.5a5 5 0 0 0 0 7M15.5 4.5a5 5 0 0 1 0 7"/></symbol>
+  <symbol id="i-trailer" viewBox="0 0 24 24"><rect x="2.5" y="6" width="15" height="10" rx="1.5"/><path d="M17.5 13h4M10 6V3.5"/><circle cx="7" cy="17.5" r="1.8"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5z"/><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H20"/></symbol>
+  <symbol id="i-kit" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M12 11v5M9.5 13.5h5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></symbol>
+  <symbol id="i-message" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol>
+  <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 12h3l2-5 3 10 3-12 3 12 2-5h4"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></symbol>
+  <!-- Drawn locator for "Where we meet" (not a Google capture). Use: <svg viewBox="0 0 400 250" role="img" aria-label="…"><use href="#map-meet"/></svg> -->
+  <symbol id="map-meet" viewBox="0 0 400 250">
+    <rect width="400" height="250" fill="#E8EEF6"/>
+    <g stroke="#D0DAE7" stroke-width="19" fill="none">
+      <path d="M0 36H400M0 104H400M0 212H400M58 0V250M176 104V250M370 0V250"/>
+    </g>
+    <g stroke="#FFFFFF" stroke-width="15" fill="none">
+      <path d="M0 36H400M0 104H400M0 212H400M58 0V250M176 104V250M370 0V250"/>
+    </g>
+    <rect x="190" y="175" width="164" height="28" rx="3" fill="#FFFFFF" stroke="#B9C7DB" stroke-width="1.5"/>
+    <text x="272" y="193.5" text-anchor="middle" font-family="Atkinson Hyperlegible, Verdana, sans-serif" font-size="11.5" fill="#465163">Spokane County Courthouse</text>
+    <rect x="193" y="121" width="78" height="42" rx="3" fill="#E4EFEA" stroke="#2E5B4F" stroke-width="2"/>
+    <g font-family="Atkinson Hyperlegible, Verdana, sans-serif" font-size="12.5" fill="#465163">
+      <text x="248" y="40.5">W Boone Ave</text>
+      <text x="72" y="108.5" font-weight="700" fill="#1B2433">W Gardner Ave</text>
+      <text x="248" y="216.5">W Mallon Ave</text>
+      <text transform="translate(180.5 204) rotate(-90)" font-weight="700" fill="#1B2433">N Jefferson St</text>
+      <text transform="translate(62.5 196) rotate(-90)">N Adams St</text>
+      <text transform="translate(374.5 196) rotate(-90)">N Monroe St</text>
+    </g>
+    <g font-family="Atkinson Hyperlegible, Verdana, sans-serif">
+      <text x="196" y="60" font-size="13" font-weight="700" fill="#1E3557">Spokane County</text>
+      <text x="196" y="75" font-size="13" font-weight="700" fill="#1E3557">Emergency Management</text>
+      <text x="196" y="90" font-size="12" fill="#465163">1121 W Gardner Ave</text>
+    </g>
+    <path d="M232 94V112" stroke="#2F4E7E" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <g transform="translate(232 141)">
+      <path d="M0 0C-3 -6-11 -12-11 -21A11 11 0 0 1 11 -21C11 -12 3 -6 0 0Z" fill="#2F4E7E"/>
+      <circle cx="0" cy="-21" r="4" fill="#FFFFFF"/>
+    </g>
+    <g transform="translate(26 158)" font-family="Atkinson Hyperlegible, Verdana, sans-serif">
+      <circle r="13" fill="#FFFFFF" stroke="#B9C7DB" stroke-width="1.5"/>
+      <path d="M0 -8L4.5 4 0 1.5-4.5 4Z" fill="#1E3557"/>
+      <text y="28" text-anchor="middle" font-size="11" fill="#465163">N</text>
+    </g>
+  </symbol>
+</svg>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="index.html" aria-label="Spokane County ARES-ACS, home">
+      <img src="assets/img/seal-ares-acs-400.png" alt="" width="50" height="50">
+      <span class="brand-text"><span class="brand-county">Spokane County</span><span class="brand-name">ARES-ACS</span></span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <ul class="nav-list">
+        <li><a class="nav-link" href="index.html" aria-current="page">Home</a></li>
+        <li><a class="nav-link" href="how-it-works.html">How it works</a></li>
+        <li><a class="nav-link" href="about.html">About ARES &amp; ACS</a></li>
+        <li><a class="nav-link" href="members/index.html">For Members</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn--join header-join" href="index.html#join">Join the team</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <svg class="icon icon-open" aria-hidden="true"><use href="#i-menu"/></svg>
+      <svg class="icon icon-close" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ================================================================ HERO -->
+<section class="hero" aria-labelledby="hero-h">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <h1 id="hero-h">From Bloomsday to blackouts, we keep Spokane County connected.</h1>
+      <p class="lede">We’re licensed amateur radio volunteers providing backup communications for Spokane County Emergency Management, our primary served agency, and for the National Weather Service, area hospitals and community events.</p>
+      <p class="invite"><span class="icon-disc icon-disc--pine" aria-hidden="true"><svg class="icon"><use href="#i-headphones"/></svg></span><span>Come say hello on Tuesday night. Visitors are welcome to check in.</span></p>
+      <div class="hero-ctas">
+        <a class="btn btn--primary" href="#visit"><svg class="icon" aria-hidden="true"><use href="#i-door"/></svg>Plan your first visit</a>
+        <a class="link-action" href="#join">Ready to join? See the four steps</a>
+      </div>
+      <p class="hero-scope">We’re volunteers, not first responders. We back up the agencies that are.</p>
+    </div>
+
+    <div class="hero-visual">
+      <figure class="hero-photo photo">
+        <div class="photo-frame">
+          <img src="assets/img/operator-headset-badge-blurred.jpg" width="659" height="372" style="object-position:72% 40%" data-verify="true"
+               alt="A volunteer operator in headphones speaks into a hand microphone at a radio desk, beside a parade route map.">
+        </div>
+      </figure>
+
+      <!-- THIS WEEK: rendered from assets/data.js by site.js (data-widget="week").
+           No-JS fallback = the standing weekly pattern + the groups.io calendar. -->
+      <section class="week-card" id="this-week" aria-labelledby="week-h">
+        <div class="week-head"><h2 id="week-h">This week</h2></div>
+        <div class="week-body" data-widget="week" data-variant="home" data-terms="true">
+          <div class="net">
+            <p class="date-block" aria-hidden="true"><span class="dow">Every</span><span class="num">Tue</span><span class="mon">8 PM</span></p>
+            <div>
+              <h3 class="net-title">Tuesday net, 8:00 PM</h3>
+              <div class="net-lines">
+                <p>Every Tuesday, on the air. <button type="button" class="term" aria-expanded="false" aria-controls="t-netcontrol">Net control</button><span class="term-def" id="t-netcontrol" role="note"><b>Net control</b>The station that runs a net, an organized on-air meeting. Net control calls stations in turn so everyone gets heard.</span> rotates among members.</p>
+                <p>Visitors are welcome to check in.</p>
+              </div>
+            </div>
+          </div>
+          <div class="settings" data-status-scope>
+            <p class="freq-line"><span class="freq"><button type="button" class="term" aria-expanded="false" aria-controls="t-w7gbu">W7GBU</button><span class="term-def" id="t-w7gbu" role="note"><b>W7GBU</b>The group’s call sign and repeater, honoring Ira “Dean” Bula.</span> 147.300 MHz</span>, +600 kHz, 100 Hz tone</p>
+            <a class="btn btn--outline btn--small" href="https://spokaneares-acs.groups.io/g/main/calendar"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Calendar on groups.io</a>
+          </div>
+          <div class="coming">
+            <h3>Coming up</h3>
+            <ul class="coming-list">
+              <li><a href="#visit-workshop"><span class="when">2nd Sat</span><span class="what">Second Saturday Workshop, 9:00 AM–noon<small>A Winlink workshop follows</small></span></a></li>
+              <li data-verify="true"><a href="#visit-meeting"><span class="when">3rd Thu</span><span class="what">Third Thursday training meeting<small>Evenings, downtown</small></span></a></li>
+            </ul>
+          </div>
+        </div>
+        <nav class="week-links" aria-label="For members">
+          <b>For members:</b>
+          <a href="members/documents.html#net-preamble-weekly">Net script</a>
+          <a href="members/documents.html#forms">Forms</a>
+          <a href="members/exercises.html">Exercises</a>
+          <a href="members/index.html">This week in full</a>
+        </nav>
+      </section>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ AUDIENCES -->
+<section class="audience-band" aria-labelledby="aud-h">
+  <div class="wrap">
+    <h2 id="aud-h" class="sr-only">Start where you are</h2>
+    <ul class="audience">
+      <li><a href="#visit-listen" data-visit="listen"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-headphones"/></svg></span><b>New to radio</b><span class="hint">Listen in on Tuesday night. No license needed.</span></a></li>
+      <li><a href="index.html?from=licensed#join"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-radio"/></svg></span><b>Licensed ham</b><span class="hint">Check in as a visitor, then take the four steps.</span></a></li>
+      <li id="members"><a href="members/index.html"><span class="icon-disc" aria-hidden="true"><svg class="icon"><use href="#i-form"/></svg></span><b>Member</b><span class="hint">This week’s net control, scripts and forms.</span></a></li>
+      <li><a href="about.html#for-agencies"><span class="icon-disc icon-disc--pine" aria-hidden="true"><svg class="icon"><use href="#i-shield"/></svg></span><b>Agency partner</b><span class="hint">How to request support, and our agreements.</span></a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================================================================ JOIN -->
+<section class="section section--white home-join" id="join" aria-labelledby="join-h" data-widget="join-path">
+  <div class="wrap">
+    <div class="section-head section-head--row">
+      <div>
+        <h2 id="join-h">Joining, in four steps</h2>
+        <p>Start at 0 if you’re not licensed yet, or at 1 if you are. You can stop at <button type="button" class="term" aria-expanded="false" aria-controls="t-ares">ARES</button><span class="term-def" id="t-ares" role="note"><b>ARES</b>Amateur Radio Emergency Service, the ARRL’s volunteer emergency program, open to any licensed ham.</span>, or go on to <button type="button" class="term" aria-expanded="false" aria-controls="t-acs">ACS</button><span class="term-def" id="t-acs" role="note" data-verify="true"><b>ACS</b>Auxiliary Communications, Spokane County Emergency Management’s volunteer radio program. Members pass a county background check.</span>.</p>
+      </div>
+      <div class="path-picker" hidden>
+        <span class="picker-label" id="from-l">Where are you starting from?</span>
+        <div class="seg" role="group" aria-labelledby="from-l">
+          <button type="button" data-from="unlicensed" aria-pressed="false">Not licensed</button>
+          <button type="button" data-from="licensed" aria-pressed="false">Licensed</button>
+          <button type="button" data-from="ares" aria-pressed="false">ARES member</button>
+          <button type="button" data-from="acs" aria-pressed="false">ACS member</button>
+        </div>
+        <p class="path-share" data-path-share hidden>Link to this path: <span data-path-url></span> <button type="button" data-path-copy>Copy link to this path</button> <span class="status-msg" role="status"></span></p>
+      </div>
+    </div>
+
+    <div class="hats">
+      <div class="hat">
+        <img src="assets/img/ARES_logo.png" alt="ARRL Amateur Radio Emergency Service emblem" width="52" height="52">
+        <p><b>ARES</b> A national ARRL program open to any licensed ham. Events, training and weather work need no declared emergency.</p>
+      </div>
+      <div class="hat">
+        <img src="assets/img/ACS_logo-500.png" alt="Spokane Auxiliary Communications (ACS) seal" width="52" height="52">
+        <p><b>ACS</b> The county’s own volunteer radio unit. After a background check, the county can call on you for its operations centers, hospitals and shelters.</p>
+      </div>
+      <p class="hat-quote">You can join ARES only, or both. In the group’s own words: <q>Even [if] you don’t or can’t qualify for ACS, our ARES group welcomes you.</q></p>
+    </div>
+
+    <p class="path-note" data-path-note hidden>You’re on the team. Staying current lives on the members pages: <a href="members/index.html#requirements">what’s due this month and this year</a>.</p>
+
+    <ol class="join-steps">
+      <li class="join-step" data-step="0">
+        <div class="step-top"><span class="step-num display-num" aria-hidden="true">0</span><span class="step-flag next">Your next step</span><span class="step-flag done"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Done</span></div>
+        <h3><span class="sr-only">Step 0: </span>Get licensed</h3>
+        <p>An FCC Technician license or higher. Every exam question is published in advance.</p>
+        <dl class="step-facts"><dt>How long</dt><dd>Your own pace; <span data-verify="true">exam sessions run monthly</span></dd><dt>You need</dt><dd>Nothing yet</dd></dl>
+        <p class="step-action"><a class="link-action" href="about.html#licensing">Licensing in plain English</a></p>
+      </li>
+      <li class="join-step" data-step="1">
+        <div class="step-top"><span class="step-num display-num" aria-hidden="true">1</span><span class="step-flag next">Your next step</span><span class="step-flag done"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Done</span></div>
+        <h3><span class="sr-only">Step 1: </span>Join ARES</h3>
+        <p>Bring the application to a meeting or send it to <span data-verify="true">join@spokares.org</span>. ARRL membership isn’t required.</p>
+        <dl class="step-facts"><dt>How long</dt><dd>One form</dd><dt>You need</dt><dd>An FCC Technician license or higher</dd></dl>
+        <p class="step-action"><a class="btn btn--primary btn--small" href="members/documents.html#ares-application">Get the ARES application</a></p>
+      </li>
+      <li class="join-step" data-step="2">
+        <div class="step-top"><span class="step-num display-num" aria-hidden="true">2</span><span class="step-flag next">Your next step</span><span class="step-flag done"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Done</span></div>
+        <h3><span class="sr-only">Step 2: </span>Get connected</h3>
+        <p>A moderator approves new members. Then check into the net and come to a meeting or workshop.</p>
+        <dl class="step-facts"><dt>How long</dt><dd>A Tuesday evening</dd><dt>You need</dt><dd>Your call sign</dd></dl>
+        <p class="step-action"><a class="link-action" href="https://spokaneares-acs.groups.io/g/main" rel="noopener"><span>Apply to join our groups.io <span class="nowrap">list<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></span></span><span class="sr-only"> (opens groups.io)</span></a></p>
+      </li>
+      <li class="join-step" data-step="3">
+        <div class="step-top"><span class="step-num display-num" aria-hidden="true">3</span><span class="step-flag next">Your next step</span><span class="step-flag done"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Done</span></div>
+        <h3><span class="sr-only">Step 3: </span>Qualify for ACS <span class="opt">Optional</span></h3>
+        <p>A background check, orientation and the New Member courses lead to Radio Operator and your ACS ID card.</p>
+        <dl class="step-facts"><dt>How long</dt><dd>Normally up to a year</dd><dt>You need</dt><dd>The county application</dd></dl>
+        <p class="step-action"><a class="link-action" href="https://www.spokanecounty.gov/FormCenter/Emergency-Management-31/Volunteer-Emergency-Worker-Application-276" rel="noopener"><span>County volunteer <span class="nowrap">application<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg></span></span><span class="sr-only"> (opens spokanecounty.gov)</span></a></p>
+      </li>
+    </ol>
+
+    <div class="takes" id="what-it-takes">
+      <div class="takes-head">
+        <h3>Here’s what it takes</h3>
+        <p class="intro">Honest numbers, from the county’s ACS task book. ARES and ACS members train side by side.</p>
+      </div>
+      <ul class="figures figures--row">
+        <li class="figure"><span class="display-num" aria-hidden="true">1</span><div><b><span class="sr-only">1 </span>net check-in a month</b><span>Weekly is encouraged.</span></div></li>
+        <li class="figure"><span class="display-num" aria-hidden="true">1</span><div><b><span class="sr-only">1 </span>meeting or workshop a quarter</b><span>Monthly is encouraged.</span></div></li>
+        <li class="figure"><span class="display-num" aria-hidden="true">1</span><div><b><span class="sr-only">1 </span>field operation a year</b><span>An activation, an exercise or a public-service event.</span></div></li>
+        <li class="figure"><span class="display-num" aria-hidden="true">2</span><div><b><span class="sr-only">2 </span>kits, ready</b><span>A personal kit for 24 hours or more (72 preferred) and a 2 m / 70 cm radio kit.</span></div></li>
+      </ul>
+      <div class="takes-foot">
+        <p class="takes-note">New members also complete four free online FEMA courses and the ARRL Basic EmComm course in their first year. <a href="about.html#training-path">The full training path</a></p>
+        <a class="link-action" href="#visit"><svg class="icon" aria-hidden="true"><use href="#i-door"/></svg>Not ready to join? Visit first</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================= PLANNER -->
+<section class="section section--cloud" id="visit" aria-labelledby="visit-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="visit-h">Three ways to visit</h2>
+      <p>None of them asks for a commitment. Pick one to see what to expect.</p>
+    </div>
+
+    <div class="planner" data-widget="planner" data-default="listen">
+      <ul class="doors">
+        <li><a class="door" href="#visit-listen" data-door="listen"><svg class="icon" aria-hidden="true"><use href="#i-headphones"/></svg><span class="door-name">Listen</span><span class="door-when">Tuesdays, 8:00 PM, from home</span></a></li>
+        <li><a class="door" href="#visit-meeting" data-door="meeting"><svg class="icon" aria-hidden="true"><use href="#i-people"/></svg><span class="door-name">Meeting</span><span class="door-when" data-verify="true">Third Thursdays, evenings, downtown</span></a></li>
+        <li><a class="door" href="#visit-workshop" data-door="workshop"><svg class="icon" aria-hidden="true"><use href="#i-tools"/></svg><span class="door-name">Workshop</span><span class="door-when">Second Saturdays, 9:00 AM to noon</span></a></li>
+      </ul>
+
+      <div class="visit-panels">
+        <!-- LISTEN -->
+        <section class="visit-panel" id="visit-listen" data-door="listen" aria-labelledby="vp-listen-h">
+          <h3 class="panel-title" id="vp-listen-h">Listen to the Tuesday net</h3>
+          <div class="visit-grid">
+            <div>
+              <p class="chips-label" id="chips-listen">Pick a date</p>
+              <div class="chips" data-chips role="group" aria-labelledby="chips-listen"><span class="chip chip--static"><b>Every Tuesday</b><small>8:00 PM</small></span></div>
+              <p class="visit-date" data-slot="date">Every Tuesday</p>
+              <p class="visit-what" data-slot="what">8:00 PM, the Tuesday net</p>
+              <p class="visit-note" data-slot="note"></p>
+              <ol class="timeline" aria-label="What happens on a net night">
+                <li data-when="gmrs" data-verify="true"><span class="tl-time">7:30 PM</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">The GMRS net first</p><p>On third Tuesdays, for county volunteers with GMRS licenses.</p></div></li>
+                <li><span class="tl-time">7:55 PM</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Tune in</p><p>Any radio or scanner that receives 147.300 MHz will do.</p></div></li>
+                <li><span class="tl-time">8:00 PM</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">The net opens</p><p>Net control (<span data-slot="nc">a member on the rota</span>) opens. Officials check in, then members.</p></div></li>
+                <li data-when="simplex" data-verify="true"><span class="tl-time">5th Tue</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Simplex first</p><p>The net starts radio to radio, then moves to W7GBU for traffic.</p></div></li>
+                <li class="tl-you"><span class="tl-time">Then</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Visitors: this is your cue</p><p>Licensed? Give your call sign slowly and phonetically, your name and location. Not licensed? Keep listening; it’s how everyone learns.</p></div></li>
+                <li data-when="winlink" data-verify="true"><span class="tl-time">2nd, 4th Tue</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">The Winlink assignment</p><p>The Winlink lead gives the assignment. Have paper and pencil ready.</p></div></li>
+                <li><span class="tl-time">Last</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Traffic, then the close</p><p>Listed traffic and late check-ins, then net control closes the net.</p></div></li>
+              </ol>
+            </div>
+            <aside class="glance" aria-labelledby="gl-listen">
+              <h4 id="gl-listen">At a glance</h4>
+              <dl>
+                <dt>How long</dt><dd>As long as you like. <span data-verify="true">The net starts at 8:00 PM and runs as long as check-ins last.</span></dd>
+                <dt>Where</dt><dd>From home, your car, anywhere you can hear the repeater.</dd>
+                <dt>What to bring</dt><dd>A radio or scanner that receives 147.300 MHz. Licensed? Your call sign.</dd>
+                <dt>License needed?</dt><dd>Not to listen. To check in on the air, a Technician license or higher.</dd>
+              </dl>
+              <div class="actions" data-status-scope>
+                <a class="btn btn--primary btn--small" data-ics="visit" href="https://spokaneares-acs.groups.io/g/main/calendar"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Add to calendar</a>
+                <a data-gcal href="https://calendar.google.com/calendar/" rel="noopener">Google Calendar</a>
+                <p class="status-msg" role="status"></p>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <!-- MEETING -->
+        <section class="visit-panel" id="visit-meeting" data-door="meeting" aria-labelledby="vp-meeting-h">
+          <h3 class="panel-title" id="vp-meeting-h">Come to a training meeting</h3>
+          <div class="visit-grid">
+            <div>
+              <p class="chips-label" id="chips-meeting">Pick a date</p>
+              <div class="chips" data-chips role="group" aria-labelledby="chips-meeting"><span class="chip chip--static" data-verify="true"><b>Third Thursdays</b><small>Evenings</small></span></div>
+              <p class="visit-date" data-slot="date">The third Thursday of the month</p>
+              <p class="visit-what" data-slot="what" data-verify="true">Third Thursday training meeting, evening</p>
+              <p class="visit-note" data-slot="note"></p>
+              <ol class="timeline" aria-label="What happens at a training meeting">
+                <li><span class="tl-time">Arrive</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Find the building</p><p>Spokane County Emergency Management, 1121 W Gardner Ave, next to the Spokane County Courthouse.</p></div></li>
+                <li><span class="tl-time">First</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">The training</p><p>The monthly training meeting. <span data-verify="true">Recent topics have included shelter training and go-kits.</span></p></div></li>
+                <li class="tl-you"><span class="tl-time">Then</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Meet the people you’d work beside</p><p>As the new-member orientation puts it, “An emergency is a poor time to be handing out business cards.”</p></div></li>
+                <li><span class="tl-time">Any time</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Ask about joining</p><p>Questions are welcome. Ready to join? Bring your ARES application.</p></div></li>
+              </ol>
+            </div>
+            <aside class="glance" aria-labelledby="gl-meeting">
+              <h4 id="gl-meeting">At a glance</h4>
+              <dl>
+                <dt>How long</dt><dd data-verify="true">An evening.</dd>
+                <dt>Where</dt><dd data-verify="true">Spokane County Emergency Management, 1121 W Gardner Ave, Spokane, next to the courthouse.</dd>
+                <dt>What to bring</dt><dd>Nothing. Ready to join? Bring your ARES application.</dd>
+                <dt>License needed?</dt><dd>No. Visitors are welcome.</dd>
+              </dl>
+              <div class="actions" data-status-scope>
+                <a class="btn btn--primary btn--small" data-ics="visit" href="https://spokaneares-acs.groups.io/g/main/calendar"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Add to calendar</a>
+                <a data-gcal href="https://calendar.google.com/calendar/" rel="noopener">Google Calendar</a>
+                <p class="status-msg" role="status"></p>
+              </div>
+              <figure class="map-frame">
+                <svg viewBox="0 0 400 250" role="img" aria-label="Drawn map: Spokane County Emergency Management is on the south side of W Gardner Ave, just east of N Jefferson St, with the Spokane County Courthouse directly south of it."><use href="#map-meet"/></svg>
+                <figcaption><span>Where we meet. Drawn, not to scale.</span><a href="https://www.google.com/maps/search/?api=1&amp;query=1121+W+Gardner+Ave+Spokane+WA+99260" rel="noopener">Get directions<span class="sr-only"> (opens Google Maps)</span></a></figcaption>
+              </figure>
+            </aside>
+          </div>
+        </section>
+
+        <!-- WORKSHOP -->
+        <section class="visit-panel" id="visit-workshop" data-door="workshop" aria-labelledby="vp-workshop-h">
+          <h3 class="panel-title" id="vp-workshop-h">Drop into a workshop</h3>
+          <div class="visit-grid">
+            <div>
+              <p class="chips-label" id="chips-workshop">Pick a date</p>
+              <div class="chips" data-chips role="group" aria-labelledby="chips-workshop"><span class="chip chip--static"><b>Second Saturdays</b><small>9:00 AM to noon</small></span></div>
+              <p class="visit-date" data-slot="date">The second Saturday of the month</p>
+              <p class="visit-what" data-slot="what">9:00 AM to noon, Second Saturday Workshop</p>
+              <p class="visit-note" data-slot="note"></p>
+              <ol class="timeline" aria-label="What happens at a workshop">
+                <li><span class="tl-time">9:00 AM</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">The workshop starts</p><p>Hands-on skills: radios, digital modes, power, mobile installs and more.</p></div></li>
+                <li class="tl-you"><span class="tl-time">Morning</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Build, program, test</p><p>Past workshops have covered digital-mode setups, emergency power, mobile installs and cross-band repeating.</p></div></li>
+                <li><span class="tl-time">Noon</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Wrap up</p><p>Three hours in all. Bring questions about gear; this is the place to ask.</p></div></li>
+                <li data-verify="true"><span class="tl-time">12:30 PM</span><span class="tl-mark" aria-hidden="true"></span><div class="tl-body"><p class="tl-head">Winlink workshop, if you like</p><p>Help getting Winlink (email over radio) set up and working, until 3:30 PM. Open to everyone.</p></div></li>
+              </ol>
+            </div>
+            <aside class="glance" aria-labelledby="gl-workshop">
+              <h4 id="gl-workshop">At a glance</h4>
+              <dl>
+                <dt>How long</dt><dd>Three hours, 9:00 AM to noon. <span data-verify="true">The Winlink workshop runs 12:30 to 3:30 PM.</span></dd>
+                <dt>Where</dt><dd data-verify="true">Spokane County Emergency Management, 1121 W Gardner Ave, Spokane, next to the courthouse.</dd>
+                <dt>What to bring</dt><dd>Your radio, if you have one, and your questions.</dd>
+                <dt>License needed?</dt><dd>No. Hands-on help is the point.</dd>
+              </dl>
+              <div class="actions" data-status-scope>
+                <a class="btn btn--primary btn--small" data-ics="visit" href="https://spokaneares-acs.groups.io/g/main/calendar"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Add to calendar</a>
+                <a data-gcal href="https://calendar.google.com/calendar/" rel="noopener">Google Calendar</a>
+                <p class="status-msg" role="status"></p>
+              </div>
+              <figure class="map-frame">
+                <svg viewBox="0 0 400 250" role="img" aria-label="Drawn map: Spokane County Emergency Management is on the south side of W Gardner Ave, just east of N Jefferson St, with the Spokane County Courthouse directly south of it."><use href="#map-meet"/></svg>
+                <figcaption><span>Where we meet. Drawn, not to scale.</span><a href="https://www.google.com/maps/search/?api=1&amp;query=1121+W+Gardner+Ave+Spokane+WA+99260" rel="noopener">Get directions<span class="sr-only"> (opens Google Maps)</span></a></figcaption>
+              </figure>
+            </aside>
+          </div>
+        </section>
+
+        <!-- TELL US YOU'RE COMING: the site's single form.
+             Form service: set action to the provider endpoint (Formspree, Basin, Netlify Forms;
+             or WPForms / Gravity Forms in WordPress) that e-mails the membership role address.
+             The site stores nothing. Keep the honeypot field and the provider's spam filter. -->
+        <div class="visit-rsvp">
+          <details class="rsvp" id="rsvp">
+            <summary><span class="rsvp-title">Tell us you’re coming</span><span class="rsvp-note">Optional. It lets us say hello by name.</span><svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary>
+            <div class="rsvp-body">
+              <form class="rsvp-form" data-widget="rsvp" action="#rsvp" method="post">
+                <div class="field"><label for="f-name">Name</label><input id="f-name" name="name" autocomplete="name" required></div>
+                <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
+                <div class="field"><label for="f-call">Call sign <small>(optional)</small></label><input id="f-call" name="call" autocapitalize="characters" spellcheck="false"></div>
+                <div class="field span-2"><label for="f-visit">Which visit</label>
+                  <select id="f-visit" name="visit">
+                    <option value="listen">Listen to the Tuesday net</option>
+                    <option value="meeting">Third Thursday training meeting</option>
+                    <option value="workshop">Second Saturday Workshop</option>
+                  </select></div>
+                <div class="field"><label for="f-route">Where are you on the route?</label>
+                  <select id="f-route" name="route">
+                    <option>Just curious</option>
+                    <option>Studying for my license</option>
+                    <option>Licensed, not a member yet</option>
+                    <option>ARES member, thinking about ACS</option>
+                  </select></div>
+                <div class="honeypot" aria-hidden="true"><label for="f-website">Leave this empty</label><input id="f-website" name="website" tabindex="-1" autocomplete="off"></div>
+                <div class="form-actions">
+                  <button class="btn btn--pine" type="submit">Send to the team</button>
+                  <p class="rsvp-fine" data-verify="true">We use this only to say hello. Nothing is stored on this website; a form service sends it to the membership role address.</p>
+                  <p class="form-error" role="alert"></p>
+                </div>
+              </form>
+              <div data-form-done aria-live="polite"></div>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================== WHAT WE DO -->
+<section class="section section--white" id="what-we-do" aria-labelledby="wwd-h">
+  <div class="wrap">
+    <div class="section-head section-head--row">
+      <div>
+        <h2 id="wwd-h">What we do</h2>
+        <p>One team of licensed amateur radio (“ham”) operators, ready when phones, power or the internet can’t be counted on, and busy the rest of the year.</p>
+      </div>
+      <a class="btn btn--outline" href="how-it-works.html">See how it works</a>
+    </div>
+    <ul class="work-grid">
+      <li class="work-item">
+        <div class="media photo-frame"><img src="assets/img/Operating-in-VAN_4.jpg" width="640" height="480" loading="lazy" data-verify="true" alt="Volunteers in headsets operate radios at desks inside a communications trailer."></div>
+        <h3>The county’s radio room and trailer</h3>
+        <p>When the county activates us, members staff its radio room and communications trailer and pass messages where normal links are down.</p>
+        <a class="link-action" href="how-it-works.html#activation">How activation works</a>
+      </li>
+      <li class="work-item">
+        <div class="media art" role="img" aria-label="Illustration: a hospital building with a radio antenna on its roof and a backup power box beside it.">
+          <svg viewBox="0 0 320 240" aria-hidden="true" fill="none" stroke="#2F4E7E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M28 204H292" stroke="#B9C7DB"/>
+            <rect x="78" y="92" width="150" height="112" rx="3" fill="#FFFFFF"/>
+            <path d="M70 92H236"/>
+            <rect x="136" y="104" width="34" height="34" rx="4" fill="#E4EFEA" stroke="#2E5B4F"/>
+            <path d="M153 111V131M143 121H163" stroke="#2E5B4F" stroke-width="4"/>
+            <g stroke="#9FB2CC" stroke-width="2"><rect x="94" y="110" width="22" height="16" rx="2"/><rect x="190" y="110" width="22" height="16" rx="2"/><rect x="94" y="146" width="22" height="16" rx="2"/><rect x="190" y="146" width="22" height="16" rx="2"/><rect x="132" y="150" width="42" height="12" rx="2"/></g>
+            <path d="M140 204V176H166V204"/>
+            <path d="M212 92V38M204 60H220M206 50H218"/>
+            <path d="M226 44a14 14 0 0 1 0 20M234 36a26 26 0 0 1 0 36M242 28a38 38 0 0 1 0 52" stroke="#2E5B4F"/>
+            <rect x="244" y="170" width="40" height="34" rx="4" fill="#FFFFFF"/>
+            <path d="M266 176l-7 13h8l-6 11" stroke="#2E5B4F"/>
+            <path d="M228 188H244" stroke-dasharray="4 4"/>
+          </svg>
+        </div>
+        <h3>Hospitals</h3>
+        <p>A hospital team helps keep backup radio and computer equipment in place and working at Greater Spokane area hospitals.</p>
+        <a class="link-action" href="how-it-works.html#where-we-work">Where we work</a>
+      </li>
+      <li class="work-item">
+        <div class="media photo-needed">
+          <svg class="icon" aria-hidden="true"><use href="#i-camera"/></svg>
+          <p><b>PHOTO NEEDED</b>Volunteers at a Bloomsday aid station, wide, landscape</p>
+        </div>
+        <h3>Community events</h3>
+        <p>Primary or backup communications for Bloomsday, the Lilac Festival Armed Forces Torchlight Parade, fun runs and bike races.</p>
+        <a class="link-action" href="how-it-works.html#public-service">Public-service events</a>
+      </li>
+      <li class="work-item">
+        <div class="media photo-frame"><img src="assets/img/IMG_6574-2000w.jpg" width="2000" height="1500" loading="lazy" data-verify="true" style="object-position:55% 70%" alt="A portable emergency radio station on a pickup tailgate at a mountain overlook: radios in a rack case, a laptop and a binder of forms."></div>
+        <h3>Weather and Winlink</h3>
+        <p>Many members are trained SKYWARN spotters for the National Weather Service in Spokane. <button type="button" class="term" aria-expanded="false" aria-controls="t-winlink">Winlink</button><span class="term-def" id="t-winlink" role="note"><b>Winlink</b>Email by radio: messages and forms sent over the air, with or without the internet.</span> sends email-style messages by radio, through the group’s own W7GBU-10 gateway.</p>
+        <a class="link-action" href="how-it-works.html#winlink">How a message moves</a>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================== PARTNERS + WHO WE SERVE -->
+<section class="section section--cloud" id="who-we-serve" aria-labelledby="serve-h">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="serve-h">Training with partners this fall</h2>
+      <p>Exercises with the agencies we back up, on the calendar now.</p>
+    </div>
+    <!-- Rendered from data.js (data-widget="partners"); fallback matches data.js as of 2026-09-26 -->
+    <ul class="partners" data-widget="partners">
+      <li><time class="when" datetime="2026-09-26">Sep 26–27</time><span class="what">ARES-ACS and WSDOT exercise</span><span class="with">With the Washington State Department of Transportation</span></li>
+      <li><time class="when" datetime="2026-10-03">Oct 3</time><span class="what">Simulated Emergency Test</span><span class="with">The ARRL’s national exercise</span></li>
+      <li><time class="when" datetime="2026-10-15">Oct 15</time><span class="what">Great ShakeOut</span><span class="with">A USGS “Did You Feel It?” report by Winlink</span></li>
+      <li data-verify="true"><time class="when" datetime="2026-10-24">Oct 24</time><span class="what">State COMMEX</span><span class="with">Washington’s statewide communications exercise</span></li>
+      <li data-verify="true"><time class="when" datetime="2026-12-04">Dec 4–5</time><span class="what">SKYWARN Recognition Day</span><span class="with">A station at the National Weather Service office in Spokane</span></li>
+    </ul>
+
+    <div class="served-wrap">
+      <div>
+        <h3>Who we serve</h3>
+        <div class="served-lead" style="margin-top:14px">
+          <img src="assets/img/SCDEM_Logo-600.png" width="76" height="76" alt="Spokane County Emergency Management seal">
+          <p><b>Spokane County Emergency Management</b> is our primary served agency. It activates ACS members and runs the county application, background check and ID cards.</p>
+        </div>
+        <ul class="served-list">
+          <li><b>National Weather Service, Spokane</b>SKYWARN weather spotting and severe-weather nets.</li>
+          <li><b>Greater Spokane area hospitals</b>Backup radio and computer equipment kept ready.</li>
+          <li><b>American Red Cross</b>Service under the national ARRL–Red Cross agreement.</li>
+          <li><b>Community event organizers</b>Bloomsday, the Torchlight Parade, fun runs and bike races.</li>
+        </ul>
+        <p class="affil-line">We’re an ARRL Amateur Radio Emergency Service group, and we share a backup repeater and packet paths with the Inland Empire VHF Radio Amateurs under a written agreement.</p>
+      </div>
+      <aside class="agency-door" id="agencies" aria-labelledby="agency-h">
+        <h3 id="agency-h">Represent an agency or an event?</h3>
+        <p>Government agencies request amateur radio support through Spokane County Emergency Management, which activates the team. Event organizers can reach our public-events coordinator.</p>
+        <p class="scope">We’re an auxiliary support function. Our members are volunteers, not first responders.</p>
+        <div class="actions">
+          <a class="btn btn--pine" href="about.html#contact">Contact the emergency coordinator</a>
+          <a class="link-action" href="how-it-works.html#activation">How activation works</a>
+          <a class="link-action" href="about.html#for-agencies">Our agreements</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="assets/img/seal-ares-acs-400.png" alt="" width="60" height="60">
+        <div>
+          <span class="footer-name">Spokane County ARES-ACS</span>
+          <p>Volunteer amateur radio emergency communications for Spokane County. Formerly Spokane County ARES/RACES.</p>
+          <address>Spokane County Emergency Management<br>1121 W Gardner Ave, Spokane, WA 99260</address>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h2>New to radio</h2>
+        <ul>
+          <li><a href="how-it-works.html">How it works</a></li>
+          <li><a href="about.html">About ARES &amp; ACS</a></li>
+          <li><a href="about.html#licensing">Get licensed</a></li>
+          <li><a href="index.html#visit">Visit a meeting</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Licensed hams</h2>
+        <ul>
+          <li><a href="index.html#join">Join the team</a></li>
+          <li><a href="index.html#visit-listen">Listen on Tuesday night</a></li>
+          <li><a href="members/documents.html#ares-application">The ARES application</a></li>
+          <li><a href="about.html#training-path">The training path</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Members</h2>
+        <ul>
+          <li><a href="members/index.html">For Members (this week)</a></li>
+          <li><a href="members/documents.html">Documents &amp; downloads</a></li>
+          <li><a href="members/exercises.html">Exercises &amp; events</a></li>
+          <li><a href="members/documents.html#forms">Forms</a></li>
+          <li><a href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io (members)<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io)</span></a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Agency partners</h2>
+        <ul>
+          <li><a href="about.html#who-we-serve">Who we serve</a></li>
+          <li><a href="about.html#for-agencies">For agencies and partners</a></li>
+          <li><a href="about.html#agreements">Agreements</a></li>
+          <li><a href="how-it-works.html#activation">How activation works</a></li>
+          <li><a href="about.html#contact">Contact the emergency coordinator</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-affil">
+      <div class="marks">
+        <img src="assets/img/ARES_logo.png" alt="ARRL Amateur Radio Emergency Service emblem" width="44" height="44">
+        <img src="assets/img/ACS_logo-500.png" alt="Spokane Auxiliary Communications (ACS) seal" width="44" height="44">
+        <img src="assets/img/SCDEM_Logo-600.png" alt="Spokane County Emergency Management seal" width="44" height="44">
+      </div>
+      <p>An ARRL Amateur Radio Emergency Service group, serving Spokane County Emergency Management.</p>
+    </div>
+    <div class="footer-fine">
+      <p data-verify="true">A volunteer group, not an emergency service. In an emergency, call 911.</p>
+      <p class="fine-links"><a href="#">Privacy</a><span>© Spokane County ARES-ACS</span></p>
+      <p class="mockup-note">Mockup — content to be verified before launch</p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

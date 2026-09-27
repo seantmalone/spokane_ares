@@ -1,0 +1,36 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "spokares/meetings",
+	"title": "Meetings",
+	"category": "spokares",
+	"icon": "groups",
+	"description": "Regular meetings with their next dates, cancellations and moves. Edit them in Regular meetings.",
+	"textdomain": "spokares-core",
+	"attributes": {
+		"view": {
+			"type": "string",
+			"default": "home",
+			"enum": [
+				"home",
+				"next"
+			],
+			"label": "What to show"
+		},
+		"meeting": {
+			"type": "string",
+			"default": "",
+			"label": "Meeting id (blank: the soonest Home meeting)"
+		}
+	},
+	"supports": {
+		"autoRegister": true,
+		"html": false,
+		"reusable": false,
+		"className": true
+	},
+	"usesContext": [
+		"postId"
+	],
+	"render": "file:./render.php"
+}

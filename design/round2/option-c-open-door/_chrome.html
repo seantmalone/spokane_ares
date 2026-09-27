@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+<title>Chrome reference | Spokane County ARES-ACS</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/img/seal-ares-acs-400.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  .ref pre { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; overflow-x: auto; font-size: .8125rem; line-height: 1.5; white-space: pre; }
+  .ref h2 { margin-top: 40px; }
+  .ref h2:first-child { margin-top: 0; }
+  .ref p, .ref li { max-width: 70ch; }
+  .ref ul { padding-left: 1.2em; }
+  .preview-label { font-size: .875rem; color: var(--ink-2); padding: 8px var(--gutter); background: var(--dusk-mist); }
+</style>
+</head>
+<body data-root="">
+<!--
+=============================================================================
+ _chrome.html — canonical chrome for Option C "Open Channel"
+ COPY VERBATIM. Builders change only: the aria-current attributes, <title>,
+ <meta description>, and (members pages) the ../ prefixes shown in the
+ <template> blocks below. Everything else is shared on every page.
+
+ ACTIVE STATE (no classes, attributes only):
+   Primary nav   aria-current="page" on the current page's .nav-link:
+                   index.html -> Home, how-it-works.html -> How it works,
+                   about.html -> About ARES & ACS.
+                 On ALL members/*.html pages: For Members gets
+                   aria-current="true" (a section parent, not the page itself);
+                   on members/index.html use aria-current="page".
+   Members menu  aria-current="page" on the current .pill in the sub-nav
+                   (Overview / Exercises & events / Documents & downloads).
+                   Styling reads the attribute; do not add .active classes.
+ PATHS: top-level pages use "index.html", "assets/…". members/*.html use
+   "../index.html", "../assets/…" for top-level things and bare
+   "index.html", "documents.html", "exercises.html" inside the members menu.
+ <body data-root="">  top level;  <body data-root="../">  members pages.
+=============================================================================
+-->
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ======================= ICON SPRITE (copy verbatim into every page) ======================= -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4.5" height="7" rx="1.5"/><rect x="16.5" y="14" width="4.5" height="7" rx="1.5"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15.6 14.3A5 5 0 0 1 21 19"/></symbol>
+  <symbol id="i-tools" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></symbol>
+  <symbol id="i-door" viewBox="0 0 24 24"><path d="M6 21V4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5V21"/><path d="M3 21h18"/><circle cx="14.5" cy="12.5" r="1" fill="currentColor"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-radio" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="14" rx="2"/><path d="M9.5 7V2.5M10 11h4M10 14h4"/><circle cx="12" cy="17.6" r=".7" fill="currentColor"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-form" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2.8h6V4M8.5 10h7M8.5 14h7M8.5 18h4"/></symbol>
+  <symbol id="i-hospital" viewBox="0 0 24 24"><path d="M4 21V8l8-4 8 4v13M2.5 21h19M12 9v6M9 12h6"/></symbol>
+  <symbol id="i-weather" viewBox="0 0 24 24"><path d="M7 17a4.5 4.5 0 1 1 1-8.9A5.5 5.5 0 0 1 18.5 10 3.5 3.5 0 0 1 18 17"/><path d="M12.5 13l-2 4h3l-2 4"/></symbol>
+  <symbol id="i-antenna" viewBox="0 0 24 24"><path d="M12 10v11M8 21l4-11 4 11"/><circle cx="12" cy="8" r="1.5"/><path d="M8.5 4.5a5 5 0 0 0 0 7M15.5 4.5a5 5 0 0 1 0 7"/></symbol>
+  <symbol id="i-trailer" viewBox="0 0 24 24"><rect x="2.5" y="6" width="15" height="10" rx="1.5"/><path d="M17.5 13h4M10 6V3.5"/><circle cx="7" cy="17.5" r="1.8"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5z"/><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H20"/></symbol>
+  <symbol id="i-kit" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M12 11v5M9.5 13.5h5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></symbol>
+  <symbol id="i-message" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol>
+  <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 12h3l2-5 3 10 3-12 3 12 2-5h4"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></symbol>
+  <!-- Drawn locator for "Where we meet" (not a Google capture). Use: <svg viewBox="0 0 400 250" role="img" aria-label="…"><use href="#map-meet"/></svg> -->
+  <symbol id="map-meet" viewBox="0 0 400 250">
+    <rect width="400" height="250" fill="#E8EEF6"/>
+    <g stroke="#D0DAE7" stroke-width="19" fill="none">
+      <path d="M0 36H400M0 104H400M0 212H400M58 0V250M176 104V250M370 0V250"/>
+    </g>
+    <g stroke="#FFFFFF" stroke-width="15" fill="none">
+      <path d="M0 36H400M0 104H400M0 212H400M58 0V250M176 104V250M370 0V250"/>
+    </g>
+    <rect x="190" y="175" width="164" height="28" rx="3" fill="#FFFFFF" stroke="#B9C7DB" stroke-width="1.5"/>
+    <text x="272" y="193.5" text-anchor="middle" font-family="Atkinson Hyperlegible, Verdana, sans-serif" font-size="11.5" fill="#465163">Spokane County Courthouse</text>
+    <rect x="193" y="121" width="78" height="42" rx="3" fill="#E4EFEA" stroke="#2E5B4F" stroke-width="2"/>
+    <g font-family="Atkinson Hyperlegible, Verdana, sans-serif" font-size="12.5" fill="#465163">
+      <text x="248" y="40.5">W Boone Ave</text>
+      <text x="72" y="108.5" font-weight="700" fill="#1B2433">W Gardner Ave</text>
+      <text x="248" y="216.5">W Mallon Ave</text>
+      <text transform="translate(180.5 204) rotate(-90)" font-weight="700" fill="#1B2433">N Jefferson St</text>
+      <text transform="translate(62.5 196) rotate(-90)">N Adams St</text>
+      <text transform="translate(374.5 196) rotate(-90)">N Monroe St</text>
+    </g>
+    <g font-family="Atkinson Hyperlegible, Verdana, sans-serif">
+      <text x="196" y="60" font-size="13" font-weight="700" fill="#1E3557">Spokane County</text>
+      <text x="196" y="75" font-size="13" font-weight="700" fill="#1E3557">Emergency Management</text>
+      <text x="196" y="90" font-size="12" fill="#465163">1121 W Gardner Ave</text>
+    </g>
+    <path d="M232 94V112" stroke="#2F4E7E" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <g transform="translate(232 141)">
+      <path d="M0 0C-3 -6-11 -12-11 -21A11 11 0 0 1 11 -21C11 -12 3 -6 0 0Z" fill="#2F4E7E"/>
+      <circle cx="0" cy="-21" r="4" fill="#FFFFFF"/>
+    </g>
+    <g transform="translate(26 158)" font-family="Atkinson Hyperlegible, Verdana, sans-serif">
+      <circle r="13" fill="#FFFFFF" stroke="#B9C7DB" stroke-width="1.5"/>
+      <path d="M0 -8L4.5 4 0 1.5-4.5 4Z" fill="#1E3557"/>
+      <text y="28" text-anchor="middle" font-size="11" fill="#465163">N</text>
+    </g>
+  </symbol>
+</svg>
+<!-- ======================= /ICON SPRITE ======================= -->
+
+<!-- ======================= HEADER, top-level pages (shown here with Home current) ======================= -->
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="index.html" aria-label="Spokane County ARES-ACS, home">
+      <img src="assets/img/seal-ares-acs-400.png" alt="" width="50" height="50">
+      <span class="brand-text"><span class="brand-county">Spokane County</span><span class="brand-name">ARES-ACS</span></span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <ul class="nav-list">
+        <li><a class="nav-link" href="index.html" aria-current="page">Home</a></li>
+        <li><a class="nav-link" href="how-it-works.html">How it works</a></li>
+        <li><a class="nav-link" href="about.html">About ARES &amp; ACS</a></li>
+        <li><a class="nav-link" href="members/index.html">For Members</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn--join header-join" href="index.html#join">Join the team</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <svg class="icon icon-open" aria-hidden="true"><use href="#i-menu"/></svg>
+      <svg class="icon icon-close" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
+  </div>
+</header>
+<!-- ======================= /HEADER ======================= -->
+
+<main id="main">
+  <p class="preview-label">Preview of the members sub-nav (as on members/documents.html). Its links are members-relative, so they only work from members/*.html.</p>
+  <!-- ======================= MEMBERS SUB-NAV (members/*.html only; directly after </header>) ======================= -->
+<nav class="pillbar subnav" aria-label="Members" data-widget="subnav">
+  <div class="wrap">
+    <details class="subnav-details" open>
+      <summary class="subnav-summary"><span class="subnav-summary-label">Members menu</span><span class="sr-only">, current page:</span> <span class="current">Documents &amp; downloads</span><svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary>
+      <div class="subnav-inner">
+        <ul class="subnav-list">
+          <li><a class="pill" href="index.html">Overview (this week)</a></li>
+          <li class="subnav-group"><span class="subnav-label" aria-hidden="true">Operate</span><ul aria-label="Operate">
+              <li><a class="pill" href="#">Nets &amp; net control</a></li>
+              <li><a class="pill" href="#">Winlink &amp; digital</a></li>
+              <li><a class="pill" href="#">Repeaters &amp; programming</a></li>
+            </ul>
+          </li>
+          <li class="subnav-group"><span class="subnav-label" aria-hidden="true">Prepare</span><ul aria-label="Prepare">
+              <li><a class="pill" href="exercises.html">Exercises &amp; events</a></li>
+              <li><a class="pill" href="#">Training &amp; task books</a></li>
+              <li><a class="pill" href="#">Go-kits &amp; readiness</a></li>
+            </ul>
+          </li>
+          <li class="subnav-group"><span class="subnav-label" aria-hidden="true">Reference</span><ul aria-label="Reference">
+              <li><a class="pill" href="documents.html" aria-current="page">Documents &amp; downloads</a></li>
+              <li><a class="pill" href="documents.html#forms">Forms</a></li>
+              <li><a class="pill" href="#">Contacts &amp; roles</a></li>
+            </ul>
+          </li>
+          <li><a class="pill pill--ext" href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io, members only)</span></a></li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</nav>
+  <!-- ======================= /MEMBERS SUB-NAV ======================= -->
+
+  <div class="wrap section ref">
+    <h1>Chrome reference</h1>
+    <p class="lede" style="margin-top:12px">The header, members sub-nav and footer that every Option C page shares. View source and copy the marked blocks. The members-page versions (with <code>../</code> paths) are in the <code>&lt;template&gt;</code> blocks at the end of this file.</p>
+
+    <h2>Page skeleton</h2>
+    <pre>&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot; class=&quot;no-js&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;script&gt;document.documentElement.className = document.documentElement.className.replace(&#x27;no-js&#x27;, &#x27;js&#x27;);&lt;/script&gt;
+&lt;title&gt;How it works | Spokane County ARES-ACS&lt;/title&gt;
+&lt;meta name=&quot;description&quot; content=&quot;…from the page&#x27;s content file…&quot;&gt;
+&lt;meta name=&quot;theme-color&quot; content=&quot;#1E3557&quot;&gt;
+&lt;link rel=&quot;icon&quot; href=&quot;assets/img/seal-ares-acs-400.png&quot;&gt;
+&lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.googleapis.com&quot;&gt;
+&lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.gstatic.com&quot; crossorigin&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&amp;amp;family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&amp;amp;display=swap&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;assets/site.css&quot;&gt;
+&lt;style&gt;/* small page-scoped tweaks only */&lt;/style&gt;
+&lt;/head&gt;
+&lt;body data-root=&quot;&quot;&gt;            &lt;!-- members/*.html: data-root=&quot;../&quot; and every assets/ path gains ../ --&gt;
+&lt;a class=&quot;skip-link&quot; href=&quot;#main&quot;&gt;Skip to main content&lt;/a&gt;
+&lt;!-- ICON SPRITE: paste the whole &lt;svg width=&quot;0&quot; …&gt; block from this file here --&gt;
+&lt;!-- HEADER --&gt;
+&lt;main id=&quot;main&quot;&gt; … &lt;/main&gt;
+&lt;!-- FOOTER --&gt;
+&lt;script src=&quot;assets/data.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;assets/site.js&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+
+    <h2>Active states</h2>
+    <ul>
+      <li>Primary nav: <code>aria-current="page"</code> on the current page's link. On every <code>members/*.html</code> page, <b>For Members</b> carries <code>aria-current="true"</code> (use <code>"page"</code> on <code>members/index.html</code>).</li>
+      <li>Members sub-nav: <code>aria-current="page"</code> on the current pill, and the same name in the summary's <code>.current</code> (below 1280px the menu is a "Members menu: &lt;current page&gt;" disclosure). Non-mocked sub-sections link to <code>#</code> and look identical.</li>
+      <li>About TOC and the How it works chip bar set <code>aria-current="true"</code> themselves (site.js scroll-spy). Don't hard-code it.</li>
+      <li>No <code>.active</code> or <code>.is-active</code> classes anywhere: CSS reads the attributes.</li>
+    </ul>
+
+    <h2>Rules</h2>
+    <ul>
+      <li>The header is not sticky. The page's local nav sticks instead (members sub-nav, About TOC, How it works chip bar), always at <code>top: 0</code>.</li>
+      <li>"Join the team" is the only filled button in the header and the only use of seal red on the site. It always points to <code>index.html#join</code> (<code>../index.html#join</code> from members).</li>
+      <li>The footer is identical on every page, including the single line "Mockup — content to be verified before launch". Do not add review chips anywhere else.</li>
+      <li>about.html must contain <code>id="for-agencies"</code> (the "For agencies and partners" section): the Home audience row and the footer link to it.</li>
+    </ul>
+  </div>
+</main>
+
+<!-- ======================= FOOTER, top-level pages ======================= -->
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="assets/img/seal-ares-acs-400.png" alt="" width="60" height="60">
+        <div>
+          <span class="footer-name">Spokane County ARES-ACS</span>
+          <p>Volunteer amateur radio emergency communications for Spokane County. Formerly Spokane County ARES/RACES.</p>
+          <address>Spokane County Emergency Management<br>1121 W Gardner Ave, Spokane, WA 99260</address>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h2>New to radio</h2>
+        <ul>
+          <li><a href="how-it-works.html">How it works</a></li>
+          <li><a href="about.html">About ARES &amp; ACS</a></li>
+          <li><a href="about.html#licensing">Get licensed</a></li>
+          <li><a href="index.html#visit">Visit a meeting</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Licensed hams</h2>
+        <ul>
+          <li><a href="index.html#join">Join the team</a></li>
+          <li><a href="index.html#visit-listen">Listen on Tuesday night</a></li>
+          <li><a href="members/documents.html#ares-application">The ARES application</a></li>
+          <li><a href="about.html#training-path">The training path</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Members</h2>
+        <ul>
+          <li><a href="members/index.html">For Members (this week)</a></li>
+          <li><a href="members/documents.html">Documents &amp; downloads</a></li>
+          <li><a href="members/exercises.html">Exercises &amp; events</a></li>
+          <li><a href="members/documents.html#forms">Forms</a></li>
+          <li><a href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io (members)<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io)</span></a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Agency partners</h2>
+        <ul>
+          <li><a href="about.html#who-we-serve">Who we serve</a></li>
+          <li><a href="about.html#for-agencies">For agencies and partners</a></li>
+          <li><a href="about.html#agreements">Agreements</a></li>
+          <li><a href="how-it-works.html#activation">How activation works</a></li>
+          <li><a href="about.html#contact">Contact the emergency coordinator</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-affil">
+      <div class="marks">
+        <img src="assets/img/ARES_logo.png" alt="ARRL Amateur Radio Emergency Service emblem" width="44" height="44">
+        <img src="assets/img/ACS_logo-500.png" alt="Spokane Auxiliary Communications (ACS) seal" width="44" height="44">
+        <img src="assets/img/SCDEM_Logo-600.png" alt="Spokane County Emergency Management seal" width="44" height="44">
+      </div>
+      <p>An ARRL Amateur Radio Emergency Service group, serving Spokane County Emergency Management.</p>
+    </div>
+    <div class="footer-fine">
+      <p data-verify="true">A volunteer group, not an emergency service. In an emergency, call 911.</p>
+      <p class="fine-links"><a href="#">Privacy</a><span>© Spokane County ARES-ACS</span></p>
+      <p class="mockup-note">Mockup — content to be verified before launch</p>
+    </div>
+  </div>
+</footer>
+<!-- ======================= /FOOTER ======================= -->
+
+<!-- ======================= MEMBERS-PAGE VERSIONS (copy from here for members/*.html) ======================= -->
+<template id="tpl-members-header">
+<!-- members/index.html: change aria-current="true" to "page" on For Members -->
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="../index.html" aria-label="Spokane County ARES-ACS, home">
+      <img src="../assets/img/seal-ares-acs-400.png" alt="" width="50" height="50">
+      <span class="brand-text"><span class="brand-county">Spokane County</span><span class="brand-name">ARES-ACS</span></span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <ul class="nav-list">
+        <li><a class="nav-link" href="../index.html">Home</a></li>
+        <li><a class="nav-link" href="../how-it-works.html">How it works</a></li>
+        <li><a class="nav-link" href="../about.html">About ARES &amp; ACS</a></li>
+        <li><a class="nav-link" href="../members/index.html" aria-current="true">For Members</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn--join header-join" href="../index.html#join">Join the team</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <svg class="icon icon-open" aria-hidden="true"><use href="#i-menu"/></svg>
+      <svg class="icon icon-close" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
+  </div>
+</header>
+<nav class="pillbar subnav" aria-label="Members" data-widget="subnav">
+  <div class="wrap">
+    <details class="subnav-details" open>
+      <summary class="subnav-summary"><span class="subnav-summary-label">Members menu</span><span class="sr-only">, current page:</span> <span class="current">Overview (this week)</span><svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></summary>
+      <div class="subnav-inner">
+        <ul class="subnav-list">
+          <li><a class="pill" href="index.html" aria-current="page">Overview (this week)</a></li>
+          <li class="subnav-group"><span class="subnav-label" aria-hidden="true">Operate</span><ul aria-label="Operate">
+              <li><a class="pill" href="#">Nets &amp; net control</a></li>
+              <li><a class="pill" href="#">Winlink &amp; digital</a></li>
+              <li><a class="pill" href="#">Repeaters &amp; programming</a></li>
+            </ul>
+          </li>
+          <li class="subnav-group"><span class="subnav-label" aria-hidden="true">Prepare</span><ul aria-label="Prepare">
+              <li><a class="pill" href="exercises.html">Exercises &amp; events</a></li>
+              <li><a class="pill" href="#">Training &amp; task books</a></li>
+              <li><a class="pill" href="#">Go-kits &amp; readiness</a></li>
+            </ul>
+          </li>
+          <li class="subnav-group"><span class="subnav-label" aria-hidden="true">Reference</span><ul aria-label="Reference">
+              <li><a class="pill" href="documents.html">Documents &amp; downloads</a></li>
+              <li><a class="pill" href="documents.html#forms">Forms</a></li>
+              <li><a class="pill" href="#">Contacts &amp; roles</a></li>
+            </ul>
+          </li>
+          <li><a class="pill pill--ext" href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io, members only)</span></a></li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</nav>
+</template>
+
+<template id="tpl-members-footer">
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="../assets/img/seal-ares-acs-400.png" alt="" width="60" height="60">
+        <div>
+          <span class="footer-name">Spokane County ARES-ACS</span>
+          <p>Volunteer amateur radio emergency communications for Spokane County. Formerly Spokane County ARES/RACES.</p>
+          <address>Spokane County Emergency Management<br>1121 W Gardner Ave, Spokane, WA 99260</address>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h2>New to radio</h2>
+        <ul>
+          <li><a href="../how-it-works.html">How it works</a></li>
+          <li><a href="../about.html">About ARES &amp; ACS</a></li>
+          <li><a href="../about.html#licensing">Get licensed</a></li>
+          <li><a href="../index.html#visit">Visit a meeting</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Licensed hams</h2>
+        <ul>
+          <li><a href="../index.html#join">Join the team</a></li>
+          <li><a href="../index.html#visit-listen">Listen on Tuesday night</a></li>
+          <li><a href="../members/documents.html#ares-application">The ARES application</a></li>
+          <li><a href="../about.html#training-path">The training path</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Members</h2>
+        <ul>
+          <li><a href="../members/index.html">For Members (this week)</a></li>
+          <li><a href="../members/documents.html">Documents &amp; downloads</a></li>
+          <li><a href="../members/exercises.html">Exercises &amp; events</a></li>
+          <li><a href="../members/documents.html#forms">Forms</a></li>
+          <li><a href="https://spokaneares-acs.groups.io/g/main" rel="noopener">groups.io (members)<svg class="icon ext" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only"> (opens groups.io)</span></a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h2>Agency partners</h2>
+        <ul>
+          <li><a href="../about.html#who-we-serve">Who we serve</a></li>
+          <li><a href="../about.html#for-agencies">For agencies and partners</a></li>
+          <li><a href="../about.html#agreements">Agreements</a></li>
+          <li><a href="../how-it-works.html#activation">How activation works</a></li>
+          <li><a href="../about.html#contact">Contact the emergency coordinator</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-affil">
+      <div class="marks">
+        <img src="../assets/img/ARES_logo.png" alt="ARRL Amateur Radio Emergency Service emblem" width="44" height="44">
+        <img src="../assets/img/ACS_logo-500.png" alt="Spokane Auxiliary Communications (ACS) seal" width="44" height="44">
+        <img src="../assets/img/SCDEM_Logo-600.png" alt="Spokane County Emergency Management seal" width="44" height="44">
+      </div>
+      <p>An ARRL Amateur Radio Emergency Service group, serving Spokane County Emergency Management.</p>
+    </div>
+    <div class="footer-fine">
+      <p data-verify="true">A volunteer group, not an emergency service. In an emergency, call 911.</p>
+      <p class="fine-links"><a href="#">Privacy</a><span>© Spokane County ARES-ACS</span></p>
+      <p class="mockup-note">Mockup — content to be verified before launch</p>
+    </div>
+  </div>
+</footer>
+<script src="../assets/data.js"></script>
+<script src="../assets/site.js"></script>
+</template>
+
+<template id="tpl-how-header">
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="index.html" aria-label="Spokane County ARES-ACS, home">
+      <img src="assets/img/seal-ares-acs-400.png" alt="" width="50" height="50">
+      <span class="brand-text"><span class="brand-county">Spokane County</span><span class="brand-name">ARES-ACS</span></span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <ul class="nav-list">
+        <li><a class="nav-link" href="index.html">Home</a></li>
+        <li><a class="nav-link" href="how-it-works.html" aria-current="page">How it works</a></li>
+        <li><a class="nav-link" href="about.html">About ARES &amp; ACS</a></li>
+        <li><a class="nav-link" href="members/index.html">For Members</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn--join header-join" href="index.html#join">Join the team</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <svg class="icon icon-open" aria-hidden="true"><use href="#i-menu"/></svg>
+      <svg class="icon icon-close" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
+  </div>
+</header>
+</template>
+
+<template id="tpl-about-header">
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="index.html" aria-label="Spokane County ARES-ACS, home">
+      <img src="assets/img/seal-ares-acs-400.png" alt="" width="50" height="50">
+      <span class="brand-text"><span class="brand-county">Spokane County</span><span class="brand-name">ARES-ACS</span></span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <ul class="nav-list">
+        <li><a class="nav-link" href="index.html">Home</a></li>
+        <li><a class="nav-link" href="how-it-works.html">How it works</a></li>
+        <li><a class="nav-link" href="about.html" aria-current="page">About ARES &amp; ACS</a></li>
+        <li><a class="nav-link" href="members/index.html">For Members</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn--join header-join" href="index.html#join">Join the team</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <svg class="icon icon-open" aria-hidden="true"><use href="#i-menu"/></svg>
+      <svg class="icon icon-close" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
+  </div>
+</header>
+</template>
+
+<script src="assets/data.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

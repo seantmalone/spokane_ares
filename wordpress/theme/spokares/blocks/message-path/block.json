@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "spokares-theme/message-path",
+	"title": "Message path figure",
+	"category": "theme",
+	"icon": "location-alt",
+	"description": "The How it works drawing: one message carried hop by hop from a shelter to the county EOC. The drawing is fixed.",
+	"textdomain": "spokares",
+	"attributes": {},
+	"supports": {
+		"autoRegister": true,
+		"html": false,
+		"reusable": false,
+		"multiple": false,
+		"className": true
+	},
+	"render": "file:./render.php"
+}
