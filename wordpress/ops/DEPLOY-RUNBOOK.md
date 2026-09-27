@@ -69,7 +69,8 @@ If routes, post types or the `/docs/` rule changed, also flush the rewrite rules
 From GitHub (the gate and the checks run the same way):
 
 ```bash
-gh workflow run deploy.yml --repo seantmalone/spokane_ares -f ref=main            # a branch
+gh workflow run deploy.yml --repo seantmalone/spokane_ares -f ref=main            # main (the only branch allowed)
+# Any other branch, or a bare commit SHA, is refused by the workflow's check-ref job.
 gh workflow run deploy.yml --repo seantmalone/spokane_ares -f ref=v0.2.0          # a tag
 gh workflow run deploy.yml --repo seantmalone/spokane_ares -f ref=v0.2.0 -f flush_rewrites=true
 gh run watch --repo seantmalone/spokane_ares

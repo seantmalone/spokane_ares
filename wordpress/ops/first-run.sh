@@ -30,7 +30,8 @@
 #      spare (twentytwentyfive), only while they are inactive
 #   c. lets UpdraftPlus create its deny-all backup folder
 #   d. adds security-hosting.md §4.4's two rewrite rules above
-#      "# BEGIN WordPress" (no PHP under uploads; no direct wp-includes/*.php);
+#      "# BEGIN WordPress" (no PHP under uploads; no direct wp-includes/*.php;
+#      no readme.html, license.txt or wp-config-sample.php);
 #      the previous .htaccess is kept as ~/.spokares-htaccess.before-first-run
 #   e. writes ~/.spokares-weekly.env for weekly-check.sh if it is missing
 #
@@ -182,6 +183,8 @@ if [[ $MODE == cleanup ]]; then
       print "RewriteEngine On"
       print "RewriteRule ^wp-content/uploads/.*\\.(php[0-9]?|phtml|phar)$ - [F,L,NC]"
       print "RewriteRule ^wp-includes/[^/]+\\.php$ - [F,L]"
+      print "# Core files that name the WordPress version (check-live.sh /readme.html note)."
+      print "RewriteRule ^(readme\\.html|license\\.txt|wp-config-sample\\.php)$ - [F,L,NC]"
       print "</IfModule>"
       print "# END spokares hardening"
       print ""

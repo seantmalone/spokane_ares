@@ -5,7 +5,8 @@
 #
 #   - on a pushed tag v*  (a release: the version strings must equal the tag)
 #   - by hand: Actions > Deploy > Run workflow, or
-#       gh workflow run deploy.yml -f ref=<tag|branch|commit>
+#       gh workflow run deploy.yml -f ref=<main|v* tag>
+#     (any other branch or a bare commit is refused by the check-ref job)
 #
 # The ci.sh gate (ci.yml) runs first on the same commit. Secrets live in the
 # GitHub environment "production" (DEPLOY_SSH_KEY, DEPLOY_KNOWN_HOSTS,
@@ -37,11 +38,46 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Only main or a v* release tag may reach production. The environment's
+  # branch rule checks the branch the workflow runs from, not the `ref` input,
+  # so the input is checked here and turned into a full ref (refs/heads/main or
+  # refs/tags/<tag>) so a branch named like a tag can't stand in for it.
+  check-ref:
+    name: Check the ref
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    outputs:
+      ref: ${{ steps.ref.outputs.ref }}
+    steps:
+      - name: Only main or a v* tag
+        id: ref
+        env:
+          EVENT: ${{ github.event_name }}
+          INPUT_REF: ${{ inputs.ref }}
+          GH_REF: ${{ github.ref }}
+        run: |
+          if [[ $EVENT == workflow_dispatch ]]; then
+            case $INPUT_REF in
+              main | refs/heads/main) ref=refs/heads/main ;;
+              *)
+                name=${INPUT_REF#refs/tags/}
+                [[ $name =~ ^v[0-9][0-9A-Za-z.+-]*$ ]] || { echo "::error::refusing to deploy '$INPUT_REF': only main or a v* release tag (e.g. v0.1.0) may be deployed"; exit 1; }
+                ref=refs/tags/$name
+                ;;
+            esac
+          else
+            [[ $GH_REF =~ ^refs/tags/v[0-9] ]] || { echo "::error::unexpected ref $GH_REF"; exit 1; }
+            ref=$GH_REF
+          fi
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+          echo "Deploying $ref"
+
   gate:
     name: Gate
+    needs: check-ref
     uses: ./.github/workflows/ci.yml
     with:
-      ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
+      ref: ${{ needs.check-ref.outputs.ref }}
 
   deploy:
     name: Deploy to production
