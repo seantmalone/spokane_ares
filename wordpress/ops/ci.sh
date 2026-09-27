@@ -106,8 +106,10 @@ for v in 8.3 8.4; do
   if command -v php >/dev/null && [[ $(php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;') == "$v" ]]; then
     out=$(for f in "${PHP_FILES[@]}"; do php -l "$f" 2>&1 | grep -v '^No syntax errors'; done)
   else
+    # Anything but "No syntax errors" is a failure, except npm's and
+    # Playground's own notices (seen on 4-CPU CI runners).
     vfs=(); for f in "${PHP_FILES[@]}"; do vfs+=("/src/${f#$SRC/}"); done
-    out=$($PG php --php=$v --wordpress-install-mode=do-not-attempt-installing --skip-sqlite-setup --mount="$SRC:/src" -- -l "${vfs[@]}" 2>&1 | grep -vE '^No syntax errors|^$')
+    out=$($PG php --php=$v --wordpress-install-mode=do-not-attempt-installing --skip-sqlite-setup --mount="$SRC:/src" -- -l "${vfs[@]}" 2>&1 | grep -vE '^No syntax errors|^$|^npm warn |default worker count has been reduced')
   fi
   if [[ -z $out ]]; then spk_pass "PHP $v lint: ${#PHP_FILES[@]} files, no syntax errors"; else spk_fail "PHP $v lint:"; echo "$out" | head -20 | sed 's/^/      /'; fi
 done
