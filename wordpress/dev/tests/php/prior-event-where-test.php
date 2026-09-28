@@ -4,11 +4,11 @@
  * (build-notes/plugin.md "Fixer round" › Events; PLAN §3.4): the event form
  * had no place for where an event happens, and after saving a published
  * event the editor was not told where on the site it now shows. The fix
- * (admin-events.php, render.php): an optional "Where" field (spk_where,
- * checked like the other text) printed on the Next up cards, Later this
- * season, the public-service rows and the hub list; the form says where each
- * kind shows; and a save of a published event queues a notice "On the site
- * now: … Events never show on Home."
+ * (admin-events.php, render.php): a "Where" field (spk_where, checked like
+ * the other text) printed on the Next up cards, Later this season, the
+ * public-service rows and the hub list; and a save of a published event
+ * queues one notice that says where it shows ("Published. It shows under
+ * Next up on the Exercises & events page …", with a "See it" link).
  *
  * @package spokares-dev
  */
@@ -87,7 +87,7 @@ function prior_event_where_day( int $days ): string {
 }
 
 test(
-	'the event form has a Where field, and says where each kind shows',
+	'the event form has a Where field with one hint; where the event shows is said once, by the save notice',
 	function () {
 		as_role( 'ares-editor' );
 		$post = get_post( prior_event_where_new() );
@@ -95,10 +95,11 @@ test(
 		spokares_event_form_top( $post );
 		spokares_event_form_fields( $post );
 		$html = (string) ob_get_clean();
-		assert_matches( '/<label for="spk-where">Where \(optional\)<\/label>/', $html, 'label' );
+		assert_matches( '/<label for="spk-where">Where<\/label>/', $html, 'label' );
 		assert_matches( '/<input type="text" id="spk-where" name="spk_where"/', $html, 'field' );
-		assert_contains( 'data-kinds="exercise">Where it shows: Exercises &amp; events › Later this season', $html, 'exercise: where it shows' );
-		assert_contains( 'data-kinds="public-service">Where it shows: Exercises &amp; events › Public-service events. Never on Home.', $html, 'public service: where it shows' );
+		assert_contains( 'A place, or “From your own station”.', $html, 'the one hint' );
+		assert_not_contains( 'Where it shows:', $html, 'no per-type "where it shows" lines on the form' );
+		assert_not_contains( 'Never on Home', $html, 'no "Never on Home"' );
 	}
 );
 
@@ -198,9 +199,12 @@ test(
 				'spk_where'  => 'Spokane Valley Fire Station 8',
 			)
 		);
-		$info = array_values( array_filter( prior_event_where_notices(), static fn( $n ) => 'info' === $n['type'] ) );
-		assert_count( 1, $info, 'one "where it shows" notice' );
-		assert_matches( '/^On the site now: .*a Next up card on Exercises & events.*This week on For members.*\. Events never show on Home\.$/', $info[0]['text'], 'notice' );
+		$notices = prior_event_where_notices();
+		assert_count( 1, $notices, 'one notice for the save: ' . export( $notices ) );
+		assert_same( 'success', $notices[0]['type'], 'a success notice' );
+		assert_same( 'Published. It shows under Next up on the Exercises & events page and in This week on the For members page.', $notices[0]['text'], 'notice' );
+		assert_same( 'See it', $notices[0]['label'], 'the link words' );
+		assert_contains( '/members/exercises/#', $notices[0]['url'], 'the link goes to its row' );
 
 		// An update of the published event says it again.
 		prior_event_where_save(
@@ -213,13 +217,13 @@ test(
 			)
 		);
 		$texts = wp_list_pluck( prior_event_where_notices(), 'text' );
-		assert_true( (bool) preg_grep( '/^On the site now: /', $texts ), 'notice after an update: ' . export( $texts ) );
+		assert_same( array( 'Saved. It shows under Next up on the Exercises & events page and in This week on the For members page.' ), $texts, 'notice after an update' );
 		assert_same( 'Station 8', get_post_meta( $id, 'spk_where', true ), 'updated' );
 	}
 );
 
 test(
-	'saving a draft event queues no "On the site now" notice',
+	'saving a draft event queues no notice of its own (WordPress says "Draft saved")',
 	function () {
 		as_role( 'ares-editor' );
 		$id = prior_event_where_new();
@@ -237,12 +241,12 @@ test(
 		assert_same( 'draft', get_post_status( $id ), 'draft' );
 		assert_same( 'Station 8', get_post_meta( $id, 'spk_where', true ), 'stored on a draft too' );
 		$texts = wp_list_pluck( prior_event_where_notices(), 'text' );
-		assert_false( (bool) preg_grep( '/^On the site now: /', $texts ), 'no "On the site now" notice: ' . export( $texts ) );
+		assert_same( array(), $texts, 'no "It shows" notice for a draft' );
 	}
 );
 
 test(
-	'Where is checked like the other text: a phone number keeps a new event a Draft and names the place',
+	'Where is checked like the other text: a phone number keeps a new event a Draft, with the sentence under Where',
 	function () {
 		as_role( 'ares-editor' );
 		$id = prior_event_where_new();
@@ -258,8 +262,15 @@ test(
 		);
 		clean_post_cache( $id );
 		assert_same( 'draft', get_post_status( $id ), 'kept a Draft' );
-		$errors = wp_list_pluck( array_filter( prior_event_where_notices(), static fn( $n ) => 'error' === $n['type'] ), 'text' );
-		assert_count( 1, $errors, 'one problem notice' );
-		assert_contains( 'The place has', (string) reset( $errors ), 'the notice names the Where field' );
+		$notices = prior_event_where_notices();
+		assert_count( 1, $notices, 'one notice: ' . export( $notices ) );
+		assert_same( 'error', $notices[0]['type'], 'a problem notice' );
+		assert_contains( 'Not published yet', $notices[0]['text'], 'the notice says it isn’t on the site' );
+		ob_start();
+		spokares_event_form_fields( get_post( $id ) );
+		$html = (string) ob_get_clean();
+		assert_matches( '/id="spk-where"[^>]*class="[^"]*spk-field-error/', $html, 'Where is outlined' );
+		assert_contains( 'It has a phone number. Take it out, or tick the box if it’s a public agency number.', $html, 'the sentence under Where' );
+		assert_contains( 'name="spk_confirm[where]"', $html, 'the tick under Where' );
 	}
 );

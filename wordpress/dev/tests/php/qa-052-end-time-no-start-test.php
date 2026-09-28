@@ -161,7 +161,7 @@ function qa052_publish( int $id, array $fields ): array {
  */
 function qa052_add_event( array $typing ): int {
 	$id = get_default_post_to_edit( 'spk_event', true )->ID;
-	assert_same( 'auto-draft', get_post_status( $id ), 'Add event made an auto-draft (control)' );
+	assert_same( 'auto-draft', get_post_status( $id ), 'Add an Event made an auto-draft (control)' );
 	$fields = qa052_browser_fields( qa052_form_html( $id ) );
 	foreach ( $typing as $name => $value ) {
 		if ( null === $value ) {

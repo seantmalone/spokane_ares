@@ -208,7 +208,7 @@ function qa059_assert_told( array $notices, string $msg ): void {
 }
 
 test(
-	'Meeting rules: a save from a screen opened before someone else\'s save keeps their Workshop times',
+	'Meeting Schedule: a save from a screen opened before someone else\'s save keeps their Workshop times',
 	function () {
 		$before = qa059_meeting( 'workshop' );
 		assert_same( array( '09:00', '12:00' ), array( $before['start'], $before['end'] ), 'the seeded Workshop is 09:00–12:00 (control)' );
@@ -247,7 +247,7 @@ test(
 );
 
 test(
-	'Meeting rules: the same Workshop time changed on an older screen does not overwrite the newer save, and the editor is told',
+	'Meeting Schedule: the same Workshop time changed on an older screen does not overwrite the newer save, and the editor is told',
 	function () {
 		as_role( 'ares-net' );
 		$b = qa059_open( 'rules' );
@@ -333,7 +333,7 @@ test(
 );
 
 test(
-	'a screen opened after someone else\'s save still saves normally on Meeting rules and Net details (control)',
+	'a screen opened after someone else\'s save still saves normally on Meeting Schedule and Net Settings (control)',
 	function () {
 		as_role( 'admin' );
 		$a                         = qa059_open( 'rules' );
@@ -350,9 +350,9 @@ test(
 		$t                             = qa059_card( $b, 'third-thursday' );
 		$b['rules'][ $t ]['time_text'] = 'early evenings';
 		$said                          = qa059_save( 'rules', $b );
-		assert_contains( 'success', wp_list_pluck( $said, 'type' ), 'Meeting rules: "Saved." (' . qa059_said( $said ) . ')' );
-		assert_same( 'early evenings', qa059_meeting( 'third-thursday' )['time_text'], 'Meeting rules: B\'s time words are stored' );
-		assert_same( '10:00', qa059_meeting( 'workshop' )['start'], 'Meeting rules: A\'s Workshop start is kept' );
+		assert_contains( 'success', wp_list_pluck( $said, 'type' ), 'Meeting Schedule: "Saved." (' . qa059_said( $said ) . ')' );
+		assert_same( 'early evenings', qa059_meeting( 'third-thursday' )['time_text'], 'Meeting Schedule: B\'s time words are stored' );
+		assert_same( '10:00', qa059_meeting( 'workshop' )['start'], 'Meeting Schedule: A\'s Workshop start is kept' );
 
 		$m                           = qa059_open( 'net' );
 		$m['nets']['open_slot_line'] = 'Open slot? Say so on the Tuesday net.';

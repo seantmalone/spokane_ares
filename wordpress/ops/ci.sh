@@ -22,6 +22,11 @@
 #      local phpcs has it; otherwise Plugin Check's bundled phpcs in Playground)
 #   8. Plugin Check on spokares-core in Playground ("plugin_updater_detected" is
 #      expected: Update URI: false is deliberate, §5.7)
+#   9. no visible "rota" (UX spec §7): not in a translatable string of the
+#      plugin or theme, a block's title, description or label, the plugin,
+#      theme or pattern headers, or the editing guide (screenshot file names
+#      like admin-net-rota.png excepted);
+#      identifiers (spk_rota, spokares-rota, #rota, view "rota") keep the word
 # Then builds wordpress/dist/spokares-<v>.zip, spokares-core-<v>.zip,
 # spokares-hardening-<v>.zip and SHA256SUMS. Exit 1 if any check failed.
 set -uo pipefail
@@ -175,6 +180,18 @@ else
     echo "$errors" | cut -d, -f1-5 | sed 's/^/      /' | head -20
   fi
 fi
+
+# 9. No visible "rota" (UX spec §7, the owner's directive: "Net Control
+# Schedule"). Identifiers keep the word on purpose (option spk_rota, page
+# spokares-rota, the #rota anchor, the net block's "rota" view and default),
+# so only text a person reads is checked, in the checked tree.
+rota=$(
+  grep -rnIiE "(__|_e|_n|_x|esc_html__|esc_html_e|esc_attr__|esc_attr_e)\(\s*'[^']*\brota\b" "$W/plugins" "$W/theme" 2>/dev/null
+  grep -nwiE '"(title|description|label)".*\brota\b' "$W"/plugins/spokares-core/blocks/*/block.json 2>/dev/null
+  grep -niE '^[[:space:]/*]*(Plugin Name|Theme Name|Title|Description):.*\brota\b' "$W"/plugins/spokares-core/spokares-core.php "$W"/theme/spokares/style.css "$W"/theme/spokares/patterns/*.php 2>/dev/null
+  if [[ -f $W/EDITING-GUIDE.md ]]; then sed -E 's/[A-Za-z0-9_-]*rota[A-Za-z0-9_-]*\.png//g' "$W/EDITING-GUIDE.md" | grep -nwi rota | sed 's|^|wordpress/EDITING-GUIDE.md:|'; fi
+)
+if [[ -z $rota ]]; then spk_pass "no visible \"rota\" (translatable strings, block labels, plugin, theme and pattern headers, editing guide)"; else spk_fail "\"rota\" in text people read (say \"Net Control Schedule\"; identifiers may keep it):"; echo "$rota" | sed "s|$SRC/||; s/^/      /" | head -20; fi
 
 # Release zips.
 if (( ZIP )); then

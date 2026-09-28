@@ -6,11 +6,12 @@
  * About's excerpt to "Call 509-555-9999" (the Page panel, or REST) and it was
  * saved and published with no warning, and the Dashboard didn't flag it.
  *
- * The excerpt now gets the same checks as the page text: the Dashboard's
- * Site tasks lists "The excerpt of <page> … may contain something we never
- * publish" under Needs attention, and the editor guard script receives the
- * excerpt warning's words (it scans the excerpt after each save, as it does
- * the page text; saving is never blocked).
+ * The excerpt now gets the same checks as the page text. It is the
+ * webmaster's (UX spec §3.8: editors no longer see the Excerpt panel), so
+ * the checks are administrators' only: their Dashboard's Needs attention
+ * lists "The search-engine description of <page> has what looks like …",
+ * and the editors' guard script checks the page text only (saving is never
+ * blocked).
  *
  * @package spokares-dev
  */
@@ -36,7 +37,7 @@ function qa_107_about_title(): string {
 }
 
 test(
-	'QA-107: an ARES Editor saves a phone number in About\'s excerpt over REST: saved (warn, never block), and the Dashboard flags the excerpt',
+	'QA-107: an ARES Editor saves a phone number in About\'s excerpt over REST: saved (warn, never block), and the webmaster\'s Dashboard flags the description',
 	function () {
 		as_role( 'ares-editor' );
 		$about = page_id( 'about' );
@@ -44,11 +45,15 @@ test(
 		expect_not_wp_error( $res, 'REST save of the excerpt' );
 		assert_same( 'Call 509-555-9999', get_post( $about )->post_excerpt, 'the excerpt is saved (page text is warned about, not blocked)' );
 
-		$html  = qa_107_dashboard();
+		// The search-engine description is the webmaster's: only an
+		// administrator's Needs attention names it (UX spec §3.1).
 		$title = qa_107_about_title();
+		assert_not_contains( 'The search-engine description of', qa_107_dashboard(), 'an ARES Editor\'s Dashboard names the description they can\'t see' );
+		as_role( 'admin' );
+		$html = qa_107_dashboard();
 		assert_contains( 'Needs attention', $html, 'Dashboard has a Needs attention box' );
-		assert_contains( 'The excerpt of ' . $title, $html, 'Dashboard names About\'s excerpt' );
-		assert_not_contains( '<li>' . $title . ' may contain', $html, 'About\'s page text itself is clean, so no page-text line' );
+		assert_contains( 'The search-engine description of ' . $title . ' has what looks like a phone number (509-555-9999).', $html, 'Dashboard names About\'s description, what it found and the text' );
+		assert_not_contains( '<li>' . $title . ' has what looks like', $html, 'About\'s page text itself is clean, so no page-text line' );
 	}
 );
 
@@ -92,12 +97,13 @@ test(
 		foreach ( $status as $item ) {
 			assert_same( array(), $item['excerpt_hits'], $item['page']->post_name . ' excerpt: ' . $item['page']->post_excerpt );
 		}
-		assert_not_contains( 'The excerpt of', qa_107_dashboard(), 'Dashboard' );
+		as_role( 'admin' );
+		assert_not_contains( 'The search-engine description of', qa_107_dashboard(), 'Dashboard' );
 	}
 );
 
 test(
-	'QA-107: the editor guard script gets the excerpt warning\'s words (ARES Editor, a page)',
+	'QA-107: the editor guard checks an ARES Editor\'s page text, not the search-engine description (the webmaster\'s, UX spec §3.8)',
 	function () {
 		global $current_screen, $typenow, $taxnow;
 		$saved = array( $current_screen, $typenow, $taxnow );
@@ -107,7 +113,8 @@ test(
 			spokares_enqueue_editor_guard();
 			$before = wp_scripts()->get_data( 'spokares-editor-guard', 'before' );
 			$config = is_array( $before ) ? implode( "\n", $before ) : '';
-			assert_matches( '/window\.spokaresGuard = \{.*"excerpt":"[^"]*excerpt[^"]*%s/', $config, 'spokaresGuard.excerpt' );
+			assert_matches( '/window\.spokaresGuard = \{.*"message":"On the site now: this page has what looks like %1\$s \(%2\$s\)\./', $config, 'spokaresGuard.message (the page-text warning)' );
+			assert_not_contains( '"excerpt":', $config, 'an excerpt warning for editors (they can\'t see or change the description)' );
 		} finally {
 			wp_dequeue_script( 'spokares-editor-guard' );
 			// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited -- restoring the globals set_current_screen() changed.

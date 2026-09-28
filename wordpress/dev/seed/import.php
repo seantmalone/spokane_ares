@@ -254,7 +254,8 @@ if ( ! function_exists( 'spokares_dev_import' ) ) {
 				'gmrs_nth'       => $nth( $nets['gmrs']['rule'] ?? array() ),
 				'gmrs_time'      => (string) ( $nets['gmrs']['start'] ?? '' ),
 				'winlink_howto'  => (string) $data['winlink']['howTo'],
-				'open_slot_line' => (string) $data['rotaMeta']['openSlotAction'],
+				// extra.json's line says "Volunteer needed", the public tag's words (UX spec §3.10).
+				'open_slot_line' => (string) ( $extra['nets']['openSlotLine'] ?? $data['rotaMeta']['openSlotAction'] ),
 				'needs_check'    => ! empty( $nets['winlink-nights']['verify'] ) || ! empty( $nets['simplex-5th']['verify'] ) || ! empty( $nets['gmrs']['verify'] ),
 			)
 		);

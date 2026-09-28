@@ -2,9 +2,9 @@
 // (build-notes/plugin.md "Fixer round" › Events): the event form had no place
 // for where an event happens, and after publishing the editor was not told
 // where on the site the event now shows. Through the real form, as the ARES
-// Editor: pick a kind (the form says where that kind shows), fill in Where,
-// Publish, read the "On the site now" notice, find the place on Exercises &
-// events, then move the test event to the Trash so the site is as it was.
+// Editor: pick a type of event, fill in Where, Publish, read the one notice
+// ("Published. It shows under …"), find the place on Exercises & events,
+// then take the test event off the site so the site is as it was.
 // The save logic itself is in dev/tests/php/prior-event-where-test.php.
 
 const TITLE = 'QA e2e Where training';
@@ -22,11 +22,10 @@ export const tests = [
       await t.expectStatus(200);
       await t.waitFor('#spk-where');
       await t.click('input[name="spk_kind"][value="training"]');
-      await t.expectVisible('.spk-places[data-kinds="training"]');
-      await t.expectText('.spk-places[data-kinds="training"]', 'Where it shows: Exercises & events › Later this season');
-      await t.expectHidden('.spk-places[data-kinds="public-service"]');
+      // Where it shows is said once, by the notice after Publish: no per-type lines on the form.
+      t.expect(await t.count('.spk-places'), 'per-type "where it shows" lines').toBe(0);
       await t.expectVisible('label[for="spk-where"]');
-      await t.expectText('label[for="spk-where"]', 'Where (optional)');
+      await t.expectText('label[for="spk-where"]', 'Where');
 
       await t.type('#title', TITLE);
       // 75 days after the site's today: past the hub's 60 days, so it lands in Later this season.
@@ -50,11 +49,11 @@ export const tests = [
       let trashed = false;
       try {
         t.expect(editUrl, 'back on the event form after Publish').toContain('post.php?post=');
-        await t.waitForText('On the site now:', { selector: '#wpbody-content' });
-        const notices = await t.texts('.notice.spk-notice');
-        const info = notices.find((n) => n.startsWith('On the site now:')) || '';
-        t.expect(info, `the "where it shows" notice (notices: ${JSON.stringify(notices)})`).toContain('Later this season on Exercises & events');
-        t.expect(info).toContain('Events never show on Home.');
+        await t.waitForText('It shows under', { selector: '#wpbody-content' });
+        const notices = await t.evaluate(() => [...document.querySelectorAll('#wpbody-content .notice')].filter((n) => n.getClientRects().length > 0).map((n) => n.textContent.trim()));
+        t.expect(notices.length, `one notice after Publish (notices: ${JSON.stringify(notices)})`).toBe(1);
+        t.expect(notices[0]).toContain('Published. It shows under Later this season on the Exercises & events page.');
+        t.expect(await t.text('.notice.spk-notice a'), 'the link').toBe('See it');
         t.expect(await t.attr('#spk-where', 'value'), 'Where kept on the form').toBe(WHERE);
 
         await t.goto('/members/exercises/');
@@ -64,7 +63,7 @@ export const tests = [
         await t.goto(editUrl);
         await t.clickAndWait('#spk-trash-link');
         trashed = true;
-        await t.waitForText('moved to the Trash', { selector: '#wpbody-content' });
+        await t.waitForText(`“${TITLE}” is off the site.`, { selector: '#wpbody-content' });
         t.expectNoConsoleErrors();
       } finally {
         if (!trashed && /post\.php\?post=/.test(editUrl)) {

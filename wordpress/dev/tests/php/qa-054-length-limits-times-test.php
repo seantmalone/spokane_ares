@@ -12,8 +12,9 @@
  * - a 270-character meeting name (maxlength 80),
  * - a 400-character event Short line (maxlength 90) and a 300-character
  *   Where (maxlength 80), both live on a published event,
- * - a 200-character document note (maxlength 60), and a 9-word note
- *   although the field says "8 words or fewer".
+ * - a 200-character document note (maxlength 60). (A 9-word note used to
+ *   be warned about; the field now counts characters, "Short note (60
+ *   characters)", UX spec §3.6.)
  *
  * Invalid times were also dropped without a word: a net time of 25:00 or
  * an empty one, and a GMRS time of "7pm", kept the old value under
@@ -166,7 +167,7 @@ function qa054_save_net( array $nets_in, string $msg ): array {
 }
 
 test(
-	'control: Net details saved as shown says "Saved." and keeps the times',
+	'control: Net Settings saved as shown says nothing changed and keeps the times',
 	function () {
 		as_role( 'ares-net' );
 		$before = \spokares_opt( 'spk_nets' );
@@ -175,7 +176,7 @@ test(
 		assert_same( $before['gmrs_time'], $out['nets']['gmrs_time'], 'GMRS time' );
 		assert_same( $before['open_slot_line'], $out['nets']['open_slot_line'], 'open-slot line' );
 		assert_same( array(), $out['retained']['errors'], 'no field errors' );
-		assert_contains( 'Saved.', wp_list_pluck( $out['notices'], 'text' ), 'the success notice' );
+		assert_same( array( 'Nothing changed, so nothing was saved.' ), wp_list_pluck( $out['notices'], 'text' ), 'the one notice' );
 	}
 );
 
@@ -333,7 +334,7 @@ function qa054_save_rules( int $index, array $replace, string $msg ): array {
 }
 
 test(
-	'Meeting rules: a 270-character meeting name (maxlength 80) is held back, not saved',
+	'Meeting Schedule: a 270-character meeting name (maxlength 80) is held back, not saved',
 	function () {
 		as_role( 'ares-net' );
 		$before = \spokares_opt( 'spk_meetings' )['meetings'][0];
@@ -347,7 +348,7 @@ test(
 );
 
 test(
-	'Meeting rules: a start time of 25:00 is held back with an error, not saved as "no time"',
+	'Meeting Schedule: a start time of 25:00 is held back with an error, not saved as "no time"',
 	function () {
 		as_role( 'ares-net' );
 		$index = null;
@@ -406,7 +407,7 @@ function qa054_update_event( int $id, array $replace ): void {
 			'post_title'           => get_post_field( 'post_title', $id ),
 			'post_status'          => 'publish',
 			'original_post_status' => 'publish',
-			'save'                 => 'Update',
+			'save'                 => 'Save',
 			'_wpnonce'             => wp_create_nonce( 'update-post_' . $id ),
 			'spokares_event_nonce' => wp_create_nonce( 'spokares_event_meta' ),
 			'spk_kind'             => 'exercise',
@@ -433,7 +434,7 @@ function qa054_update_event( int $id, array $replace ): void {
 }
 
 test(
-	'Events: a 400-character Short line (maxlength 90) never goes live on a published event',
+	'Events: a 400-character Short description (maxlength 90) never goes live on a published event',
 	function () {
 		as_role( 'ares-editor' );
 		$id = qa054_event();
@@ -441,9 +442,10 @@ test(
 		qa054_update_event( $id, array( 'spk_summary' => qa054_text( 400 ) ) );
 		$status  = get_post_status( $id );
 		$summary = (string) get_post_meta( $id, 'spk_summary', true );
-		assert_false( 'publish' === $status && mb_strlen( $summary ) > 90, 'a ' . mb_strlen( $summary ) . '-character Short line is live on a published event (form maxlength 90)' );
+		assert_false( 'publish' === $status && mb_strlen( $summary ) > 90, 'a ' . mb_strlen( $summary ) . '-character Short description is live on a published event (form maxlength 90)' );
 		$notices = qa054_notices();
-		assert_contains( 'error', wp_list_pluck( $notices, 'type' ), '400-character Short line: no error sentence (notices: ' . wp_json_encode( wp_list_pluck( $notices, 'text' ) ) . ')' );
+		// A partly saved event is amber, like every other screen's partial save.
+		assert_contains( 'warning', wp_list_pluck( $notices, 'type' ), '400-character Short description: no notice that it wasn\'t saved (notices: ' . wp_json_encode( wp_list_pluck( $notices, 'text' ) ) . ')' );
 	}
 );
 
@@ -458,7 +460,8 @@ test(
 		$where  = (string) get_post_meta( $id, 'spk_where', true );
 		assert_false( 'publish' === $status && mb_strlen( $where ) > 80, 'a ' . mb_strlen( $where ) . '-character Where is live on a published event (form maxlength 80)' );
 		$notices = qa054_notices();
-		assert_contains( 'error', wp_list_pluck( $notices, 'type' ), '300-character Where: no error sentence (notices: ' . wp_json_encode( wp_list_pluck( $notices, 'text' ) ) . ')' );
+		// A partly saved event is amber, like every other screen's partial save.
+		assert_contains( 'warning', wp_list_pluck( $notices, 'type' ), '300-character Where: no notice that it wasn\'t saved (notices: ' . wp_json_encode( wp_list_pluck( $notices, 'text' ) ) . ')' );
 	}
 );
 
@@ -539,12 +542,13 @@ test(
 		$note   = (string) get_post_meta( $doc, 'spk_note', true );
 		assert_false( 'publish' === $status && mb_strlen( $note ) > 60, 'a ' . mb_strlen( $note ) . '-character note is live on a published document (form maxlength 60)' );
 		$notices = qa054_notices();
-		assert_contains( 'error', wp_list_pluck( $notices, 'type' ), '200-character note: no error sentence (notices: ' . wp_json_encode( wp_list_pluck( $notices, 'text' ) ) . ')' );
+		assert_same( array( 'warning: Saved, except the short note (outlined in red).' ), array_map( static fn( $n ) => $n['type'] . ': ' . $n['text'], $notices ), '200-character note: one notice names the field that wasn\'t saved' );
+		assert_same( 'publish', $status, 'the document stays on the site; only the note is held back' );
 	}
 );
 
 test(
-	'Documents: a 9-word note ("8 words or fewer") is refused or warned about',
+	'Documents: a 9-word note within "Short note (60 characters)" is saved as typed, with no word warning',
 	function () {
 		$doc = qa054_document();
 		as_role( 'ares-editor' );
@@ -553,10 +557,8 @@ test(
 		assert_true( mb_strlen( $note ) <= 60, 'set-up: within the 60-character maxlength' );
 		qa054_notices();
 		qa054_update_document( $doc, $note );
-		$told = array_filter(
-			qa054_notices(),
-			static fn( $n ) => in_array( $n['type'], array( 'error', 'warning' ), true ) && preg_match( '/\bnote\b/i', (string) $n['text'] )
-		);
-		assert_true( (bool) $told, 'a 9-word note was saved without a word although the field says "8 words or fewer"' );
+		assert_same( $note, (string) get_post_meta( $doc, 'spk_note', true ), 'the note is saved as typed' );
+		$notices = qa054_notices();
+		assert_same( array( 'success: Saved.' ), array_map( static fn( $n ) => $n['type'] . ': ' . $n['text'], $notices ), 'one plain Saved notice, no word warning' );
 	}
 );

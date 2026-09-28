@@ -38,6 +38,18 @@ function saveBoxTest(type) {
         t.expect(await t.evaluate(() => document.querySelector('#spokares_savebox').className), 'Save box classes').not.toMatch(/\b(closed|hide-if-js)\b/);
         await t.expectVisible('#submitpost input[name="saveasdraft"]');
         await t.expectVisible('#submitpost input[name="publish"]');
+        // The new item's Save box (UX spec §3.9): a plain status line, Save
+        // draft that skips the browser's required checks, nothing to trash yet.
+        const box = await t.evaluate(() => ({
+          status: (document.querySelector('#submitpost .spk-status')?.textContent || '').trim(),
+          novalidate: !!document.querySelector('#submitpost input[name="saveasdraft"]')?.hasAttribute('formnovalidate'),
+          trash: !!document.querySelector('#spk-trash-link'),
+          text: document.querySelector('#submitpost')?.textContent || '',
+        }));
+        t.expect(box.status, 'the new item\'s status line').toBe('Not saved yet');
+        t.expect(box.novalidate, 'Save draft skips the browser\'s required checks').toBe(true);
+        t.expect(box.trash, 'a trash link on an item not saved yet').toBe(false);
+        t.expect(box.text, 'the Save box').not.toContain('Status:');
         t.expect(await t.exists('#screen-options-link-wrap, #show-settings-link'), 'Screen Options tab').toBe(false);
         t.expect(await t.exists('#adv-settings input.hide-postbox-tog[value="spokares_savebox"]'), 'a "Save" toggle in Screen Options').toBe(false);
       } finally {

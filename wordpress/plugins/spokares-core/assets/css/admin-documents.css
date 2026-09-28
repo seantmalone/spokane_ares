@@ -1,0 +1,61 @@
+/* spokares-admin-documents: the document form, the Documents list and the
+   Most Used screen (UX spec §3.6, §3.7). Loaded after admin.css. */
+
+/* ------------------------------------------------------------ the form */
+
+.spk-doc-form { margin-top: 18px; max-width: 900px; }
+.spk-doc-form select { max-width: 100%; }
+
+/* "Document name (required)", above WordPress's name box. */
+.spk-title-label { display: block; margin: 12px 0 -4px; font-size: 14px; font-weight: 600; }
+.post-type-spk_document #poststuff { padding-top: 8px; }
+
+/* "Already a document: … Open it", under the name on Add. */
+.spk-name-match { margin: 0 0 12px; padding: 6px 10px; background: #fcf9e8; border-left: 4px solid #dba617; }
+.spk-name-match:empty { display: none; }
+
+.spk-doc-form #spk-title-problem { margin: 0 0 12px; }
+.spk-doc-form .spk-source-choices { margin: 0 0 4px; }
+.spk-doc-form [data-source][hidden] { display: none !important; }
+.spk-doc-form .spk-upload, .spk-doc-form .spk-link { margin-top: 8px; padding-top: 10px; border-top: 1px solid #f0f0f1; }
+
+/* The privacy tick: one sentence, set apart so it is read before a file is chosen. */
+.spk-doc-form .spk-privacy { margin: 0 0 10px; padding: 8px 10px; background: #fcf9e8; border: 1px solid #dba617; border-radius: 3px; }
+.spk-doc-form .spk-privacy label { display: block; }
+.spk-doc-form .spk-privacy input[type="checkbox"] { margin: 0 6px 0 0; }
+.spk-doc-form .spk-privacy.spk-field-error { box-shadow: 0 0 0 2px #d63638; }
+
+.spk-doc-form .spk-current-file { margin: 0 0 10px; }
+.spk-doc-form .spk-file { margin: 0 0 6px; }
+.spk-doc-form .spk-file label { display: block; margin-bottom: 4px; font-weight: 600; }
+.spk-doc-form .spk-file input[type="file"]:disabled { opacity: .55; }
+.spk-doc-form .spk-link .spk-field:last-of-type { margin-bottom: 12px; }
+
+/* "{n} left" beside the Short note. */
+.spk-doc-form .spk-left { display: block; min-height: 1.4em; margin-top: 2px; color: #50575e; font-size: 12px; }
+
+.spk-doc-form .spk-course-links { margin: -6px 0 16px; color: #50575e; }
+.spk-doc-form .spk-howto label, .spk-sublinks label { display: inline-block; margin: 0 12px 8px 0; }
+.spk-sublinks .spk-wide { width: 7em; }
+.spk-doc-form .spk-button-line { margin: 0; }
+.spk-doc-form #spk-place { max-width: 100%; }
+
+@media (max-width: 782px) {
+	.spk-doc-form .spk-howto label, .spk-sublinks label { display: block; margin-right: 0; }
+	.spk-doc-form .spk-howto input, .spk-sublinks input:not([type="hidden"]) { width: 100%; }
+	.spk-doc-form input[type="text"], .spk-doc-form input[type="url"], .spk-doc-form select, .spk-doc-form textarea { max-width: 100%; box-sizing: border-box; }
+}
+
+/* ------------------------------------------------------------- the list */
+
+/* "Click a name to change it, …", above the views. */
+.spk-cue { margin: 10px 0 4px; font-size: 14px; }
+.post-type-spk_document .wp-list-table .column-title { width: 40%; }
+.post-type-spk_document .wp-list-table .column-spk_source,
+.post-type-spk_document .wp-list-table .column-spk_version,
+.post-type-spk_document .wp-list-table .column-spk_reviewed { width: 13%; }
+
+/* ------------------------------------------------------------ Most Used */
+
+.spk-tiles .spk-tile-edit { display: inline-block; margin-top: 6px; }
+.spk-tiles .spk-tile-edit[hidden] { display: none; }

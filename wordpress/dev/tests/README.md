@@ -25,7 +25,7 @@ Use your own port, and stop the site when you are done. Every script exits 0 on 
 | `author` | `qa-author` | `qa-author` | Author |
 | `core-editor` | `qa-core-editor` | `qa-core-editor` | Editor (the core role) |
 | `ares-editor` | `editor` | `editor` | ARES Editor (`ares_editor`) |
-| `ares-net` | `qa-ares-net` | `qa-ares-net` | ARES Editor plus the per-user "Net details and Meeting rules" grant (`spokares_edit_net_details`) |
+| `ares-net` | `qa-ares-net` | `qa-ares-net` | ARES Editor plus the per-user "Net Settings and Meeting Schedule" grant (`spokares_edit_net_details`) |
 | `admin` | `admin` | `1` | Administrator |
 
 Add `?dev_login=<value>` to any URL to sign that user in, for example `/wp-admin/?dev_login=qa-core-editor`. `?dev_login=1` and `?dev_login=editor` work as before.
@@ -209,7 +209,7 @@ For each role, the crawler starts a fresh Chrome profile and signs in with `?dev
 - The Dashboard, every `#adminmenu` link (submenus too), and the admin-bar and Dashboard links.
 - The known screens the role's capabilities allow:
   - Profile
-  - Net rota, Net details, Regular meetings, Meeting rules, Hub tiles and ARES site settings
+  - Net Control Schedule, Net Settings, Cancel or Move a Meeting, Meeting Schedule, Most Used and ARES site settings
   - the Events and Documents lists, their add screens, and the edit screens for SET and ICS-213
   - Library sections and Pages
   - the block editor for Home, How it works, About and For members

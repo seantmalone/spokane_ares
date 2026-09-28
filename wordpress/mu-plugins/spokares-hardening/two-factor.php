@@ -10,6 +10,10 @@
  *    own requests) and async-upload;
  *  - fail closed: without the plugin, non-administrators are refused wp-admin
  *    and administrators see a red notice that says how to fix it.
+ *  - plain words (UX spec §3.9): once the phone app is set up it is the
+ *    primary method, editors don't see the Primary Method row, and the
+ *    plugin's sign-in wording says "the code from my phone app", "e-mail me
+ *    a code" and "a printed backup code".
  * Dev only (local + SPOKARES_DEV): enforcement, fail-closed and the
  * Email-on-register step are skipped.
  *
@@ -185,7 +189,89 @@ function spokares_hard_2fa_setup_notice(): void {
 		return;
 	}
 	echo '<div class="notice notice-warning"><p><strong>' . esc_html__( 'Set up two-factor sign-in first.', 'spokares-hardening' ) . '</strong> '
-		. esc_html__( 'Everyone who can change the website signs in with a code as well as a password. Choose a method under Two-Factor Options below and save your profile; then the rest of wp-admin opens.', 'spokares-hardening' )
+		. esc_html__( 'Everyone who can change the website signs in with a code as well as a password. Choose a method under Two-Factor Options below and click Update Profile; then the Dashboard opens.', 'spokares-hardening' )
 		. '</p></div>';
 }
 add_action( 'admin_notices', 'spokares_hard_2fa_setup_notice' );
+
+/**
+ * Once the phone app (TOTP) is set up it is the method asked for first at
+ * sign-in: always for editors (they don't see the Primary Method row), and
+ * for an administrator who hasn't picked one that is still on.
+ *
+ * @param string $provider Provider key the plugin chose.
+ * @param int    $user_id  User.
+ */
+function spokares_hard_2fa_totp_first( $provider, $user_id ) {
+	if ( ! spokares_hard_2fa_active() || 'Two_Factor_Totp' === $provider ) {
+		return $provider;
+	}
+	$available = Two_Factor_Core::get_available_providers_for_user( (int) $user_id );
+	if ( ! is_array( $available ) || ! isset( $available['Two_Factor_Totp'] ) ) {
+		return $provider;
+	}
+	$chosen = (string) get_user_meta( (int) $user_id, SPOKARES_HARD_2FA_PROVIDER, true );
+	if ( ! user_can( (int) $user_id, 'manage_options' ) || ! isset( $available[ $chosen ] ) ) {
+		return 'Two_Factor_Totp';
+	}
+	return $provider;
+}
+add_filter( 'two_factor_primary_provider_for_user', 'spokares_hard_2fa_totp_first', 10, 2 );
+
+/**
+ * The moment the phone app is set up (its secret key is stored, from the
+ * profile's Verify), it becomes the stored primary method too, so an
+ * administrator's Primary Method row shows it.
+ *
+ * @param int    $meta_id  Meta row.
+ * @param int    $user_id  User.
+ * @param string $meta_key Meta key.
+ */
+function spokares_hard_2fa_totp_primary( $meta_id, $user_id, $meta_key ): void {
+	if ( '_two_factor_totp_key' === $meta_key ) {
+		update_user_meta( (int) $user_id, SPOKARES_HARD_2FA_PROVIDER, 'Two_Factor_Totp' );
+	}
+}
+add_action( 'added_user_meta', 'spokares_hard_2fa_totp_primary', 10, 3 );
+add_action( 'updated_user_meta', 'spokares_hard_2fa_totp_primary', 10, 3 );
+
+/**
+ * No Primary Method row on an editor's profile: the phone app is primary
+ * once it is set up (above), so there is nothing to choose.
+ */
+function spokares_hard_2fa_hide_primary(): void {
+	global $pagenow;
+	if ( ! in_array( $pagenow, array( 'profile.php', 'user-edit.php' ), true ) || current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	echo '<style id="spokares-2fa-primary">.two-factor-primary-method-table,hr:has(+ .two-factor-primary-method-table){display:none}</style>' . "\n";
+}
+add_action( 'admin_head', 'spokares_hard_2fa_hide_primary' );
+
+/**
+ * The Two-Factor plugin's words, in plain English (its own text domain only;
+ * the source strings are Two-Factor 0.16's).
+ *
+ * @param string $translation Translated text.
+ * @param string $text        Source text.
+ */
+function spokares_hard_2fa_words( $translation, $text ) {
+	static $words = null;
+	if ( null === $words ) {
+		$code  = __( 'Code:', 'spokares-hardening' );
+		$retry = __( 'That code didn’t work. Wait for the next code in the app, then type it.', 'spokares-hardening' );
+		$words = array(
+			'Use your authenticator app for time-based one-time passwords (TOTP)' => __( 'Use the code from my phone app', 'spokares-hardening' ),
+			'Send a code to your email'         => __( 'E-mail me a code', 'spokares-hardening' ),
+			'Use a recovery code'               => __( 'Use a printed backup code', 'spokares-hardening' ),
+			'Authentication Code:'              => $code,
+			'Verification Code:'                => $code,
+			'Recovery Code:'                    => $code,
+			// One wrong code: the plugin's refusal, and its short wait before the next try.
+			'ERROR: Invalid verification code.' => $retry,
+			'ERROR: Too many invalid verification codes, you can try again in %s. This limit protects your account against automated attacks.' => $retry,
+		);
+	}
+	return $words[ $text ] ?? $translation;
+}
+add_filter( 'gettext_two-factor', 'spokares_hard_2fa_words', 10, 2 );

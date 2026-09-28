@@ -7,8 +7,9 @@
  * files.php spokares_attachment_uses() looks for documents with
  * post_status 'any', and WP_Query's 'any' leaves out the statuses that are
  * excluded from search, trash among them. So once a document is moved to the
- * Trash WITHOUT "Also remove its file from the web" (which keeps spk_file and
- * the file, so the document can be restored), the guard no longer sees it:
+ * Trash another way than the form's "Take it off the site" link (which
+ * keeps spk_file and the file, so the document can be restored), the guard
+ * no longer sees it:
  * an administrator (or a core Editor, for a file they uploaded) can delete
  * the attachment from the Media Library or over REST, and when the document
  * is restored its spk_file points at an attachment that no longer exists.
@@ -75,9 +76,9 @@ function qa_044_published_upload( string $title, string $uploader ): array {
 }
 
 /**
- * Move to Trash from the document form with "Also remove its file from the
- * web" unticked, as post.php?action=trash runs it (the link's nonce in $_GET,
- * no spk_remove_file), as the administrator.
+ * Trash the document without the form's "Take it off the site" link (no
+ * spk_remove_file, as another route would), as post.php?action=trash runs it
+ * (the link's nonce in $_GET), as the administrator: the file stays.
  *
  * @param int $doc Document.
  */
@@ -149,10 +150,10 @@ test(
 		assert_true( empty( $res ), 'wp_delete_attachment() of a trashed document\'s file is refused' );
 		qa_044_assert_file_kept( $doc, $att, $file, 'after the delete attempt' );
 
-		// Restore from the Trash (core gives a Draft): it still has its file.
+		// Restore from the Trash (a document comes back as it was, §3.6): it still has its file.
 		assert_true( wp_untrash_post( $doc ) instanceof \WP_Post, 'setup: the document was restored' );
 		clean_post_cache( $doc );
-		assert_same( 'draft', get_post_status( $doc ), 'setup: Restore gives a Draft' );
+		assert_same( 'publish', get_post_status( $doc ), 'setup: Restore brings it back Published, as it was' );
 		qa_044_assert_file_kept( $doc, $att, $file, 'restored' );
 		assert_true( '' !== (string) wp_get_attachment_url( $att ), 'restored: the document\'s file still has a web address' );
 	}

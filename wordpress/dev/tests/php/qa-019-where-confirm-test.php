@@ -85,14 +85,15 @@ function qa019_new( string $title ): int {
 }
 
 /**
- * The error notices queued for the current user (and clear all notices).
+ * The problem notices (error or warning) queued for the current user (and
+ * clear all notices).
  */
 function qa019_errors(): array {
 	$key     = 'spokares_notices_' . get_current_user_id();
 	$notices = get_transient( $key );
 	delete_transient( $key );
 	$notices = is_array( $notices ) ? $notices : array();
-	return array_values( wp_list_pluck( array_filter( $notices, static fn( $n ) => 'error' === $n['type'] ), 'text' ) );
+	return array_values( wp_list_pluck( array_filter( $notices, static fn( $n ) => in_array( $n['type'], array( 'error', 'warning' ), true ) ), 'text' ) );
 }
 
 /**
@@ -131,7 +132,7 @@ test(
 			assert_same( 'Spokane DEM', get_post_meta( $id, 'spk_where', true ), $role . ': the place is held back without the tick' );
 			$errors = qa019_errors();
 			assert_count( 1, $errors, $role . ': one problem notice without the tick' );
-			assert_contains( 'The place has a phone number', (string) reset( $errors ), $role . ': the notice names the place' );
+			assert_contains( 'Saved, except Where: it has a phone number.', (string) reset( $errors ), $role . ': the notice names the Where field' );
 
 			// Tick "Publish it" and Update: saved.
 			qa019_save( $id, array_merge( $fields, array( 'spk_confirm' => array( 'where' => '1' ) ) ) );
@@ -203,6 +204,6 @@ test(
 		assert_same( 'Spokane DEM, 509-555-0142', get_post_meta( $id, 'spk_where', true ), 'the changed place is held back' );
 		$errors = qa019_errors();
 		assert_count( 1, $errors, 'one problem notice for the changed place' );
-		assert_contains( 'The place has a phone number', (string) reset( $errors ), 'the notice names the place' );
+		assert_contains( 'Saved, except Where: it has a phone number.', (string) reset( $errors ), 'the notice names the Where field' );
 	}
 );

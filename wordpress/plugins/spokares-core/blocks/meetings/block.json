@@ -5,7 +5,7 @@
 	"title": "Meetings",
 	"category": "spokares",
 	"icon": "groups",
-	"description": "Regular meetings with their next dates, cancellations and moves. Edit them in Regular meetings.",
+	"description": "Regular meetings with their next dates, cancellations and moves. Edit them on the Meetings screens.",
 	"textdomain": "spokares-core",
 	"attributes": {
 		"view": {

@@ -80,13 +80,13 @@ test(
 );
 
 test(
-	'Other nets with no week ticked: a Net details grant holder also gets the edit link',
+	'Other nets with no week ticked: a Net Settings grant holder also gets the edit link',
 	function () {
 		qafront095_no_weeks();
 		as_role( 'ares-net' );
 		$html = qafront095_net( 'other-nets' );
 		assert_contains( 'No other nets are scheduled right now.', qafront095_plain( $html ), 'the sentence' );
-		assert_same( array( 'Edit this list in Net details' ), qafront095_edit_links( $html ), 'the edit link' );
+		assert_same( array( 'Edit this list in Net Settings' ), qafront095_edit_links( $html ), 'the edit link' );
 	}
 );
 
@@ -101,15 +101,15 @@ test(
 );
 
 test(
-	'net bar, settings box and From home: grant holders get "Edit these settings in Net details", not "Edit this list"',
+	'net bar, settings box and From home: grant holders get "Edit these settings in Net Settings", not "Edit this list"',
 	function () {
 		foreach ( array( 'ares-net', 'admin' ) as $role ) {
 			as_role( $role );
 			foreach ( array( 'bar', 'settings', 'from-home' ) as $view ) {
-				assert_same( array( 'Edit these settings in Net details' ), qafront095_edit_links( qafront095_net( $view ) ), $role . ' › ' . $view );
+				assert_same( array( 'Edit these settings in Net Settings' ), qafront095_edit_links( qafront095_net( $view ) ), $role . ' › ' . $view );
 			}
-			assert_same( array( 'Edit this list in Net details' ), qafront095_edit_links( qafront095_net( 'other-nets' ) ), $role . ' › other-nets is a list' );
-			assert_same( array( 'Edit this list in Net rota' ), qafront095_edit_links( qafront095_net( 'rota' ) ), $role . ' › the rota keeps its own link' );
+			assert_same( array( 'Edit this list in Net Settings' ), qafront095_edit_links( qafront095_net( 'other-nets' ) ), $role . ' › other-nets is a list' );
+			assert_same( array( 'Edit this list in Net Control Schedule' ), qafront095_edit_links( qafront095_net( 'rota' ) ), $role . ' › the Net Control Schedule keeps its own link' );
 		}
 	}
 );

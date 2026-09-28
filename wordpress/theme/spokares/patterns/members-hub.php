@@ -1,11 +1,11 @@
 <?php
 /**
- * Title: Members: hub (This week)
+ * Title: Members: For members page (This week)
  * Slug: spokares/members-hub
  * Categories: spokares-members
  * Inserter: no
  * Viewport Width: 1440
- * Description: Used by the page-members template. Every list comes from wp-admin: Events, Regular meetings, Net rota, Net details and Hub tiles.
+ * Description: Used by the page-members template. Every list comes from an admin screen: Exercises & Events, Meetings, Net Control Schedule, Net Settings and Most Used.
  *
  * @package spokares
  */

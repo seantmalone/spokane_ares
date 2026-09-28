@@ -1,8 +1,8 @@
 <?php
 /**
- * Net details (§3.4): repeater settings, the net time, which Tuesdays are
- * Winlink, simplex and GMRS nights, and the two sentences. A preview shows
- * every sentence these facts produce on the site.
+ * Net Settings (ux/SPEC.md §3.3): the Tuesday net's time and repeater, the
+ * alternate repeater, which Tuesdays are Winlink, simplex or GMRS nights,
+ * and two lines of wording. Each section ends in what members see.
  *
  * @package spokares-core
  */
@@ -63,6 +63,23 @@ function spokares_freq_ok( string $freq ): bool {
 }
 
 /**
+ * The one line under a frequency the save refuses: the shape, or the band
+ * (and what the site keeps instead). admin-forms.js says the same live.
+ *
+ * @param string $typed  Typed frequency.
+ * @param string $stored The stored frequency.
+ */
+function spokares_freq_problem( string $typed, string $stored ): string {
+	if ( ! preg_match( '/^\d{2,3}\.\d{3}$/', $typed ) ) {
+		return __( 'Three digits after the point, like 147.300.', 'spokares-core' );
+	}
+	return '' !== $stored
+		/* translators: %s: the stored frequency, e.g. "147.300". */
+		? sprintf( __( 'Not an amateur frequency; the site keeps %s.', 'spokares-core' ), $stored )
+		: __( 'Not an amateur frequency.', 'spokares-core' );
+}
+
+/**
  * A select for a list of values, keeping an unknown stored value selectable.
  *
  * @param string   $name    Field name.
@@ -86,26 +103,41 @@ function spokares_select( string $name, string $current, array $choices, string 
 }
 
 /**
- * Week checkboxes (1st-5th).
+ * The kinds of Tuesday net, as the Which Tuesdays selects name them.
  *
- * @param string $name    Field name (without []).
- * @param int[]  $current Selected weeks.
- * @param string $legend  Legend.
+ * @return array<string,string> Value => label.
  */
-function spokares_week_boxes( string $name, array $current, string $legend ): void {
-	echo '<fieldset class="spk-weeks"><legend class="screen-reader-text">' . esc_html( $legend ) . '</legend>';
-	for ( $n = 1; $n <= 5; $n++ ) {
-		printf(
-			'<label><input type="checkbox" name="%1$s[]" value="%2$d" %3$s> %4$s</label> ',
-			esc_attr( $name ),
-			(int) $n,
-			checked( in_array( $n, $current, true ), true, false ),
-			esc_html( 5 === $n ? __( '5th', 'spokares-core' ) : spokares_ordinal( $n ) )
-		);
-	}
-	echo '</fieldset>';
+function spokares_net_kinds(): array {
+	return array(
+		'regular' => __( 'Regular net', 'spokares-core' ),
+		'winlink' => __( 'Winlink night', 'spokares-core' ),
+		'simplex' => __( 'Starts on simplex', 'spokares-core' ),
+		'gmrs'    => __( 'GMRS net', 'spokares-core' ),
+	);
 }
 
+/**
+ * What each Tuesday of the month is (1-5 => kind), as the schedule reads
+ * the three week lists: a week in two lists goes to the first of simplex,
+ * Winlink, GMRS (spokares_net_weeks()).
+ *
+ * @param array $nets spk_nets.
+ * @return array<int,string>
+ */
+function spokares_net_week_kinds( array $nets ): array {
+	$weeks = spokares_net_weeks( $nets );
+	$out   = array();
+	for ( $n = 1; $n <= 5; $n++ ) {
+		$out[ $n ] = 'regular';
+		foreach ( array( 'simplex', 'winlink', 'gmrs' ) as $kind ) {
+			if ( in_array( $n, $weeks[ $kind ], true ) ) {
+				$out[ $n ] = $kind;
+				break;
+			}
+		}
+	}
+	return $out;
+}
 
 /**
  * Plain text of a piece of the site's HTML, as a reader sees it.
@@ -118,14 +150,15 @@ function spokares_net_plain( string $html ): string {
 }
 
 /**
- * The preview lines for a set of net facts: what the site prints for them.
- * The site's own formatters and the Other nets view are run with these facts
- * in place of the stored ones, so the preview can't drift from the pages
+ * The "Members see" lines for a set of net facts: what the site prints for
+ * them. The site's own formatters and the Other nets view are run with these
+ * facts in place of the stored ones, so the lines can't drift from the pages
  * (no ", ," for an empty GMRS time; the alternate row as How it works shows
- * it; a week ticked twice listed once).
+ * it; a week in two lists listed once).
  *
  * @param array $nets  spk_nets.
  * @param array $radio spk_radio.
+ * @return array{bar:string,alt:string,winlink:string,simplex:string,gmrs:string}
  */
 function spokares_net_preview_lines( array $nets, array $radio ): array {
 	$use_nets  = static fn() => $nets;
@@ -136,23 +169,15 @@ function spokares_net_preview_lines( array $nets, array $radio ): array {
 	try {
 		$nets  = spokares_opt( 'spk_nets' );
 		$radio = spokares_opt( 'spk_radio' );
-		$p     = $radio['primary'];
 		$a     = $radio['alternate'];
-		$time  = spokares_fmt_time( $nets['net_time'] );
 		$lines = array(
 			// For members: the settings bar prints the time, then the bar line.
-			'bar'       => trim( $time . ' ' . spokares_radio_line( 'bar' ) ),
-			'copy'      => spokares_radio_line( 'copy' ),
-			// How it works: the box prints the time, then the call sign and the display line.
-			/* translators: %s: time. */
-			'settings'  => sprintf( __( 'Every Tuesday, %s', 'spokares-core' ), $time ) . ' · ' . trim( $p['call'] . ' ' . spokares_radio_line( 'display' ) ),
-			'alt'       => ( $a['show'] && '' !== $a['freq'] ) ? __( 'Alternate', 'spokares-core' ) . ' · ' . spokares_radio_line( 'alt-display' ) : __( '(not shown)', 'spokares-core' ),
-			'from-home' => __( 'From home:', 'spokares-core' ) . ' ' . __( 'listen to the Tuesday net,', 'spokares-core' ) . ' ' . $time . ', '
-				. ( '' !== $p['freq'] ? spokares_radio_line( 'freq' ) . ', ' : '' )
-				. __( 'on any scanner or 2-meter radio. No license needed.', 'spokares-core' ),
-			'winlink'   => '',
-			'simplex'   => '',
-			'gmrs'      => '',
+			'bar'     => implode( ' · ', array_filter( array( spokares_fmt_time( $nets['net_time'] ), spokares_radio_line( 'bar' ) ) ) ),
+			// How it works: the settings box's Alternate row.
+			'alt'     => ( $a['show'] && '' !== $a['freq'] ) ? __( 'Alternate', 'spokares-core' ) . ' · ' . spokares_radio_line( 'alt-display' ) : __( 'Not shown on How it works.', 'spokares-core' ),
+			'winlink' => '',
+			'simplex' => '',
+			'gmrs'    => '',
 		);
 		// How it works › Other nets, as it prints: one bullet per group.
 		preg_match_all( '#<li\b[^>]*>(.*?)</li>#s', spokares_render_net( array( 'view' => 'other-nets' ) ), $m );
@@ -175,10 +200,11 @@ function spokares_net_preview_lines( array $nets, array $radio ): array {
 }
 
 /**
- * Net details as the form shows them (field key => text), recorded in the
+ * Net Settings as the form shows them (field key => text), recorded in the
  * form when it is drawn. A save changes only the fields the editor changed,
- * so an older screen never puts back someone else's newer save (§8.2 #18,
- * as the rota and Regular meetings do).
+ * so an older screen never puts back someone else's newer save (as the Net
+ * Control Schedule and Meeting Schedule do). The week lists are as the
+ * Which Tuesdays selects show them: each week in one list only.
  *
  * @param array $nets  spk_nets.
  * @param array $radio spk_radio.
@@ -186,11 +212,8 @@ function spokares_net_preview_lines( array $nets, array $radio ): array {
 function spokares_net_form_state( array $nets, array $radio ): array {
 	$p     = $radio['primary'];
 	$a     = $radio['alternate'];
-	$weeks = static function ( $picked ): string {
-		$picked = array_values( array_unique( array_map( 'intval', (array) $picked ) ) );
-		sort( $picked );
-		return implode( ',', $picked );
-	};
+	$kinds = spokares_net_week_kinds( $nets );
+	$weeks = static fn( string $kind ): string => implode( ',', array_keys( $kinds, $kind, true ) );
 	return array(
 		'p_call'         => strtoupper( trim( (string) $p['call'] ) ),
 		'p_freq'         => (string) $p['freq'],
@@ -202,9 +225,9 @@ function spokares_net_form_state( array $nets, array $radio ): array {
 		'a_tone'         => (string) $a['tone'],
 		'a_show'         => $a['show'] ? '1' : '',
 		'a_needs_check'  => $a['needs_check'] ? '1' : '',
-		'winlink_nth'    => $weeks( $nets['winlink_nth'] ),
-		'simplex_nth'    => $weeks( $nets['simplex_nth'] ),
-		'gmrs_nth'       => $weeks( $nets['gmrs_nth'] ),
+		'winlink_nth'    => $weeks( 'winlink' ),
+		'simplex_nth'    => $weeks( 'simplex' ),
+		'gmrs_nth'       => $weeks( 'gmrs' ),
 		'gmrs_time'      => (string) $nets['gmrs_time'],
 		'needs_check'    => $nets['needs_check'] ? '1' : '',
 		'winlink_howto'  => trim( (string) preg_replace( '/\s+/', ' ', (string) $nets['winlink_howto'] ) ),
@@ -213,32 +236,124 @@ function spokares_net_form_state( array $nets, array $radio ): array {
 }
 
 /**
- * Field names for the Net details sentences.
+ * The fields' names for the notices, in lower case ("Not saved: the
+ * frequency (outlined in red).").
  */
 function spokares_net_field_names(): array {
 	return array(
-		'p_call'         => __( 'The repeater call sign', 'spokares-core' ),
-		'p_freq'         => __( 'The frequency', 'spokares-core' ),
-		'p_offset'       => __( 'The offset', 'spokares-core' ),
-		'p_tone'         => __( 'The tone', 'spokares-core' ),
-		'net_time'       => __( 'The net time', 'spokares-core' ),
-		'a_freq'         => __( 'The alternate frequency', 'spokares-core' ),
-		'a_offset'       => __( 'The alternate offset', 'spokares-core' ),
-		'a_tone'         => __( 'The alternate tone', 'spokares-core' ),
+		'p_call'         => __( 'the repeater call sign', 'spokares-core' ),
+		'p_freq'         => __( 'the frequency', 'spokares-core' ),
+		'p_offset'       => __( 'the offset', 'spokares-core' ),
+		'p_tone'         => __( 'the tone', 'spokares-core' ),
+		'net_time'       => __( 'the net time', 'spokares-core' ),
+		'a_freq'         => __( 'the alternate frequency', 'spokares-core' ),
+		'a_offset'       => __( 'the alternate offset', 'spokares-core' ),
+		'a_tone'         => __( 'the alternate tone', 'spokares-core' ),
 		'a_show'         => __( '“Show on How it works”', 'spokares-core' ),
-		'a_needs_check'  => __( 'The alternate repeater’s “Needs checking”', 'spokares-core' ),
-		'winlink_nth'    => __( 'The Winlink nights', 'spokares-core' ),
-		'simplex_nth'    => __( 'The simplex nights', 'spokares-core' ),
-		'gmrs_nth'       => __( 'The GMRS net weeks', 'spokares-core' ),
-		'gmrs_time'      => __( 'The GMRS net time', 'spokares-core' ),
-		'needs_check'    => __( 'The nets’ “Needs checking”', 'spokares-core' ),
-		'winlink_howto'  => __( 'The Winlink sentence', 'spokares-core' ),
-		'open_slot_line' => __( 'The open-slot line', 'spokares-core' ),
+		'a_needs_check'  => __( 'the alternate repeater’s “Needs checking”', 'spokares-core' ),
+		'winlink_nth'    => __( 'which Tuesdays', 'spokares-core' ),
+		'simplex_nth'    => __( 'which Tuesdays', 'spokares-core' ),
+		'gmrs_nth'       => __( 'which Tuesdays', 'spokares-core' ),
+		'gmrs_time'      => __( 'the GMRS net time', 'spokares-core' ),
+		'needs_check'    => __( 'the nets’ “Needs checking”', 'spokares-core' ),
+		'winlink_howto'  => __( 'the Winlink how-to wording', 'spokares-core' ),
+		'open_slot_line' => __( 'the asking-for-volunteers line', 'spokares-core' ),
 	);
 }
 
 /**
- * The Net details screen.
+ * What a save changed, in the screen's order and its own words: "tone
+ * 103.5 Hz (was 100 Hz)", "2nd Tuesday Winlink night (was regular net)",
+ * "Winlink how-to wording changed".
+ *
+ * @param array $was       spokares_net_form_state() before the save.
+ * @param array $now       The same after it.
+ * @param array $was_weeks spokares_net_week_kinds() before the save.
+ * @param array $now_weeks The same after it.
+ * @return string[]
+ */
+function spokares_net_changes( array $was, array $now, array $was_weeks, array $now_weeks ): array {
+	$none  = __( 'none', 'spokares-core' );
+	$time  = static fn( string $v ): string => '' !== $v ? spokares_fmt_time( $v ) : $none;
+	$mhz   = static fn( string $v ): string => '' !== $v ? $v . ' MHz' : $none;
+	$plain = static fn( string $v ): string => '' !== $v ? spokares_minus( $v ) : $none;
+	$tone  = static fn( string $v ): string => '' !== $v ? $v : __( 'no tone', 'spokares-core' );
+	$kinds = spokares_net_kinds();
+	$kind  = static fn( string $k ): string => in_array( $k, array( 'regular', 'simplex' ), true ) ? strtolower( $kinds[ $k ] ) : $kinds[ $k ];
+	$out   = array();
+	$pair  = static function ( string $key, string $label, callable $show ) use ( $was, $now, &$out ): void {
+		if ( $was[ $key ] !== $now[ $key ] ) {
+			/* translators: 1: a field's name, 2: its new value, 3: its old value. */
+			$out[] = sprintf( __( '%1$s %2$s (was %3$s)', 'spokares-core' ), $label, $show( $now[ $key ] ), $show( $was[ $key ] ) );
+		}
+	};
+	$pair( 'net_time', __( 'net time', 'spokares-core' ), $time );
+	$pair( 'p_call', __( 'repeater call sign', 'spokares-core' ), $plain );
+	$pair( 'p_freq', __( 'frequency', 'spokares-core' ), $mhz );
+	$pair( 'p_offset', __( 'offset', 'spokares-core' ), $plain );
+	$pair( 'p_tone', __( 'tone', 'spokares-core' ), $tone );
+	if ( $was['a_show'] !== $now['a_show'] ) {
+		$out[] = '1' === $now['a_show'] ? __( 'alternate repeater shown on How it works', 'spokares-core' ) : __( 'alternate repeater taken off How it works', 'spokares-core' );
+	}
+	$pair( 'a_freq', __( 'alternate frequency', 'spokares-core' ), $mhz );
+	$pair( 'a_offset', __( 'alternate offset', 'spokares-core' ), $plain );
+	$pair( 'a_tone', __( 'alternate tone', 'spokares-core' ), $tone );
+	for ( $n = 1; $n <= 5; $n++ ) {
+		if ( $was_weeks[ $n ] !== $now_weeks[ $n ] ) {
+			/* translators: 1: "2nd", 2: the new kind of net, 3: the old one. */
+			$out[] = sprintf( __( '%1$s Tuesday %2$s (was %3$s)', 'spokares-core' ), 5 === $n ? __( '5th', 'spokares-core' ) : spokares_ordinal( $n ), $kind( $now_weeks[ $n ] ), $kind( $was_weeks[ $n ] ) );
+		}
+	}
+	$pair( 'gmrs_time', __( 'GMRS net time', 'spokares-core' ), $time );
+	if ( $was['winlink_howto'] !== $now['winlink_howto'] ) {
+		$out[] = __( 'Winlink how-to wording changed', 'spokares-core' );
+	}
+	if ( $was['open_slot_line'] !== $now['open_slot_line'] ) {
+		$out[] = __( 'asking-for-volunteers line changed', 'spokares-core' );
+	}
+	if ( $was['a_needs_check'] !== $now['a_needs_check'] || $was['needs_check'] !== $now['needs_check'] ) {
+		$out[] = __( '“Needs checking” changed', 'spokares-core' );
+	}
+	return $out;
+}
+
+/**
+ * A field's hint, or the problem that replaces it (one line, same id, so
+ * the field's aria-describedby reads whichever is there).
+ *
+ * @param array  $errors Field key => sentence.
+ * @param string $key    Field key.
+ * @param string $id     Element id.
+ * @param string $hint   The hint.
+ */
+function spokares_net_hint( array $errors, string $key, string $id, string $hint ): void {
+	$problem = isset( $errors[ $key ] );
+	printf(
+		'<p class="%1$s" id="%2$s" data-hint="%3$s">%4$s</p>',
+		$problem ? 'spk-error-text' : 'description',
+		esc_attr( $id ),
+		esc_attr( $hint ),
+		esc_html( $problem ? $errors[ $key ] : $hint )
+	);
+}
+
+/**
+ * A "Members see" row.
+ *
+ * @param string $key  The data-preview hook.
+ * @param string $text The line.
+ */
+function spokares_net_members_see( string $key, string $text ): void {
+	?>
+	<tr class="spk-members-see">
+		<th scope="row"><?php esc_html_e( 'Members see', 'spokares-core' ); ?></th>
+		<td data-preview="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $text ); ?></td>
+	</tr>
+	<?php
+}
+
+/**
+ * The Net Settings screen.
  */
 function spokares_net_details_page(): void {
 	if ( ! current_user_can( 'spokares_edit_net_details' ) ) {
@@ -255,38 +370,49 @@ function spokares_net_details_page(): void {
 	$a        = $radio['alternate'];
 	$lines    = spokares_net_preview_lines( $nets, $radio );
 	$state    = spokares_net_form_state( $nets, $radio );
+	$kinds    = spokares_net_week_kinds( $nets );
+	$saved    = get_option( 'spk_net_saved', array() );
+	$saved    = is_array( $saved ) ? spokares_saved_line( $saved ) : '';
+	$freqhint = __( 'Three digits after the point, like 147.300.', 'spokares-core' );
+	$others   = array_filter( array( $lines['winlink'], $lines['simplex'], $lines['gmrs'] ) );
+	$week_err = array_values( array_intersect_key( $errors, array_flip( array( 'winlink_nth', 'simplex_nth', 'gmrs_nth' ) ) ) );
 	?>
 	<div class="wrap spk-screen spk-net">
-		<h1 class="wp-heading-inline"><?php esc_html_e( 'Net details', 'spokares-core' ); ?></h1>
+		<h1 class="wp-heading-inline"><?php echo esc_html( spokares_screen_title( 'net-details' ) ); ?></h1>
 		<a class="page-title-action" href="<?php echo esc_url( spokares_site_url( '/how-it-works/', 'weekly-net' ) ); ?>"><?php esc_html_e( 'View on site', 'spokares-core' ); ?></a>
+		<?php if ( '' !== $saved ) : ?>
+			<span class="spk-saved"><?php echo esc_html( $saved ); ?></span>
+		<?php endif; ?>
 		<hr class="wp-header-end">
-		<div class="spk-banner spk-banner--red" role="note"><?php esc_html_e( 'Amateur frequencies only. Never county, hospital, SHARES, 800 MHz or channel numbers.', 'spokares-core' ); ?></div>
 
-		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" data-spk-confirm id="spk-net-form">
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="spk-net-form" data-spk-guard<?php echo $held ? ' data-spk-dirty' : ''; ?>>
 			<input type="hidden" name="action" value="spokares_save_net_details">
 			<?php wp_nonce_field( 'spokares_save_net_details' ); ?>
 			<input type="hidden" name="orig" value="<?php echo esc_attr( (string) wp_json_encode( $state ) ); ?>">
 
-			<h2><?php esc_html_e( 'The repeater', 'spokares-core' ); ?></h2>
+			<h2><?php esc_html_e( 'The Tuesday net', 'spokares-core' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<tr>
-					<th scope="row"><label for="spk-p-call"><?php esc_html_e( 'Repeater call sign', 'spokares-core' ); ?></label></th>
-					<td>
+					<th scope="row"><label for="spk-net-time"><?php esc_html_e( 'Net time (required)', 'spokares-core' ); ?></label></th>
+					<td><input type="time" id="spk-net-time" name="nets[net_time]" class="<?php echo esc_attr( trim( spokares_err_class( $errors, 'net_time' ) ) ); ?>" value="<?php echo esc_attr( (string) $v( 'net_time', $nets['net_time'] ) ); ?>" data-stored="<?php echo esc_attr( $nets['net_time'] ); ?>" required>
+					<?php spokares_err_text( $errors, 'net_time' ); ?></td>
+				</tr>
+				<tr>
 					<?php if ( $admin ) : ?>
-						<input type="text" id="spk-p-call" name="radio[primary][call]" class="regular-text<?php echo esc_attr( spokares_err_class( $errors, 'p_call' ) ); ?>" value="<?php echo esc_attr( (string) $v( 'p_call', $p['call'] ) ); ?>" data-preview-input="call" data-stored="<?php echo esc_attr( $p['call'] ); ?>" maxlength="12" spellcheck="false" aria-describedby="spk-p-call-hint">
+						<th scope="row"><label for="spk-p-call"><?php esc_html_e( 'Repeater call sign', 'spokares-core' ); ?></label></th>
+						<td><input type="text" id="spk-p-call" name="radio[primary][call]" class="regular-text<?php echo esc_attr( spokares_err_class( $errors, 'p_call' ) ); ?>" value="<?php echo esc_attr( (string) $v( 'p_call', $p['call'] ) ); ?>" data-stored="<?php echo esc_attr( $p['call'] ); ?>" maxlength="12" spellcheck="false" aria-describedby="spk-p-call-hint">
 						<p class="description" id="spk-p-call-hint"><?php esc_html_e( 'The club’s own call sign. How it works also names it in its page text and in the message-path picture, which don’t follow this box.', 'spokares-core' ); ?></p>
 					<?php else : ?>
-						<?php // Read-only and not posted: only an administrator can change the club's call (the save checks it too). ?>
-						<input type="text" id="spk-p-call" class="regular-text<?php echo esc_attr( spokares_err_class( $errors, 'p_call' ) ); ?>" value="<?php echo esc_attr( $p['call'] ); ?>" data-preview-input="call" data-stored="<?php echo esc_attr( $p['call'] ); ?>" spellcheck="false" readonly aria-describedby="spk-p-call-hint">
-						<p class="description" id="spk-p-call-hint"><?php esc_html_e( 'The club’s own call sign. Only an administrator can change it.', 'spokares-core' ); ?></p>
+						<?php // Plain text, not a box: only the webmaster changes the club's call (the save checks it too). ?>
+						<th scope="row"><?php esc_html_e( 'Repeater call sign', 'spokares-core' ); ?></th>
+						<td><span id="spk-p-call" class="spk-fixed" data-stored="<?php echo esc_attr( $p['call'] ); ?>"><?php echo esc_html( sprintf( /* translators: %s: the club's call sign. */ __( '%s (the webmaster changes this)', 'spokares-core' ), $p['call'] ) ); ?></span>
 					<?php endif; ?>
 					<?php spokares_err_text( $errors, 'p_call' ); ?></td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="spk-p-freq"><?php esc_html_e( 'Frequency (MHz)', 'spokares-core' ); ?></label></th>
-					<td><input type="text" id="spk-p-freq" name="radio[primary][freq]" class="<?php echo esc_attr( trim( 'small-text spk-freq' . spokares_err_class( $errors, 'p_freq' ) ) ); ?>" value="<?php echo esc_attr( (string) $v( 'p_freq', $p['freq'] ) ); ?>" pattern="\d{2,3}\.\d{3}" inputmode="decimal" data-preview-input="freq" data-stored="<?php echo esc_attr( $p['freq'] ); ?>" aria-describedby="spk-p-freq-hint" required>
-					<p class="description" id="spk-p-freq-hint"><?php esc_html_e( 'An amateur frequency, like 147.300 (three digits after the point).', 'spokares-core' ); ?></p>
-					<?php spokares_err_text( $errors, 'p_freq' ); ?></td>
+					<th scope="row"><label for="spk-p-freq"><?php esc_html_e( 'Frequency (MHz) (required)', 'spokares-core' ); ?></label></th>
+					<td><input type="text" id="spk-p-freq" name="radio[primary][freq]" class="<?php echo esc_attr( trim( 'small-text spk-freq' . spokares_err_class( $errors, 'p_freq' ) ) ); ?>" value="<?php echo esc_attr( (string) $v( 'p_freq', $p['freq'] ) ); ?>" inputmode="decimal" autocomplete="off" data-stored="<?php echo esc_attr( $p['freq'] ); ?>" aria-describedby="spk-p-freq-hint" required>
+					<?php spokares_net_hint( $errors, 'p_freq', 'spk-p-freq-hint', $freqhint ); ?></td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="spk-p-offset"><?php esc_html_e( 'Offset', 'spokares-core' ); ?></label></th>
@@ -298,20 +424,24 @@ function spokares_net_details_page(): void {
 					<td><?php spokares_select( 'radio[primary][tone]', (string) $p['tone'], spokares_tones(), __( 'No tone', 'spokares-core' ), 'spk-p-tone' ); ?>
 					<?php spokares_err_text( $errors, 'p_tone' ); ?></td>
 				</tr>
-				<tr>
-					<th scope="row"><label for="spk-net-time"><?php esc_html_e( 'Net time (every Tuesday)', 'spokares-core' ); ?></label></th>
-					<td><input type="time" id="spk-net-time" name="nets[net_time]" class="<?php echo esc_attr( trim( spokares_err_class( $errors, 'net_time' ) ) ); ?>" value="<?php echo esc_attr( (string) $v( 'net_time', $nets['net_time'] ) ); ?>" data-stored="<?php echo esc_attr( $nets['net_time'] ); ?>" required>
-					<?php spokares_err_text( $errors, 'net_time' ); ?></td>
-				</tr>
+				<?php spokares_net_members_see( 'bar', $lines['bar'] ); ?>
 			</table>
 
-			<h2><?php esc_html_e( 'The alternate repeater', 'spokares-core' ); ?></h2>
+			<h2><?php esc_html_e( 'Alternate repeater', 'spokares-core' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<tr>
+					<th scope="row"><label for="spk-a-show"><?php esc_html_e( 'Show on How it works', 'spokares-core' ); ?></label></th>
+					<td><input type="checkbox" name="radio[alternate][show]" id="spk-a-show" value="1" <?php checked( $a['show'] ); ?>>
+					<?php if ( $admin ) : ?>
+						<label class="spk-admin-tick"><input type="checkbox" name="radio[alternate][needs_check]" value="1" <?php checked( $a['needs_check'] ); ?>> <?php esc_html_e( 'Needs checking (webmaster only)', 'spokares-core' ); ?></label>
+					<?php endif; ?>
+					<?php spokares_err_text( $errors, 'a_show' ); ?>
+					<?php spokares_err_text( $errors, 'a_needs_check' ); ?></td>
+				</tr>
+				<tr>
 					<th scope="row"><label for="spk-a-freq"><?php esc_html_e( 'Frequency (MHz)', 'spokares-core' ); ?></label></th>
-					<td><input type="text" id="spk-a-freq" name="radio[alternate][freq]" class="<?php echo esc_attr( trim( 'small-text spk-freq' . spokares_err_class( $errors, 'a_freq' ) ) ); ?>" value="<?php echo esc_attr( (string) $v( 'a_freq', $a['freq'] ) ); ?>" pattern="\d{2,3}\.\d{3}" inputmode="decimal" data-stored="<?php echo esc_attr( $a['freq'] ); ?>" aria-describedby="spk-a-freq-hint">
-					<p class="description" id="spk-a-freq-hint"><?php esc_html_e( 'An amateur frequency, like 146.880, or empty.', 'spokares-core' ); ?></p>
-					<?php spokares_err_text( $errors, 'a_freq' ); ?></td>
+					<td><input type="text" id="spk-a-freq" name="radio[alternate][freq]" class="<?php echo esc_attr( trim( 'small-text spk-freq' . spokares_err_class( $errors, 'a_freq' ) ) ); ?>" value="<?php echo esc_attr( (string) $v( 'a_freq', $a['freq'] ) ); ?>" inputmode="decimal" autocomplete="off" data-stored="<?php echo esc_attr( $a['freq'] ); ?>" aria-describedby="spk-a-freq-hint">
+					<?php spokares_net_hint( $errors, 'a_freq', 'spk-a-freq-hint', $freqhint ); ?></td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="spk-a-offset"><?php esc_html_e( 'Offset', 'spokares-core' ); ?></label></th>
@@ -323,36 +453,47 @@ function spokares_net_details_page(): void {
 					<td><?php spokares_select( 'radio[alternate][tone]', (string) $a['tone'], spokares_tones(), __( 'No tone', 'spokares-core' ), 'spk-a-tone' ); ?>
 					<?php spokares_err_text( $errors, 'a_tone' ); ?></td>
 				</tr>
-				<tr>
-					<th scope="row"><?php esc_html_e( 'Show it', 'spokares-core' ); ?></th>
-					<td><label><input type="checkbox" name="radio[alternate][show]" id="spk-a-show" value="1" <?php checked( $a['show'] ); ?>> <?php esc_html_e( 'Show on How it works', 'spokares-core' ); ?></label>
-					<?php if ( $admin ) : ?>
-						<br><label><input type="checkbox" name="radio[alternate][needs_check]" value="1" <?php checked( $a['needs_check'] ); ?>> <?php esc_html_e( 'Needs checking (webmaster only)', 'spokares-core' ); ?></label>
-					<?php endif; ?>
-					<?php spokares_err_text( $errors, 'a_show' ); ?>
-					<?php spokares_err_text( $errors, 'a_needs_check' ); ?></td>
-				</tr>
+				<?php spokares_net_members_see( 'alt', $lines['alt'] ); ?>
 			</table>
 
 			<h2><?php esc_html_e( 'Which Tuesdays', 'spokares-core' ); ?></h2>
+			<fieldset class="spk-week-kinds<?php echo $week_err ? ' spk-field-error' : ''; ?>">
+				<legend class="screen-reader-text"><?php esc_html_e( 'The net on each Tuesday of the month', 'spokares-core' ); ?></legend>
+				<?php for ( $n = 1; $n <= 5; $n++ ) : ?>
+					<span class="spk-week">
+						<label for="spk-week-<?php echo (int) $n; ?>">
+							<?php
+							if ( 1 === $n ) {
+								esc_html_e( '1st Tuesday', 'spokares-core' );
+							} else {
+								echo esc_html( 5 === $n ? __( '5th', 'spokares-core' ) : spokares_ordinal( $n ) ) . '<span class="screen-reader-text"> ' . esc_html__( 'Tuesday', 'spokares-core' ) . '</span>';
+							}
+							?>
+						</label>
+						<select id="spk-week-<?php echo (int) $n; ?>" name="nets[week][<?php echo (int) $n; ?>]">
+							<?php foreach ( spokares_net_kinds() as $value => $label ) : ?>
+								<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $kinds[ $n ] ); ?>><?php echo esc_html( $label ); ?></option>
+							<?php endforeach; ?>
+						</select>
+					</span>
+				<?php endfor; ?>
+				<?php if ( $week_err ) : ?>
+					<span class="spk-error-text"><?php echo esc_html( $week_err[0] ); ?></span>
+				<?php endif; ?>
+			</fieldset>
 			<table class="form-table" role="presentation">
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Winlink nights', 'spokares-core' ); ?></th>
-					<td><?php spokares_week_boxes( 'nets[winlink_nth]', $nets['winlink_nth'], __( 'Winlink nights', 'spokares-core' ) ); ?>
-					<?php spokares_err_text( $errors, 'winlink_nth' ); ?></td>
+					<th scope="row"><label for="spk-gmrs-time"><?php esc_html_e( 'GMRS net time', 'spokares-core' ); ?></label></th>
+					<td><input type="time" id="spk-gmrs-time" name="nets[gmrs_time]" class="<?php echo esc_attr( trim( spokares_err_class( $errors, 'gmrs_time' ) ) ); ?>" value="<?php echo esc_attr( (string) $v( 'gmrs_time', $nets['gmrs_time'] ) ); ?>" data-stored="<?php echo esc_attr( $nets['gmrs_time'] ); ?>">
+					<?php spokares_err_text( $errors, 'gmrs_time' ); ?></td>
 				</tr>
-				<tr>
-					<th scope="row"><?php esc_html_e( 'Simplex nights', 'spokares-core' ); ?></th>
-					<td><?php spokares_week_boxes( 'nets[simplex_nth]', $nets['simplex_nth'], __( 'Simplex nights', 'spokares-core' ) ); ?>
-					<p class="description"><?php esc_html_e( 'The net starts on simplex, then moves to the repeater. A week ticked twice counts as simplex first, then Winlink, then GMRS.', 'spokares-core' ); ?></p>
-					<?php spokares_err_text( $errors, 'simplex_nth' ); ?></td>
-				</tr>
-				<tr>
-					<th scope="row"><?php esc_html_e( 'ACS GMRS net', 'spokares-core' ); ?></th>
-					<td><?php spokares_week_boxes( 'nets[gmrs_nth]', $nets['gmrs_nth'], __( 'GMRS net weeks', 'spokares-core' ) ); ?>
-						<label for="spk-gmrs-time"><?php esc_html_e( 'at', 'spokares-core' ); ?> <span class="screen-reader-text"><?php esc_html_e( '(ACS GMRS net time)', 'spokares-core' ); ?></span></label> <input type="time" id="spk-gmrs-time" name="nets[gmrs_time]" class="<?php echo esc_attr( trim( spokares_err_class( $errors, 'gmrs_time' ) ) ); ?>" value="<?php echo esc_attr( (string) $v( 'gmrs_time', $nets['gmrs_time'] ) ); ?>" data-stored="<?php echo esc_attr( $nets['gmrs_time'] ); ?>">
-						<?php spokares_err_text( $errors, 'gmrs_nth' ); ?>
-						<?php spokares_err_text( $errors, 'gmrs_time' ); ?></td>
+				<tr class="spk-members-see"<?php echo $others ? '' : ' hidden'; ?>>
+					<th scope="row"><?php esc_html_e( 'Members see', 'spokares-core' ); ?></th>
+					<td><ul class="spk-members-see-list">
+						<?php foreach ( array( 'winlink', 'simplex', 'gmrs' ) as $key ) : ?>
+							<li data-preview="<?php echo esc_attr( $key ); ?>"<?php echo '' === $lines[ $key ] ? ' hidden' : ''; ?>><?php echo esc_html( $lines[ $key ] ); ?></li>
+						<?php endforeach; ?>
+					</ul></td>
 				</tr>
 				<?php if ( $admin ) : ?>
 				<tr>
@@ -363,47 +504,56 @@ function spokares_net_details_page(): void {
 				<?php endif; ?>
 			</table>
 
-			<h2><?php esc_html_e( 'Sentences', 'spokares-core' ); ?></h2>
+			<h2><?php esc_html_e( 'Wording on the site', 'spokares-core' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<tr>
 					<th scope="row"><label for="spk-howto"><?php esc_html_e( 'How to answer a Winlink assignment', 'spokares-core' ); ?></label></th>
 					<td><textarea id="spk-howto" name="nets[winlink_howto]" rows="3" class="large-text<?php echo esc_attr( spokares_err_class( $errors, 'winlink_howto' ) ); ?>" maxlength="300" aria-describedby="spk-howto-hint"><?php echo esc_textarea( (string) $v( 'winlink_howto', $nets['winlink_howto'] ) ); ?></textarea>
-					<p class="description" id="spk-howto-hint"><?php esc_html_e( 'Shown above the Winlink assignments on Exercises & events, as one line.', 'spokares-core' ); ?></p>
+					<p class="description" id="spk-howto-hint"><?php esc_html_e( 'Shown above the Winlink assignments on the Exercises & events page.', 'spokares-core' ); ?></p>
 					<?php spokares_err_text( $errors, 'winlink_howto' ); ?>
 					<?php spokares_confirm_box( $errors, 'winlink_howto' ); ?></td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="spk-open"><?php esc_html_e( 'Open-slot line', 'spokares-core' ); ?></label></th>
+					<th scope="row"><label for="spk-open"><?php esc_html_e( 'Asking for volunteers', 'spokares-core' ); ?></label></th>
 					<td><input type="text" id="spk-open" name="nets[open_slot_line]" class="large-text<?php echo esc_attr( spokares_err_class( $errors, 'open_slot_line' ) ); ?>" maxlength="160" value="<?php echo esc_attr( (string) $v( 'open_slot_line', $nets['open_slot_line'] ) ); ?>" aria-describedby="spk-open-hint">
-					<p class="description" id="spk-open-hint"><?php esc_html_e( 'Shown under the rota; the “Open” tags link to it.', 'spokares-core' ); ?></p>
+					<p class="description" id="spk-open-hint"><?php esc_html_e( 'Shown under the Net Control Schedule on the For members page; the “Volunteer needed” tags link to it.', 'spokares-core' ); ?></p>
 					<?php spokares_err_text( $errors, 'open_slot_line' ); ?>
 					<?php spokares_confirm_box( $errors, 'open_slot_line' ); ?></td>
 				</tr>
 			</table>
 
-			<?php // No live region: the preview is read on demand, not announced on every keystroke. ?>
-			<div class="spk-preview" id="spk-net-preview">
-				<h2><?php esc_html_e( 'Preview: what the site will say', 'spokares-core' ); ?></h2>
-				<dl>
-					<dt><?php esc_html_e( 'For members: the settings bar', 'spokares-core' ); ?></dt><dd data-preview="bar"><?php echo esc_html( $lines['bar'] ); ?></dd>
-					<dt><?php esc_html_e( 'The Copy buttons copy', 'spokares-core' ); ?></dt><dd data-preview="copy"><?php echo esc_html( $lines['copy'] ); ?></dd>
-					<dt><?php esc_html_e( 'How it works: the settings box', 'spokares-core' ); ?></dt><dd data-preview="settings"><?php echo esc_html( $lines['settings'] ); ?></dd>
-					<dt><?php esc_html_e( 'How it works: the alternate repeater', 'spokares-core' ); ?></dt><dd data-preview="alt"><?php echo esc_html( $lines['alt'] ); ?></dd>
-					<dt><?php esc_html_e( 'Home: the “From home” card', 'spokares-core' ); ?></dt><dd data-preview="from-home"><?php echo esc_html( $lines['from-home'] ); ?></dd>
-					<dt><?php esc_html_e( 'How it works: “Other nets”', 'spokares-core' ); ?></dt>
-					<dd><ul>
-						<?php foreach ( array( 'winlink', 'simplex', 'gmrs' ) as $key ) : ?>
-							<li data-preview="<?php echo esc_attr( $key ); ?>"<?php echo '' === $lines[ $key ] ? ' hidden' : ''; ?>><?php echo esc_html( $lines[ $key ] ); ?></li>
-						<?php endforeach; ?>
-					</ul></dd>
-				</dl>
-			</div>
-
-			<p class="submit"><button type="submit" class="button button-primary button-large"><?php esc_html_e( 'Save net details', 'spokares-core' ); ?></button></p>
+			<p class="submit spk-submit"><button type="submit" class="button button-primary button-large"><?php esc_html_e( 'Save', 'spokares-core' ); ?></button></p>
 		</form>
 	</div>
 	<?php
 }
+
+/**
+ * The screen's words for admin-forms.js (window.spokaresNet). The bands
+ * stay in window.spokaresAdmin.
+ *
+ * @param string $hook Screen hook.
+ */
+function spokares_net_script_words( $hook ): void {
+	if ( ! str_ends_with( (string) $hook, '_page_spokares-net-details' ) || ! wp_script_is( 'spokares-admin-forms', 'enqueued' ) ) {
+		return;
+	}
+	wp_add_inline_script(
+		'spokares-admin-forms',
+		'window.spokaresNet = ' . wp_json_encode(
+			array(
+				'format'   => __( 'Three digits after the point, like 147.300.', 'spokares-core' ),
+				/* translators: %s: the stored frequency, e.g. "147.300". */
+				'band'     => __( 'Not an amateur frequency; the site keeps %s.', 'spokares-core' ),
+				'bandNone' => __( 'Not an amateur frequency.', 'spokares-core' ),
+				'alt'      => __( 'Alternate', 'spokares-core' ),
+				'notShown' => __( 'Not shown on How it works.', 'spokares-core' ),
+			)
+		) . ';',
+		'before'
+	);
+}
+add_action( 'admin_enqueue_scripts', 'spokares_net_script_words', 20 );
 
 /**
  * A "Publish it" tick for a settings field (shown after a phone/e-mail hit).
@@ -424,7 +574,7 @@ function spokares_confirm_box( array $errors, string $field ): void {
 
 /**
  * Check one settings sentence; on a problem hold it back (keep the stored
- * value), remember the typed text and the error.
+ * value), remember the typed text and the problem's one sentence.
  *
  * @param string $field     Field key.
  * @param string $typed     Typed text.
@@ -433,31 +583,20 @@ function spokares_confirm_box( array $errors, string $field ): void {
  * @param array  $ticks     Confirm ticks from the form.
  * @param array  $held      Held values (updated).
  * @param array  $errors    Errors (updated).
- * @param string $label     Field name for the sentence.
  * @param int    $max       Characters allowed (the form's maxlength; 0 = no limit).
  * @return string The value to save.
  */
-function spokares_settings_text( string $field, string $typed, string $stored, array &$confirmed, array $ticks, array &$held, array &$errors, string $label, int $max = 0 ): string {
+function spokares_settings_text( string $field, string $typed, string $stored, array &$confirmed, array $ticks, array &$held, array &$errors, int $max = 0 ): string {
 	if ( $max && spokares_too_long( $typed, $max ) ) {
-		$held[ $field ]   = $typed;
-		$errors[ $field ] = sprintf(
-			/* translators: 1: field name, 2: number of characters. */
-			__( '%1$s wasn’t saved: it is longer than %2$d characters.', 'spokares-core' ),
-			$label,
-			$max
-		);
+		$held[ $field ] = $typed;
+		/* translators: %d: number of characters. */
+		$errors[ $field ] = sprintf( __( 'Keep it to %d characters.', 'spokares-core' ), $max );
 		return $stored;
 	}
 	$check = spokares_check_field( $typed, $field, $confirmed, ! empty( $ticks[ $field ] ) );
 	if ( $check['block'] || $check['confirm'] ) {
-		$what             = $check['block'] ? $check['block'] : wp_list_pluck( $check['confirm'], 'what' );
 		$held[ $field ]   = $typed;
-		$errors[ $field ] = sprintf(
-			/* translators: 1: field name, 2: what was found. */
-			__( '%1$s wasn’t saved because it mentions %2$s.', 'spokares-core' ),
-			$label,
-			spokares_and_list( $what )
-		);
+		$errors[ $field ] = spokares_problem_sentence( $check );
 		if ( ! $check['block'] ) {
 			$errors[ $field . '-confirm' ] = spokares_confirm_label( $check['confirm'] );
 		}
@@ -493,7 +632,7 @@ function spokares_posted_orig( $raw ): ?array {
 }
 
 /**
- * Save Net details.
+ * Save Net Settings, then one notice that says what changed.
  */
 function spokares_handle_save_net_details(): void {
 	spokares_verify_form( 'spokares_save_net_details', 'spokares_edit_net_details' );
@@ -504,6 +643,8 @@ function spokares_handle_save_net_details(): void {
 	$admin    = current_user_can( 'manage_options' );
 	$nets     = spokares_opt( 'spk_nets' );
 	$radio    = spokares_opt( 'spk_radio' );
+	$was      = spokares_net_form_state( $nets, $radio );
+	$was_week = spokares_net_week_kinds( $nets );
 	$held     = array();
 	$errors   = array();
 	$names    = spokares_net_field_names();
@@ -516,6 +657,27 @@ function spokares_handle_save_net_details(): void {
 		sort( $picked );
 		return $picked;
 	};
+	// Which Tuesdays: one select per week, so a week has one kind of net. A
+	// form opened before the selects existed posts the three week lists.
+	if ( is_array( $in_nets['week'] ?? null ) ) {
+		$lists = array(
+			'winlink' => array(),
+			'simplex' => array(),
+			'gmrs'    => array(),
+		);
+		for ( $n = 1; $n <= 5; $n++ ) {
+			$kind = spokares_post_str( $in_nets['week'], (string) $n );
+			if ( isset( $lists[ $kind ] ) ) {
+				$lists[ $kind ][] = $n;
+			}
+		}
+	} else {
+		$lists = array(
+			'winlink' => $weeks( $in_nets['winlink_nth'] ?? array() ),
+			'simplex' => $weeks( $in_nets['simplex_nth'] ?? array() ),
+			'gmrs'    => $weeks( $in_nets['gmrs_nth'] ?? array() ),
+		);
+	}
 
 	// What was typed, field by field, in the form's shape.
 	$typed = array(
@@ -529,9 +691,9 @@ function spokares_handle_save_net_details(): void {
 		'a_tone'         => sanitize_text_field( spokares_post_str( $ain, 'tone' ) ),
 		'a_show'         => ! empty( $ain['show'] ) ? '1' : '',
 		'a_needs_check'  => ! empty( $ain['needs_check'] ) ? '1' : '',
-		'winlink_nth'    => $weeks( $in_nets['winlink_nth'] ?? array() ),
-		'simplex_nth'    => $weeks( $in_nets['simplex_nth'] ?? array() ),
-		'gmrs_nth'       => $weeks( $in_nets['gmrs_nth'] ?? array() ),
+		'winlink_nth'    => $lists['winlink'],
+		'simplex_nth'    => $lists['simplex'],
+		'gmrs_nth'       => $lists['gmrs'],
 		'gmrs_time'      => sanitize_text_field( spokares_post_str( $in_nets, 'gmrs_time' ) ),
 		'needs_check'    => ! empty( $in_nets['needs_check'] ) ? '1' : '',
 		// Plain one-line text on the site: the line breaks go before it is
@@ -542,29 +704,36 @@ function spokares_handle_save_net_details(): void {
 	$shown = array_map( static fn( $x ) => is_array( $x ) ? implode( ',', $x ) : (string) $x, $typed );
 
 	$shown['p_call'] = strtoupper( trim( $shown['p_call'] ) );
-	$now             = spokares_net_form_state( $nets, $radio );
 	$conflicts       = array();
 
 	// Save a field only when this editor changed it; a field someone else
 	// changed after this screen was opened is kept, and the editor is told.
-	$apply = static function ( string $key ) use ( $orig, $now, $shown, &$conflicts ): bool {
+	$apply = static function ( string $key ) use ( $orig, $was, $shown, &$conflicts ): bool {
 		if ( null === $orig || ! array_key_exists( $key, $orig ) ) {
 			return true; // A form without the record: save as typed.
 		}
 		if ( $shown[ $key ] === $orig[ $key ] ) {
 			return false; // Unchanged here: keep what is stored now.
 		}
-		if ( $now[ $key ] === $orig[ $key ] || $now[ $key ] === $shown[ $key ] ) {
+		if ( $was[ $key ] === $orig[ $key ] || $was[ $key ] === $shown[ $key ] ) {
 			return true;
 		}
 		$conflicts[] = $key;
 		return false;
 	};
 
-	// Primary repeater. The call sign is the club's own call, which How it
-	// works also names in page text: administrators only. For anyone else
-	// the form shows it read-only and doesn't post it; a request that posts
-	// a different one anyway is refused here, never saved.
+	// The Tuesday net. The call sign is the club's own call, which How it
+	// works also names in page text: the webmaster's only. For anyone else
+	// the screen shows it as text and posts nothing; a request that posts a
+	// different one anyway is refused here, never saved.
+	if ( $apply( 'net_time' ) ) {
+		if ( spokares_is_hhmm( $typed['net_time'] ) ) {
+			$nets['net_time'] = $typed['net_time'];
+		} else {
+			$held['net_time']   = $typed['net_time'];
+			$errors['net_time'] = __( 'Type a time, like 8:00 PM.', 'spokares-core' );
+		}
+	}
 	if ( $admin ) {
 		if ( $apply( 'p_call' ) ) {
 			$call = spokares_call_sign( $typed['p_call'] );
@@ -572,18 +741,18 @@ function spokares_handle_save_net_details(): void {
 				$radio['primary']['call'] = $call['call'];
 			} else {
 				$held['p_call']   = $typed['p_call'];
-				$errors['p_call'] = __( 'The repeater call sign wasn’t saved: type one call sign, like W7GBU.', 'spokares-core' );
+				$errors['p_call'] = __( 'Type one call sign, like W7GBU.', 'spokares-core' );
 			}
 		}
-	} elseif ( '' !== $shown['p_call'] && $shown['p_call'] !== $now['p_call'] && ( null === $orig || ( $orig['p_call'] ?? null ) !== $shown['p_call'] ) ) {
-		$errors['p_call'] = __( 'The repeater call sign wasn’t saved: only an administrator can change it.', 'spokares-core' );
+	} elseif ( '' !== $shown['p_call'] && $shown['p_call'] !== $was['p_call'] && ( null === $orig || ( $orig['p_call'] ?? null ) !== $shown['p_call'] ) ) {
+		$errors['p_call'] = __( 'The webmaster changes the repeater call sign.', 'spokares-core' );
 	}
 	if ( $apply( 'p_freq' ) ) {
 		if ( spokares_freq_ok( $typed['p_freq'] ) ) {
 			$radio['primary']['freq'] = $typed['p_freq'];
 		} else {
 			$held['p_freq']   = $typed['p_freq'];
-			$errors['p_freq'] = __( 'The frequency wasn’t saved: type an amateur frequency like 147.300.', 'spokares-core' );
+			$errors['p_freq'] = spokares_freq_problem( $typed['p_freq'], (string) $radio['primary']['freq'] );
 		}
 	}
 	if ( $apply( 'p_offset' ) && ( in_array( $typed['p_offset'], spokares_offsets(), true ) || $typed['p_offset'] === $radio['primary']['offset'] ) ) {
@@ -594,12 +763,18 @@ function spokares_handle_save_net_details(): void {
 	}
 
 	// Alternate repeater.
+	if ( $apply( 'a_show' ) ) {
+		$radio['alternate']['show'] = '1' === $typed['a_show'];
+	}
+	if ( $admin && $apply( 'a_needs_check' ) ) {
+		$radio['alternate']['needs_check'] = '1' === $typed['a_needs_check'];
+	}
 	if ( $apply( 'a_freq' ) ) {
 		if ( '' === $typed['a_freq'] || spokares_freq_ok( $typed['a_freq'] ) ) {
 			$radio['alternate']['freq'] = $typed['a_freq'];
 		} else {
 			$held['a_freq']   = $typed['a_freq'];
-			$errors['a_freq'] = __( 'The alternate frequency wasn’t saved: type an amateur frequency like 146.880, or leave it empty.', 'spokares-core' );
+			$errors['a_freq'] = spokares_freq_problem( $typed['a_freq'], (string) $radio['alternate']['freq'] );
 		}
 	}
 	if ( $apply( 'a_offset' ) && ( '' === $typed['a_offset'] || in_array( $typed['a_offset'], spokares_offsets(), true ) || $typed['a_offset'] === $radio['alternate']['offset'] ) ) {
@@ -608,20 +783,11 @@ function spokares_handle_save_net_details(): void {
 	if ( $apply( 'a_tone' ) && ( '' === $typed['a_tone'] || in_array( $typed['a_tone'], spokares_tones(), true ) || $typed['a_tone'] === $radio['alternate']['tone'] ) ) {
 		$radio['alternate']['tone'] = $typed['a_tone'];
 	}
-	if ( $apply( 'a_show' ) ) {
-		$radio['alternate']['show'] = '1' === $typed['a_show'];
-	}
-	if ( $admin && $apply( 'a_needs_check' ) ) {
-		$radio['alternate']['needs_check'] = '1' === $typed['a_needs_check'];
-	}
 
-	// Nets: the times must be times (a bad one is held back, never dropped).
-	if ( $apply( 'net_time' ) ) {
-		if ( spokares_is_hhmm( $typed['net_time'] ) ) {
-			$nets['net_time'] = $typed['net_time'];
-		} else {
-			$held['net_time']   = $typed['net_time'];
-			$errors['net_time'] = __( 'The net time wasn’t saved: type a time, like 8:00 PM.', 'spokares-core' );
+	// Which Tuesdays, and the GMRS net time (a bad time is held back, never dropped).
+	foreach ( array( 'winlink_nth', 'simplex_nth', 'gmrs_nth' ) as $k ) {
+		if ( $apply( $k ) ) {
+			$nets[ $k ] = $typed[ $k ];
 		}
 	}
 	if ( $apply( 'gmrs_time' ) ) {
@@ -629,53 +795,64 @@ function spokares_handle_save_net_details(): void {
 			$nets['gmrs_time'] = $typed['gmrs_time'];
 		} else {
 			$held['gmrs_time']   = $typed['gmrs_time'];
-			$errors['gmrs_time'] = __( 'The GMRS net time wasn’t saved: type a time, like 7:30 PM, or leave it empty.', 'spokares-core' );
-		}
-	}
-	foreach ( array( 'winlink_nth', 'simplex_nth', 'gmrs_nth' ) as $k ) {
-		if ( $apply( $k ) ) {
-			$nets[ $k ] = $typed[ $k ];
+			$errors['gmrs_time'] = __( 'Type a time, like 8:00 PM.', 'spokares-core' );
 		}
 	}
 	if ( $admin && $apply( 'needs_check' ) ) {
 		$nets['needs_check'] = '1' === $typed['needs_check'];
 	}
+
+	// Wording on the site.
 	$confirmed = is_array( $nets['confirmed'] ?? null ) ? $nets['confirmed'] : array();
+	$was_ok    = $confirmed;
 	if ( $apply( 'winlink_howto' ) ) {
-		$nets['winlink_howto'] = spokares_settings_text( 'winlink_howto', $typed['winlink_howto'], $nets['winlink_howto'], $confirmed, $ticks, $held, $errors, $names['winlink_howto'], 300 );
+		$nets['winlink_howto'] = spokares_settings_text( 'winlink_howto', $typed['winlink_howto'], $nets['winlink_howto'], $confirmed, $ticks, $held, $errors, 300 );
 	}
 	if ( $apply( 'open_slot_line' ) ) {
-		$nets['open_slot_line'] = spokares_settings_text( 'open_slot_line', $typed['open_slot_line'], $nets['open_slot_line'], $confirmed, $ticks, $held, $errors, $names['open_slot_line'], 160 );
+		$nets['open_slot_line'] = spokares_settings_text( 'open_slot_line', $typed['open_slot_line'], $nets['open_slot_line'], $confirmed, $ticks, $held, $errors, 160 );
 	}
 	if ( $confirmed ) {
 		$nets['confirmed'] = $confirmed;
 	}
 	foreach ( $conflicts as $key ) {
-		$errors[ $key ] = sprintf(
-			/* translators: %s: field name, e.g. "The tone". */
-			__( '%s was changed by someone else while you were editing, so your change wasn’t saved. Check it and save again.', 'spokares-core' ),
-			$names[ $key ] ?? $key
-		);
+		$errors[ $key ] = __( 'Someone else changed this while you were editing. Check it and save again.', 'spokares-core' );
 		if ( ! is_array( $typed[ $key ] ) ) {
 			$held[ $key ] = $typed[ $key ];
 		}
 	}
 
-	update_option( 'spk_radio', $radio );
-	update_option( 'spk_nets', $nets );
-	spokares_purge_cache();
+	$changes = spokares_net_changes( $was, spokares_net_form_state( $nets, $radio ), $was_week, spokares_net_week_kinds( $nets ) );
+	if ( $changes || $confirmed !== $was_ok ) {
+		update_option( 'spk_radio', $radio );
+		update_option( 'spk_nets', $nets );
+		spokares_purge_cache();
+	}
+	if ( $changes ) {
+		update_option( 'spk_net_saved', spokares_stamp(), false );
+	}
 
-	foreach ( $errors as $key => $message ) {
+	// One notice for the whole save.
+	$bad  = array();
+	$link = spokares_site_url( '/how-it-works/', 'weekly-net' );
+	$see  = __( 'See it on the How it works page', 'spokares-core' );
+	foreach ( array_keys( $errors ) as $key ) {
 		if ( ! str_ends_with( (string) $key, '-confirm' ) ) {
-			spokares_add_notice( 'error', $message );
+			$bad[] = $names[ $key ] ?? (string) $key;
 		}
 	}
-	spokares_add_notice(
-		$errors ? 'warning' : 'success',
-		$errors ? __( 'Saved, except the fields outlined in red.', 'spokares-core' ) : __( 'Saved.', 'spokares-core' ),
-		spokares_site_url( '/how-it-works/', 'weekly-net' ),
-		__( 'See it on How it works', 'spokares-core' )
-	);
+	$bad = spokares_and_list( array_values( array_unique( $bad ) ) );
+	if ( $changes && '' === $bad ) {
+		/* translators: %s: what changed, e.g. "tone 103.5 Hz (was 100 Hz); net time 7:30 PM (was 8:00 PM)". */
+		spokares_add_notice( 'success', sprintf( __( 'Saved: %s.', 'spokares-core' ), implode( '; ', $changes ) ), $link, $see );
+	} elseif ( $changes ) {
+		/* translators: %s: the fields not saved, e.g. "the frequency". */
+		spokares_add_notice( 'warning', sprintf( __( 'Saved, except %s (outlined in red).', 'spokares-core' ), $bad ), $link, $see );
+	} elseif ( '' !== $bad ) {
+		/* translators: %s: the fields not saved, e.g. "the frequency". */
+		spokares_add_notice( 'error', sprintf( __( 'Not saved: %s (outlined in red).', 'spokares-core' ), $bad ) );
+	} else {
+		spokares_add_notice( 'info', __( 'Nothing changed, so nothing was saved.', 'spokares-core' ) );
+	}
 	if ( $errors ) {
 		spokares_retain( 'spokares-net-details', $held, $errors );
 	}

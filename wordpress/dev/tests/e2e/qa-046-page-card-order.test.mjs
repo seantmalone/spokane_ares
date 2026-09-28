@@ -11,8 +11,9 @@
 //
 // The correct behaviour: the page card's Actions menu offers no Order to an
 // ARES Editor (with or without the net-details grant) or a core Editor, and
-// still offers it to an administrator. Rename stays: it edits the page's
-// title text, which editors may change. These tests only open the menu; they
+// still offers it to an administrator. Nor does it offer them Rename (UX
+// spec §3.8): the page's heading is in its text, and the title only names
+// the browser tab and search results. These tests only open the menu; they
 // save nothing.
 
 /** Open a page in the block editor and return the labels of its page card's ⋮ Actions menu. */
@@ -55,7 +56,7 @@ async function pageCardActions(t, pageId) {
 }
 
 const noOrderFor = (role, label) => ({
-  name: `${role}: About's page card ⋮ menu offers no Order (${label})`,
+  name: `${role}: About's page card ⋮ menu offers no Order or Rename (${label})`,
   role,
   timeout: 150000,
   async run(t) {
@@ -63,6 +64,7 @@ const noOrderFor = (role, label) => ({
     // Control: this is the page card's menu, and it opened.
     t.expect(items, 'page card ⋮ menu items (control)').toContain('View');
     t.expect(items, `page card ⋮ menu items ${JSON.stringify(items)}: Order is offered, but the server keeps a non-admin's menu_order (spokares_page_insert_guard), so saving it says "Order updated." and changes nothing`).not.toContain('Order');
+    t.expect(items, `page card ⋮ menu items ${JSON.stringify(items)}: Rename (the page title is the webmaster's)`).not.toContain('Rename');
     t.expectNoPhpErrors();
   },
 });
@@ -72,12 +74,13 @@ export const tests = [
   noOrderFor('ares-net', 'ARES Editor with the net-details grant'),
   noOrderFor('core-editor', 'core Editor role'),
   {
-    name: "admin: About's page card ⋮ menu still offers Order (control)",
+    name: "admin: About's page card ⋮ menu still offers Order and Rename (control)",
     role: 'admin',
     timeout: 150000,
     async run(t) {
       const items = await pageCardActions(t, t.ids.pages.about);
       t.expect(items, 'page card ⋮ menu items').toContain('Order');
+      t.expect(items, 'page card ⋮ menu items').toContain('Rename');
       t.expectNoPhpErrors();
     },
   },

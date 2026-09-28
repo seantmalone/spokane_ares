@@ -7,7 +7,7 @@
 // wide empty bar (about 145x16 at desktop width, solid blue when ticked)
 // instead of a normal square checkbox like the one on Regular meetings and
 // the event form. The tests hold a note back the way an editor does (type
-// it, Save rota) and measure the tick. Nothing is saved: the held row is
+// it, Save) and measure the tick. Nothing is saved: the held row is
 // not written.
 
 const NOTE = 'Call 509-555-0101';
@@ -17,7 +17,7 @@ function firstDate(t) {
   return t.evaluate(() => document.querySelector('tr.spk-rota-row')?.dataset.date || '');
 }
 
-/** Type a phone-number note into one row and press Save rota. */
+/** Type a phone-number note into one row and press Save. */
 async function holdBackNote(t, date) {
   const sel = `tr.spk-rota-row[data-date="${date}"] td.spk-note input[type="text"]`;
   await t.waitFor(sel);
@@ -52,7 +52,7 @@ async function expectSquareTick(t, maxWidth) {
   t.expect(date, 'first rota row').toBeTruthy();
 
   await holdBackNote(t, date);
-  t.expect(await t.url(), 'back on the Net rota').toContain('page=spokares-rota');
+  t.expect(await t.url(), 'back on the Net Control Schedule').toContain('page=spokares-rota');
 
   const got = await tick(t, date);
   t.expect(got, 'the "Publish it" tick under the held-back note').toBeTruthy();

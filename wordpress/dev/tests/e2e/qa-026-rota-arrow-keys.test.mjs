@@ -66,19 +66,19 @@ function expectOnRadio(t, got, value, step) {
 
 export const tests = [
   {
-    name: 'ares-editor: ArrowUp from "Open" chooses "Call sign" and keeps the focus in the radio group; the next ArrowUp reaches "Not posted yet"',
+    name: 'ares-editor: ArrowUp from "Volunteer needed" chooses the call-sign choice and keeps the focus in the radio group; the next ArrowUp reaches "Not posted yet"',
     role: 'ares-editor',
     async run(t) {
       await t.goto(ROTA);
       await t.expectStatus(200);
       await t.waitFor('tr.spk-rota-row input[type="radio"]');
       const date = await rowWithState(t, 'open');
-      t.expect(date, 'a rota row whose Net control is "Open"').toBeTruthy();
+      t.expect(date, 'a row whose Net control is "Volunteer needed"').toBeTruthy();
 
-      t.expect(await focusRadio(t, date, 'open'), 'the "Open" radio takes the focus').toBe(true);
+      t.expect(await focusRadio(t, date, 'open'), 'the "Volunteer needed" radio takes the focus').toBe(true);
       await t.press('ArrowUp');
       const first = await focusState(t, date);
-      expectOnRadio(t, first, 'call', 'after ArrowUp from "Open"');
+      expectOnRadio(t, first, 'call', 'after ArrowUp from "Volunteer needed"');
       // Choosing Call sign still opens the box for typing (no focus needed).
       t.expect(first.boxReadOnly, 'after ArrowUp: the call-sign box is open for typing').toBe(false);
       t.expect(first.boxOff, 'after ArrowUp: the call-sign box is not greyed').toBe(false);
@@ -91,14 +91,14 @@ export const tests = [
     },
   },
   {
-    name: 'ares-editor: ArrowDown from "Not posted yet" wraps to "Call sign" and keeps the focus in the radio group; the next ArrowDown reaches "Open"',
+    name: 'ares-editor: ArrowDown from "Not posted yet" wraps to the call-sign choice and keeps the focus in the radio group; the next ArrowDown reaches "Volunteer needed"',
     role: 'ares-editor',
     async run(t) {
       await t.goto(ROTA);
       await t.expectStatus(200);
       await t.waitFor('tr.spk-rota-row input[type="radio"]');
       const date = await rowWithState(t, 'tbd');
-      t.expect(date, 'a rota row whose Net control is "Not posted yet"').toBeTruthy();
+      t.expect(date, 'a row whose Net control is "Not posted yet"').toBeTruthy();
 
       t.expect(await focusRadio(t, date, 'tbd'), 'the "Not posted yet" radio takes the focus').toBe(true);
       await t.press('ArrowDown');

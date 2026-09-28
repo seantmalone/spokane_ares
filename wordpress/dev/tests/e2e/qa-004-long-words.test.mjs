@@ -107,8 +107,8 @@ async function publishEvent(t, { kind, title, days }) {
   // Pasted, as an editor would (Input.insertText, so maxlength applies).
   await t.type('#spk-summary', SHORT);
   await t.type('#spk-where', WHERE);
-  t.expect(await t.attr('#spk-summary', 'maxlength'), 'the Short line\'s maxlength').toBe(String(SHORT.length));
-  t.expect(await t.evaluate(() => document.querySelector('#spk-summary').value), 'the Short line as pasted').toBe(SHORT);
+  t.expect(await t.attr('#spk-summary', 'maxlength'), 'the Short description\'s maxlength').toBe(String(SHORT.length));
+  t.expect(await t.evaluate(() => document.querySelector('#spk-summary').value), 'the Short description as pasted').toBe(SHORT);
   t.expect(await t.evaluate(() => document.querySelector('#spk-where').value), 'Where as pasted').toBe(WHERE);
   // Wait for WordPress's first autosave of a new post (it greys out Publish).
   await sleep(1500);
@@ -116,7 +116,7 @@ async function publishEvent(t, { kind, title, days }) {
   await t.clickAndWait('#submitpost input[name="publish"]');
   const editUrl = await t.url();
   t.expect(editUrl, 'back on the event form after Publish').toContain('post.php?post=');
-  await t.waitForText('On the site now:', { selector: '#wpbody-content' });
+  await t.waitForText('It shows under', { selector: '#wpbody-content' });
   return editUrl;
 }
 

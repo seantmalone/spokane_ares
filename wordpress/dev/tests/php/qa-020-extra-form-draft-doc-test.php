@@ -97,7 +97,7 @@ function qa020_form_post( int $id ): array {
 	$fields = array();
 	parse_str( $query, $fields );
 	assert_true( isset( $fields['spokares_event_nonce'], $fields['spk_kind'] ), 'set-up: the rendered event form has its nonce and kind' );
-	assert_true( array_key_exists( 'spk_extra_doc', $fields ), 'set-up: the rendered form has the Extra form select' );
+	assert_true( array_key_exists( 'spk_extra_doc', $fields ), 'set-up: the rendered form has the Document members need select' );
 	$fields['post_title'] = $post->post_title;
 	return $fields;
 }
@@ -176,14 +176,15 @@ function qa020_set_extra_line(): string {
 }
 
 test(
-	'updating an event while its Extra form document is a draft keeps the reference',
+	'updating an event while its Document members need is a draft keeps the reference',
 	function () {
 		foreach ( array( 'ares-editor', 'ares-net', 'admin' ) as $role ) {
 			as_role( $role );
 			$set = post_id( 'spk_event', 'set-2026' );
 			$doc = post_id( 'spk_document', 'wa-field-situation-report' );
-			assert_same( $doc, absint( get_post_meta( $set, 'spk_extra_doc', true ) ), $role . ': set-up: SET has the Field Situation Report as its Extra form' );
+			assert_same( $doc, absint( get_post_meta( $set, 'spk_extra_doc', true ) ), $role . ': set-up: SET has the Field Situation Report as its Document members need' );
 			assert_contains( 'wa-field-situation-report', qa020_set_extra_line(), $role . ': set-up: SET card links the Extra form' );
+			assert_contains( '<p class="ex-form">You’ll need: <a ', qa020_set_extra_line(), $role . ': members read the document as "You’ll need:", not "Extra form:"' );
 
 			// The document is taken off the site for a moment.
 			qa020_doc_status( $doc, 'draft', $role );
@@ -193,7 +194,7 @@ test(
 			$fields = qa020_form_post( $set );
 			qa020_save( $set, $fields );
 			assert_same( 'publish', get_post_status( $set ), $role . ': SET still published' );
-			assert_same( $doc, absint( get_post_meta( $set, 'spk_extra_doc', true ) ), $role . ': Extra form reference kept after an Update while the document was a draft (form posted spk_extra_doc=' . $fields['spk_extra_doc'] . ')' );
+			assert_same( $doc, absint( get_post_meta( $set, 'spk_extra_doc', true ) ), $role . ': Document members need kept after a Save while the document was a draft (form posted spk_extra_doc=' . $fields['spk_extra_doc'] . ')' );
 
 			// The document is published again: the link comes back.
 			qa020_doc_status( $doc, 'publish', $role );
@@ -201,27 +202,27 @@ test(
 
 			// A second, untouched Update keeps it too.
 			qa020_save( $set, qa020_form_post( $set ) );
-			assert_same( $doc, absint( get_post_meta( $set, 'spk_extra_doc', true ) ), $role . ': Extra form reference kept after a later Update' );
+			assert_same( $doc, absint( get_post_meta( $set, 'spk_extra_doc', true ) ), $role . ': Document members need kept after a later Save' );
 		}
 	}
 );
 
 test(
-	'control: an untouched Update keeps a published Extra form, and choosing none clears it',
+	'control: an untouched Save keeps a published Document members need, and choosing none clears it',
 	function () {
 		as_role( 'ares-editor' );
 		$set = post_id( 'spk_event', 'set-2026' );
 		$doc = post_id( 'spk_document', 'wa-field-situation-report' );
 
 		$fields = qa020_form_post( $set );
-		assert_same( (string) $doc, (string) $fields['spk_extra_doc'], 'the form shows the published Extra form chosen' );
+		assert_same( (string) $doc, (string) $fields['spk_extra_doc'], 'the form shows the published Document members need chosen' );
 		qa020_save( $set, $fields );
-		assert_same( $doc, absint( get_post_meta( $set, 'spk_extra_doc', true ) ), 'kept after an untouched Update' );
+		assert_same( $doc, absint( get_post_meta( $set, 'spk_extra_doc', true ) ), 'kept after an untouched Save' );
 
 		$fields                  = qa020_form_post( $set );
 		$fields['spk_extra_doc'] = '0';
 		qa020_save( $set, $fields );
-		assert_same( '', get_post_meta( $set, 'spk_extra_doc', true ), 'choosing "— none —" removes the Extra form' );
+		assert_same( '', get_post_meta( $set, 'spk_extra_doc', true ), 'choosing "— none —" removes the Document members need' );
 		assert_same( '', qa020_set_extra_line(), 'the SET card has no Extra form line' );
 	}
 );

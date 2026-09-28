@@ -122,11 +122,12 @@ function qa003_notices(): array {
  * @param string $msg Message prefix.
  */
 function qa003_assert_held_notice( string $why, string $msg ): void {
-	$errors = wp_list_pluck( array_filter( qa003_notices(), static fn( $n ) => 'error' === $n['type'] ), 'text' );
+	$errors = wp_list_pluck( array_filter( qa003_notices(), static fn( $n ) => in_array( $n['type'], array( 'error', 'warning' ), true ) ), 'text' );
 	assert_count( 1, $errors, $msg . ': one problem notice' );
 	$text = (string) reset( $errors );
-	assert_contains( 'the event is still on the site as it was', $text, $msg . ': held-back notice' );
-	assert_contains( $why, $text, $msg . ': names the problem' );
+	assert_contains( 'Saved, except ', $text, $msg . ': held-back notice' );
+	assert_contains( 'Everything else is on the site now.', $text, $msg . ': held-back notice says the rest is live' );
+	assert_contains( lcfirst( $why ), $text, $msg . ': names the problem' );
 }
 
 test(
@@ -261,7 +262,7 @@ test(
 				)
 			)
 		);
-		$errors = array_filter( qa003_notices(), static fn( $n ) => 'error' === $n['type'] );
+		$errors = array_filter( qa003_notices(), static fn( $n ) => in_array( $n['type'], array( 'error', 'warning' ), true ) );
 		assert_count( 0, $errors, 'no problem notice' );
 		assert_same( '13:00', get_post_meta( $id, 'spk_time_start', true ), 'new start saved' );
 		assert_same( '14:30', get_post_meta( $id, 'spk_time_end', true ), 'new end saved' );

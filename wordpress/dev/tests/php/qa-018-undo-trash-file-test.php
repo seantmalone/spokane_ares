@@ -3,8 +3,8 @@
  * Regression tests for QA-018 (PLAN §5.5 "Trash removes the old file from the
  * web by default"; §3.4 a published document always has somewhere to go).
  *
- * The document form's Move to Trash link carries spk_remove_file=1 ("Also
- * remove its file from the web", ticked by default), and
+ * The document form's "Take it off the site" link (the trash link) carries
+ * spk_remove_file=1 (UX spec §3.9: always, there is no tick any more), and
  * admin-documents.php spokares_document_trashed() then deletes the file and
  * clears spk_file. The list then says "1 document moved to the Trash. Undo".
  * Undo is edit.php?doaction=undo&action=untrash, where core adds
@@ -17,9 +17,10 @@
  * default since WordPress 5.6. Only Undo restores the old status.)
  *
  * Correct behaviour: a document whose file was removed when it was trashed
- * comes back from Undo as a Draft, with a notice that its file was removed
- * and must be uploaded again. A document trashed without removing its file
- * still comes back Published.
+ * comes back from Undo as a Draft, and the list's one notice says to upload
+ * the file again (§3.6: "“X” is back as a draft: upload the file again, then
+ * Publish."). A document trashed without removing its file (not through the
+ * form's link) still comes back Published.
  *
  * The two requests are run as core runs them: the trash as post.php's
  * action=trash (its nonce and spk_remove_file in $_GET, then
@@ -87,7 +88,7 @@ function qa_018_published_upload( string $role, string $title ): array {
  * the delete_post check, then wp_trash_post().
  *
  * @param int  $doc         Document.
- * @param bool $remove_file "Also remove its file from the web" ticked.
+ * @param bool $remove_file Through the form's link (spk_remove_file=1).
  */
 function qa_018_trash( int $doc, bool $remove_file ): void {
 	$get = array(
@@ -150,7 +151,7 @@ function qa_018_undo( int $doc ): void {
 }
 
 test(
-	'Undo after Move to Trash with "Also remove its file" brings the document back as a Draft, not Published',
+	'Undo after "Take it off the site" (file removed) brings the document back as a Draft, not Published',
 	function () {
 		foreach ( array( 'ares-editor', 'ares-net', 'admin' ) as $role ) {
 			list( $doc, $att, $file ) = qa_018_published_upload( $role, 'QA-018 upload doc ' . $role );
@@ -180,7 +181,7 @@ test(
 );
 
 test(
-	'Undo of a document whose file was removed tells the user the file must be uploaded again',
+	'Undo of a document whose file was removed tells the user, in one notice, to upload the file again',
 	function () {
 		list( $doc ) = qa_018_published_upload( 'ares-editor', 'QA-018 notice doc' );
 		qa_018_trash( $doc, true );
@@ -188,17 +189,26 @@ test(
 		delete_transient( $key );
 
 		qa_018_undo( $doc );
-		$notices = get_transient( $key );
-		$notices = is_array( $notices ) ? $notices : array();
-		$texts   = implode( ' | ', wp_list_pluck( $notices, 'text' ) );
-		assert_true( count( $notices ) > 0, 'Undo queued no notice for the user (the document silently lost its file)' );
-		assert_matches( '/\bfile\b/i', $texts, 'the notice says the document\'s file was removed' );
-		assert_not_contains( 'success', wp_list_pluck( $notices, 'type' ), 'the notice is a warning, not a success' );
+		$queued = get_transient( $key );
+		assert_count( 0, is_array( $queued ) ? $queued : array(), 'Undo queued a notice of its own besides the list\'s' );
+		// The list's notice after the redirect (edit.php?post_type=spk_document&untrashed=1).
+		$r    = call_request(
+			'GET',
+			array(
+				'post_type' => 'spk_document',
+				'untrashed' => '1',
+			),
+			array(),
+			static fn() => apply_filters( 'bulk_post_updated_messages', array(), array( 'untrashed' => 1 ) ) // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- core's filter.
+		);
+		$said = (string) ( $r['returned']['spk_document']['untrashed'] ?? '' );
+		assert_contains( 'QA-018 notice doc', $said, 'the notice names the document' );
+		assert_contains( 'is back as a draft: upload the file again, then Publish.', $said, 'the notice says the file must be uploaded again' );
 	}
 );
 
 test(
-	'Undo after Move to Trash without removing the file still brings the document back Published with its file',
+	'Undo after a Trash that kept the file (not the form\'s link) still brings the document back Published with its file',
 	function () {
 		foreach ( array( 'ares-editor', 'admin' ) as $role ) {
 			list( $doc, $att, $file ) = qa_018_published_upload( $role, 'QA-018 kept file ' . $role );

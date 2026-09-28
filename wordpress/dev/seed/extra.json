@@ -51,6 +51,10 @@
    "src": "design/round3/option-b-lines-down/index.html (#visit, a data-verify span; data.js displayTime 'Evening')"
   }
  },
+ "nets": {
+  "openSlotLine": "Can you take a Tuesday marked “Volunteer needed”? Tell the Net Manager (AG7QP) on the net or on groups.io.",
+  "src": "ux/SPEC.md §3.10 (the owner's directive: the public tag reads “Volunteer needed”, so the line under the Net Control Schedule says the same; data.js rotaMeta.openSlotAction still says “Open slot?”)"
+ },
  "tiles": {
   "slots": [
    { "doc": "net-scripts", "label": "Net script", "icon": "script" },
@@ -81,7 +85,7 @@
    "src": "design/round3/option-b-lines-down/about.html <meta name=description>; copy-about.md (Page owner: Emergency Coordinator; the review date is left for the owner)"
   },
   "members": {
-   "excerpt": "This week’s exercises, the Tuesday net rota and the most-used documents for Spokane County ARES-ACS members.",
+   "excerpt": "This week’s exercises, the Net Control Schedule and the most-used documents for Spokane County ARES-ACS members.",
    "src": "design/round3/option-b-lines-down/members/index.html <meta name=description>"
   },
   "documents": {

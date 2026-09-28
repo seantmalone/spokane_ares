@@ -364,13 +364,13 @@ function spokares_profile_grant_field( $user ): void {
 	<h2><?php esc_html_e( 'ARES site', 'spokares-core' ); ?></h2>
 	<table class="form-table" role="presentation">
 		<tr>
-			<th scope="row"><?php esc_html_e( 'Net details and Meeting rules', 'spokares-core' ); ?></th>
+			<th scope="row"><?php esc_html_e( 'Net Settings and Meeting Schedule', 'spokares-core' ); ?></th>
 			<td>
 				<label>
 					<input type="checkbox" name="spokares_net_details" value="1" <?php checked( ! empty( $user->allcaps['spokares_edit_net_details'] ) ); ?>>
-					<?php esc_html_e( 'May change the repeaters’ frequency, offset and tone (not the club’s call sign), the net times and weeks, and the regular meeting rules.', 'spokares-core' ); ?>
+					<?php esc_html_e( 'May change the repeaters’ frequency, offset and tone (not the club’s call sign), the net times and weeks, and the Meeting Schedule.', 'spokares-core' ); ?>
 				</label>
-				<p class="description"><?php esc_html_e( 'Only for someone the Emergency Coordinator has named. Everyone with the ARES Editor role can already edit the rota, events, meetings and documents.', 'spokares-core' ); ?></p>
+				<p class="description"><?php esc_html_e( 'Only for someone the Emergency Coordinator has named. Everyone with the ARES Editor role can already change the Net Control Schedule, events, meetings and documents.', 'spokares-core' ); ?></p>
 			</td>
 		</tr>
 	</table>
@@ -404,7 +404,7 @@ function spokares_profile_grant_save( $user_id ): void {
 add_action( 'edit_user_profile_update', 'spokares_profile_grant_save' );
 
 /**
- * Users screen: a "Net details" column, so an administrator can see who
+ * Users screen: a "Net Settings" column, so an administrator can see who
  * holds the grant without opening every profile.
  *
  * @param string[] $columns Column key => title.
@@ -413,7 +413,7 @@ function spokares_users_grant_column( $columns ) {
 	if ( ! is_array( $columns ) || ! current_user_can( 'promote_users' ) ) {
 		return $columns;
 	}
-	$columns['spokares_net_details'] = __( 'Net details', 'spokares-core' );
+	$columns['spokares_net_details'] = __( 'Net Settings', 'spokares-core' );
 	return $columns;
 }
 add_filter( 'manage_users_columns', 'spokares_users_grant_column' );

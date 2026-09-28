@@ -15,8 +15,9 @@
  * media_handle_upload() refuses it in spokares_save_document(), which demotes
  * only a document with no file yet), so it stays published.
  *
- * Correct behaviour: a refused replacement is reported ("File not uploaded:
- * …") and the document stays published with its current file. A published
+ * Correct behaviour: a refused replacement is reported (one notice, "Saved,
+ * except the new file (outlined in red).", and the reason under the file
+ * box) and the document stays published with its current file. A published
  * document that has no good file still goes back to Draft.
  *
  * The saves run as the classic post.php save does: the document form's fields
@@ -156,15 +157,14 @@ function qa017_php_file( string $path ): array {
 }
 
 /**
- * The error notices queued for the current user (spokares_add_notice()).
+ * The notices queued for the current user (spokares_add_notice()), each as
+ * "type: text".
  */
-function qa017_error_notices(): array {
+function qa017_notices(): array {
 	$notices = get_transient( 'spokares_notices_' . get_current_user_id() );
 	$out     = array();
 	foreach ( is_array( $notices ) ? $notices : array() as $n ) {
-		if ( 'error' === ( $n['type'] ?? '' ) ) {
-			$out[] = (string) ( $n['text'] ?? '' );
-		}
+		$out[] = (string) ( $n['type'] ?? '' ) . ': ' . (string) ( $n['text'] ?? '' );
 	}
 	return $out;
 }
@@ -191,8 +191,10 @@ function qa017_assert_refused_replacement_keeps_it_live( string $role, ?array $f
 
 	qa017_update( $doc, $file );
 
-	$notices = qa017_error_notices();
-	assert_true( (bool) array_filter( $notices, static fn( $n ) => str_starts_with( $n, 'File not uploaded' ) ), $role . ': the refused file is reported (' . implode( ' | ', $notices ) . ')' );
+	$notices = qa017_notices();
+	assert_same( array( 'warning: Saved, except the new file (outlined in red).' ), $notices, $role . ': one notice says the new file was not saved' );
+	$held = spokares_retained( 'spk_document_' . $doc );
+	assert_not_same( '', (string) ( $held['errors']['upload'] ?? '' ), $role . ': the reason is kept for the line under the file box (' . wp_json_encode( $held['errors'] ) . ')' );
 	assert_same( $att, absint( get_post_meta( $doc, 'spk_file', true ) ), $role . ': the current file is still the document\'s file' );
 	assert_true( file_exists( $path ), $role . ': the current file is still on disk' );
 	assert_same( 'publish', get_post_status( $doc ), $role . ': a refused replacement must not unpublish the document' );

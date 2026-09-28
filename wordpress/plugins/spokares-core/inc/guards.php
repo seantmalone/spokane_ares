@@ -88,10 +88,11 @@ function spokares_text_patterns(): array {
 }
 
 /**
- * Check a piece of plain text.
+ * Check a piece of plain text. Each hit carries 'match': the first text the
+ * pattern found, trimmed, at most 60 characters (the Dashboard quotes it).
  *
  * @param string $text Text.
- * @return array<int,array{level:string,what:string,kind?:string}>
+ * @return array<int,array{level:string,what:string,match:string,kind?:string}>
  */
 function spokares_check_text( string $text ): array {
 	// A space after every tag first, so adjacent table cells or list items don't
@@ -104,10 +105,11 @@ function spokares_check_text( string $text ): array {
 	$scan  = (string) preg_replace( '/[A-Z0-9._%+-]+@spokares\.org\b/i', ' ', $text );
 	$found = array();
 	foreach ( spokares_text_patterns() as $p ) {
-		if ( preg_match( '/' . $p['re'] . '/iu', $scan ) ) {
+		if ( preg_match( '/' . $p['re'] . '/iu', $scan, $m ) ) {
 			$hit = array(
 				'level' => $p['level'],
 				'what'  => $p['what'],
+				'match' => mb_substr( trim( (string) preg_replace( '/\s+/u', ' ', $m[0] ) ), 0, 60, 'UTF-8' ),
 			);
 			if ( isset( $p['kind'] ) ) {
 				$hit['kind'] = $p['kind'];
@@ -154,6 +156,36 @@ function spokares_check_field( string $text, string $field, array $confirmed = a
 }
 
 /**
+ * The one sentence under a field with a problem, for a spokares_check_field()
+ * result: what is wrong and what to do. '' when there is no problem.
+ *
+ * @param array $check spokares_check_field() result.
+ */
+function spokares_problem_sentence( array $check ): string {
+	$block = array_values( array_filter( (array) ( $check['block'] ?? array() ), 'is_string' ) );
+	if ( $block ) {
+		/* translators: %s: what the text mentions, e.g. "a hospital net". */
+		return sprintf( __( 'It mentions %s, which we never publish. Take it out.', 'spokares-core' ), spokares_and_list( $block ) );
+	}
+	$kinds = array();
+	foreach ( (array) ( $check['confirm'] ?? array() ) as $hit ) {
+		$kinds[] = is_array( $hit ) ? (string) ( $hit['kind'] ?? 'phone' ) : 'phone';
+	}
+	$phone = in_array( 'phone', $kinds, true );
+	$email = in_array( 'email', $kinds, true );
+	if ( $phone && $email ) {
+		return __( 'It has a phone number and an e-mail address. Take them out, or tick the box if they’re public agency contacts.', 'spokares-core' );
+	}
+	if ( $email ) {
+		return __( 'It has an e-mail address. Take it out, or tick the box if it’s a public agency address.', 'spokares-core' );
+	}
+	if ( $phone ) {
+		return __( 'It has a phone number. Take it out, or tick the box if it’s a public agency number.', 'spokares-core' );
+	}
+	return '';
+}
+
+/**
  * The confirm tick's words for a field's hits.
  *
  * @param array $confirm Hits from spokares_check_field()['confirm'].
@@ -170,7 +202,10 @@ function spokares_confirm_label( array $confirm ): string {
 
 /**
  * Sanitise a web address: https only (plus mailto: for role addresses).
- * Returns '' when the typed text isn't one.
+ * Returns '' when the typed text isn't one. An address typed without its
+ * https:// ("www.arrl.org/kids-day") gets it when the part before the first
+ * "/" has a dot, and no spaces or "@"; other text without a scheme is not a
+ * web address.
  *
  * @param string $typed Typed address.
  * @param bool   $allow_mailto Accept mailto: links.
@@ -179,6 +214,15 @@ function spokares_clean_url( string $typed, bool $allow_mailto = false ): string
 	$typed = trim( $typed );
 	if ( '' === $typed ) {
 		return '';
+	}
+	// No scheme (a colon followed by a port number is not one): a web
+	// address only when its first part looks like a site name.
+	if ( ! preg_match( '#^[a-z][a-z0-9+.\-]*:(?!\d)#i', $typed ) ) {
+		$first = (string) preg_split( '#[/?\#]#', $typed, 2 )[0];
+		if ( ! str_contains( $first, '.' ) || preg_match( '/[\s@]/u', $first ) ) {
+			return '';
+		}
+		$typed = 'https://' . $typed;
 	}
 	$protocols = $allow_mailto ? array( 'https', 'mailto' ) : array( 'https' );
 	$clean     = esc_url_raw( $typed, $protocols );

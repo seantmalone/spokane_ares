@@ -87,6 +87,23 @@ function qa055_rota_links( string $html ): array {
 }
 
 /**
+ * How many Tuesdays the screen shows: every row is drawn (so "Show 13 more"
+ * can show the next ones in place, keeping what was typed), and the rows
+ * past ?weeks= are hidden.
+ *
+ * @param string $html Screen HTML.
+ * @return array{drawn:int,shown:int}
+ */
+function qa055_rows( string $html ): array {
+	preg_match_all( '/<tr class="spk-rota-row[^"]*"[^>]*>/', $html, $m );
+	$shown = array_filter( $m[0], static fn( $tag ) => ! preg_match( '/\shidden[\s>]/', $tag ) );
+	return array(
+		'drawn' => count( $m[0] ),
+		'shown' => count( $shown ),
+	);
+}
+
+/**
  * The "Show 13 more" links on the screen.
  *
  * @param string $html Screen HTML.
@@ -106,7 +123,8 @@ test(
 		foreach ( array( 'ares-editor', 'ares-net' ) as $role ) {
 			as_role( $role );
 			$html = qa055_rota_html( '52' );
-			assert_same( 52, substr_count( $html, 'class="spk-rota-row' ), $role . ': set-up: the screen lists 52 Tuesdays' );
+			assert_same( 52, qa055_rows( $html )['shown'], $role . ': set-up: the screen lists 52 Tuesdays' );
+			assert_contains( 'That’s as far ahead as you can post.', $html, $role . ': at the cap the screen says so' );
 			$more = qa055_more_links( $html );
 			assert_count(
 				0,
@@ -138,7 +156,7 @@ test(
 	function () {
 		as_role( 'ares-editor' );
 		$html = qa055_rota_html( '60' );
-		assert_same( 52, substr_count( $html, 'class="spk-rota-row' ), 'set-up: weeks=60 is clamped to 52 Tuesdays' );
+		assert_same( 52, qa055_rows( $html )['shown'], 'set-up: weeks=60 is clamped to 52 Tuesdays' );
 		assert_count( 0, qa055_more_links( $html ), 'weeks=60 (clamped to 52) still prints a "Show 13 more" link' );
 	}
 );
@@ -153,7 +171,8 @@ test(
 				$to    = $step[1];
 				$html  = qa055_rota_html( $weeks );
 				$shown = null === $weeks ? 13 : (int) $weeks;
-				assert_same( $shown, substr_count( $html, 'class="spk-rota-row' ), $role . ': set-up: weeks=' . ( $weeks ?? '(none)' ) . ' lists ' . $shown . ' Tuesdays' );
+				assert_same( $shown, qa055_rows( $html )['shown'], $role . ': set-up: weeks=' . ( $weeks ?? '(none)' ) . ' lists ' . $shown . ' Tuesdays' );
+				assert_same( 52, qa055_rows( $html )['drawn'], $role . ': weeks=' . ( $weeks ?? '(none)' ) . ': all 52 Tuesdays are on the page, the rest hidden, so "Show 13 more" shows them in place' );
 				$more = qa055_more_links( $html );
 				assert_count( 1, $more, $role . ': weeks=' . ( $weeks ?? '(none)' ) . ': one "Show 13 more" link' );
 				$query = (string) wp_parse_url( $more[0]['href'], PHP_URL_QUERY );

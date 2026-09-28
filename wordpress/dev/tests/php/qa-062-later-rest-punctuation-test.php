@@ -81,7 +81,7 @@ function qa062_event( string $title, array $fields, int $days = 100 ): int {
 	clean_post_cache( $id );
 	assert_same( 'publish', get_post_status( $id ), 'set-up: ' . $title . ' is published' );
 	if ( isset( $fields['spk_summary'] ) ) {
-		assert_same( $fields['spk_summary'], (string) get_post_meta( $id, 'spk_summary', true ), 'set-up: the short line is stored as typed' );
+		assert_same( $fields['spk_summary'], (string) get_post_meta( $id, 'spk_summary', true ), 'set-up: the short description is stored as typed' );
 	}
 	return $id;
 }
@@ -150,7 +150,7 @@ function qa062_assert_no_double( string $text, string $label ): void {
 }
 
 test(
-	'Later this season: a short line ending in ":" with a More link reads "…asks you to: Forms", not "to:. Forms" (every role)',
+	'Later this season: a short description ending in ":" with a More link reads "…asks you to: Forms", not "to:. Forms" (every role)',
 	function () {
 		as_role( 'ares-editor' );
 		$id = qa062_event(
@@ -170,7 +170,7 @@ test(
 		foreach ( role_keys() as $role ) {
 			as_role( $role );
 			$row = qa062_row( $id );
-			assert_contains( 'QA-062 County drill: County-wide drill. The EC asks you to:', $row, $role . ': the title and the short line' );
+			assert_contains( 'QA-062 County drill: County-wide drill. The EC asks you to:', $row, $role . ': the title and the short description' );
 			assert_contains( 'Forms', $row, $role . ': the More link is kept' );
 			qa062_assert_no_double( $row, $role );
 			assert_contains( 'The EC asks you to: Forms', $row, $role . ': the More link follows the colon' );
@@ -179,7 +179,7 @@ test(
 );
 
 test(
-	'Later this season: a short line ending in "." with a More link reads "drill. Forms", not "drill.. Forms"',
+	'Later this season: a short description ending in "." with a More link reads "drill. Forms", not "drill.. Forms"',
 	function () {
 		as_role( 'ares-editor' );
 		$id  = qa062_event(
@@ -196,14 +196,14 @@ test(
 			)
 		);
 		$row = qa062_row( $id );
-		assert_contains( 'QA-062 Full stop drill: County-wide drill.', $row, 'the title and the short line' );
+		assert_contains( 'QA-062 Full stop drill: County-wide drill.', $row, 'the title and the short description' );
 		qa062_assert_no_double( $row, 'row' );
 		assert_matches( '/County-wide drill\. Forms$/', $row, 'one full stop before the More link' );
 	}
 );
 
 test(
-	'Later this season: a More link after the title\'s own More link does not double the short line\'s colon',
+	'Later this season: a More link after the title\'s own More link does not double the short description\'s colon',
 	function () {
 		as_role( 'ares-editor' );
 		$id  = qa062_event(
@@ -230,7 +230,7 @@ test(
 );
 
 test(
-	'spokares_later_rest(): a short line ending in ":", ".", "!" or "?" gets no second mark before the More link',
+	'spokares_later_rest(): a short description ending in ":", ".", "!" or "?" gets no second mark before the More link',
 	function () {
 		as_role( 'ares-editor' );
 		$cases = array(
@@ -264,7 +264,7 @@ test(
 );
 
 test(
-	'Later this season: a short line without end punctuation still gets ". " before a More link (control)',
+	'Later this season: a short description without end punctuation still gets ". " before a More link (control)',
 	function () {
 		as_role( 'ares-editor' );
 		$id  = qa062_event(
@@ -286,7 +286,7 @@ test(
 );
 
 test(
-	'Later this season: a short line ending in "." with no extra link is printed as typed (control)',
+	'Later this season: a short description ending in "." with no extra link is printed as typed (control)',
 	function () {
 		as_role( 'ares-editor' );
 		$id  = qa062_event(

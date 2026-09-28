@@ -45,3 +45,6 @@ wordpress/shots/*
 # QA crawl screenshots and raw reports (regenerate with wordpress/dev/qa/crawl.mjs)
 wordpress/qa/shots/
 wordpress/qa/runs/
+
+# Editor-journey UX review screenshots (report + findings are tracked)
+wordpress/ux/shots/

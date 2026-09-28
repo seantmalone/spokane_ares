@@ -146,14 +146,36 @@ function qa022_assert_draft_notice( array $res, int $id, string $list_path, stri
 	assert_not_contains( $list_path, $notice, $label . ': a draft notice links to the public list' );
 }
 
+/**
+ * The Save box of a published item, as the current user sees it: one Save
+ * button (name "save"), "Take it off the site" as the trash link, and no
+ * "Save as draft (takes it off …)" control, "Status:" prefix or "Update"
+ * (UX spec §3.9: the draft route off the site is gone by design).
+ *
+ * @param int    $id    Post.
+ * @param string $label What is checked, for the failure text.
+ */
+function qa022_assert_published_box( int $id, string $label ): void {
+	ob_start();
+	spokares_render_save_box( get_post( $id ) );
+	$html = (string) ob_get_clean();
+	assert_contains( 'On the site', $html, $label . ': status line' );
+	assert_not_contains( 'Status:', $html, $label . ': "Status:" prefix' );
+	assert_matches( '#<input type="submit" name="save"[^>]*value="Save"#', $html, $label . ': the Save button' );
+	assert_not_contains( 'value="Update"', $html, $label . ': an Update button' );
+	assert_not_contains( 'name="saveasdraft"', $html, $label . ': a draft button on a published item' );
+	assert_not_contains( 'Save as draft', $html, $label . ': "Save as draft (takes it off …)"' );
+	assert_matches( '#<a class="submitdelete" id="spk-trash-link" href="[^"]*">Take it off the site</a>#', $html, $label . ': the trash link reads "Take it off the site"' );
+	assert_not_contains( 'Move to Trash', $html, $label . ': "Move to Trash" on a published item' );
+}
+
 test(
-	'an ARES Editor\'s "Save as draft (takes it off the site)" on a published event says Draft saved, with no link to Exercises & events',
+	'a published event\'s Save box (ARES Editor) has Save and "Take it off the site", and no "Save as draft (takes it off the site)"',
 	function () {
 		$id = post_id( 'spk_event', 'set-2026' );
 		assert_same( 'publish', get_post_status( $id ), 'set-2026 starts published' );
 		as_role( 'ares-editor' );
-		$res = qa022_click( $id, '/^Save as draft/' );
-		qa022_assert_draft_notice( $res, $id, '/members/exercises/', 'event Save as draft' );
+		qa022_assert_published_box( $id, 'published event' );
 	}
 );
 
@@ -180,28 +202,71 @@ test(
 );
 
 test(
-	'an ARES Editor\'s "Save as draft (takes it off the lists)" on a published document says Draft saved, with no link to Documents & forms',
+	'a published document\'s Save box (ARES Editor) has Save and "Take it off the site", and no "Save as draft (takes it off the lists)"',
 	function () {
 		$id = post_id( 'spk_document', 'ics-213' );
 		assert_same( 'publish', get_post_status( $id ), 'ics-213 starts published' );
 		as_role( 'ares-editor' );
-		$res = qa022_click( $id, '/^Save as draft/' );
-		qa022_assert_draft_notice( $res, $id, '/members/documents/', 'document Save as draft' );
+		qa022_assert_published_box( $id, 'published document' );
 	}
 );
 
 test(
-	'Update on a published event still says Saved with the link to Exercises & events (control)',
+	'a draft\'s Save box has Save draft (no browser checks) and Publish, the draft status line and "Move to Trash"; a new item has no trash link',
+	function () {
+		as_role( 'ares-editor' );
+		$id = create_post(
+			array(
+				'post_type'   => 'spk_event',
+				'post_status' => 'draft',
+				'post_title'  => 'QA022 draft box',
+			)
+		);
+
+		$links = array(
+			array(
+				'label' => 'Make a copy',
+				'url'   => admin_url( 'admin.php?qa022=copy' ),
+			),
+			array(
+				'label' => '',
+				'url'   => 'https://example.org/',
+			),
+		);
+		ob_start();
+		spokares_render_save_box( get_post( $id ), $links );
+		$html = (string) ob_get_clean();
+		assert_contains( 'Not on the site (draft)', $html, 'draft status line' );
+		assert_matches( '#<input type="submit" name="saveasdraft"[^>]*value="Save draft" formnovalidate>#', $html, 'Save draft skips the browser checks' );
+		assert_matches( '#<input type="submit" name="publish"[^>]*value="Publish"#', $html, 'Publish' );
+		assert_contains( '<p class="spk-savebox-link"><a href="' . esc_url( admin_url( 'admin.php?qa022=copy' ) ) . '">Make a copy</a></p>', $html, 'the caller\'s link, on its own line' );
+		assert_same( 1, substr_count( $html, 'spk-savebox-link' ), 'a link without words is left out' );
+		assert_matches( '#id="spk-trash-link"[^>]*>Move to Trash</a>#', $html, 'a draft goes to the Trash' );
+		assert_true( strpos( $html, 'spk-savebox-link' ) < strpos( $html, 'spk-trash-link' ), 'the caller\'s links come before the trash link' );
+
+		$new = get_default_post_to_edit( 'spk_document', true );
+		ob_start();
+		spokares_render_save_box( $new );
+		$html = (string) ob_get_clean();
+		assert_contains( 'Not saved yet', $html, 'new item status line' );
+		assert_not_contains( 'spk-trash-link', $html, 'a new item has nothing to take off the site' );
+		assert_contains( 'id="submitpost"', $html, 'the box keeps id="submitpost" (core post.js)' );
+		assert_contains( 'name="original_post_status" value="auto-draft"', $html, 'hidden status fields' );
+	}
+);
+
+test(
+	'Save on a published event still says Saved with the link to Exercises & events (control)',
 	function () {
 		$id = post_id( 'spk_event', 'set-2026' );
 		as_role( 'ares-editor' );
-		$res = qa022_click( $id, '/^Update$/' );
+		$res = qa022_click( $id, '/^Save$/' );
 		clean_post_cache( $id );
 		assert_same( 'publish', get_post_status( $id ), 'still published' );
 		$n      = qa022_message( $res );
 		$notice = qa022_notice( $id, $n );
-		assert_same( '1', $n, 'Update redirect ' . $res['redirect'] );
-		assert_contains( 'See it on Exercises &amp; events', $notice, 'the published notice links to the list' );
+		assert_same( '1', $n, 'Save redirect ' . $res['redirect'] );
+		assert_contains( 'See it on the Exercises &amp; events page', $notice, 'the published notice links to the list' );
 		assert_contains( '/members/exercises/', $notice, 'link target' );
 	}
 );

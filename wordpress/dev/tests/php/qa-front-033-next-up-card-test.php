@@ -92,16 +92,16 @@ function qafront033_event( string $title, string $summary, array $links ): int {
 }
 
 test(
-	'Great ShakeOut card: the short line is a sentence with DYFI linked inside it, and no line repeats the title',
+	'Great ShakeOut card: the short description is a sentence with DYFI linked inside it, and no line repeats the title',
 	function () {
 		foreach ( array( 'anonymous', 'ares-editor', 'admin' ) as $role ) {
 			as_role( $role );
 			$html = qafront033_card( post_id( 'spk_event', 'shakeout-2026' ) );
 
 			$summary = qafront033_parts( $html, 'p', 'ex-summary' );
-			assert_count( 1, $summary, $role . ': one short line' );
-			assert_same( 'Send a DYFI report by Winlink, marked as an exercise.', qafront033_visible( $summary[0] ), $role . ': the short line reads as a sentence' );
-			assert_matches( '#<a class="ext" href="https://earthquake\.usgs\.gov/data/dyfi/">DYFI<span class="vh">#', $summary[0], $role . ': DYFI is linked inside the short line' );
+			assert_count( 1, $summary, $role . ': one short description' );
+			assert_same( 'Send a DYFI report by Winlink, marked as an exercise.', qafront033_visible( $summary[0] ), $role . ': the short description reads as a sentence' );
+			assert_matches( '#<a class="ext" href="https://earthquake\.usgs\.gov/data/dyfi/">DYFI<span class="vh">#', $summary[0], $role . ': DYFI is linked inside the short description' );
 
 			$links = qafront033_parts( $html, 'p', 'ex-link' );
 			assert_same( array( 'shakeout.org' ), array_map( __NAMESPACE__ . '\qafront033_visible', $links ), $role . ': one more-link line, naming the ShakeOut site (no "Great ShakeOut" line, no "DYFI" line)' );
@@ -116,7 +116,7 @@ test(
 );
 
 test(
-	'SET card (control): a more link that is not in the short line and not the title keeps its own line',
+	'SET card (control): a more link that is not in the short description and not the title keeps its own line',
 	function () {
 		$html  = qafront033_card( post_id( 'spk_event', 'set-2026' ), true );
 		$lines = array_map( __NAMESPACE__ . '\qafront033_visible', qafront033_parts( $html, 'p', 'ex-link' ) );
@@ -127,7 +127,7 @@ test(
 );
 
 test(
-	'card short line: a closing mark is kept, mixed-case first words are left alone, links keep their order',
+	'card short description: a closing mark is kept, mixed-case first words are left alone, links keep their order',
 	function () {
 		$id   = qafront033_event(
 			'QA front drill',
@@ -148,7 +148,7 @@ test(
 );
 
 test(
-	'card short line: a lower-case fragment with no mark gets a capital and a full stop; one already ending in "!" is kept',
+	'card short description: a lower-case fragment with no mark gets a capital and a full stop; one already ending in "!" is kept',
 	function () {
 		$a = qafront033_event( 'QA front A', 'bring a charged radio', array() );
 		$b = qafront033_event( 'QA front B', 'Bring a charged radio!', array() );

@@ -63,15 +63,27 @@ export const tests = [
     },
   },
   {
-    name: 'ares-net: the Net details frequency patterns are valid and the browser applies them',
+    // Since the 2026-09-27 review (ux/SPEC.md §3.3, NET-16) the frequency
+    // boxes carry no pattern (no browser bubble): the page's own check says
+    // the rule in one line under the box instead. The browser still applies
+    // the rule; this checks that it does.
+    name: 'ares-net: the Net Settings frequency rule is applied in the browser (without a pattern bubble), and any pattern left compiles',
     role: 'ares-net',
     async run(t) {
       await t.goto('/wp-admin/admin.php?page=spokares-net-details');
       await t.expectStatus(200);
-      t.expect(await t.count('input[pattern]'), 'frequency fields with a pattern').toBeGreaterThan(0);
+      t.expect(await t.count('input.spk-freq[pattern]'), 'frequency fields with a pattern').toBe(0);
       t.expect(await badPatterns(t), 'pattern attributes that do not compile with the v flag').toEqual([]);
-      t.expect(await mismatch(t, '#spk-p-freq', '146.52'), '"146.52" breaks the frequency rule').toBe(true);
-      t.expect(await mismatch(t, '#spk-p-freq', '146.520'), '"146.520" is allowed').toBe(false);
+      const line = async (value) => {
+        await t.type('#spk-p-freq', value, { clear: true });
+        await t.press('Tab');
+        return t.evaluate(() => {
+          const el = document.querySelector('#spk-p-freq-hint');
+          return { text: el.textContent.trim(), problem: el.classList.contains('spk-error-text') };
+        });
+      };
+      t.expect(await line('146.52'), '"146.52" breaks the frequency rule').toEqual({ text: 'Three digits after the point, like 147.300.', problem: true });
+      t.expect(await line('146.520'), '"146.520" is allowed').toEqual({ text: 'Three digits after the point, like 147.300.', problem: false });
       t.expectNoConsoleErrors();
     },
   },

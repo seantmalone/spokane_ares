@@ -53,6 +53,11 @@ grep -q 'wp-block-cover__image-background wp-image-' <<<"$home" && grep -q 'srcs
 members=$(curl -s -m 30 "$URL/members/")
 grep -q 'Net control' <<<"$members" && pass "/members/ contains \"Net control\" (uptime keyword)" || fail "/members/ lacks \"Net control\""
 grep -q '<b>NZ2S</b>' <<<"$members" && pass "/members/ rota shows the seeded NZ2S row" || fail "/members/ rota lacks the seeded NZ2S row"
+# The search-engine description is text people read: "Net Control Schedule", never "rota" (UX spec §7).
+desc=$(grep -o '<meta name="description"[^>]*>' <<<"$members" | head -1)
+if [[ -z $desc ]]; then fail "/members/ has no <meta name=\"description\">"
+elif grep -qi 'rota' <<<"$desc"; then fail "/members/ meta description says \"rota\": $desc"
+else pass "/members/ meta description has no \"rota\""; fi
 docs=$(curl -s -m 30 "$URL/members/documents/")
 grep -q 'Showing all 37 documents' <<<"$docs" && pass "library shows all 37 documents" || fail "library does not show 37 documents"
 grep -q 'spk-edit-link' <<<"$members$docs" && fail "logged-out pages show the editor-only edit links" || pass "no editor edit links when logged out"

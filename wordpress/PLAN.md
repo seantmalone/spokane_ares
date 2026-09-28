@@ -41,7 +41,7 @@
 | 4 | Plugins (D5 limit: 4) | 1 `spokares-core` · 2 **Two-Factor** · 3 **UpdraftPlus (free)** · 4 **empty** | SMTP, redirects, hardening and the calendar feed are our own code. The must-use plugin is our code split out, not a fourth slot |
 | 5 | Source of truth for events and the rota (changes D9) | **WordPress.** Editors keep events, the rota, meetings and documents in wp-admin forms; the theme renders them | The owner's direction; groups.io's public feed was never confirmed |
 | 6 | How lists render | **Seven server-rendered dynamic blocks** (`spokares/events`, `net`, `meetings`, `docs`, `toc`, `last-reviewed`, `asof`), most with a `view` attribute; complete without JavaScript. `data.js` is retired | Pages are right on first load; fewer blocks share one query and format layer |
-| 7 | Editing | Four of the five routine jobs are **plain forms** (Net rota, Events, Regular meetings, Documents). Page text (Home, How it works, About only) uses the block editor; **the server refuses layout changes** from editors | The main editor (AG7QP) is a visual-builder user, not a coder |
+| 7 | Editing | Four of the five routine jobs are **plain forms** (Net Control Schedule, Exercises & Events, Cancel or Move a Meeting, Documents). Page Text (Home, How it works, About only) uses the block editor; **the server refuses layout changes** from editors. Screens are named the way a volunteer says it (UX spec, 2026-09-27) | The main editor (AG7QP) is a visual-builder user, not a coder |
 | 8 | Members pages | **Theme templates** (`page-members`, `page-documents`, `page-exercises`) built from theme patterns. They have no page text to edit | They are headings plus lists; their structure deploys with git and needs no lock |
 | 9 | Look | B's `site.css` is **ported nearly verbatim** into one theme stylesheet; B's class names ride on core blocks via `className`; plugin blocks print B's markup and classes | Keeps the feel with the least rewriting |
 | 10 | Chrome | Header, footer, members sub-nav and menu overlay are **template parts** editors can't reach; links are hard-coded, root-relative | Chrome is fixed (DESIGN §0 rule 11) |
@@ -159,7 +159,7 @@ Type key: **T** template or part · **P** pattern copied into page content (lock
 | Hub | Most used: 4 tiles | **`spokares/docs` view `tiles`** (four slots on **Documents › Hub tiles**) | M, D | Hub tiles screen |
 | Documents | Library: sticky rail (search, chips), 7 groups, count, empty state | **`spokares/docs` view `library`** + library module; server-side `?q=` and `?section=` without JS | M, D, J | Documents screen |
 | Documents | Not posted here | Paragraph in the `members-documents` pattern | M | Nothing (admin, git) |
-| Exercises | Bring line; Next up cards (red first card, Happening now, tasks, extra form, button); After line | Paragraphs in the `members-exercises` pattern + **`spokares/events` view `next-up`** | M, D | Events screen; the two lines are admin work |
+| Exercises | Bring line; Next up cards (red first card, Happening now, tasks, the document members need, button); After line | Paragraphs in the `members-exercises` pattern + **`spokares/events` view `next-up`** | M, D | Events screen; the two lines are admin work |
 | Exercises | Later this season | **`spokares/events` view `later`** | M, D | Events screen |
 | Exercises | Winlink assignments | **`spokares/net` view `winlink`** (rows from the Net rota screen) | M, D | Net rota screen |
 | Exercises | Public-service events + tips line | **`spokares/events` view `public-service`** + paragraph | M, D | Events screen |
@@ -196,7 +196,7 @@ Type key: **T** template or part · **P** pattern copied into page content (lock
 | 21 | The members pages' fixed lines ("Bring to every exercise", "After any exercise", "What to bring", "Not posted here", the tips line) live in **theme patterns inside templates** | Page-slug templates deploy with git and need no lock | Same words in the same places; changing them is admin work |
 | 22 | Home's "From home" card, the "In person" address and How it works' "Other nets" lines are **printed from data** | One home per fact (placement map §1) | Same words |
 | 23 | A cancelled or moved meeting is **shown**: Home prints "Next: Sat, Nov 14 (Oct 10 cancelled)" or "(moved from Oct 10)"; the hub adds "Sat, Oct 10: Second Saturday Workshop cancelled." for 14 days before | Nobody drives in for a cancelled meeting | New words, shown only when a date changes |
-| 24 | Logged-in editors see a small "**Edit this list in Net rota**" link under each dynamic list, and an admin-bar menu **Update lists** | The main editor edits "on the page" in Hostinger today | Readers never see either |
+| 24 | Logged-in editors see a small "**Edit this list in Net Control Schedule**" link under each dynamic list (the screen's name), and an admin-bar menu **Update lists** | The main editor edits "on the page" in Hostinger today | Readers never see either |
 
 ### 2.3 Round-3 review fixes built in
 
@@ -285,158 +285,165 @@ The exact meta keys, option shapes and storage rules are in **§6.3** (the contr
 
 ### 3.4 Admin screens (what the editor sees)
 
-**Menu for an ARES Editor, top to bottom** (order set with the `custom_menu_order` / `menu_order` filters; Net rota uses `dashicons-microphone`): Dashboard · **Net rota** (Net rota, Net details\*) · **Events** (All events, Add event, Regular meetings, Meeting rules\*) · **Documents** (All documents, Add document, Hub tiles) · Pages · Profile. \*Only for users granted `spokares_edit_net_details`. Posts, **Media**, Comments, Tools, Appearance, Plugins, Users and Settings are absent (by capability, `remove_menu_page`, and a redirect of `upload.php` to the Dashboard for non-admins). Administrators see everything plus **Documents › Sections** and **Settings › ARES site**.
+**Menu for an ARES Editor, top to bottom** (order set with the `custom_menu_order` / `menu_order` filters; the Net Control Schedule uses `dashicons-microphone`): Dashboard · **Net Control Schedule** (Net Control Schedule, Net Settings\*) · **Exercises & Events** (All Events, Add an Event) · **Meetings** (Cancel or Move a Meeting, Meeting Schedule\*) · **Documents** (All Documents, Add a Document, Most Used) · **Page Text** · Profile. \*Only for users granted `spokares_edit_net_details`; without it, Net Control Schedule and Meetings each open their one screen. Posts, **Media**, Comments, Tools, Appearance, Plugins, Users and Settings are absent (by capability, `remove_menu_page`, and a redirect of `upload.php` to the Dashboard for non-admins). Administrators see everything plus **Documents › Sections** and **Settings › ARES site**. Each screen's name is held once, in `spokares_edit_screen()`; the menu, the admin bar's Update lists, the "Edit this list in …" links and the editor hints read it, and every plugin screen's h1 is `get_admin_page_title()`.
 
-**Every plugin screen:** a Help tab (3-5 lines) and visible help text under each field; every address field is labelled "Web address (copy it from your browser's address bar)"; the page's own Save button; after saving, a notice that links to the place on the site ("Saved. See it on Exercises & events").
+**Every plugin screen:** a Help tab with at most one line plus "Stuck? webmaster@spokares.org" (a rule lives in one place: a field hint, Help or a notice, never two); a field gets at most one short hint; required fields say "(required)"; every web-address field is labelled "Web address", with the hint "Copy it from your browser's address bar." once; the page's own **Save** button; each save ends in one notice that says what changed and links to the place on the site ("Saved. See it on the For members page"). Settings forms warn before you leave with unsaved changes.
 
 **Dashboard: "Site tasks"** (the only widget for editors; Welcome, At a Glance, Activity, Quick Draft and News removed):
 
 ```
-┌ Site tasks ──────────────────────────────────────────────────────────────┐
-│ 1 Net rota     Posted through Tue, Oct 27 · 2 open slots (Oct 6, Oct 27)  │
-│                [ Update the rota ]                                        │
-│ 2 Events       Happening now: ARES-ACS / WSDOT exercise                   │
-│                Next: Simulated Emergency Test, Sat, Oct 3 · {n} more      │
-│                [ Add an event ]  All events                               │
-│ 3 Meetings     Next: Second Saturday Workshop, Sat, Oct 10, 9:00 AM       │
-│                [ Cancel or move a meeting ]                               │
-│ 4 Documents    37 in the library · {n} not reviewed in 12 months          │
-│                [ Add or replace a document ]  Hub tiles                   │
-│ 5 Page text    Home · How it works · About ARES & ACS                     │
-│ Needs attention (shown only when true, amber):                            │
-│   ● The rota runs out in under 3 weeks.                                   │
-│   ● {n} items marked "Needs checking".                                    │
-│   ● How it works may contain something we never publish. Check it.       │
-│ Stuck? webmaster@spokares.org                                             │
-└──────────────────────────────────────────────────────────────────────────┘
+┌ Site tasks ──────────────────────────────────────────────────────────────────────┐
+│ Needs attention (amber; only when there is something; each line links to the fix)  │
+│   ● The Net Control Schedule runs out in under 3 weeks. Fill in more Tuesdays       │
+│   ● How it works has what looks like a phone number (509-555-0142). Open the page   │
+│ Net Control Schedule                                                               │
+│   Posted through Tue, Dec 29 · Volunteer needed: Oct 6, Oct 20 · Not posted yet: … │
+│   [ Update the schedule ]   Net Settings*                                          │
+│ Exercises & Events                                                                 │
+│   Happening now: ARES-ACS / WSDOT exercise                                         │
+│   Next: Simulated Emergency Test, Sat, Oct 3 · {n} more                            │
+│   [ Add an event ]  [ Change or cancel an event ]                                  │
+│ Meetings                                                                           │
+│   Next: Second Saturday Workshop, Sat, Oct 10, 9:00 AM                             │
+│   [ Cancel or move a meeting ]   Meeting Schedule*                                 │
+│ Documents                                                                          │
+│   37 documents · {n} marked Soon · {n} not reviewed in 12 months                   │
+│   [ Add a document ]  [ Replace or change a document ]   Most Used                 │
+│ Page Text                                                                          │
+│   Home · How it works · About ARES & ACS                                           │
+│ Stuck? webmaster@spokares.org                                                      │
+└────────────────────────────────────────────────────────────────────────────────────┘
 ```
+Administrators also see the "Needs checking" line and "The search-engine description of {page} has what looks like …" (editors can't see or change the description).
 
-**Net rota** (`admin.php?page=spokares-rota`, capability `spokares_edit_rota`):
+**Net Control Schedule** (`admin.php?page=spokares-rota`, capability `spokares_edit_rota`):
 
 ```
-Net rota                              Last saved Sat, Sep 26, 10:14 AM by Test Editor   [View on site]
+Net Control Schedule  [View on site]   Last saved Sun, Sep 27, 7:11 PM by Frank (Oct 13 and Oct 20) · Undo
 Tuesday net, 8:00 PM, W7GBU 147.300 MHz. Call signs only, no names.
 
- Tuesday      This week is…   Net control                                            Shows              Winlink assignment                Form                 Note
- Tue, Sep 29  Simplex         (•) Call sign [NZ2S   ]  ( ) Open  ( ) Not posted yet   NZ2S                                                                      [        ]
- Tue, Oct 6   –               ( ) Call sign [       ]  (•) Open  ( ) Not posted yet   Open                                                                      [        ]
- Tue, Oct 13  Winlink night   (•) Call sign [AE7RJ  ]  ( ) Open  ( ) Not posted yet   AE7RJ              [Did You Feel It report (Sha…]    [DYFI            ▾]  [        ]
- Tue, Oct 20  GMRS net, 7:30  (•) Call sign [WA7LNC ]  ( ) Open  ( ) Not posted yet   WA7LNC                                                                    [        ]
- Tue, Oct 27  Winlink night   ( ) Call sign [       ]  (•) Open  ( ) Not posted yet   Open               [A welfare message            ]    [Welfare Message…▾]  [        ]
- … 13 Tuesdays from this week (link: "Show 13 more")
-                                   [ Undo last save (Test Editor, Sat, Sep 26, 10:14 AM) ]      [ Save rota ]
-▸ Paste a list instead (P2)
+ Tuesday         Net control                                                       Winlink assignment   Form               Note
+ Tue, Sep 29     ( ) [Call sign ] ( ) Volunteer needed ( ) No net (•) Not posted yet
+ Simplex
+ Tue, Oct 13     (•) [NZ2S      ] ( ) Volunteer needed ( ) No net ( ) Not posted yet [2-line box     ]    [ICS-213 (usual)▾]  [        ]
+ Winlink night
+ … 13 Tuesdays from this week                                          [Show 13 more Tuesdays]
+                                                                                                                         [ Save ]
 ```
 
-- **One choice per row:** Call sign / Open (ask for a volunteer) / Not posted yet. Typing in the box selects Call sign; choosing another option greys the box out (a disabled input isn't submitted). "Shows" repeats what the public will see: the call sign, "Open" or "Not yet published". A Tuesday with no stored row is "Not posted yet".
-- **Call signs:** uppercased; the server stores the **first word that matches** the call-sign pattern (§4.4). If other words were dropped, the notice says so for that row ("Tue, Oct 13: saved AE7RJ only. One call sign per Tuesday; names are never stored."). If no word matches, **that row is not saved**, the typed text stays in the box with a red outline, and the notice says "Tue, Oct 6 not saved: call sign only, no names." A `<datalist>` suggests call signs used before.
-- **Winlink** inputs appear only on Winlink-night rows. Form is a list: ICS-213, ICS-213RR, DYFI, Welfare Message / Quick Health & Welfare, Other (reveals a text box). "Note" is an exception note shown in the rota's Note column (e.g., "No net: county exercise").
-- **Saves only the rows you changed.** Each row carries its original values in hidden fields. A changed row is written onto the stored option; an unchanged row is left alone. If someone else saved that same row after you opened the screen, their version is kept and yours comes back in the box with "Tue, Oct 13 was changed by {name} while you were editing. Your entry wasn't saved."
-- **Undo last save** restores the rows changed by the most recent save, whoever made it; the button names who and when.
-- Rows are generated from this week's Tuesday on; past rows drop off; stored rows older than 12 months are pruned on save.
+- **One choice per row:** a call sign / **Volunteer needed** (stored `open`) / **No net** (`none`: counts as posted, prints "No net") / **Not posted yet** (`tbd`). Typing in the box picks the call sign; the box is grey only for Volunteer needed and No net. A Tuesday with no stored row is "Not posted yet".
+- **Call signs:** uppercased; the server stores the **first word that matches** the call-sign pattern (§4.4) and says so ("Saved Oct 13: NZ2S (names aren't posted)."). If no word matches, **that row is not saved**: the typed text stays in the box, outlined in red, with "Type a call sign, like NZ2S, not a name." A `<datalist>` suggests call signs used before.
+- **Winlink** inputs appear only on Winlink-night rows. Form is a list whose blank choice is **ICS-213 (usual)**, then ICS-213RR, DYFI, Welfare Message / Quick Health & Welfare, Other… (reveals a text box); a stored "ICS-213" shows as ICS-213 (usual) and keeps its value. "Note" prints in the public Note column.
+- **Saves only the rows you changed.** Each row carries its original values in hidden fields. A changed row is written onto the stored option; an unchanged row is left alone. If someone else saved that same row after you opened the screen, their version is kept and yours comes back in the box with "{name} changed this Tuesday while you were editing. Your entry wasn't saved."
+- **Undo** (a link in the title line, after "Last saved … (dates)") restores the rows changed by the most recent save, whoever made it; after an undo the line offers **Redo**. The rows a save or undo changed are tinted once.
+- All 52 rows are drawn; **Show 13 more Tuesdays** reveals the next 13 in place, so typing is kept. Past rows drop off; stored rows older than 12 months are pruned on save.
 
-**Net details** (`admin.php?page=spokares-net-details`, capability `spokares_edit_net_details`): a red banner "Amateur frequencies only. Never county, hospital, SHARES, 800 MHz or channel numbers." Fields: W7GBU call (**administrators only**, QA-039: W7GBU is the club's own call and How it works also names it in page text and the message-path picture, so a user with only the grant sees it read-only and not posted, and the save refuses a different one from them with "The repeater call sign wasn't saved: only an administrator can change it."), frequency (`^\d{2,3}\.\d{3}$`), offset (list), tone (list); alternate repeater frequency, offset, tone, "Show on How it works"; net time; Winlink-night weeks, fifth-Tuesday simplex weeks, GMRS weeks and time; Winlink how-to sentence; open-slot sentence. A **live preview** prints every sentence these facts produce: the hub bar, the copy line, Home's "From home" card and How it works' "Other nets" lines. Save asks for confirmation. Admins also see the "Needs checking (webmaster only)" flags. There is no list of hand-checked mentions any more: no net fact is page text.
+**Net Settings** (`admin.php?page=spokares-net-details`, capability `spokares_edit_net_details`), in four sections, each ending in a live "Members see" line: **The Tuesday net** (net time; the W7GBU call, **administrators only**, QA-039: W7GBU is the club's own call and How it works also names it in page text and the message-path picture, so a user with only the grant sees it as plain text, "W7GBU (the webmaster changes this)", and the save refuses a different one from them with "The webmaster changes the repeater call sign."; frequency, checked live: "Three digits after the point, like 147.300."; offset; tone) · **Alternate repeater** ("Show on How it works", frequency, offset, tone) · **Which Tuesdays** (one select per week of the month: Regular net / Winlink night / Starts on simplex / GMRS net; GMRS net time) · **Wording on the site** (how to answer a Winlink assignment; **Asking for volunteers**, the line under the public table that the "Volunteer needed" tags link to). No confirm: the notice names each change ("Saved: tone 103.5 Hz (was 100 Hz)."), and "Last saved … by …" heads the screen. Admins also see the "Needs checking (webmaster only)" flags. There is no list of hand-checked mentions any more: no net fact is page text.
 
-**Events › Add event** (classic form; WordPress's Publish box is replaced by our own **Save** box with Save draft, Publish (**Update** once published) and Move to Trash; no Preview, no Visibility, no publish date):
+**Exercises & Events › Add an Event** (classic form; WordPress's Publish box is replaced by our own **Save** box: **Save draft** and **Publish**, or **Save** once published, then **Make a copy** and **Take it off the site**; no Preview, no Visibility, no publish date):
 
 ```
-Add event
-┌ Kind (pick one first) ──────────────────────────────────────────┐   ┌ Save ─────────────────────┐
-│ ( ) Exercise   ( ) Training   ( ) On the air   ( ) Public service │   │ Status: Draft             │
-│ On the air: an on-air event members join from their own stations, │   │ [Save draft]  [Publish]   │
-│ like SKYWARN Recognition Day.                                     │   │ Move to Trash             │
-└───────────────────────────────────────────────────────────────────┘   └───────────────────────────┘
-Event name [ Simulated Emergency Test                        ]            ┌ Checking ─────────────────┐
-┌ When ─────────────────────────────────────────────────────────┐        │ [ ] Needs checking        │
-│ (•) On a date   ( ) Date not posted yet   ( ) As requested*    │        │     (webmaster only)      │
-│ First day [2026-10-03]   Last day [          ] (optional)      │        └───────────────────────────┘
-│ [x] All day      Start [--:--]   End [--:--]                   │
-└────────────────────────────────────────────────────────────────┘
-Short line for lists (90 characters) [ ARRL’s national exercise. The Section asks you to: ]
+Add an Event
+┌ Type of event (required) ──────────────────────────────────────────────────────┐   ┌ Save ─────────────────────┐
+│ ( ) Exercise  ( ) Training or meeting  ( ) On the air (from home stations)       │   │ Not saved yet             │
+│ ( ) Public service                                                               │   │ [Save draft]  [Publish]   │
+└──────────────────────────────────────────────────────────────────────────────────┘   └───────────────────────────┘
+Event name (required) [ Simulated Emergency Test                        ]
+┌ When ─────────────────────────────────────────────────────────────────────────┐
+│ (•) On a date  ( ) Postponed  ( ) Date not posted yet  ( ) As requested*       │
+│ First day [2026-10-03] Sat   Last day [          ]                             │
+│ [x] All day      Start [--:--]   End [--:--]                                   │
+│ [ ] Cancelled   Members see "Cancelled" until the date passes.  (published only) │
+└────────────────────────────────────────────────────────────────────────────────┘
+Where [ From your own station ]          A place, or "From your own station".
+Short description [ ARRL's national exercise. The Section asks you to: ]           (not Public service)
 What members do (one task per line)                                              (Exercise only)
-Main link (shown as the button)                                                   (not Public service)
-  Web address (copy it from your browser's address bar) [https://…]   Button words [Exercise details on groups.io]
-More links (up to 3)                                                              (not Public service)
-  Words [ARRL SET forms]   Web address (copy it from your browser's address bar) [https://www.arrl.org/…]   + Add a link
-Extra form [— none — ▾ (published documents)]                                      (Exercise only)
+Button: Web address [https://…]   Words on the button [Details]                  (not Public service)
+More links (up to 3): Words [ARRL SET forms]   Web address [https://www.arrl.org/…]   + Add a link
+Document members need [— none — ▾ (published documents)]                          (Exercise only)
 Volunteer through (call sign) [NV2Z]                                              (Public service only)
-After it ends: [x] Keep in Past exercises                                         (Exercise only; ticked by default)
-Never publish: no county, hospital, SHARES or 800 MHz channels; no names, phones or e-mails.
+[x] List under Past exercises after it ends                                       (Exercise only; ticked on Add)
+Never publish county, hospital, SHARES or 800 MHz channels, or names, phones or e-mails.
 ```
-\*"As requested" appears only for Public service.
+\*"As requested" appears only while Public service is picked.
 
-- **Kind comes first, is required and has no default.** Fields that don't apply to the chosen kind are hidden; their stored values are kept but ignored when rendering. A save without a kind is kept as a Draft with "Pick a kind first."
+- **Type of event comes first, is required and has no default.** Fields that don't apply to the chosen type are hidden; their stored values are kept but ignored when rendering. Publish without a type is stopped with one notice: "Not published yet: pick the type of event, then click Publish."
 - "All day" is ticked by default; unticking it shows Start and End. Ticking it again clears both times.
-- List screen: views **Upcoming** (default, soonest first), **Past** (newest first), **Drafts**; columns When, Event name, Kind, Status (Upcoming / Happening now / Past / Draft), Needs checking; row actions Edit · **Duplicate** (draft copy, dates cleared) · Trash · View on site (`/members/exercises/#<slug>`). No Quick Edit; no bulk Edit.
+- **Postponed** keeps an event listed without a date ("Postponed"); **Cancelled** keeps its row with a "Cancelled" tag until the date passes (never in Next up or Past exercises). Calling an event off is a tick, not the Trash.
+- List screen (h1 "Exercises & Events"): views **Upcoming** (default, soonest first), **Past** (newest first), **Drafts**, **Trash**; columns When, Event, Type of event, **Where it shows** (the Exercises & events page's sections, "For members page", "Not listed", "Draft (not on the site)"); Needs checking for administrators only; row actions Edit · **Make a copy** (draft copy, dates cleared) · View on site (`/members/exercises/#<slug>`). No Quick Edit; no bulk Edit; no Trash row action (an event is taken off the site from its form); for editors no bulk actions and no row ticks at all. A draft taken off reads "“X” is in the Trash." (it was never on the site), a published one "“X” is off the site.".
+- **Add an Event checks the name** as Add a Document does: a typed name that is an event's name, starts one or has only words that start its words gives "Already an event: Lilac Festival Armed Forces Torchlight Parade (Date not posted yet). Open it" under the name (a name WordPress saved on its own from an abandoned Add, with no type of event, is left out). "Open it" leaves without a "Leave site?" question and without saving the typed name as a draft.
 - Draft events never render.
 
-**Events › Regular meetings** (`admin.php?page=spokares-meetings`, capability `spokares_edit_rota`), the common job:
+**Meetings › Cancel or Move a Meeting** (`admin.php?page=spokares-meetings`, capability `spokares_edit_rota`), the common job:
 
 ```
-Regular meetings: cancel or move one date
- Second Saturday Workshop           Sat, Oct 10  [ ] Cancelled   Moved to [          ]   Note [                           ]
-                                    Sat, Nov 14  [ ] Cancelled   Moved to [          ]   Note [                           ]   … next 4 dates
- Third Thursday training meeting    Thu, Oct 15  [ ] Cancelled   Moved to [          ]   Note [                           ]   …
+Cancel or Move a Meeting   [Meeting Schedule]*  [View on site]
+ Meeting                            Date         Cancelled   Moved to        Note (shown with the date)
+ Second Saturday Workshop           Sat, Oct 10  [ ]         [          ]    [                           ]
+                                    Sat, Nov 14  [ ]         [          ]    [Starts at 10:00 AM this time]   … next 4 dates
+ Third Thursday training meeting    Thu, Oct 15  [ ]         [          ]    [                           ]   …
                                                                                                        [ Save ]
-Meeting times and weeks are on Meeting rules (ask the webmaster).
 ```
-Saves only the rows that changed (same rule as the rota). Home shows "Next: Sat, Nov 14 (Oct 10 cancelled)"; the hub shows "Sat, Oct 10: Second Saturday Workshop cancelled." plus the note, from 14 days before the date.
+Saves only the rows that changed (same rule as the Net Control Schedule). Only meetings shown on the site are listed. **A note on its own** is a one-date change (a new time or room that day). Unticking Cancelled clears the row's note, so un-cancelling is one tick. Home shows "Next: Sat, Nov 14 (Oct 10 cancelled)" or "(Starts at 10:00 AM this time)"; the For members page shows "Sat, Oct 10: Second Saturday Workshop cancelled." plus the note, from 14 days before the date.
 
-**Events › Meeting rules** (`admin.php?page=spokares-meeting-rules`, capability `spokares_edit_net_details`; administrators by default), the rare job, with its own Save and a confirmation:
-
-```
- Name | Week (1st–5th) | Day | Start | End | Time words ("evenings") | Extra on Home | Skip months | On Home | Active | Needs checking
-```
-
-**Documents › Add document** (same Save box as events; "Move to Trash" carries **[x] Also remove its file from the web**, ticked by default):
+**Meetings › Meeting Schedule** (`admin.php?page=spokares-meeting-rules`, capability `spokares_edit_net_details`; administrators by default), the rare job, one card per meeting, the Add card with the same fields:
 
 ```
-Add document
-── Basics ──────────────────────────────────────────────────────────────────────────
-Document name [ ACS Position Task Book                          ]
-Library section (•) Join & task books  ( ) Forms  ( ) …            (required; pick one)
-Where the file is  (•) Upload a file  ( ) Link to another site  ( ) Not available yet ("Soon")
-[ ] Privacy check: no personal phones, home addresses, personal e-mails, member lists or rosters,
-    and no county, hospital, SHARES or 800 MHz details.            (required to publish; tick it to unlock the file chooser)
-  File [Choose file]  (it uploads when you click Save draft or Publish)
-  After an upload:  Current file: acs-task-book-7f3a9c2b.docx · 84 KB · Open
-                    Replace with [Choose file]   [x] Remove the old file from the web (recommended)
-  For a link:       Web address (copy it from your browser's address bar) [https://…]
-Version or date [2024-08-09]
-Short note (8 words or fewer) [Print it; keep sign-offs in a binder.]
+ Name · Week of the month · Day · Start · End · Time as words ("evenings") · Extra words on Home · Skip these months · [x] Show on the site · Takes effect on [date] (Leave empty for now)
+```
+A pattern change with a later **Takes effect on** date is stored as the meeting's `next` and starts on that date; today's pattern stays until then. A cancel, move or note left on a date that is no longer a meeting date is removed, and the notice names it. No confirm dialog.
+
+**Documents › Add a Document** (same Save box as events; **Take it off the site** on a published document takes it off the site and its file off the web; Undo brings it back):
+
+```
+Add a Document
+Document name (required) [ ACS Position Task Book                          ]
+                          Already a document: ICS 309 Communications Log (Soon). Open it     (on a name match)
+Section (required) (•) Join & task books  ( ) Forms  ( ) …
+Where the file is  (•) Upload a file  ( ) Link to another site  ( ) Not ready yet (shows "Soon")
+  [ ] I checked this file: no personal phone numbers, home addresses, personal e-mails or member lists,
+      and no county, hospital, SHARES or 800 MHz details.           (a new file, a new address, or Soon/Link → file)
+  File [Choose File]  PDF, Word (.docx), Excel (.xlsx), JPEG or PNG.   (locked until ticked)
+  After an upload:  Current file: acs-task-book.docx, uploaded Aug 9 · 84 KB · Open
+                    Replace with [Choose File]   (locked until "I checked the new file" is ticked)
+  For a link:       Web address [https://…]   Site name shown [ag7qp.com]   Format [DOCX ▾]
+                    [ ] I checked the page it links to: …                  ("Upload a file instead" to swap a link for a file)
+Version or date [v3 or Sept 2026]
+Short note (60 characters) [Print it; keep sign-offs in a binder.]
 ▸ More options (closed)
-    Source shown on the page [ag7qp.com]   (filled in from the web address)
-    Format [DOCX ▾]   (automatic for uploads)
-    "How to" link: words [How to write one]   web address [https://…]
-    [ ] Show under "Most used"
-    Position in section (lower shows first) [30]
-    Who keeps it current [Net Manager]    Last reviewed [2026-09-26]  [Mark reviewed today]
-    [ ] Needs checking (webmaster only)
-    Hub tile: slot 4, "ACS Task Book". Change tiles on Documents › Hub tiles.
+    "How to" link: Words [How to write one]   Web address [https://…]
+    [ ] Also list under Most used        (a Most Used document instead: "It's button 2 on the Most Used screen.")
+    Place in section [At the top / After "…" / At the end ▾]
+    Owner [Net Manager]    Last reviewed [2026-09-26]  [Mark reviewed today]
 ▸ Admin only (closed; administrators only)
     Extra links (FEMA course codes): words, full title, web address (+ Add; ids are made from the words)
     Search words [task book, PTB, RADO, S-RADO]
     Link name (slug) [acs-task-book]
+    [ ] Needs checking (webmaster only); "Pull this file now"
 ```
 
-- The file chooser is a plain `<input type="file">` (`enctype="multipart/form-data"` via `post_edit_form_tag`), **not** the media window, so nothing uploads when a file is picked. It is disabled until Privacy check is ticked, and the server refuses a file without the tick (the rest of the form is kept, saved as Draft, "File not uploaded: tick the Privacy check first, then choose the file again.").
-- Upload rules (types, inspection, random suffix, deletion of replaced files) are in §5.5.
+- The file chooser is a plain `<input type="file">` (`enctype="multipart/form-data"` via `post_edit_form_tag`), **not** the media window, so nothing uploads when a file is picked. It is disabled until the "I checked" box is ticked, and the server refuses a file without the tick (the rest of the form is saved; "Saved, except the new file (outlined in red)."). **Privacy re-tick rule:** a fresh tick is needed whenever something new goes public (a new document, a new file, a new or changed web address, or a switch from Soon or Link to a file); edits to the name, note or version need none.
+- Upload rules (types, inspection, random suffix, deletion of replaced files) are in §5.5. The original file name is kept for display (`spk_file_name`).
+- **The name check** (on Add only): the typed name against every document's name (exact, starts one, or only words that start its words) and every course link under one ("Already on the site: IS-100.c, under FEMA courses. Open it"). A name WordPress saved on its own from an abandoned Add (no section) is left out; "Open it" leaves without a "Leave site?" question and without saving the typed name as a draft.
 - The slug is the row anchor and the stable link `/docs/<slug>/`; it is read-only for non-admins once published.
-- List: columns Document, Section, Source (File / Link / Soon), Format, Version, Most used, Tile slot, Reviewed (red after 12 months), Needs checking; filter by section; bulk action **Mark reviewed today**; row actions Edit · View on site (`/members/documents/#<slug>`) and, for administrators, **Pull this file now** (§5.5). No Quick Edit, no bulk Edit, no Trash row action (trash from the edit screen, where the file box is).
+- List (h1 "Documents"): every document on one page in site order (section, place, title); columns Document, Section, Source (File / File (none yet) / Link / Soon / Links (n)), Version, Reviewed (red after 12 months); Needs checking for administrators only; views All · Published · Drafts · **Soon** · Trash; filter by section; bulk action **Mark reviewed today**; row actions Edit · View on site (`/members/documents/#<slug>`) and, for administrators, **Pull this file now** (§5.5). No Quick Edit, no bulk Edit, no Trash row action (take a document off the site from its form, where the file box is).
 
-**Documents › Hub tiles** (`admin.php?page=spokares-tiles`, capability `edit_spk_documents`):
+**Documents › Most Used** (`admin.php?page=spokares-tiles`, capability `edit_spk_documents`):
 
 ```
-Hub tiles: the four "Most used" tiles on For members
- Slot 1  Document [Net scripts: weekly, simplex and GMRS ▾]   Words [Net script   ]   Icon [script ▾]
- Slot 2  Document [ICS 213 General Message ▾]                 Words [ICS-213      ]   Icon [form ▾]
- Slot 3  Document [ICS 214 Activity Log ▾]                    Words [ICS-214      ]   Icon [log ▾]
- Slot 4  Document [ACS Position Task Book ▾]                  Words [ACS Task Book]   Icon [book ▾]
-                                                                                   [ Save tiles ]
+Most Used  [View on site]
+The four buttons under Most used on the For members page, left to right.
+ Button  Document                                            Words on the button   Icon
+ 1       [Net scripts: weekly, simplex and GMRS ▾]           [Net script   ]       [Script ▾]
+         Replace or change it
+ 2       [ICS 213 General Message ▾]                         [ICS-213      ]       [Form ▾]
+ …                                                                                  [ Save ]
 ```
-The lists offer published, privacy-checked documents that aren't "Soon". A document already in another slot shows "(now slot 2)", and choosing it swaps the two slots, so a tile can't silently disappear.
+The lists offer published documents with a file or a link that aren't "Soon". A document already on another button shows "(now button 2)", and choosing it swaps the two, so a button can't silently disappear. Choosing a different document empties "Words on the button" (the site then prints the document's name). **Replace or change it** opens the selected document's form (the door for "here's the new net script"). The Documents & forms page's **Most used** filter always lists the four buttons' documents, plus any document ticked "Also list under Most used".
 
-**Page review box** (block editor sidebar, pages only; a classic `side` meta box, so no build): "Last reviewed: Sep 26, 2026" (or "not yet") · Page owner [Emergency Coordinator] · **[ ] Mark reviewed today when I save**. It replaces the hover-only row action of the first plan.
+**Page Text** (the Pages list, for non-admins): Home, How it works and About ARES & ACS only (the members pages have no words to edit), Title column only. The page type's labels for non-admins read "Page Text", "Edit Page Text" (the admin bar) and "Saved. It's on the site now." (after a save).
+
+**Page review box** (block editor sidebar, **About only**, the page that prints its review line; a classic `side` meta box, so no build): "Last reviewed: Sep 26, 2026" (or "not yet") · Page owner [ ] · **[ ] Mark reviewed today when I save**. It replaces the hover-only row action of the first plan. The settings sidebar opens with it on About and starts closed on the other pages.
 
 **Settings › ARES site** (`admin.php?page=spokares-site`, `manage_options`): the meeting place (`spk_site`). The groups.io links are page text and theme parts (footer, members menu, Home's Join section), not settings (QA-038).
 
@@ -445,21 +452,21 @@ The lists offer published, privacy-checked documents that aren't "Soon". A docum
 | Block › view | Attributes (the values the patterns set; block defaults are in §6.4) | Query and logic | Used on |
 |---|---|---|---|
 | `events` › `upcoming` | `types` "exercise,training", `limit` 2, `days` 60 | Published, dated events of those kinds with `spk_end_sort` ≥ today and `spk_sort` ≤ today + days, ordered by start (an event in progress sorts first) | Hub "This week" |
-| `events` › `next-up` | `types` "exercise", `limit` 2 | First N upcoming **dated** events of those kinds; first card red with a red button, others ghost | Exercises |
-| `events` › `later` | `types` "exercise,training,on-air", `limit` 12, `cardTypes` "exercise", `cardLimit` 2 | Every published upcoming event of `types` **except** the ones `next-up` shows (computed from `cardTypes`/`cardLimit`, which must equal the next-up block's `types`/`limit`); dated by start, then undated by menu order and title, printed "Date not posted" | Exercises |
-| `events` › `public-service` | — | Published public-service events: dated and not past, by date; then undated ("Date not posted" / "As requested") by menu order and title | Exercises |
-| `events` › `past` | `limit` 8 | Exercise-kind events with `spk_keep_past` and `spk_end_sort` < today, newest first | Exercises |
-| `net` › `rota` | `weeks` 5 | Tuesdays from today; call sign / Open / "Not yet published"; note from rules + row note; first row `is-next` | Hub |
+| `events` › `next-up` | `types` "exercise", `limit` 2 | First N upcoming **dated**, not cancelled events of those kinds; first card red with a red button, others ghost | Exercises |
+| `events` › `later` | `types` "exercise,training,on-air", `limit` 12, `cardTypes` "exercise", `cardLimit` 2 | Every published upcoming event of `types` **except** the ones `next-up` shows (computed from `cardTypes`/`cardLimit`, which must equal the next-up block's `types`/`limit`); dated by start, then undated by menu order and title, printed "Date not posted yet" or "Postponed"; a cancelled event keeps its row with a "Cancelled" tag until its date passes | Exercises |
+| `events` › `public-service` | — | Published public-service events: dated and not past, by date; then undated ("Date not posted yet" / "Postponed" / "As requested") by menu order and title; "Cancelled" tag as above | Exercises |
+| `events` › `past` | `limit` 8 | Exercise events with `spk_keep_past` and `spk_end_sort` < today, not cancelled, newest first | Exercises |
+| `net` › `rota` | `weeks` 5 | The Net Control Schedule: Tuesdays from today; call sign / "Volunteer needed" (links to `#open-slot`, the Asking for volunteers line) / "No net" / "Not posted yet"; note from rules + row note (a No net row: its own note only); first row `is-next`. The `#rota` anchor and `view:"rota"` keep their names (identifiers) | Hub |
 | `net` › `bar` | — | `spk_radio.primary` + net time | Hub |
-| `net` › `winlink` | `limit` 8 | `spk_rota` rows with a Winlink task, date ≥ today; first row `is-next`; how-to line from `spk_nets` | Exercises |
+| `net` › `winlink` | `limit` 8 | `spk_rota` rows with a Winlink task, date ≥ today, No net Tuesdays skipped; first row `is-next`; how-to line from `spk_nets` | Exercises |
 | `net` › `settings` | — | `spk_radio` (alternate only when `show`) + net time; Copy buttons | How it works |
 | `net` › `from-home` | — | Net time + primary frequency, in B's sentence | Home |
 | `net` › `other-nets` | — | Winlink, simplex and GMRS weeks and GMRS time, in B's three sentences | How it works |
-| `meetings` › `home` | — | "In person at {place}:" + active meetings with `show_home`: the Home line + "Next: <date>" (+ change note) | Home |
-| `meetings` › `next` | `meeting` "" (= soonest Home meeting) | Cancelled/moved Home-meeting dates in the next 14 days, then the next real date | Hub |
-| `docs` › `library` | — | All published, privacy-checked docs by section (`spk_order`), then `menu_order`, title; server filters `?q=` (all words must match title, note, keywords, format, version, slug, sub-link labels) and `?section=` | Documents |
+| `meetings` › `home` | — | "In person at {place}:" + meetings shown on the site (`active` and `show_home`, one tick on the Meeting Schedule screen): the Home line + "Next: <date>" (+ change note, or a note-only change such as "(Starts at 10:00 AM this time)"), using the pattern in effect on that date (Takes effect on) | Home |
+| `meetings` › `next` | `meeting` "" (= soonest Home meeting) | Cancelled, moved and note-only Home-meeting dates in the next 14 days, then the next real date | Hub |
+| `docs` › `library` | — | All published, privacy-checked docs by section (`spk_order`), then `menu_order`, title; server filters `?q=` (all words must match title, note, keywords, format, version, slug, sub-link labels) and `?section=`; its Most used filter lists the four Most Used buttons' documents plus any ticked "Also list under Most used" | Documents |
 | `docs` › `search` | — | GET form to `/members/documents/` with `q` | Hub |
-| `docs` › `tiles` | — | The four `spk_tiles` slots; a slot whose document isn't published, privacy-checked and a file or link is skipped | Hub |
+| `docs` › `tiles` | — | The four Most Used buttons (`spk_tiles`); a button whose document isn't published, privacy-checked and a file or link is skipped | Hub |
 | `toc` | `title` "On this page", `labels` "legal-basis=Legal basis;leadership=Leadership;history=History" | H2 blocks with anchors in this page's content, in order; `labels` overrides the link text | About |
 | `last-reviewed` | — | This page's `_spk_reviewed` and `_spk_owner`; nothing publicly if no date | About |
 | `asof` | — | Today, long format | Hub |
@@ -468,33 +475,33 @@ Markup for each view is fixed in §6.4.
 
 ### 3.6 Editing workflows (the five jobs; target times for the launch gate)
 
-**Job 1: Post next month's rota** (monthly, **3 minutes**):
-1. Dashboard › **Update the rota**. The next 13 Tuesdays are listed with their notes filled in.
-2. For each Tuesday type a call sign (the row switches to Call sign), or choose **Open** or **Not posted yet**. On Winlink nights, type the assignment and pick the form.
-3. **Save rota**, then **View on site**. Mistake? **Undo last save**.
+**Job 1: Update the Net Control Schedule** (monthly, **3 minutes**):
+1. Dashboard › **Update the schedule**. The next 13 Tuesdays are listed with their Winlink, simplex and GMRS weeks marked.
+2. For each Tuesday type a call sign (the row picks it), or choose **Volunteer needed**, **No net** or **Not posted yet**. On Winlink nights, type the assignment and pick the form (**ICS-213 (usual)** unless another is named).
+3. **Save**; the notice names the Tuesdays and links to the For members page. Mistake? **Undo** in the title line (then **Redo** if wanted).
 
-**Job 2: Add or change an event** (**3 minutes**):
-1. Dashboard › **Add an event** (or Events › Add event).
-2. Pick the **Kind** first. Type the name as members will see it.
+**Job 2: Add or change an exercise or event** (**3 minutes**):
+1. Dashboard › **Add an event** (or Exercises & Events › Add an Event).
+2. Pick the **Type of event** first. Type the name as members will see it.
 3. **When:** On a date; pick the first day (and the last day if it runs longer). All day is already ticked; untick it to add times.
-4. Optional: the short line, one task per line, the main link (groups.io post) and more links, an extra form.
-5. **Publish.** The notice links to `/members/exercises/#<slug>`. A yearly repeat: **Duplicate** last year's, change the date, Publish.
+4. The short description, one task per line, the Button (groups.io post) and more links, a Document members need, as the type offers them.
+5. **Publish.** The notice says where it shows and links to `/members/exercises/#<slug>`. A yearly repeat: **Make a copy** of last year's, change the date, Publish. Called off: tick **Cancelled**; moved with no new date: **Postponed**; added by mistake: **Take it off the site**.
 
-**Job 3: Cancel or move a meeting** (**1 minute**): Events › **Regular meetings** › tick **Cancelled** beside the date (or fill **Moved to**) › optional note › **Save**. Home and the hub show the change and the next real date.
+**Job 3: Cancel or move a meeting** (**1 minute**): Dashboard › **Cancel or move a meeting** › tick **Cancelled** beside the date (or fill **Moved to**, or type a **Note** alone for a new time or room that day) › **Save**. Home and the For members page show the change and the next real date. A regular-pattern change, from a later date with **Takes effect on**, is on the Meeting Schedule screen (the grant).
 
-**Job 4: Add or replace a document** (**3 minutes**):
-1. Documents › **Add document**. Name; pick the section.
-2. **Upload a file**, tick the **Privacy check**, then **Choose file**. Or **Link to another site** and paste the web address.
-3. Optional: version, short note.
-4. **Publish.** New version later: open it › **Replace with** › Choose file (leave "Remove the old file from the web" ticked) › change the version › **Update**. The link `/docs/<slug>/` never changes, and the old file is gone from the web.
+**Job 4: Add, replace or change a document** (**3 minutes**):
+1. Dashboard › **Add a document**. Name; pick the section.
+2. **Upload a file**, tick **I checked this file**, then **Choose File**. Or **Link to another site** and paste the web address.
+3. Version or date, short note, if they help.
+4. **Publish.** New version later: Dashboard › **Replace or change a document** › its name › **Replace with** (or **Upload a file instead** for a link) › Choose File › tick the check › change the version › **Save** (from the Most Used screen, **Replace or change it** goes straight to a button's document). The link `/docs/<slug>/` never changes, and the old file is gone from the web.
 
 **Job 5: Change words on a page** (**5 minutes**):
-1. Pages › **Home** (or **Edit page** in the admin bar while viewing Home).
-2. Click into a heading, paragraph, list item, button or table cell and type. Change a button's link from its toolbar. Replace the hero photo from the Cover's toolbar. In a list, **bold the first words** of a new item; **Shift+Enter** starts a new line inside an item.
-3. **Ctrl+Z** undoes before you save. Then click the save button (its exact word in 7.1 is taken from the click-test screenshot for the guide).
-4. If the page answers "Layout changes need an administrator", press Ctrl+Z until the moved or added section is back, then save again, or ask the webmaster. Restoring an older version is the webmaster's job.
+1. Dashboard › **Page Text** › **Home** (or **Edit Page Text** in the admin bar while viewing Home).
+2. Click into a heading, paragraph, list item, button or table cell and type. A button's link: click the button, then the pencil in the box under it. Replace the hero photo from the Cover's **Replace** (**Choose a photo** or Upload). In a list, **bold the first words** of a new item; **Shift+Enter** starts a new line inside an item.
+3. **Ctrl+Z** undoes before you save. Then click **Save**; the notice reads "Saved. It's on the site now."
+4. A refused save starts "Not saved:" and says what to click (Undo, or the pencil for a button's link); restoring an older version is the webmaster's job.
 
-**Change the repeater tone** (Net details users only): Net rota › **Net details** › change **Tone**; the preview shows every new sentence › **Save** (confirm). The hub bar, How it works, Home and both Copy buttons update. Nothing else to check.
+**Change the repeater tone** (Net Settings users only): Net Control Schedule › **Net Settings** › change **Tone**; its "Members see" line shows the new sentence › **Save**. The notice names the change ("tone 103.5 Hz (was 100 Hz)"); the For members page's bar, How it works, Home and both Copy buttons update. Nothing else to check.
 
 ### 3.7 Time, caching and freshness
 
@@ -529,14 +536,17 @@ Markup for each view is fixed in §6.4.
 
 ### 4.2 Admin simplification
 
-- Menu trimmed and ordered as in §3.4; labels are the words editors use ("Net rota", "Add document"). Media is hidden and `upload.php` redirects editors to the Dashboard.
-- Admin bar for non-admins: no WordPress logo menu, no "+ New", no comments, no Customize. It keeps "Visit site" and "Edit page" (Home, How it works, About only), and adds **Update lists** on the front end: Net rota, Events, Regular meetings, Documents, Hub tiles (each shown only with the matching capability).
-- Front end, logged-in editors only: each dynamic list ends with a small **"Edit this list in {screen}"** link (§6.4). Readers never see it.
-- Block editor for non-admins: the Welcome Guide and the starter-pattern window are turned off (`spokares-editor-guard` sets the preferences); code editor off.
+- Menu trimmed and ordered as in §3.4; labels are the words editors use ("Net Control Schedule", "Cancel or Move a Meeting", "Add a Document", "Page Text"). Media is hidden and `upload.php` redirects editors to the Dashboard.
+- Screens use plain spoken names (Net Control Schedule, Most Used …); internal identifiers (`spk_rota`, `spokares-rota`, `#rota`, `view:"rota"`, `spk_tiles`) keep their old names on purpose.
+- Admin bar for non-admins: no WordPress logo menu, no "+ New", no comments, no Customize, no "Howdy," and no ⌘K. It keeps "Visit site" and "Edit Page Text" (Home, How it works, About only), and adds **Update lists** on the front end: Net Control Schedule, Exercises & Events, Meetings, Documents, Most Used (each shown only with the matching capability).
+- Front end, logged-in editors only: each dynamic list ends with a small **"Edit this list in {screen}"** link (§6.4), e.g. "Edit this list in Net Control Schedule", or "Edit these settings in Net Settings" under the net facts. Readers never see it.
+- Block editor for non-admins: the Welcome Guide and the starter-pattern window are turned off (`spokares-editor-guard` sets the preferences); code editor off. The settings sidebar starts closed except on About (the Page review box); the ⋮ Options menu, the Excerpt and Content panels, the page card's Rename and Order, the block menu's "Add note", list Indent/Outdent, heading levels, a Button's Unlink and the hero photo's Reset, "Use featured image" and "Embed video from URL" are not offered; the media window shows only the alt text, as "Describe the photo in a few words" (UX spec §3.8), and speaks plainly: the Replace menu's Open Media Library, the window's title, its tabs and its side panel read **Choose a photo**, **Upload a photo**, **Photos on the site** and **This photo**, with no Edit Image link.
+- List screens for non-admins (Exercises & Events, Documents, Page Text) and the event and document forms have no Screen Options tab; the Save box and the Page review box have no move or fold buttons.
 - Profile screen for non-admins: only name, e-mail, password and Two-Factor options; colour scheme, keyboard shortcuts, toolbar, website, biography and profile picture are hidden.
 - Comments off everywhere (supports removed, closed, admin-bar bubble gone).
 - Setup deletes the default Sample Page, the Privacy Policy draft and "Hello world!".
-- Dynamic blocks in the editor show a plain-text hint "Edit in wp-admin › {screen}" inside the block (§6.4).
+- Dynamic blocks in the editor show a plain-text hint inside the block (§6.4): "Change this on the {Screen} screen." for an editor who can open it, else "The webmaster sets this."; About's review line: "Change this in the Page review box."
+
 
 ### 4.3 Locking page text (Home, How it works, About)
 
@@ -545,7 +555,7 @@ The core review showed that in 7.1.2 a root `templateLock: 'contentOnly'` leaves
 | Layer | Mechanism | Owner |
 |---|---|---|
 | 1 Out of reach | Templates, parts, the menu overlay and the three members pages need `edit_theme_options`, which ARES Editors lack | theme + role |
-| 2 **Server floor (the real lock)** | For users without `edit_theme_options`, `rest_pre_insert_page` (and `wp_insert_post_data` for non-REST saves, including revision restores) compares a **block skeleton** of the new content with the stored page. If it differs, REST returns `WP_Error( 'spokares_layout_locked', 'Layout changes need an administrator. Undo the last change (Ctrl+Z, or Cmd+Z on a Mac, or the curved Undo arrow at the top left) and save again, or ask the webmaster.', [ 'status' => 403 ] )`; a non-REST save keeps the stored content. The editor's text stays in the editor | plugin |
+| 2 **Server floor (the real lock)** | For users without `edit_theme_options`, `rest_pre_insert_page` (and `wp_insert_post_data` for non-REST saves, including revision restores) compares a **block skeleton** of the new content with the stored page. If it differs, REST returns `WP_Error( 'spokares_layout_locked', 'Not saved: only the webmaster can add, move or restyle parts of a page. Click the Undo arrow (top left) until that part is back, then Save.', [ 'status' => 403 ] )`; a non-REST save keeps the stored content. The same floor refuses a button with no words (`spokares_empty_button`), a button with no link (`spokares_button_link`) and a Cover with no photo (`spokares_hero_photo`), each only when the stored page had none. The editor's text stays in the editor | plugin |
 | 3 Editor tidy-up | `spokares-editor-guard` (plain `wp.data`, pages, non-admins; a copy of core's `DisableNonPageContentBlocks`): `setBlockEditingMode( '', 'disabled' )`, then `'contentOnly'` on each top-level block, re-applied when blocks load. Core's `blockEditor.__unstableCanInsertBlockType` filter allows only list items to be inserted (integration round 2), so no inserter appears inside the Cover or Buttons. Plus `block_editor_settings_all`: `templateLock` `'contentOnly'`, `disableContentOnlyForUnsyncedPatterns` true, `canLockBlocks` false, `codeEditingEnabled` false | plugin |
 | 4 Block locks | Every top-level block of a page pattern and every dynamic or theme block carries `"lock":{"move":true,"remove":true}`. No Group `templateLock`, no `metadata.patternName`, no `wp:pattern` in page content | patterns |
 | 5 Design controls off | theme.json turns off every colour, typography, spacing, dimension, layout, position, border, shadow, background, lightbox and block-visibility control (§6.7); `DISALLOW_UNFILTERED_HTML` strips per-block custom CSS; no Openverse, block directory, remote patterns, core patterns or font library (7.1.2's theme.json has no font-library switch, so the plugin removes Appearance › Fonts, sends `font-library.php` to Themes and sets the editor's `fontLibraryEnabled` false: QA-032) | theme + plugin + wp-config |
@@ -565,20 +575,21 @@ Editors can: change words in headings, paragraphs, list items, buttons and table
 
 ### 4.4 Guard rails on data
 
-**Never throw away what the editor typed.** On a **post form** (Events, Documents) a problem saves everything as a **Draft**, outlines the field in red and adds one sentence naming the field ("Saved as a draft, so it's off the site: the short line mentions a hospital net."). On a **settings screen** (Net rota, Net details, Regular meetings, Meeting rules, Hub tiles) the one field is **not saved** (it keeps its stored value), every other field is saved, and the form comes back with the typed text in the box, outlined, and the sentence (the submitted values are held for 5 minutes in a per-user transient across the redirect).
+**Never throw away what the editor typed.** On a **post form** (Exercises & Events, Documents) a new item with a problem isn't published ("Not published yet: pick the type of event, then click Publish."), and a published one is saved except the problem field ("Saved, except Where: it has a phone number. … Everything else is on the site now.", amber like every screen's partial save, and it takes the focus as a refusal does); the field is outlined in red with one sentence under it that says what to do, and its typing stays until the next save. On a **settings screen** (Net Control Schedule, Net Settings, Cancel or Move a Meeting, Meeting Schedule, Most Used) the one field is **not saved** (it keeps its stored value), every other field is saved, and the form comes back with the typed text in the box, outlined, and the sentence (the submitted values are held for 5 minutes in a per-user transient across the redirect). Each save gives one notice.
 
 | Guard | Fields | Level | Behaviour |
 |---|---|---|---|
-| Call signs | rota Net control, "Volunteer through" | fix | Uppercase; store the **first word** matching `^[A-Z0-9]{1,3}[0-9][A-Z0-9]{0,4}(/[A-Z0-9]+)?$`; say when other words were dropped. No match: rota row not saved (text kept); event saved as Draft |
-| Never-publish words | event short line, tasks, link words; rota notes and Winlink tasks; Net details sentences; meeting notes; document name, note and how-to words | block | Matches `hospital net`, `channel \d`, `SHARES (channel\|frequenc)`, `800 ?MHz`, `talkgroup` (case-insensitive): Draft / field held back, as above |
-| Phone numbers | every free-text field | confirm | Only real 10-digit North American shapes: `(?<!\d)(?:\+?1[\s.-]?)?\(?[2-9]\d{2}\)?[\s.-]?[2-9]\d{2}[\s.-]?\d{4}(?!\d)` ("WSDOT 580-020", "ICS-213" and dates don't match). First time: Draft / field held back, with a tick beside the field **"This is a public agency number. Publish it."** Saving with the tick accepts it and records a hash of that field's text (`spk_confirmed`), so the same text doesn't ask again |
+| Call signs | Net Control Schedule's Net control, "Volunteer through" | fix | Uppercase; store the **first word** matching `^[A-Z0-9]{1,3}[0-9][A-Z0-9]{0,4}(/[A-Z0-9]+)?$`; say when other words were dropped. No match: that Tuesday not saved (text kept); the event's field not saved |
+| Never-publish words | event short description, tasks, link words; Net Control Schedule notes and Winlink assignments; Net Settings wording; meeting notes; document name, note and how-to words | block | Matches `hospital net`, `channel \d`, `SHARES (channel\|frequenc)`, `800 ?MHz`, `talkgroup` (case-insensitive): not published / field not saved, as above |
+| Phone numbers | every free-text field | confirm | Only real 10-digit North American shapes: `(?<!\d)(?:\+?1[\s.-]?)?\(?[2-9]\d{2}\)?[\s.-]?[2-9]\d{2}[\s.-]?\d{4}(?!\d)` ("WSDOT 580-020", "ICS-213" and dates don't match). First time: not published / field not saved, with a tick beside the field **"This is a public agency number. Publish it."** Saving with the tick accepts it and records a hash of that field's text (`spk_confirmed`), so the same text doesn't ask again |
 | E-mail addresses | every free-text field | confirm | Any address not ending `@spokares.org`: as for phone numbers, with **"This is a public agency address. Publish it."** |
 | Dates and times | events, meetings | block | Last day ≥ first day; end time after start time; storage `Y-m-d`/`H:i`; display 12-hour |
 | Web addresses | all | block | `https://` only (plus `mailto:` for role addresses); `esc_url_raw` with allowed protocols |
-| Kind | events | block | Required, no default |
-| Uploads | documents | gate | Privacy check first; types and inspection (§5.5) |
-| Page text | Home, How it works, About (block editor): the blocks and the excerpt (the page's `<meta name="description">`) | warn | The never-publish, phone and e-mail patterns run in `spokares-editor-guard` on save and show a warning notice ("This page may contain something we never publish: …", and a second one for the excerpt, "This page's excerpt, the description search engines show, …"); saving is never blocked. The dashboard lists pages whose text or excerpt matches (QA-107) |
-| Every write handler | forms, GET row actions (Duplicate, Pull this file now), bulk actions, meta boxes, Undo | — | Its own `current_user_can()` check and nonce (`check_admin_referer`; `wp_nonce_url` on GET links). `register_post_meta` auth callbacks don't protect `update_post_meta()` calls in our handlers |
+| Type of event | events | block | Required (`required` in the browser too), no default |
+| Uploads | documents | gate | "I checked this file" first, and again for anything new going public (a new file, a new or changed address, Soon or Link → file); types and inspection (§5.5) |
+| Page text | Home, How it works, About (block editor): the blocks; the excerpt (the page's `<meta name="description">`, the "search-engine description") for administrators | warn | The never-publish, phone and e-mail patterns run in `spokares-editor-guard` on save and show a warning naming what and where ("On the site now: this page has what looks like a phone number (509-555-0142). If it isn't public, take it out and Save."), and a link whose words are its web address is named too; saving is never blocked. The Dashboard's Needs attention lists pages whose text matches, and for administrators pages whose description matches (QA-107). Editors don't see the description, so it is the webmaster's |
+| Page shape | Home, How it works, About (non-admins) | block | Refused with one sentence that says what to click: a layout change ("Not saved: only the webmaster can add, move or restyle parts of a page. …"), a button with no words, a button with no link ("Not saved: a button needs a link. Click the button, then the pencil in the box under it, …"), the Home photo removed ("Not saved: the Home photo can be replaced but not removed. …") (§4.3) |
+| Every write handler | forms, GET row actions (Make a copy, Pull this file now), bulk actions, meta boxes, Undo | — | Its own `current_user_can()` check and nonce (`check_admin_referer`; `wp_nonce_url` on GET links). `register_post_meta` auth callbacks don't protect `update_post_meta()` calls in our handlers |
 
 The patterns live in one place (`spokares_check_text()`), and the editor guard script receives them as JSON.
 
@@ -740,7 +751,7 @@ Everything visual, including the CSS for the plugin's block markup and the `spk-
 | Capabilities | `spokares_edit_rota`, `spokares_edit_net_details`; CPT caps from `capability_type` `spk_event`/`spk_events` and `spk_document`/`spk_documents` |
 | Admin pages | `spokares-rota` (Net rota), `spokares-net-details` (Net details), `spokares-meetings` (Regular meetings), `spokares-meeting-rules` (Meeting rules), `spokares-tiles` (Hub tiles), `spokares-site` (Settings › ARES site) |
 | Dashboard widget | `spokares_site_tasks` |
-| Layout-check error | code `spokares_layout_locked`, status 403, message "Layout changes need an administrator. Undo the last change (Ctrl+Z, or Cmd+Z on a Mac, or the curved Undo arrow at the top left) and save again, or ask the webmaster." An emptied button is refused with `spokares_empty_button`. |
+| Layout-check error | code `spokares_layout_locked`, status 403, message "Not saved: only the webmaster can add, move or restyle parts of a page. Click the Undo arrow (top left) until that part is back, then Save." An emptied button is refused with `spokares_empty_button`, a button with no link with `spokares_button_link`, the Home photo removed with `spokares_hero_photo` (the sentences are `spokares_layout_refusals()`). |
 | Front-end routes | `/docs/<slug>/` (query var `spk_doc`) · P2: `/calendar.ics` (query var `spk_ics`) |
 | Library query params | `q` (search words, at most 100 characters), `section` (one of the 7 section slugs or `most-used`; anything else is ignored) |
 | Script modules (front end) | `@spokares/copy`, `@spokares/doc-library`, `@spokares/toc` (plugin) |
@@ -771,7 +782,7 @@ Everything visual, including the CSS for the plugin's block markup and the `spk-
 | `spk_main_url` | string | https URL or `''` | the card's button; also links the title in "Later this season" |
 | `spk_main_label` | string | default "Exercise details on groups.io" for groups.io URLs, else "Details" | button words |
 | `spk_links` | array | "More links": `[ ['label'=>'ARRL SET forms','url'=>'https://…'], … ]`, ≤ 3 | card text links; the first links the "Later" title when there is no main link |
-| `spk_extra_doc` | int | a published `spk_document` ID or 0 | "Extra form: …" (exercise) |
+| `spk_extra_doc` | int | a published `spk_document` ID or 0 | "You’ll need: …" (exercise; the form's "Document members need") |
 | `spk_contact_call` | string | call sign or `''` | "Volunteer through" (public service) |
 | `spk_keep_past` | bool | | "Keep in Past exercises" (exercise) |
 | `spk_precision` | string | `day` \| `month` \| `year` | default `day`; imported history uses month/year |
@@ -946,7 +957,7 @@ spk_db_version = '1';   spk_seeded = '2026-09-26';   // set by the importer
     <p class="ex-when"><time datetime="{start}">{when}</time>[ <span class="ex-status"><span class="tag tag--now">Happening now</span></span>]</p>
     [<p class="ex-summary">{summary}</p>]
     [<ol class="ex-tasks"><li>{task}</li>…</ol>]
-    [<p class="ex-form">Extra form: <a href="/members/documents/#{doc-slug}">{doc title}</a></p>]
+    [<p class="ex-form">You’ll need: <a href="/members/documents/#{doc-slug}">{doc title}</a></p>]
     [<p class="ex-link">{spokares_link(url, label)}</p> …one per "more link"]
     [<p class="ex-action"><a class="btn btn--red|btn--ghost ext" href="{main_url}">{main_label}<span class="vh"> (opens {name})</span></a></p>]
   </article>
@@ -1541,7 +1552,7 @@ Priorities: **P0** needed for the integrated screenshots · **P1** needed before
 Run `start.sh`, `checks.sh`, `shots.sh`, then these by hand as **editor** (`?dev_login=editor`) unless noted. Every failure goes back to the owning builder.
 
 1. **Lock UI (Home):** select the hero Cover: no Advanced panel (CSS class, anchor, HTML element), no colour, overlay, height or visibility controls. Look for a "+" at the end of the page and between sections: none. Try to insert a block into the Cover, a Quote and a Buttons group: not offered. No "Edit pattern" button; sections can't be moved or deleted.
-2. **Server floor:** in the browser console, undo the tidy-up (`wp.data.dispatch('core/block-editor').setBlockEditingMode('', 'default')`), move a section and save: refused with "Layout changes need an administrator…", the text stays. A text-only change and an added list item save.
+2. **Server floor:** in the browser console, undo the tidy-up (`wp.data.dispatch('core/block-editor').setBlockEditingMode('', 'default')`), move a section and save: refused with "Not saved: only the webmaster can add, move or restyle parts of a page…", the text stays. A text-only change and an added list item save.
 3. Text two levels deep is editable (a step title, a stop, a run-sheet item).
 4. A table cell on About (leadership) and How it works (roles) can be edited; no row controls.
 5. The hero photo can be replaced (the saved Cover keeps an `id` and `wp-image-N`); a button's text and URL can be changed; a stop can be added to What we do. **Paste from an e-mail and from Word** into a paragraph and a list item; record what Enter and Shift+Enter do, for the guide.

@@ -105,7 +105,7 @@ test(
 		);
 		assert_same( 'exercise', (string) get_post_meta( $id, 'spk_kind', true ), 'the form was saved by the plugin handler' );
 		assert_same( 'QA051 Winlink drill', get_post_field( 'post_title', $id ), 'the title was saved' );
-		assert_same( 'Save to C:\ARES\forms', (string) get_post_meta( $id, 'spk_summary', true ), 'Short line stored as typed' );
+		assert_same( 'Save to C:\ARES\forms', (string) get_post_meta( $id, 'spk_summary', true ), 'Short description stored as typed' );
 		assert_same( 'EOC room \ B', (string) get_post_meta( $id, 'spk_where', true ), 'Where stored as typed' );
 		assert_same( "Open C:\\Winlink\\Messages\nSend a check-in", (string) get_post_meta( $id, 'spk_tasks', true ), 'task list stored as typed' );
 	}
@@ -141,7 +141,7 @@ test(
 );
 
 test(
-	'Duplicate copies an event\'s backslashes as they are stored',
+	'Make a copy copies an event\'s backslashes as they are stored',
 	function () {
 		as_role( 'ares-editor' );
 		$src = create_post(
@@ -158,18 +158,18 @@ test(
 		update_post_meta( $src, 'spk_start', qa051_day( 12 ) );
 		update_post_meta( $src, 'spk_summary', wp_slash( 'Save to C:\ARES\forms' ) );
 		update_post_meta( $src, 'spk_tasks', wp_slash( 'Open C:\Winlink\Messages' ) );
-		assert_same( 'Save to C:\ARES\forms', (string) get_post_meta( $src, 'spk_summary', true ), 'the source Short line is stored with its backslashes' );
+		assert_same( 'Save to C:\ARES\forms', (string) get_post_meta( $src, 'spk_summary', true ), 'the source Short description is stored with its backslashes' );
 
 		$res = get_action( 'spokares_duplicate_event', array( 'post' => $src ), array( 'nonce_action' => 'spokares_duplicate_event_' . $src ) );
-		assert_same( null, $res['die'], 'Duplicate did not wp_die()' );
-		assert_matches( '/post\.php\?post=\d+&action=edit/', (string) $res['redirect'], 'Duplicate redirected to the copy' );
+		assert_same( null, $res['die'], 'Make a copy did not wp_die()' );
+		assert_matches( '/post\.php\?post=\d+&action=edit/', (string) $res['redirect'], 'Make a copy redirected to the copy' );
 		preg_match( '/post=(\d+)/', (string) $res['redirect'], $m );
 		$copy = (int) $m[1];
 		assert_not_same( $src, $copy, 'a new event' );
 		clean_post_cache( $copy );
 
 		assert_same( 'exercise', (string) get_post_meta( $copy, 'spk_kind', true ), 'the copy has the fields' );
-		assert_same( 'Save to C:\ARES\forms', (string) get_post_meta( $copy, 'spk_summary', true ), 'copy\'s Short line as stored' );
+		assert_same( 'Save to C:\ARES\forms', (string) get_post_meta( $copy, 'spk_summary', true ), 'copy\'s Short description as stored' );
 		assert_same( 'Open C:\Winlink\Messages', (string) get_post_meta( $copy, 'spk_tasks', true ), 'copy\'s task list as stored' );
 		assert_same( 'QA051 drill \ Winlink', get_post_field( 'post_title', $copy ), 'copy\'s title as stored' );
 	}

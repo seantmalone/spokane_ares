@@ -3,7 +3,7 @@ Contributors: spokares
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.1.1
+Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,10 +14,10 @@ Block theme for spokares.org, built from round-3 design Option B, "Carry the Mes
 The look of spokares.org: night to dawn to day, a red message line and amber
 hop markers, Crimson Pro for voice and Schibsted Grotesk for the working parts.
 
-This theme holds no data. Events, the net rota, meetings, documents and the
-dynamic lists come from the spokares-core plugin; security settings come from
-the spokares-hardening must-use plugin. Without the plugin the pages still
-render, with the lists left out.
+This theme holds no data. Events, the Net Control Schedule, meetings,
+documents and the dynamic lists come from the spokares-core plugin; security
+settings come from the spokares-hardening must-use plugin. Without the plugin
+the pages still render, with the lists left out.
 
 Where things live:
 
@@ -52,6 +52,10 @@ Fonts (assets/fonts/), SIL Open Font License 1.1, subset to Latin and Latin Exte
 Images (assets/img/): the ARES-ACS seal and the Home sunset photo belong to Spokane County ARES-ACS.
 
 == Changelog ==
+
+= 0.2.0 =
+* Volunteer-editor review (wordpress/ux/REPORT.md): plain names on the public site — "Net Control Schedule" (never "rota"), "Volunteer needed", "No net" and "Not posted yet" on the For members page.
+* Editor hints on dynamic blocks name the screen that changes them ("Change this on the Net Control Schedule screen.").
 
 = 0.1.1 =
 * Fixes from the 2026-09-27 QA sweep (wordpress/qa/ISSUES.md).

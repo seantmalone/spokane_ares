@@ -44,6 +44,39 @@ function spokares_layout_locked_for_user(): bool {
 	return is_user_logged_in() && ! current_user_can( 'edit_theme_options' );
 }
 
+/**
+ * Page Text (§3.8): for everyone but administrators the page type is named
+ * after what editors change there. The menu, the list's title, the admin
+ * bar's edit link (on the site and in wp-admin) and the editor's "saved"
+ * message read these labels, so this file (loaded everywhere, REST included)
+ * sets them rather than an admin-only one. They are fixed when WordPress
+ * registers the type on init, after the current user is known.
+ *
+ * @param object $labels Page labels.
+ */
+function spokares_page_labels_for_editors( $labels ) {
+	if ( ! is_object( $labels ) || ! is_user_logged_in() || current_user_can( 'manage_options' ) ) {
+		return $labels;
+	}
+	$labels->name         = __( 'Page Text', 'spokares-core' );
+	$labels->menu_name    = __( 'Page Text', 'spokares-core' );
+	$labels->all_items    = __( 'Page Text', 'spokares-core' );
+	$labels->edit_item    = __( 'Edit Page Text', 'spokares-core' );
+	$labels->item_updated = __( 'Saved. It’s on the site now.', 'spokares-core' );
+	return $labels;
+}
+add_filter( 'post_type_labels_page', 'spokares_page_labels_for_editors' );
+
+/**
+ * Does this page show the Page review box? Only a page that prints its review
+ * line (About, through the Last reviewed block) has one (§3.8).
+ *
+ * @param WP_Post|null $post Page.
+ */
+function spokares_page_has_review_box( $post ): bool {
+	return $post instanceof WP_Post && 'page' === $post->post_type && has_block( 'spokares/last-reviewed', $post );
+}
+
 /* ----------------------------------------------------------- the skeleton */
 
 /**
@@ -243,6 +276,63 @@ function spokares_has_empty_button( string $content ): bool {
 }
 
 /**
+ * Does the content hold a button with no link? Its words still print, but
+ * clicking them goes nowhere, so the call to action is broken (the toolbar's
+ * Unlink, or the link box's Remove link, leaves such a button).
+ *
+ * @param string $content Post content.
+ */
+function spokares_has_linkless_button( string $content ): bool {
+	if ( ! str_contains( $content, 'wp:button' ) ) {
+		return false;
+	}
+	$walk = static function ( array $blocks ) use ( &$walk ): bool {
+		foreach ( $blocks as $b ) {
+			if ( 'core/button' === ( $b['blockName'] ?? '' ) ) {
+				$tags = new WP_HTML_Tag_Processor( (string) ( $b['innerHTML'] ?? '' ) );
+				if ( $tags->next_tag( 'A' ) ) {
+					$href = $tags->get_attribute( 'href' );
+					if ( ! is_string( $href ) || '' === trim( $href ) ) {
+						return true;
+					}
+				}
+			}
+			if ( ! empty( $b['innerBlocks'] ) && $walk( $b['innerBlocks'] ) ) {
+				return true;
+			}
+		}
+		return false;
+	};
+	return $walk( parse_blocks( $content ) );
+}
+
+/**
+ * Does the content hold a Cover (the Home photo) with no photo? The Replace
+ * menu's Reset, or "Use featured image" on a page with none, leaves the hero
+ * empty. Its url is a free attribute (a new photo may replace it), so the
+ * layout check doesn't see this.
+ *
+ * @param string $content Post content.
+ */
+function spokares_has_photoless_cover( string $content ): bool {
+	if ( ! str_contains( $content, 'wp:cover' ) ) {
+		return false;
+	}
+	$walk = static function ( array $blocks ) use ( &$walk ): bool {
+		foreach ( $blocks as $b ) {
+			if ( 'core/cover' === ( $b['blockName'] ?? '' ) && '' === trim( (string) ( $b['attrs']['url'] ?? '' ) ) ) {
+				return true;
+			}
+			if ( ! empty( $b['innerBlocks'] ) && $walk( $b['innerBlocks'] ) ) {
+				return true;
+			}
+		}
+		return false;
+	};
+	return $walk( parse_blocks( $content ) );
+}
+
+/**
  * The shape of a core/table's HTML: one entry per row, its section and its
  * cell tags, e.g. "thead:th,th,th" or "tbody:th,td,td".
  *
@@ -356,24 +446,36 @@ function spokares_layout_changed( string $old, string $new ): bool {
 }
 
 /**
+ * The sentence for each refused page save, keyed by the reason (§3.8). The
+ * editor guard gets them too, to show them without core's "Updating failed."
+ * in front.
+ *
+ * @return array<string,string>
+ */
+function spokares_layout_refusals(): array {
+	return array(
+		'layout'       => __( 'Not saved: only the webmaster can add, move or restyle parts of a page. Click the Undo arrow (top left) until that part is back, then Save.', 'spokares-core' ),
+		'empty-button' => __( 'Not saved: a button needs its words. Type them back, or click the Undo arrow (top left), then Save.', 'spokares-core' ),
+		'button-link'  => __( 'Not saved: a button needs a link. Click the button, then the pencil in the box under it, paste the address and press Enter.', 'spokares-core' ),
+		'hero-photo'   => __( 'Not saved: the Home photo can be replaced but not removed. Click the Undo arrow (top left), then Replace › Choose a photo.', 'spokares-core' ),
+	);
+}
+
+/**
  * The layout-lock error.
  *
- * @param string $why 'layout' (default) or 'empty-button'.
+ * @param string $why 'layout' (default), 'empty-button', 'button-link' or 'hero-photo'.
  */
 function spokares_layout_error( string $why = 'layout' ): WP_Error {
-	$undo = __( 'Undo the last change (Ctrl+Z, or Cmd+Z on a Mac, or the curved Undo arrow at the top left) and save again, or ask the webmaster.', 'spokares-core' );
-	if ( 'empty-button' === $why ) {
-		return new WP_Error(
-			'spokares_empty_button',
-			__( 'A button can’t be empty: its words are the link people click. Type them back, or', 'spokares-core' ) . ' ' . lcfirst( $undo ),
-			array( 'status' => 403 )
-		);
-	}
-	return new WP_Error(
-		'spokares_layout_locked',
-		__( 'Layout changes need an administrator.', 'spokares-core' ) . ' ' . $undo,
-		array( 'status' => 403 )
+	$codes    = array(
+		'layout'       => 'spokares_layout_locked',
+		'empty-button' => 'spokares_empty_button',
+		'button-link'  => 'spokares_button_link',
+		'hero-photo'   => 'spokares_hero_photo',
 	);
+	$why      = isset( $codes[ $why ] ) ? $why : 'layout';
+	$refusals = spokares_layout_refusals();
+	return new WP_Error( $codes[ $why ], $refusals[ $why ], array( 'status' => 403 ) );
 }
 
 /**
@@ -450,7 +552,9 @@ function spokares_is_empty_list_item( array $block ): bool {
 
 /**
  * Would a non-admin's new page content be refused? Returns '' when it may be
- * saved, else 'layout' or 'empty-button'.
+ * saved, else 'layout', 'empty-button', 'button-link' or 'hero-photo'. A
+ * button with no words or no link, or a Cover with no photo, counts only when
+ * the stored page had none.
  *
  * @param string $old Stored content.
  * @param string $new New content.
@@ -461,6 +565,12 @@ function spokares_page_content_problem( string $old, string $new ): string {
 	}
 	if ( spokares_has_empty_button( $new ) && ! spokares_has_empty_button( $old ) ) {
 		return 'empty-button';
+	}
+	if ( spokares_has_linkless_button( $new ) && ! spokares_has_linkless_button( $old ) ) {
+		return 'button-link';
+	}
+	if ( spokares_has_photoless_cover( $new ) && ! spokares_has_photoless_cover( $old ) ) {
+		return 'hero-photo';
 	}
 	return '';
 }
@@ -706,12 +816,16 @@ function spokares_navigation_list_for_editors( $result, $server, $request ) {
 add_filter( 'rest_pre_dispatch', 'spokares_navigation_list_for_editors', 10, 3 );
 
 /**
- * For non-admins, pages don't "support page attributes" as far as the block
- * editor is told. The page card at the top of the Page sidebar builds its
- * ⋮ menu from the post type's supports, and page-attributes adds Order (and
- * the Parent field). The server keeps a non-admin's order and parent anyway
- * (spokares_page_insert_guard), so Order said "Order updated." and changed
- * nothing. The post type itself is unchanged; this is only the editor's copy.
+ * The block editor builds some of its controls from the page type's supports,
+ * so for non-admins its copy of them (not the post type itself) leaves out:
+ *
+ * - page-attributes: the page card's ⋮ menu offered Order (and the Parent
+ *   field). The server keeps a non-admin's order and parent anyway
+ *   (spokares_page_insert_guard), so Order said "Order updated." and changed
+ *   nothing.
+ * - title: the page card's Rename (§3.8). The page's heading is in its text;
+ *   the title only names the browser tab and search results.
+ * - the editor's notes: the block menu's "Add note" (§3.8).
  *
  * @param WP_REST_Response $response  Response.
  * @param WP_Post_Type     $post_type Post type.
@@ -721,10 +835,19 @@ function spokares_page_type_for_editors( $response, $post_type ) {
 		return $response;
 	}
 	$data = $response->get_data();
-	if ( is_array( $data ) && isset( $data['supports'] ) && is_array( $data['supports'] ) && isset( $data['supports']['page-attributes'] ) ) {
-		unset( $data['supports']['page-attributes'] );
-		$response->set_data( $data );
+	if ( ! is_array( $data ) || ! isset( $data['supports'] ) || ! is_array( $data['supports'] ) ) {
+		return $response;
 	}
+	$supports = $data['supports'];
+	unset( $supports['page-attributes'], $supports['title'] );
+	if ( isset( $supports['editor'][0] ) && is_array( $supports['editor'][0] ) ) {
+		unset( $supports['editor'][0]['notes'] );
+		if ( ! $supports['editor'][0] ) {
+			$supports['editor'] = true;
+		}
+	}
+	$data['supports'] = $supports;
+	$response->set_data( $data );
 	return $response;
 }
 add_filter( 'rest_prepare_post_type', 'spokares_page_type_for_editors', 10, 2 );
@@ -805,7 +928,8 @@ add_filter( 'allowed_block_types_all', 'spokares_allowed_blocks', 20, 2 );
 /**
  * The editor guard script: content-only editing modes, list items as the only
  * insertable block, never-publish/phone/e-mail warnings after a save (page
- * text and excerpt), Welcome Guide and starter patterns off.
+ * text; the search-engine description is the webmaster's, so editors don't
+ * see it), the trimmed editor chrome, Welcome Guide and starter patterns off.
  */
 function spokares_enqueue_editor_guard(): void {
 	if ( ! spokares_layout_locked_for_user() ) {
@@ -818,7 +942,7 @@ function spokares_enqueue_editor_guard(): void {
 	wp_enqueue_script(
 		'spokares-editor-guard',
 		SPOKARES_CORE_URL . 'assets/js/editor-guard.js',
-		array( 'wp-blocks', 'wp-data', 'wp-dom-ready', 'wp-hooks', 'wp-notices', 'wp-preferences', 'wp-editor', 'wp-block-editor', 'wp-rich-text' ),
+		array( 'wp-blocks', 'wp-data', 'wp-dom-ready', 'wp-hooks', 'wp-i18n', 'wp-notices', 'wp-preferences', 'wp-editor', 'wp-block-editor', 'wp-rich-text' ),
 		spokares_asset_version( 'assets/js/editor-guard.js' ),
 		true
 	);
@@ -833,30 +957,116 @@ function spokares_enqueue_editor_guard(): void {
 		'spokares-editor-guard',
 		'window.spokaresGuard = ' . wp_json_encode(
 			array(
-				'patterns'  => $patterns,
-				'allowed'   => '[A-Z0-9._%+-]+@spokares\\.org\\b',
-				/* translators: %s: what was found, e.g. "a phone number". */
-				'message'   => __( 'This page may contain something we never publish: %s. Check it before you leave.', 'spokares-core' ),
-				/* translators: %s: what was found, e.g. "a phone number". */
-				'excerpt'   => __( 'This page’s excerpt, the description search engines show, may contain something we never publish: %s. Check it in the Page panel before you leave.', 'spokares-core' ),
-				'pasted'    => __( 'Pasted as one paragraph with line breaks: new paragraphs can’t be added to this page. To keep them apart, paste one paragraph at a time into the paragraphs that are already there.', 'spokares-core' ),
-				'pastedOn'  => __( 'Pasted as one line: a heading or a button holds one line of words.', 'spokares-core' ),
+				'patterns'    => $patterns,
+				'allowed'     => '[A-Z0-9._%+-]+@spokares\\.org\\b',
+				'and'         => __( 'and', 'spokares-core' ),
+				/* translators: 1: what was found, e.g. "a phone number"; 2: the words found, e.g. "509-555-0142". */
+				'message'     => __( 'On the site now: this page has what looks like %1$s (%2$s). If it isn’t public, take it out and Save.', 'spokares-core' ),
+				'pasted'      => __( 'Pasted as one paragraph with line breaks: new paragraphs can’t be added to this page. To keep them apart, paste one paragraph at a time into the paragraphs that are already there.', 'spokares-core' ),
+				'pastedOn'    => __( 'Pasted as one line: a heading or a button holds one line of words.', 'spokares-core' ),
 				// Lists whose items start with bold words that print as the item's title.
-				'leadIns'   => array( 'stops', 'years', 'hops' ),
+				'leadIns'     => array( 'stops', 'years', 'hops' ),
 				/* translators: %s: the first words of the list item. */
-				'noLeadIn'  => __( 'A list item has no bold first words, so it shows with no title: “%s”. Select its first words and press Ctrl+B (Cmd+B on a Mac), then Save.', 'spokares-core' ),
-				'emptyItem' => __( 'A list item is empty, so it was left out when the page was saved. Click in it and press Backspace to remove it here too, or type its words and save again.', 'spokares-core' ),
+				'noLeadIn'    => __( 'A list item has no bold first words, so it shows with no title: “%s”. Select its first words and press Ctrl+B (Cmd+B on a Mac), then Save.', 'spokares-core' ),
+				'emptyItem'   => __( 'A list item is empty, so it was left out when the page was saved. Click in it and press Backspace to remove it here too, or type its words and save again.', 'spokares-core' ),
 				/* translators: %s: the link address as typed. */
-				'badLink'   => __( 'A link doesn’t start with https:// (%s), so it may not work for visitors. Select the linked words, change the link to a full https:// address, then Save.', 'spokares-core' ),
+				'badLink'     => __( 'A link doesn’t start with https:// (%s), so it may not work for visitors. Select the linked words, change the link to a full https:// address, then Save.', 'spokares-core' ),
+				/* translators: %s: the link's words, which are a web address. */
+				'addressLink' => __( 'A link shows its web address instead of words: “%s”. Select the words people should click, then add the link.', 'spokares-core' ),
+				'photoType'   => __( 'Photos must be JPEG, PNG or WebP. On an iPad, pick the photo from Photo Library, which converts it.', 'spokares-core' ),
+				'altLabel'    => __( 'Describe the photo in a few words', 'spokares-core' ),
+				// The block editor's own words for the photo window (the rest:
+				// spokares_photo_window_words()).
+				'words'       => array(
+					'Open Media Library'     => __( 'Choose a photo', 'spokares-core' ),
+					'Select or Upload Media' => __( 'Choose a photo', 'spokares-core' ),
+				),
+				// The server's refusals (spokares_layout_error()), shown without core's "Updating failed." in front.
+				'refusals'    => array_values( spokares_layout_refusals() ),
+				// The settings sidebar opens only where the Page review box is (About).
+				'reviewBox'   => spokares_page_has_review_box( get_post() ),
 			)
 		) . ';',
 		'before'
 	);
-	// The More menu's "Manage patterns" leads to the synced-pattern list, which
-	// is administrators' only (for editors it answered "Sorry, you are not
-	// allowed"), so it isn't offered.
+	// Editor chrome editors don't use (§3.8). The More menu's "Manage patterns"
+	// leads to the synced-pattern list, which is administrators' only. The ⋮
+	// Options menu (view modes, code editor, tools, preferences, Help) goes as
+	// a whole. On a Button, the toolbar's Unlink and the link box's Remove link
+	// are gone (a button needs a link; the pencil stays): the script marks the
+	// page while a Button is selected. Lists keep their items but lose Indent
+	// and Outdent. The hero photo's Replace menu keeps Choose a photo (core's
+	// Open Media Library) and Upload (not "Use featured image", "Embed video from URL", Reset or the
+	// address box). The sidebar's "Content" list of the page's blocks goes. In
+	// the media window, the fields that do nothing on this site (title,
+	// caption, description, file address and its copy button, the alt text's
+	// how-to line) and the type and date filters go.
 	wp_register_style( 'spokares-editor-guard', false, array(), SPOKARES_CORE_VERSION );
 	wp_enqueue_style( 'spokares-editor-guard' );
-	wp_add_inline_style( 'spokares-editor-guard', '.components-menu-item__button[href*="post_type=wp_block"],.components-menu-item__button[href*="p=%2Fpattern"],.components-menu-item__button[href*="p=/pattern"]{display:none!important}' );
+	$hide = array(
+		'.components-menu-item__button[href*="post_type=wp_block"]',
+		'.components-menu-item__button[href*="p=%2Fpattern"]',
+		'.components-menu-item__button[href*="p=/pattern"]',
+		'.editor-header__settings .components-dropdown-menu:has(> button[aria-label="Options"])',
+		'body.spk-button-selected .block-editor-block-toolbar button[aria-label="Unlink"]',
+		'body.spk-button-selected .block-editor-block-toolbar .components-toolbar-group:has(button[aria-label="Unlink"]):not(:has(button:not([aria-label="Unlink"])))',
+		'body.spk-button-selected .block-editor-link-control button[aria-label="Remove link"]',
+		'.block-editor-block-toolbar button[aria-label="Outdent"]',
+		'.block-editor-block-toolbar button[aria-label="Indent"]',
+		'.block-editor-block-toolbar .components-toolbar-group:has(button[aria-label="Indent"]):not(:has(button:not([aria-label="Indent"],[aria-label="Outdent"])))',
+		'.block-editor-media-replace-flow__media-upload-menu > button ~ button',
+		'.block-editor-media-replace-flow__options .block-editor-media-flow__url-input',
+		'.editor-sidebar__panel .components-panel__body:has(.block-editor-block-quick-navigation__item)',
+		'.media-modal .attachment-details .setting[data-setting="title"]',
+		'.media-modal .attachment-details .setting[data-setting="caption"]',
+		'.media-modal .attachment-details .setting[data-setting="description"]',
+		'.media-modal .attachment-details .setting[data-setting="url"]',
+		'.media-modal .attachment-details .copy-to-clipboard-container',
+		'.media-modal .attachment-details #alt-text-description',
+		'.media-modal .media-toolbar .attachment-filters',
+		'.media-modal .media-toolbar label[for^="media-attachment-"]',
+		'.media-modal .attachment-details .edit-attachment',
+	);
+	wp_add_inline_style( 'spokares-editor-guard', implode( ',', $hide ) . '{display:none!important}' );
 }
 add_action( 'enqueue_block_editor_assets', 'spokares_enqueue_editor_guard' );
+
+/**
+ * The photo window in plain words for editors on a page (the hero photo's
+ * Replace › Choose a photo): WordPress's media strings, printed on that
+ * screen from PHP. Turned on at current_screen, before the editor screen
+ * builds the window's strings and templates. The block editor's own words
+ * (the Replace menu, the window's title) are in editor-guard.js.
+ *
+ * @param WP_Screen $screen Screen.
+ */
+function spokares_photo_window_words_on( $screen ): void {
+	if ( $screen instanceof WP_Screen && 'post' === $screen->base && 'page' === $screen->post_type && spokares_layout_locked_for_user() ) {
+		add_filter( 'gettext', 'spokares_photo_window_words', 10, 3 );
+	}
+}
+add_action( 'current_screen', 'spokares_photo_window_words_on' );
+
+/**
+ * WordPress's photo-window words → ours (see above).
+ *
+ * @param string $translation Translated text.
+ * @param string $text        Original text.
+ * @param string $domain      Text domain.
+ */
+function spokares_photo_window_words( $translation, $text, $domain ) {
+	if ( 'default' !== $domain ) {
+		return $translation;
+	}
+	static $map = null;
+	if ( null === $map ) {
+		$map = array(
+			'Media Library'      => __( 'Photos on the site', 'spokares-core' ),
+			'Upload files'       => __( 'Upload a photo', 'spokares-core' ),
+			'Attachment Details' => __( 'This photo', 'spokares-core' ),
+			'Attachment details' => __( 'This photo', 'spokares-core' ),
+			'Search media'       => __( 'Search photos', 'spokares-core' ),
+		);
+	}
+	return $map[ $text ] ?? $translation;
+}

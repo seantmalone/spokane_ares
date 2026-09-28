@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name:       Spokane ARES core
- * Description:       Events, the net rota, meetings, documents and the dynamic blocks for spokares.org. Deactivating it hides the lists; the data stays.
- * Version:           0.1.1
+ * Description:       Events, the Net Control Schedule, meetings, documents and the dynamic blocks for spokares.org. Deactivating it hides the lists; the data stays.
+ * Version:           0.2.0
  * Requires at least: 7.1
  * Requires PHP:      8.3
  * Tested up to:      7.1
@@ -16,7 +16,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SPOKARES_CORE_VERSION', '0.1.1' );
+define( 'SPOKARES_CORE_VERSION', '0.2.0' );
 define( 'SPOKARES_CORE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SPOKARES_CORE_URL', plugin_dir_url( __FILE__ ) );
 define( 'SPOKARES_CORE_FILE', __FILE__ );
@@ -46,6 +46,9 @@ if ( is_admin() ) {
 	require SPOKARES_CORE_DIR . 'inc/admin-documents.php';
 	require SPOKARES_CORE_DIR . 'inc/admin-pages.php';
 	require SPOKARES_CORE_DIR . 'inc/dashboard.php';
+} elseif ( 'wp-login.php' === ( $GLOBALS['pagenow'] ?? '' ) ) {
+	// The sign-in screen's seal and home link live with the other admin trims.
+	require SPOKARES_CORE_DIR . 'inc/admin-trim.php';
 }
 
 // The admin bar menu and the front-end edit links need these on the front end too.

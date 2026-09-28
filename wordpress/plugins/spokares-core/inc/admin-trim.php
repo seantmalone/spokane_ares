@@ -94,6 +94,87 @@ add_action( 'admin_init', 'spokares_trim_profile' );
 add_filter( 'user_contactmethods', static fn( $methods ) => spokares_is_site_admin() ? $methods : array() );
 
 /**
+ * No "Additional Capabilities" row on a non-admin's profile: it printed the
+ * raw capability name of the Net Settings grant.
+ *
+ * @param bool $show Show the row.
+ */
+function spokares_no_additional_caps( $show ) {
+	return spokares_is_site_admin() ? $show : false;
+}
+add_filter( 'additional_capabilities_display', 'spokares_no_additional_caps' );
+
+/**
+ * The profile's words for non-admins: "Display name publicly as" names what
+ * the choice does here (§3.9).
+ *
+ * @param string $translation Translated text.
+ * @param string $text        Source text.
+ */
+function spokares_profile_words( $translation, $text ) {
+	return 'Display name publicly as' === $text ? __( 'Name shown to other editors', 'spokares-core' ) : $translation;
+}
+
+/**
+ * On the profile screens, for non-admins: the relabel above, and the
+ * Nickname row hidden (the nickname follows the name, see below).
+ */
+function spokares_profile_screen_trim(): void {
+	if ( spokares_is_site_admin() ) {
+		return;
+	}
+	add_filter( 'gettext_default', 'spokares_profile_words', 10, 2 );
+	add_action(
+		'admin_head',
+		static function (): void {
+			echo '<style id="spokares-profile-trim">.user-nickname-wrap{display:none}</style>' . "\n";
+		}
+	);
+}
+add_action( 'load-profile.php', 'spokares_profile_screen_trim' );
+add_action( 'load-user-edit.php', 'spokares_profile_screen_trim' );
+
+/**
+ * A non-admin's nickname (its row is hidden) is kept as First + Last name,
+ * or the display name when both are empty, on every save of the profile.
+ *
+ * @param array   $meta   User meta about to be saved.
+ * @param WP_User $user   User.
+ * @param bool    $update An update of an existing user.
+ */
+function spokares_nickname_follows_name( $meta, $user, $update ) {
+	if ( ! $update || ! $user instanceof WP_User || ! is_user_logged_in() || spokares_is_site_admin() || ! is_array( $meta ) ) {
+		return $meta;
+	}
+	$name = trim( trim( (string) ( $meta['first_name'] ?? '' ) ) . ' ' . trim( (string) ( $meta['last_name'] ?? '' ) ) );
+	$name = '' !== $name ? $name : trim( (string) $user->display_name );
+	if ( '' !== $name ) {
+		$meta['nickname'] = $name;
+	}
+	return $meta;
+}
+add_filter( 'insert_user_meta', 'spokares_nickname_follows_name', 10, 3 );
+
+/**
+ * The hidden Nickname never stops a non-admin's profile save: WordPress's
+ * "Please enter a nickname." would name a field the editor can't see. The
+ * nickname is filled from the name instead (and set again just above).
+ *
+ * @param WP_Error $errors Profile errors.
+ * @param bool     $update An update of an existing user.
+ * @param object   $user   The user being saved (by reference).
+ */
+function spokares_nickname_never_blocks( $errors, $update, $user ): void {
+	if ( ! $update || spokares_is_site_admin() || ! $errors instanceof WP_Error || ! is_object( $user ) || ! in_array( 'nickname', $errors->get_error_codes(), true ) ) {
+		return;
+	}
+	$errors->remove( 'nickname' );
+	$name           = trim( trim( (string) ( $user->first_name ?? '' ) ) . ' ' . trim( (string) ( $user->last_name ?? '' ) ) );
+	$user->nickname = '' !== $name ? $name : (string) ( $user->display_name ?? ( $user->user_login ?? '' ) );
+}
+add_action( 'user_profile_update_errors', 'spokares_nickname_never_blocks', 10, 3 );
+
+/**
  * Your own profile has one screen for non-admins: the trimmed profile.php.
  * user-edit.php?user_id=<you> is the same form without the trim (Website,
  * Biography, Profile Picture, a "View User" link that 404s).
@@ -150,15 +231,26 @@ function spokares_keep_hidden_profile_bio( $meta, $user, $update ) {
 add_filter( 'insert_user_meta', 'spokares_keep_hidden_profile_bio', 10, 3 );
 
 /**
- * The Dashboard's and the Profile's Help for non-admins describe what they
- * see, not the widgets and options the trim removed.
+ * The Dashboard's, the Profile's and the Page Text list's Help for non-admins
+ * describe what they see, not the widgets and options the trim removed, nor
+ * WordPress's own pages help.
  */
 function spokares_trimmed_help(): void {
 	if ( spokares_is_site_admin() ) {
 		return;
 	}
 	$screen = get_current_screen();
-	if ( ! $screen || ! in_array( $screen->id, array( 'dashboard', 'profile' ), true ) ) {
+	if ( ! $screen || ! in_array( $screen->id, array( 'dashboard', 'profile', 'edit-page' ), true ) ) {
+		return;
+	}
+	if ( 'edit-page' === $screen->id ) {
+		// spokares_cpt_help() added "How to"; core added its own tabs after it.
+		foreach ( array_keys( $screen->get_help_tabs() ) as $id ) {
+			if ( 'spokares-help' !== $id ) {
+				$screen->remove_help_tab( $id );
+			}
+		}
+		$screen->set_help_sidebar( '' );
 		return;
 	}
 	$screen->remove_help_tabs();
@@ -310,16 +402,20 @@ add_filter( 'postbox_classes_spk_event_spokares_savebox', 'spokares_savebox_open
 add_filter( 'postbox_classes_spk_document_spokares_savebox', 'spokares_savebox_open' );
 
 /**
- * No Screen Options tab on the event and document forms for editors.
+ * No Screen Options tab for editors on the event and document forms, or on
+ * the Exercises & Events, Documents and Page Text lists (column switches and
+ * "Number of items per page" are WordPress's, not jobs).
  *
  * @param bool      $show   Show the tab.
  * @param WP_Screen $screen Screen.
  */
 function spokares_no_screen_options( $show, $screen ) {
-	if ( $screen instanceof WP_Screen && 'post' === $screen->base && in_array( $screen->post_type, array( 'spk_event', 'spk_document' ), true ) && ! spokares_is_site_admin() ) {
-		return false;
+	if ( ! $screen instanceof WP_Screen || spokares_is_site_admin() ) {
+		return $show;
 	}
-	return $show;
+	$forms = 'post' === $screen->base && in_array( $screen->post_type, array( 'spk_event', 'spk_document' ), true );
+	$lists = 'edit' === $screen->base && in_array( $screen->post_type, array( 'spk_event', 'spk_document', 'page' ), true );
+	return ( $forms || $lists ) ? false : $show;
 }
 add_filter( 'screen_options_show_screen', 'spokares_no_screen_options', 10, 2 );
 
@@ -334,15 +430,11 @@ function spokares_access_denied_message(): void {
 	if ( ! in_array( $page, array( 'spokares-net-details', 'spokares-meeting-rules' ), true ) ) {
 		return;
 	}
-	$what = 'spokares-net-details' === $page ? __( 'Net details (the repeater settings, net times and Winlink, simplex and GMRS weeks)', 'spokares-core' ) : __( 'Meeting rules (the regular meetings’ weeks, days and times)', 'spokares-core' );
+	$text = 'spokares-net-details' === $page
+		? __( 'Net Settings (the repeater, the net times and which Tuesdays are Winlink, simplex or GMRS) are changed by the webmaster, or by someone the Emergency Coordinator has named. Ask the webmaster: webmaster@spokares.org.', 'spokares-core' )
+		: __( 'The Meeting Schedule (the regular meetings’ weeks, days and times) is changed by the webmaster, or by someone the Emergency Coordinator has named. Ask the webmaster: webmaster@spokares.org.', 'spokares-core' );
 	wp_die(
-		'<p>' . esc_html(
-			sprintf(
-				/* translators: %s: the screen and what it holds. */
-				__( '%s are changed by the webmaster, or by someone the Emergency Coordinator has named. Ask the webmaster: webmaster@spokares.org.', 'spokares-core' ),
-				$what
-			)
-		) . '</p><p><a href="' . esc_url( admin_url( 'index.php' ) ) . '">' . esc_html__( 'Back to the Dashboard', 'spokares-core' ) . '</a></p>',
+		'<p>' . esc_html( $text ) . '</p><p><a href="' . esc_url( admin_url( 'index.php' ) ) . '">' . esc_html__( 'Back to the Dashboard', 'spokares-core' ) . '</a></p>',
 		esc_html__( 'Ask the webmaster', 'spokares-core' ),
 		array( 'response' => 403 )
 	);
@@ -350,19 +442,16 @@ function spokares_access_denied_message(): void {
 add_action( 'admin_page_access_denied', 'spokares_access_denied_message' );
 
 /**
- * The title placeholders on our forms.
+ * No placeholder in the name box of our forms: the forms print a visible
+ * label above it ("Event name", "Document name"), and a placeholder that
+ * repeats it only looks like text already typed.
  *
  * @param string  $text Placeholder.
  * @param WP_Post $post Post.
  */
 function spokares_title_placeholder( $text, $post ) {
-	if ( $post instanceof WP_Post ) {
-		if ( 'spk_event' === $post->post_type ) {
-			return __( 'Event name, as members will see it', 'spokares-core' );
-		}
-		if ( 'spk_document' === $post->post_type ) {
-			return __( 'Document name', 'spokares-core' );
-		}
+	if ( $post instanceof WP_Post && in_array( $post->post_type, array( 'spk_event', 'spk_document' ), true ) ) {
+		return '';
 	}
 	return $text;
 }
@@ -460,3 +549,60 @@ function spokares_no_font_library_in_editor( $settings ) {
 	return $settings;
 }
 add_filter( 'block_editor_settings_all', 'spokares_no_font_library_in_editor', 20 );
+
+/**
+ * Editors keep the menu's labels down to 783px (§2): WordPress folds the
+ * menu to bare icons between 783px and 960px (body class "auto-fold"), which
+ * is an iPad in landscape. Its own "unfold" setting turns that off; it is set
+ * once for each non-admin.
+ */
+function spokares_editor_menu_unfold(): void {
+	if ( spokares_is_site_admin() || ! is_user_logged_in() || wp_doing_ajax() || headers_sent() ) {
+		return;
+	}
+	if ( ! get_user_setting( 'unfold' ) ) {
+		set_user_setting( 'unfold', 1 );
+	}
+}
+add_action( 'admin_init', 'spokares_editor_menu_unfold' );
+
+/**
+ * No "Thank you for creating with WordPress." and no version in the footer
+ * for non-admins.
+ *
+ * @param string $text Footer text.
+ */
+function spokares_editor_footer_text( $text ) {
+	return spokares_is_site_admin() ? $text : '';
+}
+add_filter( 'admin_footer_text', 'spokares_editor_footer_text', 99 );
+add_filter( 'update_footer', 'spokares_editor_footer_text', 99 );
+
+/**
+ * The sign-in screen (§3.9): the club seal instead of the WordPress logo,
+ * linking to the site, named "Spokane County ARES-ACS".
+ */
+function spokares_login_seal(): void {
+	$seal = get_theme_file_uri( 'assets/img/seal-ares-acs-138.png' );
+	// After login.css, which draws the WordPress logo with the same selector.
+	wp_add_inline_style( 'login', '.login h1 a{background-image:url(' . esc_url( $seal ) . ');background-size:contain;background-position:center;width:138px;height:138px}' );
+}
+add_action( 'login_enqueue_scripts', 'spokares_login_seal' );
+add_filter( 'login_headerurl', static fn() => home_url( '/' ) );
+add_filter( 'login_headertext', static fn() => __( 'Spokane County ARES-ACS', 'spokares-core' ) );
+
+/**
+ * The browser tab without "— WordPress": "Log In ‹ Spokane County ARES-ACS"
+ * on the sign-in screen, and "Net Control Schedule ‹ Spokane County
+ * ARES-ACS" on an editor's screens (administrators keep WordPress's).
+ *
+ * @param string $tab The tab title WordPress built.
+ */
+function spokares_tab_title( $tab ) {
+	if ( 'admin_title' === current_filter() && spokares_is_site_admin() ) {
+		return $tab;
+	}
+	return (string) preg_replace( '/\s*(?:&#8212;|&mdash;|—)\s*WordPress\s*$/u', '', (string) $tab );
+}
+add_filter( 'login_title', 'spokares_tab_title' );
+add_filter( 'admin_title', 'spokares_tab_title' );

@@ -62,19 +62,23 @@ function spokares_register_blocks(): void {
 add_action( 'init', 'spokares_register_blocks' );
 
 /**
- * The admin screens the hints and edit links name: key => [label, URL, capability].
+ * The one name of each admin screen (R10), with its URL and capability:
+ * key => [name, URL, capability]. The menu, the admin bar's Update lists
+ * items, the front-end "Edit this list in …" links and the editor hints all
+ * read it, so the names can't drift apart. The keys are identifiers.
  *
  * @param string $key Screen key.
  */
 function spokares_edit_screen( string $key ): ?array {
 	$screens = array(
-		'rota'        => array( __( 'Net rota', 'spokares-core' ), admin_url( 'admin.php?page=spokares-rota' ), 'spokares_edit_rota' ),
-		'net-details' => array( __( 'Net details', 'spokares-core' ), admin_url( 'admin.php?page=spokares-net-details' ), 'spokares_edit_net_details' ),
-		'events'      => array( __( 'Events', 'spokares-core' ), admin_url( 'edit.php?post_type=spk_event' ), 'edit_spk_events' ),
-		'meetings'    => array( __( 'Regular meetings', 'spokares-core' ), admin_url( 'admin.php?page=spokares-meetings' ), 'spokares_edit_rota' ),
-		'documents'   => array( __( 'Documents', 'spokares-core' ), admin_url( 'edit.php?post_type=spk_document' ), 'edit_spk_documents' ),
-		'tiles'       => array( __( 'Hub tiles', 'spokares-core' ), admin_url( 'admin.php?page=spokares-tiles' ), 'edit_spk_documents' ),
-		'page-review' => array( __( 'Page review box', 'spokares-core' ), '', 'edit_pages' ),
+		'rota'          => array( __( 'Net Control Schedule', 'spokares-core' ), admin_url( 'admin.php?page=spokares-rota' ), 'spokares_edit_rota' ),
+		'net-details'   => array( __( 'Net Settings', 'spokares-core' ), admin_url( 'admin.php?page=spokares-net-details' ), 'spokares_edit_net_details' ),
+		'events'        => array( __( 'Exercises & Events', 'spokares-core' ), admin_url( 'edit.php?post_type=spk_event' ), 'edit_spk_events' ),
+		'meetings'      => array( __( 'Meetings', 'spokares-core' ), admin_url( 'admin.php?page=spokares-meetings' ), 'spokares_edit_rota' ),
+		'meeting-rules' => array( __( 'Meeting Schedule', 'spokares-core' ), admin_url( 'admin.php?page=spokares-meeting-rules' ), 'spokares_edit_net_details' ),
+		'documents'     => array( __( 'Documents', 'spokares-core' ), admin_url( 'edit.php?post_type=spk_document' ), 'edit_spk_documents' ),
+		'tiles'         => array( __( 'Most Used', 'spokares-core' ), admin_url( 'admin.php?page=spokares-tiles' ), 'edit_spk_documents' ),
+		'page-review'   => array( __( 'Page review box', 'spokares-core' ), '', 'edit_pages' ),
 	);
 	return $screens[ $key ] ?? null;
 }
@@ -94,7 +98,7 @@ function spokares_block_open( string $view = '' ): string {
  * the settings box and the From-home line), which are settings, not a list.
  */
 function spokares_settings_link_words(): string {
-	/* translators: %s: admin screen name, e.g. "Net details". */
+	/* translators: %s: admin screen name, e.g. "Net Settings". */
 	return __( 'Edit these settings in %s', 'spokares-core' );
 }
 
@@ -114,13 +118,18 @@ function spokares_block_tail( string $screen, bool $with_link = true, string $wo
 		return '';
 	}
 	if ( spokares_is_editor_preview() ) {
-		return '<p class="spk-edit-hint">' . esc_html(
-			/* translators: %s: admin screen name, e.g. "Net rota". */
-			sprintf( __( 'Edit in wp-admin › %s', 'spokares-core' ), $s[0] )
-		) . '</p>';
+		if ( 'page-review' === $screen ) {
+			$hint = __( 'Change this in the Page review box.', 'spokares-core' );
+		} elseif ( '' !== $s[1] && current_user_can( $s[2] ) ) {
+			/* translators: %s: admin screen name, e.g. "Net Control Schedule". */
+			$hint = sprintf( __( 'Change this on the %s screen.', 'spokares-core' ), $s[0] );
+		} else {
+			$hint = __( 'The webmaster sets this.', 'spokares-core' );
+		}
+		return '<p class="spk-edit-hint">' . esc_html( $hint ) . '</p>';
 	}
 	if ( $with_link && '' !== $s[1] && is_user_logged_in() && current_user_can( $s[2] ) ) {
-		/* translators: %s: admin screen name, e.g. "Net rota". */
+		/* translators: %s: admin screen name, e.g. "Net Control Schedule". */
 		$words = '' !== $words ? $words : __( 'Edit this list in %s', 'spokares-core' );
 		return '<p class="spk-edit-link"><a href="' . esc_url( $s[1] ) . '">' . esc_html( sprintf( $words, $s[0] ) ) . '</a></p>';
 	}

@@ -121,23 +121,49 @@ function spokares_rota_rows( int $weeks, ?string $from = null ): array {
 }
 
 /**
- * Does a meeting's rule fall on this date?
+ * A meeting's rule as it is in effect on a date: its pending change
+ * (`next`, "Takes effect on") from that change's date on, else the rule as
+ * stored. The id, show_home, active and needs_check are always the stored
+ * rule's.
+ *
+ * @param array  $m   Meeting (normalised).
+ * @param string $ymd Date.
+ */
+function spokares_meeting_in_effect( array $m, string $ymd ): array {
+	$next = is_array( $m['next'] ?? null ) ? $m['next'] : null;
+	if ( ! $next || $ymd < (string) ( $next['from'] ?? '9999-12-31' ) ) {
+		return $m;
+	}
+	foreach ( spokares_meeting_pattern_keys() as $key ) {
+		if ( array_key_exists( $key, $next ) ) {
+			$m[ $key ] = $next[ $key ];
+		}
+	}
+	return $m;
+}
+
+/**
+ * Does a meeting's rule fall on this date (under the pattern in effect on
+ * that date)?
  *
  * @param array  $m   Meeting.
  * @param string $ymd Date.
  */
 function spokares_meeting_on( array $m, string $ymd ): bool {
+	$m = spokares_meeting_in_effect( $m, $ymd );
 	if ( spokares_weekday( $ymd ) !== (int) $m['weekday'] ) {
 		return false;
 	}
-	if ( in_array( (int) substr( $ymd, 5, 2 ), $m['skip_months'], true ) ) {
+	if ( in_array( (int) substr( $ymd, 5, 2 ), (array) $m['skip_months'], true ) ) {
 		return false;
 	}
-	return in_array( spokares_nth( $ymd ), $m['nth'], true );
+	return in_array( spokares_nth( $ymd ), (array) $m['nth'], true );
 }
 
 /**
- * Rule dates of a meeting between two dates (inclusive).
+ * Rule dates of a meeting between two dates (inclusive). A pending change
+ * splits the range at its date: the stored pattern before it, the new one
+ * from it on.
  *
  * @param array  $m    Meeting.
  * @param string $from Start.
@@ -145,13 +171,33 @@ function spokares_meeting_on( array $m, string $ymd ): bool {
  * @return string[]
  */
 function spokares_meeting_rule_dates( array $m, string $from, string $to ): array {
+	$split = is_array( $m['next'] ?? null ) ? (string) ( $m['next']['from'] ?? '' ) : '';
+	if ( spokares_is_ymd( $split ) && $split > $from ) {
+		return array_merge(
+			spokares_meeting_pattern_dates( $m, $from, min( $to, spokares_add_days( $split, -1 ) ) ),
+			$split <= $to ? spokares_meeting_pattern_dates( spokares_meeting_in_effect( $m, $split ), $split, $to ) : array()
+		);
+	}
+	return spokares_meeting_pattern_dates( spokares_meeting_in_effect( $m, $from ), $from, $to );
+}
+
+/**
+ * The dates one pattern (weeks, weekday, skipped months) falls on between two
+ * dates (inclusive).
+ *
+ * @param array  $p    Pattern (a meeting rule).
+ * @param string $from Start.
+ * @param string $to   End.
+ * @return string[]
+ */
+function spokares_meeting_pattern_dates( array $p, string $from, string $to ): array {
 	$out = array();
-	if ( empty( $m['nth'] ) ) {
+	if ( empty( $p['nth'] ) || $to < $from ) {
 		return $out;
 	}
-	$d = spokares_next_weekday( $from, (int) $m['weekday'] );
+	$d = spokares_next_weekday( $from, (int) $p['weekday'] );
 	while ( $d <= $to ) {
-		if ( spokares_meeting_on( $m, $d ) ) {
+		if ( ! in_array( (int) substr( $d, 5, 2 ), (array) $p['skip_months'], true ) && in_array( spokares_nth( $d ), (array) $p['nth'], true ) ) {
 			$out[] = $d;
 		}
 		$d = spokares_add_days( $d, 7 );
@@ -175,13 +221,14 @@ function spokares_meeting_change( string $meeting_id, string $ymd ): ?array {
 }
 
 /**
- * The next real dates of every active meeting, with cancellations and moves
- * applied.
+ * The next real dates of every active meeting, with cancellations, moves and
+ * one-date notes applied.
  *
- * Each item: meeting (the rule) · dates (list of [date, orig, kind '' | 'moved',
- * note]) · cancelled (rule dates from today to the first real date that were
- * cancelled) · changes (every cancelled/moved rule date from today on, for the
- * hub's notices).
+ * Each item: meeting (the rule as it is in effect on the first returned date,
+ * with the stored rule's id, show_home and active) · dates (list of [date,
+ * orig, kind '' | 'moved' | 'note', note]) · cancelled (rule dates from today
+ * to the first real date that were cancelled) · changes (every cancelled,
+ * moved or noted rule date from today on, for the For members page).
  *
  * @param int         $per_meeting How many real dates per meeting.
  * @param string|null $from        Start date (default today).
@@ -214,6 +261,16 @@ function spokares_next_meetings( int $per_meeting = 1, ?string $from = null ): a
 				);
 				continue;
 			}
+			if ( $c && 'note' === $c['kind'] ) {
+				// Same date, with a word for that day ("Starts at 10:00 AM this time").
+				$occ[] = array(
+					'date' => $d,
+					'orig' => $d,
+					'kind' => 'note',
+					'note' => $c['note'],
+				);
+				continue;
+			}
 			$occ[] = array(
 				'date' => $d,
 				'orig' => $d,
@@ -231,8 +288,12 @@ function spokares_next_meetings( int $per_meeting = 1, ?string $from = null ): a
 				$cancelled[] = $c['date'];
 			}
 		}
+		// The rule as it reads on the first date shown (a pattern that takes
+		// effect later describes that later date), with the stored switches.
+		$rule = spokares_meeting_in_effect( $m, $first );
+		unset( $rule['next'] );
 		$out[] = array(
-			'meeting'   => $m,
+			'meeting'   => $rule,
 			'dates'     => $dates,
 			'cancelled' => $cancelled,
 			'changes'   => $changes,
@@ -287,13 +348,16 @@ function spokares_meeting_hub_line( array $m, string $ymd ): string {
  *
  * Views (§3.5):
  *  upcoming       types, limit, days: dated, of those kinds, not ended, starting within `days`
- *  next-up        types, limit: first N upcoming dated events of those kinds
+ *                 (cancelled ones too: they show with a "Cancelled" tag)
+ *  next-up        types, limit: first N upcoming dated events of those kinds, never
+ *                 a cancelled one
  *  later          types, cardTypes, cardLimit: every upcoming event of `types`
  *                 except the next-up cards; dated by start, then undated.
  *                 `limit` is not applied here: an event must never vanish
  *                 from Exercises (§2.3 #14), so the list is never cut
  *  public-service dated and not past, then undated
- *  past           limit: exercises kept after they end, newest first
+ *  past           limit: exercises kept after they end, newest first (never a
+ *                 cancelled one)
  *  all-upcoming   every upcoming published event (dashboard)
  *
  * @param string $view View.
@@ -370,6 +434,7 @@ function spokares_events( string $view, array $args = array() ): array {
 
 	switch ( $view ) {
 		case 'past':
+			$events = array_values( array_filter( $events, static fn( $e ) => ! $e['cancelled'] ) );
 			usort(
 				$events,
 				static fn( $a, $b ) => array( $b['start'], $b['title'] ) <=> array( $a['start'], $a['title'] )
@@ -416,7 +481,7 @@ function spokares_events( string $view, array $args = array() ): array {
 			break;
 
 		case 'next-up':
-			$list = array_values( array_filter( $events, static fn( $e ) => 'date' === $e['mode'] && in_array( $e['kind'], $types, true ) ) );
+			$list = array_values( array_filter( $events, static fn( $e ) => 'date' === $e['mode'] && ! $e['cancelled'] && in_array( $e['kind'], $types, true ) ) );
 			usort( $list, $dated_sort );
 			break;
 

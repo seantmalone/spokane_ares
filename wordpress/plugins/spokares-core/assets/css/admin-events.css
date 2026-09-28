@@ -1,0 +1,78 @@
+/*
+ * spokares-core: the event form and list (Exercises & Events) and the two
+ * meeting screens (Cancel or Move a Meeting, Meeting Schedule). Loaded after
+ * admin.css on those screens only (admin-events.php).
+ */
+
+/* ---------- event form ---------- */
+.spk-event-form { margin-top: 18px; max-width: 900px; }
+.spk-event-form fieldset, .spk-kind-box { min-width: 0; }
+.spk-event-form select { max-width: 100%; }
+[data-kinds][hidden] { display: none !important; }
+
+/* Type of event: the legend sits inside the box, so a red outline for a
+   missing type goes around the whole box, never through the legend. */
+.spk-kind-box { margin-top: 8px; padding-top: 12px; }
+.spk-kind-box > legend { float: left; width: 100%; padding: 0; margin: 0 0 8px; }
+.spk-kind-box > legend + * { clear: both; }
+.spk-kinds { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.spk-kinds .spk-choice { margin: 0; }
+
+/* Event name: a visible label over WordPress's name box. */
+.spk-title-label { display: block; margin: 4px 0 6px; font-size: 14px; font-weight: 600; }
+.spk-title-label.spk-has-error ~ #poststuff #title { outline: 2px solid #d63638; outline-offset: 1px; }
+
+/* When: First day and Last day, each with its weekday. */
+.spk-when .spk-modes { margin-top: 4px; }
+.spk-when .spk-dates p { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.spk-when .spk-day { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.spk-when .spk-weekday { display: inline-block; min-width: 2.2em; color: #50575e; font-weight: 600; }
+.spk-when .spk-weekday:empty { display: none; }
+.spk-when .spk-times { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.spk-when .spk-times[hidden], .spk-when .spk-dates[hidden] { display: none; }
+.spk-when .spk-cancel-event { margin: 12px 0 0; padding-top: 10px; border-top: 1px solid #f0f0f1; }
+.spk-when .spk-cancel-event .spk-choice { margin-right: 10px; }
+
+.spk-button .description { display: block; margin-top: 4px; }
+.spk-links .spk-link-row label { display: inline-block; margin-right: 12px; }
+/* A tick's words are plain, not a field label. */
+.spk-event-form .spk-field > label.spk-choice:first-child { display: inline-block; font-weight: 400; margin: 0; white-space: normal; }
+
+/* The never-publish reminder: one plain grey line at the foot of the form. */
+.spk-foot { margin: 8px 0 0; color: #50575e; font-size: 13px; }
+
+/* ---------- event list ---------- */
+.post-type-spk_event .wp-list-table .column-title { width: 34%; }
+.post-type-spk_event .wp-list-table .column-spk_when { width: 18%; }
+.post-type-spk_event .wp-list-table .column-spk_status { width: 26%; }
+.post-type-spk_event .wp-list-table .column-spk_kind { width: 16%; }
+
+/* ---------- Cancel or Move a Meeting ---------- */
+.spk-meetings-table tbody.spk-meeting { border-top: 2px solid #c3c4c7; }
+.spk-meetings-table .spk-error-text { font-weight: 600; }
+
+/* ---------- Meeting Schedule ---------- */
+.spk-rule { max-width: 900px; }
+.spk-rule-grid { display: flex; flex-wrap: wrap; gap: 12px 24px; margin: 8px 0 12px; }
+.spk-rule .spk-weeks { display: inline-flex; flex-wrap: wrap; gap: 6px 12px; margin: 0; padding: 0; border: 0; }
+.spk-months { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 8px 0; }
+.spk-months legend { font-weight: 600; margin-bottom: 4px; }
+.spk-rule .spk-show { margin: 12px 0 4px; }
+.spk-rule .spk-from { margin: 12px 0 0; padding-top: 10px; border-top: 1px solid #f0f0f1; }
+.spk-rule .spk-from .description { margin-left: 8px; }
+/* A change that takes effect later: one line under the card's legend. */
+.spk-rule .spk-pending { margin: 4px 0 10px; padding: 6px 10px; background: #f0f6fc; border-left: 3px solid #72aee6; }
+.spk-rule .spk-pending .spk-choice { margin: 4px 0 0 12px; }
+
+@media (max-width: 782px) {
+	.spk-event-form input[type="text"], .spk-event-form input[type="url"], .spk-event-form select, .spk-event-form textarea,
+	.spk-rules input[type="text"], .spk-rules select { max-width: 100%; box-sizing: border-box; }
+	.spk-links .spk-link-row label { display: block; margin: 0 0 8px; }
+	.spk-links .spk-link-row input { width: 100%; }
+	.spk-rule .spk-from .description { display: block; margin: 4px 0 0; }
+	.spk-rule .spk-pending .spk-choice { display: block; margin: 6px 0 0; }
+}
+
+/* Add an Event: "Already an event: … Open it" under the name (as on Add a Document). */
+.spk-name-match { margin: 0 0 12px; padding: 6px 10px; background: #fcf9e8; border-left: 4px solid #dba617; }
+.spk-name-match:empty { display: none; }

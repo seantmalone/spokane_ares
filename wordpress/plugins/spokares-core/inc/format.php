@@ -150,7 +150,8 @@ function spokares_event_data( $event ): array {
 		'status'    => $post->post_status,
 		'menu'      => (int) $post->menu_order,
 		'kind'      => (string) $get( 'spk_kind' ),
-		'mode'      => in_array( $mode, array( 'date', 'not-posted', 'as-requested' ), true ) ? $mode : 'date',
+		// Postponed, Date not posted yet and As requested are the undated modes.
+		'mode'      => in_array( $mode, array( 'date', 'postponed', 'not-posted', 'as-requested' ), true ) ? $mode : 'date',
 		'start'     => (string) $get( 'spk_start' ),
 		'end'       => (string) $get( 'spk_end' ),
 		't_start'   => (string) $get( 'spk_time_start' ),
@@ -164,6 +165,7 @@ function spokares_event_data( $event ): array {
 		'extra_doc' => absint( $get( 'spk_extra_doc' ) ),
 		'contact'   => (string) $get( 'spk_contact_call' ),
 		'keep_past' => '1' === (string) $get( 'spk_keep_past' ),
+		'cancelled' => '1' === (string) $get( 'spk_cancelled' ),
 		'precision' => in_array( $get( 'spk_precision' ), array( 'day', 'month', 'year' ), true ) ? $get( 'spk_precision' ) : 'day',
 		'check'     => '1' === (string) $get( 'spk_needs_check' ),
 		'sort'      => (string) $get( 'spk_sort' ),
@@ -180,6 +182,10 @@ function spokares_event_data( $event ): array {
 	}
 	if ( 'date' === $data['mode'] && '' === $data['start'] ) {
 		$data['mode'] = 'not-posted';
+	}
+	// Only an event on a date can be called off ("Cancelled" until it passes).
+	if ( 'date' !== $data['mode'] ) {
+		$data['cancelled'] = false;
 	}
 	if ( ! spokares_is_hhmm( $data['t_start'] ) ) {
 		$data['t_start'] = '';
@@ -214,7 +220,8 @@ function spokares_event_is_now( array $ev ): bool {
  *
  * Styles:
  *  'card'  "Sat–Sun, Sep 26–27", "Thu, Oct 15, 10:15 AM", "Sat, Oct 17, 9:00 AM–noon"
- *  'row'   as card, but undated prints "Date not posted" / "As requested"
+ *  'row'   as card, but undated prints "Postponed", "Date not posted yet" or
+ *          "As requested"
  *  'meta'  hub line: "All day", "All weekend", "10:15 AM", "9:00 AM–noon"
  *  'past'  "Oct 2022" (day or month precision), "2025" (year precision)
  *
@@ -228,7 +235,14 @@ function spokares_fmt_when( $event, string $style ): string {
 	}
 	if ( 'date' !== $ev['mode'] ) {
 		if ( 'row' === $style || 'card' === $style ) {
-			return 'as-requested' === $ev['mode'] ? __( 'As requested', 'spokares-core' ) : __( 'Date not posted', 'spokares-core' );
+			switch ( $ev['mode'] ) {
+				case 'as-requested':
+					return __( 'As requested', 'spokares-core' );
+				case 'postponed':
+					return __( 'Postponed', 'spokares-core' );
+				default:
+					return __( 'Date not posted yet', 'spokares-core' );
+			}
 		}
 		return '';
 	}

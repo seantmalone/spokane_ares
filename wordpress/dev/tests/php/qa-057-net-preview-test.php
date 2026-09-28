@@ -92,15 +92,17 @@ function qa057_screen(): string {
 }
 
 /**
- * The preview box of the Net details screen.
+ * The "Members see" lines of the Net Settings screen (every element with a
+ * data-preview hook), as one piece of HTML.
  *
  * @param string $html Screen HTML.
  */
 function qa057_preview_box( string $html ): string {
-	if ( ! preg_match( '#<div[^>]*id="spk-net-preview"[^>]*>.*?</dl>#s', $html, $m ) ) {
-		fail( 'the Net details screen has no preview box (#spk-net-preview)' );
+	preg_match_all( '#<(td|li)\b[^>]*\bdata-preview="[^"]*"[^>]*>.*?</\1>#s', $html, $m );
+	if ( ! $m[0] ) {
+		fail( 'the Net Settings screen has no "Members see" lines ([data-preview])' );
 	}
-	return $m[0];
+	return implode( "\n", $m[0] );
 }
 
 /**

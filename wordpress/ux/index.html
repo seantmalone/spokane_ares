@@ -1,0 +1,239 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Editor UX Review</title><meta name="description" content="Before and after of the volunteer-editor workflow pass on spokares.org: vocabulary, menu, first clicks, clicks per journey, screens, findings and tests.">
+<style>
+:root{--bg:#f7f7f5;--fg:#1d1d1f;--muted:#5c5f66;--card:#ffffff;--line:#dcdcd8;--accent:#2f5bd3;--ok:#1f7a3d;--bad:#b3261e;--code:#eeeeea;--th:#f0f0ec}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#17181a;--fg:#e8e8e6;--muted:#a3a6ad;--card:#202124;--line:#34363a;--accent:#8ab0ff;--ok:#6fcf8b;--bad:#ff8a80;--code:#2a2b2f;--th:#26272b}}
+:root[data-theme="dark"]{--bg:#17181a;--fg:#e8e8e6;--muted:#a3a6ad;--card:#202124;--line:#34363a;--accent:#8ab0ff;--ok:#6fcf8b;--bad:#ff8a80;--code:#2a2b2f;--th:#26272b}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+main{max-width:1180px;margin:0 auto;padding:24px 16px 64px}
+header.top{margin-bottom:8px}
+h1{font-size:28px;line-height:1.2;margin:8px 0 4px}
+h2{font-size:21px;margin:40px 0 10px;padding-top:8px;border-top:1px solid var(--line)}
+h3{font-size:17px;margin:24px 0 6px}
+p,li{max-width:78ch}
+a{color:var(--accent)}
+.muted{color:var(--muted)}
+nav.toc{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px;margin:10px 0 18px}
+blockquote{margin:12px 0;padding:10px 14px;border-left:4px solid var(--line);background:var(--card);border-radius:4px}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:.9em}
+.tablewrap{overflow-x:auto;margin:10px 0 16px;border:1px solid var(--line);border-radius:6px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{background:var(--th);font-weight:600;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.ok{color:var(--ok);font-weight:600}
+.bad{color:var(--bad);font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:12px 14px}
+.stat b{display:block;font-size:24px;line-height:1.2;font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--muted)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:8px 0 22px}
+.pair figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:8px}
+.pair figcaption{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:6px}
+.pair img{display:block;width:100%;height:auto;max-height:560px;object-fit:contain;object-position:top;background:var(--bg);border-radius:3px}
+@media (max-width:700px){.pair{grid-template-columns:1fr}h1{font-size:24px}}
+footer{margin-top:40px;font-size:13px;color:var(--muted)}
+</style></head><body><main>
+<header class="top"><p class="muted">spokares.org · WordPress build · verifier report</p>
+<h1>Volunteer editor UX review: before and after</h1>
+<p>Walked as Frank, the Section Emergency Coordinator: in his 70s, comfortable with e-mail, Word and PDFs, not a WordPress user. The role was the ARES Editor with the Net Settings grant, on a fresh dev site, 2026-09-28. Markdown version: <a href="REPORT.md">REPORT.md</a>.</p>
+<nav class="toc"><a href="#brief">Brief</a><a href="#glance">At a glance</a><a href="#vocab">Vocabulary</a><a href="#menu">Menu</a><a href="#tasks">20 tasks</a><a href="#other">Other journeys</a><a href="#screens">Screens</a><a href="#findings">Findings</a><a href="#tests">Tests</a></nav></header>
+<h2 id="brief">The brief</h2>
+<blockquote>Do a workflow review across user journeys for volunteer editors. Walk every step (but only as one user role since we validated permissions). Check fields, instructions, clarity. Foundationally, you need to think hard about this and ask &#x27;does this make sense?&#x27; Does the create step have the right guidance? Does edit align with create? Are we using simple, clear terminology? Is it clear from the menus where to go for different types of changes? Make it great. Fix any identified issues.</blockquote>
+<p>Owner's taste: clear labels, sensible field order and good defaults rather than more help text. One short hint beats a paragraph, and each thing is said once. The directive, given mid-review: <q>&#x27;Rota&#x27; is a good example. Weird word, makes little sense. &#x27;Net Control Schedule&#x27; makes sense.</q></p>
+<h2 id="glance">At a glance</h2><div class="stats">
+<div class="stat"><span>First click right</span><b>18 → 19 of 20</b></div>
+<div class="stat"><span>Tasks finished as intended</span><b>17 → 20 of 20</b></div>
+<div class="stat"><span>Clicks, all 20 tasks</span><b>120 → 94</b></div>
+<div class="stat"><span>Visible “rota”, 86 pages and screens</span><b>0</b></div>
+</div>
+<p>The one first-click miss left is T14. “The ICS 309 log is ready at last” still reads as <em>add a document</em>, but the Add screen now says “Already a document: ICS 309 Communications Log (Soon). Open it”, so the job finishes in 7 clicks with no duplicate (13 before).</p>
+<p class="muted">run-all.sh on a fresh site: checks 51/51, PHP 384/384, browser 169/169 · ops/ci.sh --no-zip: 12/12 (PHPCS 0 errors)</p>
+<h2 id="vocab">Vocabulary (old → new)</h2><div class="tablewrap"><table><thead><tr><th>Before</th><th>After</th></tr></thead><tbody>
+<tr><td>Net rota, rota, Update the rota, Save rota</td><td>Net Control Schedule; Update the schedule; Save</td></tr>
+<tr><td>Open, open slot</td><td>Volunteer needed</td></tr>
+<tr><td>(no state: a note on a “Not posted yet” row)</td><td>No net</td></tr>
+<tr><td>Not yet published</td><td>Not posted yet</td></tr>
+<tr><td>Net details</td><td>Net Settings</td></tr>
+<tr><td>Put back what was undone</td><td>Redo</td></tr>
+<tr><td>Hub tiles, tiles, slot</td><td>Most Used; button 1–4</td></tr>
+<tr><td>Show under “Most used”</td><td>Also list under Most used</td></tr>
+<tr><td>Events (menu)</td><td>Exercises &amp; Events</td></tr>
+<tr><td>Kind</td><td>Type of event</td></tr>
+<tr><td>Short line for lists</td><td>Short description</td></tr>
+<tr><td>Main link</td><td>Button: Web address, Words on the button</td></tr>
+<tr><td>Extra form</td><td>Document members need (form); “You’ll need:” (public card)</td></tr>
+<tr><td>Duplicate</td><td>Make a copy</td></tr>
+<tr><td>Regular meetings (under Events)</td><td>Meetings › Cancel or Move a Meeting</td></tr>
+<tr><td>Meeting rules</td><td>Meeting Schedule</td></tr>
+<tr><td>Active; On Home and the members hub</td><td>Show on the site</td></tr>
+<tr><td>(no way to say it)</td><td>Takes effect on; Postponed; Cancelled</td></tr>
+<tr><td>Library section</td><td>Section</td></tr>
+<tr><td>Not available yet (“Soon”)</td><td>Not ready yet (shows “Soon”)</td></tr>
+<tr><td>Position in section (lower shows first)</td><td>Place in section (At the top / After “…” / At the end)</td></tr>
+<tr><td>Replace a document</td><td>Replace or change a document</td></tr>
+<tr><td>Update (button)</td><td>Save</td></tr>
+<tr><td>Save as draft (takes it off the site); Move to Trash</td><td>Take it off the site</td></tr>
+<tr><td>Status: Published: on the site</td><td>On the site · Not on the site (draft) · Not saved yet</td></tr>
+<tr><td>held back</td><td>not saved (“Saved, except …”)</td></tr>
+<tr><td>Pages, Page text, Edit Page</td><td>Page Text; Edit Page Text</td></tr>
+<tr><td>Excerpt, Rename, Add note</td><td>(hidden: the webmaster&#x27;s job)</td></tr>
+<tr><td>Open Media Library, Select or Upload Media, Media Library, Upload files, Attachment Details</td><td>Choose a photo, Upload a photo, Photos on the site, This photo (verifier)</td></tr>
+<tr><td>Howdy, …; ⌘K; “Thank you for creating with WordPress”</td><td>(the name only; no command palette; no credit)</td></tr>
+<tr><td>Authentication Code, TOTP, Recovery Code</td><td>the code from my phone app; e-mail me a code; a printed backup code</td></tr>
+<tr><td>administrator (in editor text)</td><td>the webmaster</td></tr>
+</tbody></table></div><p class="muted">Internal names (option names, slugs, CSS classes, anchors, file names) keep the old words on purpose, so data, links and tests stay intact.</p>
+<h2 id="menu">Menu</h2><div class="tablewrap"><table><thead><tr><th>Before</th><th>After</th></tr></thead><tbody>
+<tr><td><b>Dashboard</b></td><td><b>Dashboard</b></td></tr>
+<tr><td><b>Net rota</b> <span class="muted">Net rota · Net details</span></td><td><b>Net Control Schedule</b> <span class="muted">Net Control Schedule · Net Settings*</span></td></tr>
+<tr><td><b>Events</b> <span class="muted">All events · Add event · Regular meetings · Meeting rules</span></td><td><b>Exercises &amp; Events</b> <span class="muted">All Events · Add an Event</span></td></tr>
+<tr><td><b>Documents</b> <span class="muted">All documents · Add document · Hub tiles</span></td><td><b>Meetings</b> <span class="muted">Cancel or Move a Meeting · Meeting Schedule*</span></td></tr>
+<tr><td><b>Pages</b> <span class="muted">All Pages (six pages; the three members pages don&#x27;t open)</span></td><td><b>Documents</b> <span class="muted">All Documents · Add a Document · Most Used</span></td></tr>
+<tr><td><b>Profile</b></td><td><b>Page Text</b> <span class="muted">(Home, How it works, About ARES &amp; ACS)</span></td></tr>
+<tr><td></td><td><b>Profile</b></td></tr>
+</tbody></table></div><p class="muted">* Net Settings and Meeting Schedule need the grant. A plain ARES Editor sees the same menu without them, and meets a plain sentence (“ask the webmaster”) where they would be.</p>
+<p><b>Dashboard before:</b> 1 Net rota: Update the rota, Net details · 2 Events: Add an event, All events · 3 Meetings: Cancel or move a meeting, Meeting rules · 4 Documents: “37 in the library”, Add a document, Replace a document, Hub tiles · 5 Page text: Home · How it works · About ARES &amp; ACS</p><p><b>Dashboard after:</b> Net Control Schedule: “Posted through Tue, Oct 27 · Volunteer needed: Oct 6 and Oct 27”, Update the schedule, Net Settings · Exercises &amp; Events: Add an event, Change or cancel an event · Meetings: Cancel or move a meeting, Meeting Schedule · Documents: “37 documents · 3 marked Soon”, Add a document, Replace or change a document, Most Used · Page Text: Home · How it works · About ARES &amp; ACS · Needs attention first, when there is something</p>
+<h2 id="tasks">First click and clicks, the 20 tasks</h2><p class="muted">A first click passes when it is the matching Dashboard control, menu item or on-page link. Clicks count clicks and picks, not typing or scrolling.</p>
+<div class="tablewrap"><table><thead><tr><th>#</th><th>Task</th><th>First click before</th><th>First click after</th><th>Clicks</th><th>Outcome before → after</th><th>What made the difference</th></tr></thead><tbody>
+<tr><td class="num">T1</td><td>Randy takes net control on Oct 13 (NZ2S) <span class="muted">(B2)</span></td><td><span class="ok">✓</span> Update the rota (hesitated at “rota”)</td><td><span class="ok">✓</span> Update the schedule</td><td class="num">3 → 3</td><td>Done → <b>Done</b></td><td>“Saved Oct 13. See it on the For members page”. Undo sits beside “Last saved” in the title line.</td></tr>
+<tr><td class="num">T2</td><td>Tom can&#x27;t do Oct 20; nobody has offered <span class="muted">(B3)</span></td><td><span class="ok">✓</span> Net rota (menu)</td><td><span class="ok">✓</span> Update the schedule</td><td class="num">3 → 3</td><td>Done → <b>Done</b></td><td>“Volunteer needed” is the choice, the public tag and the Dashboard&#x27;s word.</td></tr>
+<tr><td class="num">T3</td><td>No Tuesday net on Nov 3 <span class="muted">(B5)</span></td><td><span class="ok">✓</span> Net rota (menu)</td><td><span class="ok">✓</span> Update the schedule</td><td class="num">4 → 4</td><td>Partial: no “No net” state; the site said “Not yet published | No net …” → <b>Done</b></td><td>New “No net” choice. The notice adds “The For members page lists the next five Tuesdays.”</td></tr>
+<tr><td class="num">T4</td><td>Net control through Dec 29 <span class="muted">(B1, B7)</span></td><td><span class="ok">✓</span> Net rota (menu)</td><td><span class="ok">✓</span> Update the schedule</td><td class="num">18 → 11</td><td>Done after retyping: “Show 13 more” lost the typing → <b>Done</b></td><td>“Show 13 more Tuesdays” opens rows in place and keeps the typing. One notice: “Saved 8 Tuesdays, Nov 10 – Dec 29.”</td></tr>
+<tr><td class="num">T5</td><td>State COMMEX moves to Sat, Oct 31 <span class="muted">(D6)</span></td><td><span class="ok">✓</span> All events</td><td><span class="ok">✓</span> Change or cancel an event</td><td class="num">4 → 4</td><td>Done, two notices → <b>Done</b></td><td>A weekday shows beside First day. One notice says where it shows.</td></tr>
+<tr><td class="num">T6</td><td>Not doing the Great ShakeOut <span class="muted">(D8)</span></td><td><span class="ok">✓</span> All events (hesitated: draft or Trash?)</td><td><span class="ok">✓</span> Change or cancel an event</td><td class="num">3 → 4</td><td>Done, but it silently vanished → <b>Done</b></td><td>Tick Cancelled: members see “Cancelled” until the date passes.</td></tr>
+<tr><td class="num">T7</td><td>Winlink class, Sat Nov 7, 9 to noon, County EOC <span class="muted">(D2)</span></td><td><span class="ok">✓</span> Add an event</td><td><span class="ok">✓</span> Add an event</td><td class="num">10 → 10</td><td>Done; the On-the-air line and the groups.io placeholder confused → <b>Done</b></td><td>“Training or meeting”; the site shows “9:00 AM–noon”.</td></tr>
+<tr><td class="num">T8</td><td>Lilac Parade on Sat, May 15 via NV2Z <span class="muted">(D11)</span></td><td><span class="ok">✓</span> All events</td><td><span class="ok">✓</span> Change or cancel an event</td><td class="num">7 → 6</td><td>Done after a wrong-year save hid it → <b>Done</b></td><td>The weekday (“Fri”) flags the wrong year before saving. Starting from Add an event, “Already an event: … Open it” now catches it.</td></tr>
+<tr><td class="num">T9</td><td>Oct 10 workshop is off <span class="muted">(E1)</span></td><td><span class="ok">✓</span> Cancel or move a meeting</td><td><span class="ok">✓</span> Cancel or move a meeting</td><td class="num">4 → 4</td><td>Done; the Dashboard still named Oct 10 → <b>Done</b></td><td>“Saved: Sat, Oct 10 cancelled.” The Dashboard&#x27;s Next skips it.</td></tr>
+<tr><td class="num">T10</td><td>Holiday potluck instead of the Dec 12 workshop <span class="muted">(E1, D5)</span></td><td><span class="ok">✓</span> Cancel or move a meeting</td><td><span class="ok">✓</span> Cancel or move a meeting</td><td class="num">5 → 3</td><td>Partial: a note alone was refused → <b>Done</b></td><td>A note on its own saves: “Saved: Sat, Dec 12 note posted.”</td></tr>
+<tr><td class="num">T11</td><td>From January, Third Thursday moves to the 4th Thursday <span class="muted">(E5)</span></td><td><span class="ok">✓</span> Meeting rules (hesitated: “rules” read as bylaws)</td><td><span class="ok">✓</span> Meeting Schedule (a slight pull toward “Cancel or move”)</td><td class="num">5 → 5</td><td>Failed: no start date; reverted → <b>Done</b></td><td>“Takes effect on” Jan 1: “Saved. From Fri, Jan 1, 2027: … first on Thu, Jan 28.”</td></tr>
+<tr><td class="num">T12</td><td>Repeater tone is now 103.5 <span class="muted">(C1)</span></td><td><span class="ok">✓</span> Net details</td><td><span class="ok">✓</span> Net Settings</td><td class="num">3 → 3</td><td>Done → <b>Done</b></td><td>“Saved: tone 103.5 Hz (was 100 Hz).” No confirm step.</td></tr>
+<tr><td class="num">T13</td><td>Here&#x27;s the new net script PDF <span class="muted">(F4)</span></td><td><span class="ok">✓</span> Replace a document</td><td><span class="ok">✓</span> Replace or change a document</td><td class="num">5 → 7</td><td>Done, but the site kept the old source and version → <b>Done</b></td><td>“Upload a file instead”, the fresh “I checked this file” tick, the new version. The row shows “PDF Oct 2026”.</td></tr>
+<tr><td class="num">T14</td><td>ICS 309 is ready; put it with the forms <span class="muted">(F3)</span></td><td><span class="bad">✗</span> Add a document (miss)</td><td><span class="bad">✗</span> Add a document (still the natural click)</td><td class="num">13 → 7</td><td>Done after publishing a duplicate and trashing it → <b>Done, no duplicate</b></td><td>Typing “ICS 309” shows “Already a document: ICS 309 Communications Log (Soon). Open it”. The Dashboard&#x27;s “3 marked Soon” is a direct route.</td></tr>
+<tr><td class="num">T15</td><td>FEMA IS-100 with the training material <span class="muted">(F2)</span></td><td><span class="ok">✓</span> Add a document</td><td><span class="ok">✓</span> Add a document</td><td class="num">7 → 2</td><td>Done, but it duplicated a FEMA courses link → <b>Done: it&#x27;s already on the site</b></td><td>Typing the course shows “Already on the site: IS-100.c, under FEMA courses. Open it”. Adding it anyway takes 7 clicks and isn&#x27;t held back.</td></tr>
+<tr><td class="num">T16</td><td>Take down the Powerpole guide <span class="muted">(F7)</span></td><td><span class="ok">✓</span> Documents (menu)</td><td><span class="ok">✓</span> Replace or change a document</td><td class="num">3 → 3</td><td>Done → <b>Done</b></td><td>The list&#x27;s cue line says how; “Take it off the site” gives “… is off the site. Undo”.</td></tr>
+<tr><td class="num">T17</td><td>ICS 309 in the ICS 214&#x27;s place under Most used <span class="muted">(F11)</span></td><td><span class="bad">✗</span> Show under “Most used” on the document (miss)</td><td><span class="ok">✓</span> Most Used</td><td class="num">10 → 3</td><td>Done after a wrong button name went live → <b>Done</b></td><td>Picking ICS 309 empties the old words; the placeholder shows what prints.</td></tr>
+<tr><td class="num">T18</td><td>AA7RT replaces K7MHG as Hospital Coordinator <span class="muted">(G4)</span></td><td><span class="ok">✓</span> Page text › About (a guess)</td><td><span class="ok">✓</span> Page Text › About ARES &amp; ACS</td><td class="num">4 → 3</td><td>Done; Table-block jargon in the sidebar → <b>Done</b></td><td>“Saved. It’s on the site now.” The sidebar starts closed except for About&#x27;s review box.</td></tr>
+<tr><td class="num">T19</td><td>Add the Lilac Parade to Home <span class="muted">(G1)</span></td><td><span class="ok">✓</span> Page text › Home</td><td><span class="ok">✓</span> Page Text › Home</td><td class="num">3 → 3</td><td>Done → <b>Done</b></td><td>Unchanged, and still easy.</td></tr>
+<tr><td class="num">T20</td><td>New SET photo on Home <span class="muted">(G6)</span></td><td><span class="ok">✓</span> Page text › Home</td><td><span class="ok">✓</span> Page Text › Home</td><td class="num">6 → 6</td><td>Done, but the editor stayed “unsaved” → <b>Done, editor clean</b></td><td>Replace offers “Choose a photo” and “Upload” (was 5 choices). With a description: Replace › Choose a photo › Upload a photo › describe › Select: 9 clicks.</td></tr>
+</tbody></table></div><p>Clicks went up in three tasks, on purpose. T6 calls an event off with a tick and Save instead of the Trash, so members see “Cancelled”. T13 adds the fresh privacy tick and the version, which the old walk skipped and left stale on the site. T20 with a description goes through the photo window (9 clicks), while the quick Upload path is still 6.</p>
+<h2 id="other">Other journeys (after)</h2><div class="tablewrap"><table><thead><tr><th>Journey</th><th>What Frank did</th><th>What happened</th></tr></thead><tbody>
+<tr><td class="num">B2</td><td>Name typed with the call (“Randy NZ2S”), then a name only</td><td>Oct 27 saved as NZ2S (“names aren’t posted”); Nov 17 not saved, outlined, “Type a call sign, like NZ2S, not a name.” One amber notice.</td></tr>
+<tr><td class="num">B4</td><td>Winlink assignment with Other… form</td><td>4 clicks; shows under Winlink assignments with “ARRL Radiogram”.</td></tr>
+<tr><td class="num">B6</td><td>Undo, then Redo</td><td>Both in the title line: “Undone: Dec 22 is back as it was.” / “Redone: …”.</td></tr>
+<tr><td class="num">C2, C3</td><td>Net time 7:30 PM; a short frequency</td><td>“Saved: net time 7:30 PM (was 8:00 PM).” A bad frequency says why in place of its hint.</td></tr>
+<tr><td class="num">D4</td><td>Public service event</td><td>“As requested” appears only for Public service; “Volunteer through (call sign)”.</td></tr>
+<tr><td class="num">D7</td><td>Postpone the SET, then put it back</td><td>“It shows as Postponed on the Exercises &amp; events page.”</td></tr>
+<tr><td class="num">D10</td><td>Same event next year</td><td>“Make a copy” in the Save box and the row: “Copied. Set the new date, then Publish.” Taking the copy off: “… is in the Trash.” (verifier fix)</td></tr>
+<tr><td class="num">D13</td><td>A phone number in Where</td><td>Amber “Saved, except Where: it has a phone number. …” (verifier: was red), the tick “This is a public agency number. Publish it.” under the field.</td></tr>
+<tr><td class="num">E2, E3</td><td>Move Oct 15 to Oct 14; take back Oct 10&#x27;s cancel</td><td>One tick un-cancels and clears its note: “Sat, Oct 10 is back on; Thu, Oct 15 moved to Wed, Oct 14.”</td></tr>
+<tr><td class="num">F1, F8</td><td>Upload a new file and put it first</td><td>8 clicks; Place in section “At the top” (was: guess each neighbour&#x27;s number).</td></tr>
+<tr><td class="num">F10</td><td>A Most Used document&#x27;s options</td><td>“It’s button 1 on the Most Used screen.” replaces the tick.</td></tr>
+<tr><td class="num">—</td><td>“Here&#x27;s the new net script” from the Most Used screen</td><td>“Replace or change it” opens the net script&#x27;s form in 1 click.</td></tr>
+<tr><td class="num">G9</td><td>About&#x27;s review box</td><td>Only on About, open on arrival; no move or fold buttons (verifier).</td></tr>
+</tbody></table></div>
+<h2 id="screens">Screens, before and after</h2><p class="muted">Before: <code>shots/walk-*</code> (the v0.1.1 walk). After: <code>shots/final/</code> (this walk). Click an image for full size.</p>
+<h3>Dashboard</h3><p>Numbered badges, “Net rota”, “Hub tiles”, “Howdy,”, ⌘K and the WordPress credit are gone; each section is named after its screen, with an add and a change button.</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-pages/02b-dashboard-full.png"><img loading="lazy" src="shots/walk-pages/02b-dashboard-full.png" alt="Before: Dashboard"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/s01-dashboard.png"><img loading="lazy" src="shots/final/s01-dashboard.png" alt="After: Dashboard"></a></figure></div>
+<h3>Net Control Schedule</h3><p>“Net rota” → “Net Control Schedule”. The Shows column is gone; four choices (Call sign box, Volunteer needed, No net, Not posted yet); “ICS-213 (usual)”; Save.</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-rota-net/02b-rota-full.png"><img loading="lazy" src="shots/walk-rota-net/02b-rota-full.png" alt="Before: Net Control Schedule"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/s02-net-control-schedule.png"><img loading="lazy" src="shots/final/s02-net-control-schedule.png" alt="After: Net Control Schedule"></a></figure></div>
+<h3>Show 13 more (before: typing lost)</h3><p>Rows open in place and keep what was typed.</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-rota-net/09-b7-after-show13more-typing-lost.png"><img loading="lazy" src="shots/walk-rota-net/09-b7-after-show13more-typing-lost.png" alt="Before: Show 13 more (before: typing lost)"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/t04-typed-all.png"><img loading="lazy" src="shots/final/t04-typed-all.png" alt="After: Show 13 more (before: typing lost)"></a></figure></div>
+<h3>Net Settings</h3><p>Preview box and confirm step gone; a “Members see” line under each group; one select per Tuesday of the month.</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-rota-net/40b-net-details-full.png"><img loading="lazy" src="shots/walk-rota-net/40b-net-details-full.png" alt="Before: Net Settings"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/s03-net-settings.png"><img loading="lazy" src="shots/final/s03-net-settings.png" alt="After: Net Settings"></a></figure></div>
+<h3>Exercises &amp; Events list</h3><p>Columns When · Event · Type of event · Where it shows; no Trash row action, bulk actions, row ticks or Screen Options for editors.</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-events/02-all-events-upcoming.png"><img loading="lazy" src="shots/walk-events/02-all-events-upcoming.png" alt="Before: Exercises &amp; Events list"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/s04-events-list.png"><img loading="lazy" src="shots/final/s04-events-list.png" alt="After: Exercises &amp; Events list"></a></figure></div>
+<h3>Add an Event</h3><p>Type of event first and required; Event name labelled; one short hint; Save draft / Publish.</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-events/10-add-event-blank.png"><img loading="lazy" src="shots/walk-events/10-add-event-blank.png" alt="Before: Add an Event"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/s05-event-add.png"><img loading="lazy" src="shots/final/s05-event-add.png" alt="After: Add an Event"></a></figure></div>
+<h3>Add an Event: name check (new)</h3><p>“Already an event: Lilac Festival Armed Forces Torchlight Parade (Sat, May 15, 2027). Open it”.</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-events/10-add-event-blank.png"><img loading="lazy" src="shots/walk-events/10-add-event-blank.png" alt="Before: Add an Event: name check (new)"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/t08b-already-an-event.png"><img loading="lazy" src="shots/final/t08b-already-an-event.png" alt="After: Add an Event: name check (new)"></a></figure></div>
+<h3>Edit Event</h3><p>Same fields and order as Add; Cancelled under When; Save, Make a copy, Take it off the site.</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-events/30-edit-state-commex-open.png"><img loading="lazy" src="shots/walk-events/30-edit-state-commex-open.png" alt="Before: Edit Event"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/s06-event-edit-set.png"><img loading="lazy" src="shots/final/s06-event-edit-set.png" alt="After: Edit Event"></a></figure></div>
+<h3>Cancel or Move a Meeting</h3><p>Own Meetings menu; “Note (shown with the date)”; a note on its own is allowed.</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-events/80-meetings-screen.png"><img loading="lazy" src="shots/walk-events/80-meetings-screen.png" alt="Before: Cancel or Move a Meeting"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/s07-meetings-cancel-move.png"><img loading="lazy" src="shots/final/s07-meetings-cancel-move.png" alt="After: Cancel or Move a Meeting"></a></figure></div>
+<h3>Meeting Schedule</h3><p>“Meeting rules” → “Meeting Schedule”; one “Show on the site” tick; “Takes effect on”.</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-events/91-meeting-rules.png"><img loading="lazy" src="shots/walk-events/91-meeting-rules.png" alt="Before: Meeting Schedule"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/s08-meeting-schedule.png"><img loading="lazy" src="shots/final/s08-meeting-schedule.png" alt="After: Meeting Schedule"></a></figure></div>
+<h3>Documents list</h3><p>Cue line, site order on one page, Source column, a Soon view; Screen Options gone for editors.</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-docs-tiles/02-all-documents.png"><img loading="lazy" src="shots/walk-docs-tiles/02-all-documents.png" alt="Before: Documents list"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/s09-documents-list.png"><img loading="lazy" src="shots/final/s09-documents-list.png" alt="After: Documents list"></a></figure></div>
+<h3>Add a Document</h3><p>Labelled name; “Section (required)”; “I checked this file” unlocks the chooser; Short note (60 characters).</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-docs-tiles/10-add-empty.png"><img loading="lazy" src="shots/walk-docs-tiles/10-add-empty.png" alt="Before: Add a Document"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/s10-document-add.png"><img loading="lazy" src="shots/final/s10-document-add.png" alt="After: Add a Document"></a></figure></div>
+<h3>Add a Document: name check</h3><p>“Already a document: ICS 309 Communications Log (Soon). Open it”; course links are found too (verifier).</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-docs-tiles/10-add-empty.png"><img loading="lazy" src="shots/walk-docs-tiles/10-add-empty.png" alt="Before: Add a Document: name check"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/t14-add-name-check.png"><img loading="lazy" src="shots/final/t14-add-name-check.png" alt="After: Add a Document: name check"></a></figure></div>
+<h3>Add a Document: a course that&#x27;s already listed</h3><p>Before: IS-100 was published again next to FEMA courses. After: typing it says “Already on the site: IS-100.c, under FEMA courses. Open it” (verifier).</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-docs-tiles/33-public-training-section.png"><img loading="lazy" src="shots/walk-docs-tiles/33-public-training-section.png" alt="Before: Add a Document: a course that&#x27;s already listed"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/t15b-already-on-the-site.png"><img loading="lazy" src="shots/final/t15b-already-on-the-site.png" alt="After: Add a Document: a course that&#x27;s already listed"></a></figure></div>
+<h3>Edit Document (net script)</h3><p>“Upload a file instead” on a link; the tick names what was checked; Take it off the site.</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-docs-tiles/51-net-script-edit.png"><img loading="lazy" src="shots/walk-docs-tiles/51-net-script-edit.png" alt="Before: Edit Document (net script)"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/t13-net-script-open.png"><img loading="lazy" src="shots/final/t13-net-script-open.png" alt="After: Edit Document (net script)"></a></figure></div>
+<h3>Most Used</h3><p>“Hub tiles” → “Most Used”; rows are buttons 1–4 with “Replace or change it”.</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-docs-tiles/80-hub-tiles.png"><img loading="lazy" src="shots/walk-docs-tiles/80-hub-tiles.png" alt="Before: Most Used"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/s12-most-used.png"><img loading="lazy" src="shots/final/s12-most-used.png" alt="After: Most Used"></a></figure></div>
+<h3>Page Text list</h3><p>Three pages, Title only; no Screen Options (verifier).</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-dashboard-pages/14-pages-list.png"><img loading="lazy" src="shots/walk-dashboard-pages/14-pages-list.png" alt="Before: Page Text list"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/s13-page-text-list.png"><img loading="lazy" src="shots/final/s13-page-text-list.png" alt="After: Page Text list"></a></figure></div>
+<h3>Home photo: Replace menu</h3><p>Five choices → “Choose a photo” and “Upload” (verifier renamed Open Media Library).</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-dashboard-pages/26b-photo-replace-menu.png"><img loading="lazy" src="shots/walk-dashboard-pages/26b-photo-replace-menu.png" alt="Before: Home photo: Replace menu"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/t20-replace-menu.png"><img loading="lazy" src="shots/final/t20-replace-menu.png" alt="After: Home photo: Replace menu"></a></figure></div>
+<h3>Photo window</h3><p>“Choose a photo”, “Upload a photo”, “Photos on the site”, “This photo”, “Describe the photo in a few words”; no Edit Image (verifier).</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-dashboard-pages/26c-media-window.png"><img loading="lazy" src="shots/walk-dashboard-pages/26c-media-window.png" alt="Before: Photo window"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/t20-media-window.png"><img loading="lazy" src="shots/final/t20-media-window.png" alt="After: Photo window"></a></figure></div>
+<h3>Profile</h3><p>No Nickname or capabilities rows; “Name shown to other editors”.</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-dashboard-pages/07-profile-full.png"><img loading="lazy" src="shots/walk-dashboard-pages/07-profile-full.png" alt="Before: Profile"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/s14-profile.png"><img loading="lazy" src="shots/final/s14-profile.png" alt="After: Profile"></a></figure></div>
+<h3>For members (public, signed in)</h3><p>“Volunteer needed” tags; “Edit this list in Net Control Schedule”; Most used buttons.</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-rota-net/04-members-signed-in.png"><img loading="lazy" src="shots/walk-rota-net/04-members-signed-in.png" alt="Before: For members (public, signed in)"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/p04-members-signed-in.png"><img loading="lazy" src="shots/final/p04-members-signed-in.png" alt="After: For members (public, signed in)"></a></figure></div>
+<h3>Exercises &amp; events (public, signed in)</h3><p>Cancelled and Postponed tags; “You’ll need:” on the Next up cards.</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-events/05-public-exercises-signed-in.png"><img loading="lazy" src="shots/walk-events/05-public-exercises-signed-in.png" alt="Before: Exercises &amp; events (public, signed in)"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/p05-exercises-signed-in.png"><img loading="lazy" src="shots/final/p05-exercises-signed-in.png" alt="After: Exercises &amp; events (public, signed in)"></a></figure></div>
+<h3>iPad: Net Control Schedule</h3><p>The menu keeps its labels at 820 px; sticky Save.</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-rota-net/31-ipad-rota-top.png"><img loading="lazy" src="shots/walk-rota-net/31-ipad-rota-top.png" alt="Before: iPad: Net Control Schedule"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/i02-net-control-schedule.png"><img loading="lazy" src="shots/final/i02-net-control-schedule.png" alt="After: iPad: Net Control Schedule"></a></figure></div>
+<h3>Phone: Net Control Schedule</h3><p>One card per Tuesday with a 16 px date; Save stays at the bottom of the window.</p><div class="pair">
+<figure><figcaption>Before</figcaption><a href="shots/walk-rota-net/31b-phone-rota-full.png"><img loading="lazy" src="shots/walk-rota-net/31b-phone-rota-full.png" alt="Before: Phone: Net Control Schedule"></a></figure>
+<figure><figcaption>After</figcaption><a href="shots/final/m02-net-control-schedule.png"><img loading="lazy" src="shots/final/m02-net-control-schedule.png" alt="After: Phone: Net Control Schedule"></a></figure></div>
+<h2 id="findings">Findings disposition</h2>
+<p>The five walkers raised 114 findings: NET 24, EVT 26, DOC 19, PG 20 and FC 25. <a href="SPEC.md">SPEC.md</a> §6 records a decision for each. 95 were accepted, 12 accepted in part and 7 accepted with a change, so every finding led to a change. The parts not taken, with the reason for each, are in §6.</p>
+<h3>Fixed by the verifier in this pass</h3><div class="tablewrap"><table><thead><tr><th>Fix</th><th>Why</th><th>Files</th></tr></thead><tbody>
+<tr><td><b>Add an Event checks the name</b></td><td>“Already an event: … (date). Open it”, as Add a Document does, so the Lilac Parade isn&#x27;t added twice (T8 from Add). Create now guides like it does for documents.</td><td><code>admin-events.php, admin-events.js, admin-events.css</code></td></tr>
+<tr><td><b>Add a Document&#x27;s name check knows course links</b></td><td>Typing “FEMA IS-100” or the course title says “Already on the site: IS-100.c, under FEMA courses. Open it” (T15 was adding a duplicate). Name-only drafts left by WordPress&#x27;s autosave are skipped.</td><td><code>admin-documents.php, admin-documents.js</code></td></tr>
+<tr><td><b>“Open it” leaves cleanly</b></td><td>Found in T14: clicking “Open it” asked “Leave site?” and left an “ICS 309” draft behind. The focus now stays in the name box and the leave prompt is off for that link.</td><td><code>admin-documents.js, admin-events.js</code></td></tr>
+<tr><td><b>Photo window in plain words</b></td><td>Replace › “Choose a photo”; tabs “Upload a photo” and “Photos on the site”; side panel “This photo”; “Search photos”; no Edit Image. The refusal sentence and the guide use the same words.</td><td><code>governance.php, editor-guard.js</code></td></tr>
+<tr><td><b>No WordPress chrome on the lists</b></td><td>No Screen Options on the Exercises &amp; Events, Documents and Page Text lists for editors; the events list has no bulk actions (its only one was “Move to Trash”) and no row ticks.</td><td><code>admin-trim.php, admin-events.php</code></td></tr>
+<tr><td><b>Save box and Page review box can&#x27;t be moved or folded</b></td><td>Their Move up, Move down and fold buttons are gone for editors, as on the Dashboard.</td><td><code>admin.css</code></td></tr>
+<tr><td><b>A partly saved event is amber</b></td><td>“Saved, except Where: …” was red on events and amber everywhere else; now amber, and a warning takes the focus when there&#x27;s no error.</td><td><code>admin-events.php, admin-forms.js</code></td></tr>
+<tr><td><b>A draft taken off says so</b></td><td>“… is in the Trash.” for a draft or a fresh copy (it was never on the site), as documents already did.</td><td><code>admin-events.php</code></td></tr>
+<tr><td><b>Help uses the tick&#x27;s words</b></td><td>Documents Help: tick “I checked …” instead of “the privacy check”.</td><td><code>admin-common.php</code></td></tr>
+</tbody></table></div><p class="muted">Tests: <code>dev/tests/php/ux-verifier-polish-test.php</code> (6) and <code>dev/tests/e2e/ux-verifier-polish.test.mjs</code> (4). The wording changes in qa-003, qa-019, qa-054, ux-events-meetings and ux-page-text-editor swap the words and the notice colour; no check was weakened.</p>
+<h3>Left open, for the owner</h3><ul>
+<li>Home&#x27;s page text calls groups.io “the members’ hub for files and the calendar”. It&#x27;s page content that editors can change on the Page Text screen, so it was left for the owner.</li>
+<li>The Two-Factor section of Profile keeps the plugin&#x27;s own long sentences (“Configure a primary two-factor method…”, “Enable Authenticator App”, “Recommended”). The sign-in code screen was already reworded.</li>
+<li>The block editor&#x27;s own controls remain: Document Overview, Zoom Out, and the word count in the sidebar. They are WordPress&#x27;s controls, and none of them can break the page.</li>
+<li>The public card label “You’ll need:” was an implementer&#x27;s choice. The owner hasn&#x27;t picked it.</li>
+<li>The meeting is still named “Third Thursday training meeting” after it moves to the 4th Thursday. That is content, and it can be renamed on its Meeting Schedule card.</li>
+<li>On Most Used, a new button&#x27;s words default to the document&#x27;s full name (“ICS 309 Communications Log”) unless words are typed. The placeholder shows the name first.</li>
+<li>On an iPad in portrait, the Winlink assignment box shows two lines, so a long assignment scrolls inside it.</li>
+<li>If Frank types a name on an Add screen and then leaves another way, WordPress&#x27;s autosave can still leave a draft. Only the “Open it” path is covered.</li>
+</ul>
+<h2 id="tests">Test results</h2><ul>
+<li>dev/tests/run-all.sh 9570 on a fresh site, after every fix: checks.sh 51 passed, 0 failed; PHP integration 384 passed, 0 failed; browser (e2e) 169 passed, 0 failed (1,096 s). run-all: all passed.</li>
+<li>ops/ci.sh --no-zip: 12 passed, 0 failed. Versions, forbidden code, ABSPATH guards, seed data, redirect map, JSON and JS parse, PHP 8.3 and 8.4 lint, PHPCS WordPress-Extra with 0 errors and 15 warnings (the baseline count), Plugin Check with no errors, and the “no visible rota” guard.</li>
+<li>New in this pass: dev/tests/php/ux-verifier-polish-test.php (6 tests) and dev/tests/e2e/ux-verifier-polish.test.mjs (4 tests), both passing.</li>
+<li>“rota” sweep: 86 pages and screens as a visitor, as the grant editor and as a plain editor. It covered every same-origin public page, every editor screen, the three block editors and their canvases, the sign-in page and the 404 page, including Help tabs, templates and script strings. It found no visible “rota”; the word appears only in identifiers.</li></ul>
+<p><a href="../EDITING-GUIDE.md">EDITING-GUIDE.md</a> matches the screens word for word, and its six screenshots in <code>shots/final/</code> were regenerated. <a href="../PLAN.md">PLAN.md</a> §3.4 and §4 record the verifier's changes.</p>
+<footer>Generated 2026-09-28 from the verifier's walk logs.</footer></main></body></html>

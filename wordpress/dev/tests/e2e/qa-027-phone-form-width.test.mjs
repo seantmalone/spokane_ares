@@ -109,7 +109,7 @@ const RULE_FIELDS = [
 
 export const tests = [
   {
-    name: 'ares-net (phone): Meeting rules cards and fields fit a 390px screen',
+    name: 'ares-net (phone): Meeting Schedule cards and fields fit a 390px screen',
     role: 'ares-net',
     viewport: 'phone',
     async run(t) {
@@ -117,7 +117,7 @@ export const tests = [
     },
   },
   {
-    name: 'admin (phone): Meeting rules cards, fields and the "Needs checking" tick fit a 390px screen',
+    name: 'admin (phone): Meeting Schedule cards, fields and the "Needs checking" tick fit a 390px screen',
     role: 'admin',
     viewport: 'phone',
     async run(t) {
@@ -129,7 +129,7 @@ export const tests = [
     },
   },
   {
-    name: 'ares-editor (phone): an exercise\'s edit form (Main link, More links, Extra form) fits a 390px screen',
+    name: 'ares-editor (phone): an exercise\'s edit form (Button, More links, Document members need) fits a 390px screen',
     role: 'ares-editor',
     viewport: 'phone',
     async run(t) {

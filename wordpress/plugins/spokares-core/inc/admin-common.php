@@ -12,29 +12,26 @@ defined( 'ABSPATH' ) || exit;
 /* -------------------------------------------------------------------- menu */
 
 /**
- * The Net rota menu and the plugin's submenus. Each screen's file provides
- * its page callback and load hook.
+ * The plugin's menus (§2): Net Control Schedule (with Net Settings for the
+ * grant), Meetings (Cancel or Move a Meeting, with Meeting Schedule for the
+ * grant) and Most Used under Documents. The names come from
+ * spokares_edit_screen() (R10); each screen's file provides its page callback.
  */
 function spokares_admin_menu(): void {
 	$hooks = array();
+	$name  = static fn( string $key ): string => (string) ( spokares_edit_screen( $key )[0] ?? '' );
+	$move  = spokares_page_title( 'meetings' );
 
-	$hooks['spokares-rota'] = add_menu_page(
-		__( 'Net rota', 'spokares-core' ),
-		__( 'Net rota', 'spokares-core' ),
-		'spokares_edit_rota',
-		'spokares-rota',
-		'spokares_rota_page',
-		'dashicons-microphone',
-		3
-	);
-	add_submenu_page( 'spokares-rota', __( 'Net rota', 'spokares-core' ), __( 'Net rota', 'spokares-core' ), 'spokares_edit_rota', 'spokares-rota', 'spokares_rota_page' );
-	$hooks['spokares-net-details'] = add_submenu_page( 'spokares-rota', __( 'Net details', 'spokares-core' ), __( 'Net details', 'spokares-core' ), 'spokares_edit_net_details', 'spokares-net-details', 'spokares_net_details_page' );
+	$hooks['spokares-rota'] = add_menu_page( $name( 'rota' ), $name( 'rota' ), 'spokares_edit_rota', 'spokares-rota', 'spokares_rota_page', 'dashicons-microphone', 3 );
+	add_submenu_page( 'spokares-rota', $name( 'rota' ), $name( 'rota' ), 'spokares_edit_rota', 'spokares-rota', 'spokares_rota_page' );
+	$hooks['spokares-net-details'] = add_submenu_page( 'spokares-rota', $name( 'net-details' ), $name( 'net-details' ), 'spokares_edit_net_details', 'spokares-net-details', 'spokares_net_details_page' );
 
-	$events                          = 'edit.php?post_type=spk_event';
-	$hooks['spokares-meetings']      = add_submenu_page( $events, __( 'Regular meetings', 'spokares-core' ), __( 'Regular meetings', 'spokares-core' ), 'spokares_edit_rota', 'spokares-meetings', 'spokares_meetings_page' );
-	$hooks['spokares-meeting-rules'] = add_submenu_page( $events, __( 'Meeting rules', 'spokares-core' ), __( 'Meeting rules', 'spokares-core' ), 'spokares_edit_net_details', 'spokares-meeting-rules', 'spokares_meeting_rules_page' );
+	// Right after Exercises & Events (menu_position 4); spokares_menu_order() sets the order.
+	$hooks['spokares-meetings'] = add_menu_page( $move, $name( 'meetings' ), 'spokares_edit_rota', 'spokares-meetings', 'spokares_meetings_page', 'dashicons-groups', '4.5' );
+	add_submenu_page( 'spokares-meetings', $move, $move, 'spokares_edit_rota', 'spokares-meetings', 'spokares_meetings_page' );
+	$hooks['spokares-meeting-rules'] = add_submenu_page( 'spokares-meetings', $name( 'meeting-rules' ), $name( 'meeting-rules' ), 'spokares_edit_net_details', 'spokares-meeting-rules', 'spokares_meeting_rules_page' );
 
-	$hooks['spokares-tiles'] = add_submenu_page( 'edit.php?post_type=spk_document', __( 'Hub tiles', 'spokares-core' ), __( 'Hub tiles', 'spokares-core' ), 'edit_spk_documents', 'spokares-tiles', 'spokares_tiles_page' );
+	$hooks['spokares-tiles'] = add_submenu_page( 'edit.php?post_type=spk_document', $name( 'tiles' ), $name( 'tiles' ), 'edit_spk_documents', 'spokares-tiles', 'spokares_tiles_page' );
 	$hooks['spokares-site']  = add_options_page( __( 'ARES site', 'spokares-core' ), __( 'ARES site', 'spokares-core' ), 'manage_options', 'spokares-site', 'spokares_site_page' );
 
 	foreach ( $hooks as $slug => $hook ) {
@@ -46,12 +43,31 @@ function spokares_admin_menu(): void {
 add_action( 'admin_menu', 'spokares_admin_menu' );
 
 /**
+ * The two meeting screens moved from under Exercises & Events to their own
+ * Meetings menu: an old bookmark (edit.php?post_type=spk_event&page=…) opens
+ * the screen at its new address.
+ */
+function spokares_old_meeting_urls(): void {
+	global $pagenow;
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- routing only.
+	$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+	if ( 'edit.php' === $pagenow && in_array( $page, array( 'spokares-meetings', 'spokares-meeting-rules' ), true ) && ! wp_doing_ajax() ) {
+		wp_safe_redirect( admin_url( 'admin.php?page=' . $page ) );
+		exit;
+	}
+}
+add_action( 'admin_init', 'spokares_old_meeting_urls' );
+// Under the old parent WordPress may refuse the page before admin_init.
+add_action( 'admin_page_access_denied', 'spokares_old_meeting_urls', 0 );
+
+/**
  * Use our menu order.
  */
 add_filter( 'custom_menu_order', '__return_true' );
 
 /**
- * Dashboard · Net rota · Events · Documents · Pages first, then the rest.
+ * Dashboard · Net Control Schedule · Exercises & Events · Meetings ·
+ * Documents · Page Text first, then the rest (Profile).
  *
  * @param string[] $order Menu slugs.
  */
@@ -59,13 +75,78 @@ function spokares_menu_order( $order ) {
 	if ( ! is_array( $order ) ) {
 		return $order;
 	}
-	$want  = array( 'index.php', 'separator1', 'spokares-rota', 'edit.php?post_type=spk_event', 'edit.php?post_type=spk_document', 'edit.php?post_type=page' );
+	$want  = array( 'index.php', 'separator1', 'spokares-rota', 'edit.php?post_type=spk_event', 'spokares-meetings', 'edit.php?post_type=spk_document', 'edit.php?post_type=page' );
 	$front = array_values( array_filter( $want, static fn( $slug ) => in_array( $slug, $order, true ) ) );
 	return array_merge( $front, array_values( array_diff( $order, $front ) ) );
 }
 add_filter( 'menu_order', 'spokares_menu_order' );
 
+/**
+ * A plugin screen's name, as the menu and its h1 give it: the
+ * spokares_edit_screen() name (R10), except the Meetings menu's first
+ * screen, which is named for its job.
+ *
+ * @param string $key spokares_edit_screen() key.
+ */
+function spokares_page_title( string $key ): string {
+	if ( 'meetings' === $key ) {
+		return __( 'Cancel or Move a Meeting', 'spokares-core' );
+	}
+	return (string) ( spokares_edit_screen( $key )[0] ?? '' );
+}
+
+/**
+ * A plugin screen's h1: WordPress's page title (spokares_page_title(), set
+ * by the menu). Drawn outside a screen request (a test calling the page
+ * function), WordPress has no page to name and get_admin_page_title() would
+ * hand core a null, so the name comes from spokares_page_title() directly.
+ *
+ * @param string $key spokares_edit_screen() key.
+ */
+function spokares_screen_title( string $key ): string {
+	global $title, $plugin_page;
+	if ( ! empty( $title ) || is_string( $plugin_page ) ) {
+		return get_admin_page_title();
+	}
+	return spokares_page_title( $key );
+}
+
 /* ----------------------------------------------------------------- notices */
+
+/**
+ * Remember which events and documents were just restored (Restore, or Undo
+ * after "Take it off the site"), for the list's one notice: core's redirect
+ * after a restore doesn't name them (it names only what went to the Trash).
+ *
+ * @param int $post_id Post.
+ */
+function spokares_remember_restored( $post_id ): void {
+	$post_id = (int) $post_id;
+	$type    = (string) get_post_type( $post_id );
+	if ( ! in_array( $type, array( 'spk_event', 'spk_document' ), true ) ) {
+		return;
+	}
+	$key   = 'spokares_restored_' . $type . '_' . get_current_user_id();
+	$ids   = get_transient( $key );
+	$ids   = is_array( $ids ) ? $ids : array();
+	$ids[] = $post_id;
+	set_transient( $key, array_values( array_unique( array_map( 'intval', $ids ) ) ), 5 * MINUTE_IN_SECONDS );
+}
+add_action( 'untrashed_post', 'spokares_remember_restored' );
+
+/**
+ * The events or documents this user just restored, read once (the notice
+ * after the redirect uses them up).
+ *
+ * @param string $type spk_event or spk_document.
+ * @return int[]
+ */
+function spokares_take_restored( string $type ): array {
+	$key = 'spokares_restored_' . $type . '_' . get_current_user_id();
+	$ids = get_transient( $key );
+	delete_transient( $key );
+	return is_array( $ids ) ? array_map( 'intval', $ids ) : array();
+}
 
 /**
  * Queue a notice for this user's next admin screen (survives the redirect).
@@ -86,6 +167,9 @@ function spokares_add_notice( string $type, string $text, string $url = '', stri
 		'label' => $label,
 	);
 	set_transient( $key, $notices, 5 * MINUTE_IN_SECONDS );
+	// The events file drops core's own "message" from the redirect when a
+	// notice is queued, so each save shows exactly one notice (§4.8).
+	$GLOBALS['spokares_notice_queued'] = true;
 }
 
 /**
@@ -265,67 +349,55 @@ function spokares_stamp(): array {
 /* -------------------------------------------------------------- help tabs */
 
 /**
- * The help lines of each screen (3-5 lines each).
+ * The Help ("How to") lines of each screen. Help says only what the screen
+ * doesn't (R3): a screen whose fields say it all has no lines, and its tab
+ * holds just "Stuck?".
  */
 function spokares_help_lines(): array {
 	return array(
 		'spokares-rota'          => array(
-			__( 'Each row is one Tuesday net. Type a call sign, or choose Open (ask for a volunteer) or Not posted yet.', 'spokares-core' ),
-			__( 'Call signs only, never names. If you type more, only the first call sign is kept.', 'spokares-core' ),
-			__( 'On Winlink nights, type the assignment and pick the form. The Note appears in the rota’s Note column.', 'spokares-core' ),
-			__( 'Only the rows you changed are saved. Made a mistake? Press Undo last save.', 'spokares-core' ),
+			__( 'Winlink assignments and forms show on the Exercises & events page; notes show on the For members page.', 'spokares-core' ),
 		),
 		'spokares-net-details'   => array(
-			__( 'These facts print on the members hub, How it works and Home at once.', 'spokares-core' ),
-			__( 'Amateur frequencies only. Never county, hospital, SHARES, 800 MHz or channel numbers.', 'spokares-core' ),
-			__( 'The repeater call sign is the club’s own call, so only an administrator can change it.', 'spokares-core' ),
-			__( 'Check the preview at the bottom before you save.', 'spokares-core' ),
+			__( 'These settings print on the For members, How it works and Home pages at once.', 'spokares-core' ),
 		),
 		'spokares-meetings'      => array(
-			__( 'Tick Cancelled beside a date, or type the new date in Moved to (today or later, and not another date of the same meeting). Add a short note if it helps.', 'spokares-core' ),
-			__( 'Home shows the next real date, and the members hub shows the change for two weeks before it.', 'spokares-core' ),
 			current_user_can( 'spokares_edit_net_details' )
-				? __( 'Meeting times and weeks are on Events › Meeting rules.', 'spokares-core' )
-				: __( 'Meeting times and weeks are on Meeting rules (ask the webmaster).', 'spokares-core' ),
+				? __( 'Regular days and times are on the Meeting Schedule screen. The meeting place: ask the webmaster.', 'spokares-core' )
+				: __( 'Regular days and times, and the meeting place: ask the webmaster.', 'spokares-core' ),
 		),
-		'spokares-meeting-rules' => array(
-			__( 'Each row is a regular meeting: the weeks of the month, the day and the times.', 'spokares-core' ),
-			__( 'Time words (for example “evenings”) replace the times on Home.', 'spokares-core' ),
-			__( 'Untick Active to stop showing a meeting. To cancel one date, use Regular meetings instead.', 'spokares-core' ),
-		),
+		'spokares-meeting-rules' => array(),
 		'spokares-tiles'         => array(
-			__( 'The four “Most used” tiles on For members. Each opens its document.', 'spokares-core' ),
-			__( 'Only published, privacy-checked documents with a file or a link can be a tile.', 'spokares-core' ),
-			__( 'Choosing a document that is already in another slot swaps the two slots.', 'spokares-core' ),
+			__( 'Only published documents with a file or a link are offered.', 'spokares-core' ),
 		),
 		'spokares-site'          => array(
 			__( 'The meeting place prints on Home under “In person”.', 'spokares-core' ),
 			__( 'The groups.io links are part of the page text and the theme’s footer and members menu, not settings here.', 'spokares-core' ),
 		),
-		'spk_event'              => array(
-			__( 'Pick the kind first. Fields that don’t apply to that kind are hidden.', 'spokares-core' ),
-			__( 'All day is ticked by default; untick it to add times.', 'spokares-core' ),
-			__( 'A yearly event? Duplicate last year’s from All events, change the date, and Publish.', 'spokares-core' ),
-			__( 'Never publish county, hospital, SHARES or 800 MHz channels, or names, phones or e-mails.', 'spokares-core' ),
+		'spk_event'              => array(),
+		'spk_event_list'         => array(
+			__( 'Called off? Open it and tick Cancelled under When.', 'spokares-core' ),
+			__( 'Same event next year? Open last year’s and click Make a copy.', 'spokares-core' ),
+		),
+		'spk_document'           => array(
+			__( 'New version? Choose the new file (under Replace with, or Upload a file instead of a link), tick “I checked …” and click Save.', 'spokares-core' ),
+		),
+		'spk_document_list'      => array(),
+		'page_list'              => array(
+			__( 'Words only. The members pages are built on the Net Control Schedule, Exercises & Events, Meetings and Documents screens.', 'spokares-core' ),
 		),
 		'dashboard'              => array(
-			__( 'Site tasks lists the jobs you can do here, with a button for each.', 'spokares-core' ),
-			__( 'Needs attention (when shown) says what to look at first, such as a rota that runs out soon.', 'spokares-core' ),
+			__( 'Changes show on the site as soon as you save.', 'spokares-core' ),
 		),
 		'dashboard-none'         => array(
 			__( 'This account can’t change anything on the site.', 'spokares-core' ),
 			__( 'Your profile has your name, e-mail, password and two-step sign-in.', 'spokares-core' ),
 		),
 		'profile'                => array(
-			__( 'Name: how your name shows to the other editors. Pick it in “Display name publicly as”.', 'spokares-core' ),
-			__( 'E-mail: where password resets and site notices go. It is never shown on the site.', 'spokares-core' ),
+			__( 'Name: how your name shows to the other editors.', 'spokares-core' ),
+			__( 'E-mail: where password resets and sign-in codes go. It is never shown on the site.', 'spokares-core' ),
 			__( 'New password: click Set New Password, then Update Profile.', 'spokares-core' ),
-			__( 'Two-Factor Options: turn on a second step when you sign in (an app code or a security key).', 'spokares-core' ),
-		),
-		'spk_document'           => array(
-			__( 'Pick the section, then where the file is: upload it, link to another site, or “Soon”.', 'spokares-core' ),
-			__( 'Tick the Privacy check first; the file chooser unlocks and the file uploads when you save.', 'spokares-core' ),
-			__( 'New version? Use Replace with; the old file is removed from the web and the link stays the same.', 'spokares-core' ),
+			__( 'New phone? Under Authenticator App click Reset authenticator app, scan the code with the new phone, type its 6 digits and click Verify.', 'spokares-core' ),
 		),
 	);
 }
@@ -337,15 +409,20 @@ function spokares_help_lines(): array {
  */
 function spokares_screen_help( string $key ): void {
 	$screen = get_current_screen();
-	$lines  = spokares_help_lines()[ $key ] ?? array();
-	if ( ! $screen || ! $lines ) {
+	if ( ! $screen ) {
 		return;
 	}
-	$html = '<ul>';
-	foreach ( $lines as $line ) {
-		$html .= '<li>' . esc_html( $line ) . '</li>';
+	$lines = spokares_help_lines()[ $key ] ?? array();
+	$html  = '';
+	if ( $lines ) {
+		$html = '<ul>';
+		foreach ( $lines as $line ) {
+			$html .= '<li>' . esc_html( $line ) . '</li>';
+		}
+		$html .= '</ul>';
 	}
-	$html .= '</ul><p>' . esc_html__( 'Stuck?', 'spokares-core' ) . ' <a href="mailto:webmaster@spokares.org">webmaster@spokares.org</a></p>';
+	// Every screen's tab ends with (or is only) the way to get help.
+	$html .= '<p>' . esc_html__( 'Stuck?', 'spokares-core' ) . ' <a href="mailto:webmaster@spokares.org">webmaster@spokares.org</a></p>';
 	$screen->add_help_tab(
 		array(
 			'id'      => 'spokares-help',
@@ -356,12 +433,22 @@ function spokares_screen_help( string $key ): void {
 }
 
 /**
- * Help on the event and document screens.
+ * Help on the event and document lists ('{type}_list') and forms ('{type}'),
+ * and, for editors, on the Page Text list ('page_list').
  */
 function spokares_cpt_help(): void {
 	$screen = get_current_screen();
-	if ( $screen && in_array( $screen->post_type, array( 'spk_event', 'spk_document' ), true ) && in_array( $screen->base, array( 'post', 'edit' ), true ) ) {
-		spokares_screen_help( $screen->post_type );
+	if ( ! $screen ) {
+		return;
+	}
+	if ( in_array( $screen->post_type, array( 'spk_event', 'spk_document' ), true ) ) {
+		if ( 'edit' === $screen->base ) {
+			spokares_screen_help( $screen->post_type . '_list' );
+		} elseif ( 'post' === $screen->base ) {
+			spokares_screen_help( $screen->post_type );
+		}
+	} elseif ( 'page' === $screen->post_type && 'edit' === $screen->base && ! current_user_can( 'manage_options' ) ) {
+		spokares_screen_help( 'page_list' );
 	}
 }
 add_action( 'current_screen', 'spokares_cpt_help' );
@@ -369,71 +456,59 @@ add_action( 'current_screen', 'spokares_cpt_help' );
 /* ---------------------------------------------------------------- save box */
 
 /**
- * Our Save box (replaces WordPress's Publish box on events and documents):
- * Save draft, Publish (Update once published) and Move to Trash. No Preview,
- * no Visibility, no publish date.
+ * Our Save box (replaces WordPress's Publish box on events and documents,
+ * §3.9): where the item stands, Save (published) or Save draft and Publish,
+ * the caller's links (e.g. Make a copy), then Take it off the site (a
+ * published item) or Move to Trash (a draft). No Preview, no Visibility, no
+ * publish date.
  *
- * @param WP_Post $post       Post.
- * @param string  $trash_note Optional control under the trash link (documents).
+ * @param WP_Post $post  Post.
+ * @param array   $links Links under the buttons, each ['label' => …, 'url' => …].
  */
-function spokares_render_save_box( WP_Post $post, string $trash_note = '' ): void {
+function spokares_render_save_box( WP_Post $post, array $links = array() ): void {
 	$status    = $post->post_status;
 	$published = 'publish' === $status;
 	$type      = get_post_type_object( $post->post_type );
 	$can_pub   = $type && current_user_can( $type->cap->publish_posts );
 	$labels    = array(
-		'publish'    => __( 'Published: on the site', 'spokares-core' ),
-		'draft'      => __( 'Draft: not on the site', 'spokares-core' ),
-		'auto-draft' => __( 'New: not saved yet', 'spokares-core' ),
+		'publish'    => __( 'On the site', 'spokares-core' ),
+		'draft'      => __( 'Not on the site (draft)', 'spokares-core' ),
+		'auto-draft' => __( 'Not saved yet', 'spokares-core' ),
 		'pending'    => __( 'Waiting for review', 'spokares-core' ),
 	);
 	// id "submitpost": WordPress's post.js binds its submit handling to the
 	// buttons in #submitpost (stop autosave, drop the "Leave site? Changes you
 	// made may not be saved" warning, block double clicks). Without it every
-	// Publish or Update of a changed event or document asked to leave the page.
+	// Publish or Save of a changed event or document asked to leave the page.
 	?>
 	<div class="spk-savebox" id="submitpost">
 		<input type="hidden" name="original_post_status" value="<?php echo esc_attr( $status ); ?>">
 		<input type="hidden" name="post_status" value="<?php echo esc_attr( 'auto-draft' === $status ? 'draft' : $status ); ?>">
-		<p class="spk-status"><?php echo esc_html__( 'Status:', 'spokares-core' ) . ' ' . esc_html( $labels[ $status ] ?? $status ); ?></p>
+		<p class="spk-status"><?php echo esc_html( $labels[ $status ] ?? $status ); ?></p>
 		<p class="spk-save-buttons">
 			<?php if ( $published ) : ?>
-				<?php // "save", as WordPress's own Update button: the notice then reads "Saved.", not "Published.". ?>
-				<input type="submit" name="save" class="button button-primary button-large" value="<?php esc_attr_e( 'Update', 'spokares-core' ); ?>">
+				<?php // "save", as WordPress's own Update button: the item stays published. ?>
+				<input type="submit" name="save" class="button button-primary button-large" value="<?php esc_attr_e( 'Save', 'spokares-core' ); ?>">
 			<?php else : ?>
-				<input type="submit" name="saveasdraft" class="button button-large" value="<?php esc_attr_e( 'Save draft', 'spokares-core' ); ?>">
+				<?php // A draft may be saved half-filled: the browser's required checks are for Publish. ?>
+				<input type="submit" name="saveasdraft" class="button button-large" value="<?php esc_attr_e( 'Save draft', 'spokares-core' ); ?>" formnovalidate>
 				<?php if ( $can_pub ) : ?>
 					<input type="submit" name="publish" class="button button-primary button-large" value="<?php esc_attr_e( 'Publish', 'spokares-core' ); ?>">
 				<?php endif; ?>
 			<?php endif; ?>
 		</p>
-		<?php if ( $published && 'spk_document' === $post->post_type ) : ?>
-			<?php // A draft document leaves the lists and /docs/, but its uploaded file keeps its web address. ?>
-			<p class="spk-unpublish"><input type="submit" name="saveasdraft" class="button-link" value="<?php esc_attr_e( 'Save as draft (takes it off the lists)', 'spokares-core' ); ?>"></p>
-			<?php if ( absint( get_post_meta( $post->ID, 'spk_file', true ) ) ) : ?>
-				<p class="spk-unpublish-note"><?php esc_html_e( 'An uploaded file stays at its web address. To take it off the web too, Move to Trash with “Also remove its file from the web” ticked, or ask the webmaster to pull it.', 'spokares-core' ); ?></p>
-			<?php endif; ?>
-		<?php elseif ( $published ) : ?>
-			<p class="spk-unpublish"><input type="submit" name="saveasdraft" class="button-link" value="<?php esc_attr_e( 'Save as draft (takes it off the site)', 'spokares-core' ); ?>"></p>
-		<?php endif; ?>
-		<?php if ( 'auto-draft' !== $status && current_user_can( 'delete_post', $post->ID ) ) : ?>
-			<p class="spk-trash"><a class="submitdelete" id="spk-trash-link" href="<?php echo esc_url( get_delete_post_link( $post->ID ) ); ?>"><?php esc_html_e( 'Move to Trash', 'spokares-core' ); ?></a></p>
+		<?php foreach ( $links as $link ) : ?>
 			<?php
-			if ( '' !== $trash_note ) {
-				echo wp_kses(
-					$trash_note,
-					array(
-						'p'     => array( 'class' => true ),
-						'label' => array(),
-						'input' => array(
-							'type'    => true,
-							'id'      => true,
-							'checked' => true,
-						),
-					)
-				);
+			$label = is_array( $link ) ? trim( (string) ( $link['label'] ?? '' ) ) : '';
+			$url   = is_array( $link ) ? (string) ( $link['url'] ?? '' ) : '';
+			if ( '' === $label || '' === $url ) {
+				continue;
 			}
 			?>
+			<p class="spk-savebox-link"><a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $label ); ?></a></p>
+		<?php endforeach; ?>
+		<?php if ( 'auto-draft' !== $status && current_user_can( 'delete_post', $post->ID ) ) : ?>
+			<p class="spk-trash"><a class="submitdelete" id="spk-trash-link" href="<?php echo esc_url( get_delete_post_link( $post->ID ) ); ?>"><?php echo esc_html( $published ? __( 'Take it off the site', 'spokares-core' ) : __( 'Move to Trash', 'spokares-core' ) ); ?></a></p>
 		<?php endif; ?>
 	</div>
 	<?php
@@ -455,28 +530,6 @@ function spokares_replace_submitdiv(): void {
 	}
 }
 add_action( 'add_meta_boxes', 'spokares_replace_submitdiv', 99 );
-
-/**
- * "Save draft" and "Save as draft (takes it off …)" are named saveasdraft,
- * which WordPress's redirect_post() answers with message 4 ("Saved. See it
- * on …", a link to the public list). A draft is not on the site: show
- * message 10 ("Draft saved. Drafts never show on the site.") whenever an
- * event or document is a draft after the save, whichever button was used.
- *
- * @param string $location Redirect location.
- * @param int    $post_id  Post.
- */
-function spokares_draft_saved_message( $location, $post_id ) {
-	$post_id = (int) $post_id;
-	if ( ! in_array( get_post_type( $post_id ), array( 'spk_event', 'spk_document' ), true ) || 'draft' !== get_post_status( $post_id ) ) {
-		return $location;
-	}
-	if ( ! str_contains( (string) $location, 'message=' ) ) {
-		return $location;
-	}
-	return add_query_arg( 'message', 10, (string) $location );
-}
-add_filter( 'redirect_post_location', 'spokares_draft_saved_message', 10, 2 );
 
 /**
  * The name box of an event or document shows the name as typed. Nobody holds
@@ -515,22 +568,15 @@ function spokares_admin_assets( $hook ): void {
 		return;
 	}
 	wp_enqueue_script( 'spokares-admin-forms', SPOKARES_CORE_URL . 'assets/js/admin-forms.js', array(), spokares_asset_version( 'assets/js/admin-forms.js' ), true );
+	// The shared config. Each area adds its own object (spokaresRota,
+	// spokaresNet, spokaresEvents, spokaresDocs) from its own file (§4.10).
 	wp_add_inline_script(
 		'spokares-admin-forms',
 		'window.spokaresAdmin = ' . wp_json_encode(
 			array(
 				'today'    => spokares_today(),
-				'notYet'   => __( 'Not yet published', 'spokares-core' ),
-				'open'     => __( 'Open', 'spokares-core' ),
-				'noCall'   => __( 'No call sign: not saved', 'spokares-core' ),
-				'confirm'  => __( 'Save these changes? They show on the site at once.', 'spokares-core' ),
-				/* translators: %d: a hub tile slot number (1-4). */
-				'nowSlot'  => __( '(now slot %d)', 'spokares-core' ),
-				'every'    => __( 'Every Tuesday', 'spokares-core' ),
 				'weekdays' => array( 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ),
-				/* translators: 1: a Tuesday, e.g. "Tue, Oct 6"; 2: what the rota shows, e.g. "K7ABC". */
-				'rowShows' => __( '%1$s shows %2$s on the site', 'spokares-core' ),
-				// The amateur bands Net details accepts (the preview mirrors the save).
+				// The amateur bands Net Settings accepts (the live check mirrors the save).
 				'bands'    => function_exists( 'spokares_amateur_bands' ) ? spokares_amateur_bands() : array(),
 			)
 		) . ';',

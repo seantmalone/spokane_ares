@@ -1,8 +1,9 @@
 <?php
 /**
- * Net rota (§3.4): one screen, one row per Tuesday. Saves only the rows that
- * changed, keeps someone else's newer edit, holds back a bad field without
- * losing what was typed, and can undo the last save.
+ * Net Control Schedule (ux/SPEC.md §3.2): one screen, one row per Tuesday.
+ * Saves only the rows that changed, keeps someone else's newer edit, holds
+ * back a bad field without losing what was typed, and can undo (and redo)
+ * the last save.
  *
  * @package spokares-core
  */
@@ -10,32 +11,22 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The Winlink form choices.
+ * The Winlink form choices. 'ICS-213' stays in the list so a stored
+ * 'ICS-213' is never "Other…"; the Form select shows it as the blank
+ * "ICS-213 (usual)" choice (§4.1).
  */
 function spokares_winlink_forms(): array {
 	return array( 'ICS-213', 'ICS-213RR', 'DYFI', 'Welfare Message / Quick Health & Welfare' );
 }
 
 /**
- * A comparable fingerprint of a rota row (missing row = Not posted yet).
+ * A comparable fingerprint of a schedule row (missing row = Not posted yet).
  *
  * @param array|null $row Row.
  */
 function spokares_rota_hash( ?array $row ): string {
 	$row = spokares_normalize_rota_row( $row ?? array() );
 	return md5( (string) wp_json_encode( array( $row['state'], $row['call'], $row['note'], $row['wl_task'], $row['wl_form'] ) ) );
-}
-
-/**
- * What the public sees for a row.
- *
- * @param array $row Row.
- */
-function spokares_rota_shows( array $row ): string {
-	if ( 'call' === $row['state'] && '' !== $row['call'] ) {
-		return $row['call'];
-	}
-	return 'open' === $row['state'] ? __( 'Open', 'spokares-core' ) : __( 'Not yet published', 'spokares-core' );
 }
 
 /**
@@ -54,7 +45,70 @@ function spokares_known_calls(): array {
 }
 
 /**
- * The Net rota screen.
+ * Tuesdays named in a sentence: "Oct 13", "Oct 13 and Oct 20", or for more
+ * than three "8 Tuesdays, Nov 10 – Dec 29". An item may carry words after
+ * its date ("Oct 13: NZ2S (names aren’t posted)"); with more than three,
+ * those follow the range.
+ *
+ * @param string[]             $dates Y-m-d dates.
+ * @param array<string,string> $after Date => words after it.
+ */
+function spokares_rota_dates_phrase( array $dates, array $after = array() ): string {
+	$dates = array_values( array_unique( array_filter( array_map( 'strval', $dates ), 'spokares_is_ymd' ) ) );
+	sort( $dates );
+	if ( ! $dates ) {
+		return '';
+	}
+	$item = static fn( string $d ): string => spokares_fmt_date( $d, 'day' ) . ( isset( $after[ $d ] ) ? ': ' . $after[ $d ] : '' );
+	if ( count( $dates ) <= 3 ) {
+		return spokares_and_list( array_map( $item, $dates ) );
+	}
+	$text = sprintf(
+		/* translators: 1: number of Tuesdays, 2: first date, 3: last date. */
+		__( '%1$d Tuesdays, %2$s – %3$s', 'spokares-core' ),
+		count( $dates ),
+		spokares_fmt_date( $dates[0], 'day' ),
+		spokares_fmt_date( $dates[ count( $dates ) - 1 ], 'day' )
+	);
+	foreach ( $dates as $d ) {
+		if ( isset( $after[ $d ] ) ) {
+			$text .= '; ' . $item( $d );
+		}
+	}
+	return $text;
+}
+
+/**
+ * The title line after a save or an undo: "Last saved {when} by {name}
+ * ({dates})" or "Undone {when} by {name} ({dates})".
+ *
+ * @param array $stamp spk_rota_saved: at, by, dates, undone.
+ */
+function spokares_rota_saved_line( array $stamp ): string {
+	$ts = empty( $stamp['at'] ) ? false : strtotime( (string) $stamp['at'] );
+	if ( ! $ts ) {
+		return '';
+	}
+	$when   = wp_date( 'D, M j, g:i A', $ts );
+	$who    = spokares_user_name( (int) ( $stamp['by'] ?? 0 ) );
+	$dates  = spokares_rota_dates_phrase( is_array( $stamp['dates'] ?? null ) ? $stamp['dates'] : array() );
+	$undone = ! empty( $stamp['undone'] );
+	if ( '' === $dates ) {
+		return $undone
+			/* translators: 1: date and time, 2: a person's name. */
+			? sprintf( __( 'Undone %1$s by %2$s', 'spokares-core' ), $when, $who )
+			/* translators: 1: date and time, 2: a person's name. */
+			: sprintf( __( 'Last saved %1$s by %2$s', 'spokares-core' ), $when, $who );
+	}
+	return $undone
+		/* translators: 1: date and time, 2: a person's name, 3: the Tuesdays it changed. */
+		? sprintf( __( 'Undone %1$s by %2$s (%3$s)', 'spokares-core' ), $when, $who, $dates )
+		/* translators: 1: date and time, 2: a person's name, 3: the Tuesdays it changed. */
+		: sprintf( __( 'Last saved %1$s by %2$s (%3$s)', 'spokares-core' ), $when, $who, $dates );
+}
+
+/**
+ * The Net Control Schedule screen.
  */
 function spokares_rota_page(): void {
 	if ( ! current_user_can( 'spokares_edit_rota' ) ) {
@@ -62,7 +116,7 @@ function spokares_rota_page(): void {
 	}
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- how many rows to show; read-only.
 	$weeks    = isset( $_GET['weeks'] ) ? max( 13, min( 52, absint( $_GET['weeks'] ) ) ) : 13;
-	$rows     = spokares_rota_rows( $weeks );
+	$rows     = spokares_rota_rows( 52 );
 	$retained = spokares_retained( 'spokares-rota' );
 	$held     = $retained['values'];
 	$errors   = $retained['errors'];
@@ -71,12 +125,35 @@ function spokares_rota_page(): void {
 	$saved    = get_option( 'spk_rota_saved', array() );
 	$prev     = get_option( 'spk_rota_prev', array() );
 	$forms    = spokares_winlink_forms();
+	$user     = get_current_user_id();
+	$changed  = get_transient( 'spokares_rota_changed_' . $user );
+	$changed  = is_array( $changed ) ? $changed : array();
+	delete_transient( 'spokares_rota_changed_' . $user );
+
+	// A row with a problem or unsaved typing is never hidden: show every row
+	// up to the last such row (in steps of 13, as "Show 13 more" does).
+	$flagged = array_merge( array_keys( $held ), array_map( static fn( $key ) => substr( (string) $key, 0, 10 ), array_keys( $errors ) ) );
+	foreach ( $rows as $i => $row ) {
+		if ( $i >= $weeks && in_array( $row['date'], $flagged, true ) ) {
+			$weeks = (int) min( 52, 13 * ceil( ( $i + 1 ) / 13 ) );
+		}
+	}
+	$saved_line = is_array( $saved ) ? spokares_rota_saved_line( $saved ) : '';
+	$undo       = is_array( $prev ) && ! empty( $prev['rows'] );
 	?>
 	<div class="wrap spk-screen spk-rota">
-		<h1 class="wp-heading-inline"><?php esc_html_e( 'Net rota', 'spokares-core' ); ?></h1>
+		<h1 class="wp-heading-inline"><?php echo esc_html( spokares_screen_title( 'rota' ) ); ?></h1>
 		<a class="page-title-action" href="<?php echo esc_url( spokares_site_url( '/members/', 'rota' ) ); ?>"><?php esc_html_e( 'View on site', 'spokares-core' ); ?></a>
-		<?php if ( is_array( $saved ) && $saved ) : ?>
-			<span class="spk-saved"><?php echo esc_html( spokares_saved_line( $saved ) ); ?></span>
+		<?php if ( '' !== $saved_line ) : ?>
+			<span class="spk-saved">
+				<?php
+				echo esc_html( $saved_line );
+				if ( $undo ) {
+					// Undo (or Redo, after an undo) submits the undo form below.
+					echo ' · <button type="submit" form="spk-rota-undo" class="button-link spk-undo">' . ( empty( $prev['undo'] ) ? esc_html__( 'Undo', 'spokares-core' ) : esc_html__( 'Redo', 'spokares-core' ) ) . '</button>';
+				}
+				?>
+			</span>
 		<?php endif; ?>
 		<hr class="wp-header-end">
 		<p class="spk-lede">
@@ -92,10 +169,10 @@ function spokares_rota_page(): void {
 			?>
 		</p>
 		<?php if ( ! current_user_can( 'spokares_edit_net_details' ) ) : ?>
-			<p class="description spk-ask"><?php esc_html_e( 'Repeater details, the net time and the Winlink, simplex and GMRS weeks are on Net details: ask the webmaster (webmaster@spokares.org).', 'spokares-core' ); ?></p>
+			<p class="description spk-ask"><?php esc_html_e( 'Repeater and net times: ask the webmaster.', 'spokares-core' ); ?></p>
 		<?php endif; ?>
 
-		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="spk-rota-form">
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="spk-rota-form" data-spk-guard<?php echo $held ? ' data-spk-dirty' : ''; ?>>
 			<input type="hidden" name="action" value="spokares_save_rota">
 			<input type="hidden" name="weeks" value="<?php echo esc_attr( (string) $weeks ); ?>">
 			<?php wp_nonce_field( 'spokares_save_rota' ); ?>
@@ -104,7 +181,6 @@ function spokares_rota_page(): void {
 					<tr>
 						<th scope="col"><?php esc_html_e( 'Tuesday', 'spokares-core' ); ?></th>
 						<th scope="col"><?php esc_html_e( 'Net control', 'spokares-core' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Shows', 'spokares-core' ); ?></th>
 						<th scope="col"><?php esc_html_e( 'Winlink assignment', 'spokares-core' ); ?></th>
 						<th scope="col"><?php esc_html_e( 'Form', 'spokares-core' ); ?></th>
 						<th scope="col"><?php esc_html_e( 'Note', 'spokares-core' ); ?></th>
@@ -112,7 +188,7 @@ function spokares_rota_page(): void {
 				</thead>
 				<tbody>
 				<?php
-				foreach ( $rows as $row ) :
+				foreach ( $rows as $i => $row ) :
 					$d       = $row['date'];
 					$name    = 'rota[' . $d . ']';
 					$stored  = array(
@@ -126,31 +202,36 @@ function spokares_rota_page(): void {
 					$label   = spokares_fmt_date( $d, 'short' );
 					$winlink = 'winlink' === $row['kind'] || '' !== $v['wl_task'];
 					$other   = '' !== $v['wl_form'] && ! in_array( $v['wl_form'], $forms, true );
+					$usual   = '' === $v['wl_form'] || 'ICS-213' === $v['wl_form'];
 					$row_err = isset( $errors[ "$d-call" ] ) || isset( $errors[ "$d-row" ] );
+					$classes = 'spk-rota-row' . ( $row_err ? ' spk-row-error' : '' ) . ( in_array( $d, $changed, true ) ? ' spk-row-changed' : '' );
 					?>
-					<tr class="spk-rota-row<?php echo $row_err ? ' spk-row-error' : ''; ?>" data-date="<?php echo esc_attr( $d ); ?>" data-day="<?php echo esc_attr( $label ); ?>">
+					<tr class="<?php echo esc_attr( $classes ); ?>" data-date="<?php echo esc_attr( $d ); ?>" data-day="<?php echo esc_attr( $label ); ?>"<?php echo $i >= $weeks ? ' hidden' : ''; ?>>
 						<th scope="row">
-							<?php echo esc_html( $label ); ?>
+							<span class="spk-day"><?php echo esc_html( $label ); ?></span>
 							<?php if ( '' !== $row['note'] ) : ?>
 								<span class="spk-kind"><?php echo esc_html( $row['note'] ); ?></span>
 							<?php endif; ?>
 							<input type="hidden" name="<?php echo esc_attr( $name ); ?>[h]" value="<?php echo esc_attr( spokares_rota_hash( $stored ) ); ?>">
 						</th>
-						<td class="spk-nc" data-label="<?php esc_attr_e( 'Net control', 'spokares-core' ); ?>">
+						<td class="spk-nc">
 							<fieldset>
 								<legend class="screen-reader-text"><?php echo esc_html( sprintf( /* translators: %s: date. */ __( 'Net control on %s', 'spokares-core' ), $label ) ); ?></legend>
-								<label class="spk-choice"><input type="radio" name="<?php echo esc_attr( $name ); ?>[state]" value="call" <?php checked( 'call', $v['state'] ); ?>> <?php esc_html_e( 'Call sign', 'spokares-core' ); ?></label>
-								<input type="text" class="spk-call<?php echo esc_attr( spokares_err_class( $errors, "$d-call" ) ); ?>" name="<?php echo esc_attr( $name ); ?>[call]" value="<?php echo esc_attr( $v['call'] ); ?>" list="spk-calls" maxlength="40" autocomplete="off" spellcheck="false" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: date. */ __( 'Call sign for %s', 'spokares-core' ), $label ) ); ?>">
-								<label class="spk-choice"><input type="radio" name="<?php echo esc_attr( $name ); ?>[state]" value="open" <?php checked( 'open', $v['state'] ); ?>> <?php esc_html_e( 'Open', 'spokares-core' ); ?></label>
+								<label class="spk-choice spk-choice-call"><input type="radio" name="<?php echo esc_attr( $name ); ?>[state]" value="call" <?php checked( 'call', $v['state'] ); ?>><span class="screen-reader-text"><?php esc_html_e( 'Call sign', 'spokares-core' ); ?></span></label>
+								<input type="text" class="spk-call<?php echo esc_attr( spokares_err_class( $errors, "$d-call" ) ); ?>" name="<?php echo esc_attr( $name ); ?>[call]" value="<?php echo esc_attr( $v['call'] ); ?>" placeholder="<?php esc_attr_e( 'Call sign', 'spokares-core' ); ?>" list="spk-calls" maxlength="40" autocomplete="off" spellcheck="false" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: date. */ __( 'Call sign for %s', 'spokares-core' ), $label ) ); ?>">
+								<label class="spk-choice"><input type="radio" name="<?php echo esc_attr( $name ); ?>[state]" value="open" <?php checked( 'open', $v['state'] ); ?>> <?php esc_html_e( 'Volunteer needed', 'spokares-core' ); ?></label>
+								<label class="spk-choice"><input type="radio" name="<?php echo esc_attr( $name ); ?>[state]" value="none" <?php checked( 'none', $v['state'] ); ?>> <?php esc_html_e( 'No net', 'spokares-core' ); ?></label>
 								<label class="spk-choice"><input type="radio" name="<?php echo esc_attr( $name ); ?>[state]" value="tbd" <?php checked( 'tbd', $v['state'] ); ?>> <?php esc_html_e( 'Not posted yet', 'spokares-core' ); ?></label>
 							</fieldset>
-							<?php spokares_err_text( $errors, "$d-call" ); ?>
+							<?php if ( isset( $errors[ "$d-call" ] ) ) : ?>
+								<?php // The script hides this line once the box holds a call sign (the same sentence as its live check). ?>
+								<span class="spk-error-text spk-call-check"><?php echo esc_html( $errors[ "$d-call" ] ); ?></span>
+							<?php endif; ?>
 							<?php spokares_err_text( $errors, "$d-row" ); ?>
 						</td>
-						<td class="spk-shows" data-label="<?php esc_attr_e( 'Shows on the site', 'spokares-core' ); ?>"><?php echo esc_html( spokares_rota_shows( spokares_normalize_rota_row( $stored ) ) ); ?></td>
 						<td class="spk-wl" data-label="<?php echo $winlink ? esc_attr__( 'Winlink assignment', 'spokares-core' ) : ''; ?>">
 							<?php if ( $winlink ) : ?>
-								<input type="text" class="spk-wl-task<?php echo esc_attr( spokares_err_class( $errors, "$d-wl_task" ) ); ?>" name="<?php echo esc_attr( $name ); ?>[wl_task]" value="<?php echo esc_attr( $v['wl_task'] ); ?>" maxlength="120" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: date. */ __( 'Winlink assignment for %s', 'spokares-core' ), $label ) ); ?>">
+								<textarea class="spk-wl-task<?php echo esc_attr( spokares_err_class( $errors, "$d-wl_task" ) ); ?>" name="<?php echo esc_attr( $name ); ?>[wl_task]" rows="2" maxlength="120" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: date. */ __( 'Winlink assignment for %s', 'spokares-core' ), $label ) ); ?>"><?php echo esc_textarea( $v['wl_task'] ); ?></textarea>
 								<?php spokares_err_text( $errors, "$d-wl_task" ); ?>
 								<?php spokares_rota_confirm( $errors, $d, 'wl_task', $name ); ?>
 							<?php endif; ?>
@@ -158,9 +239,11 @@ function spokares_rota_page(): void {
 						<td class="spk-wl-form" data-label="<?php echo $winlink ? esc_attr__( 'Form', 'spokares-core' ) : ''; ?>">
 							<?php if ( $winlink ) : ?>
 								<select name="<?php echo esc_attr( $name ); ?>[wl_form]" class="spk-form-select" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: date. */ __( 'Winlink form for %s', 'spokares-core' ), $label ) ); ?>">
-									<option value=""><?php esc_html_e( '— none —', 'spokares-core' ); ?></option>
+									<option value="" <?php selected( $usual ); ?>><?php esc_html_e( 'ICS-213 (usual)', 'spokares-core' ); ?></option>
 									<?php foreach ( $forms as $f ) : ?>
-										<option value="<?php echo esc_attr( $f ); ?>" <?php selected( $f, $v['wl_form'] ); ?>><?php echo esc_html( $f ); ?></option>
+										<?php if ( 'ICS-213' !== $f ) : ?>
+											<option value="<?php echo esc_attr( $f ); ?>" <?php selected( $f, $v['wl_form'] ); ?>><?php echo esc_html( $f ); ?></option>
+										<?php endif; ?>
 									<?php endforeach; ?>
 									<option value="__other" <?php selected( $other ); ?>><?php esc_html_e( 'Other…', 'spokares-core' ); ?></option>
 								</select>
@@ -177,42 +260,21 @@ function spokares_rota_page(): void {
 				<?php endforeach; ?>
 				</tbody>
 			</table>
-			<?php // One quiet status line for screen readers (admin-forms.js), instead of a live region in every Shows cell. ?>
-			<p class="screen-reader-text" id="spk-rota-status" role="status"></p>
 			<datalist id="spk-calls">
 				<?php foreach ( spokares_known_calls() as $call ) : ?>
 					<option value="<?php echo esc_attr( $call ); ?>"></option>
 				<?php endforeach; ?>
 			</datalist>
 			<p class="spk-rota-more">
-				<?php
-				/* translators: %d: number of Tuesdays. */
-				echo esc_html( sprintf( __( 'Showing %d Tuesdays from this week.', 'spokares-core' ), $weeks ) );
-				if ( $weeks < 52 ) {
-					// Only "Show 13 more" is the link, and only below the 52-week cap.
-					echo ' <a href="' . esc_url( add_query_arg( 'weeks', min( 52, $weeks + 13 ), admin_url( 'admin.php?page=spokares-rota' ) ) ) . '">' . esc_html__( 'Show 13 more', 'spokares-core' ) . '</a>';
-				} else {
-					echo ' ' . esc_html__( 'That is as far ahead as the rota goes.', 'spokares-core' );
-				}
-				?>
-			</p>
-			<p class="submit spk-submit">
-				<?php if ( is_array( $prev ) && ! empty( $prev['rows'] ) ) : ?>
-					<button type="submit" form="spk-rota-undo" class="button">
-						<?php
-						$prev_who  = spokares_user_name( (int) ( $prev['by'] ?? 0 ) );
-						$prev_when = wp_date( 'D, M j, g:i A', (int) strtotime( (string) ( $prev['at'] ?? '' ) ) );
-						echo esc_html(
-							empty( $prev['undo'] )
-								/* translators: 1: a person's name, 2: date and time. */
-								? sprintf( __( 'Undo last save (%1$s, %2$s)', 'spokares-core' ), $prev_who, $prev_when )
-								/* translators: 1: a person's name, 2: date and time of their undo. */
-								: sprintf( __( 'Put back what was undone (%1$s undid it, %2$s)', 'spokares-core' ), $prev_who, $prev_when )
-						);
-						?>
-					</button>
+				<?php if ( $weeks < 52 ) : ?>
+					<?php // Without the script, the link opens the screen with 13 more rows; the script shows them in place. ?>
+					<a class="spk-more-link" href="<?php echo esc_url( add_query_arg( 'weeks', min( 52, $weeks + 13 ), admin_url( 'admin.php?page=spokares-rota' ) ) ); ?>"><?php esc_html_e( 'Show 13 more Tuesdays', 'spokares-core' ); ?></a>
+				<?php else : ?>
+					<?php esc_html_e( 'That’s as far ahead as you can post.', 'spokares-core' ); ?>
 				<?php endif; ?>
-				<button type="submit" class="button button-primary button-large"><?php esc_html_e( 'Save rota', 'spokares-core' ); ?></button>
+			</p>
+			<p class="submit spk-submit spk-savebar">
+				<button type="submit" class="button button-primary button-large"><?php esc_html_e( 'Save', 'spokares-core' ); ?></button>
 			</p>
 		</form>
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="spk-rota-undo">
@@ -225,8 +287,30 @@ function spokares_rota_page(): void {
 }
 
 /**
- * The "Publish it" tick beside a rota field that holds a phone number or
- * e-mail address.
+ * The screen's words for admin-forms.js (window.spokaresRota).
+ *
+ * @param string $hook Screen hook.
+ */
+function spokares_rota_script_words( $hook ): void {
+	if ( ! str_ends_with( (string) $hook, '_page_spokares-rota' ) || ! wp_script_is( 'spokares-admin-forms', 'enqueued' ) ) {
+		return;
+	}
+	wp_add_inline_script(
+		'spokares-admin-forms',
+		'window.spokaresRota = ' . wp_json_encode(
+			array(
+				'noCall' => __( 'Type a call sign, like NZ2S, not a name.', 'spokares-core' ),
+				'end'    => __( 'That’s as far ahead as you can post.', 'spokares-core' ),
+			)
+		) . ';',
+		'before'
+	);
+}
+add_action( 'admin_enqueue_scripts', 'spokares_rota_script_words', 20 );
+
+/**
+ * The "Publish it" tick beside a schedule field that holds a phone number
+ * or e-mail address.
  *
  * @param array  $errors Errors.
  * @param string $d      Date.
@@ -247,7 +331,24 @@ function spokares_rota_confirm( array $errors, string $d, string $field, string 
 }
 
 /**
- * Save the rota: changed rows only.
+ * The Tuesdays a set of problems is about (their field keys start with the
+ * date), leaving out the "Publish it" ticks.
+ *
+ * @param array $errors Field key => sentence.
+ * @return string[] Dates.
+ */
+function spokares_rota_error_dates( array $errors ): array {
+	$dates = array();
+	foreach ( array_keys( $errors ) as $key ) {
+		if ( ! str_ends_with( (string) $key, '-confirm' ) ) {
+			$dates[] = substr( (string) $key, 0, 10 );
+		}
+	}
+	return array_values( array_unique( $dates ) );
+}
+
+/**
+ * Save the schedule: changed rows only, then one notice.
  */
 function spokares_handle_save_rota(): void {
 	spokares_verify_form( 'spokares_save_rota', 'spokares_edit_rota' );
@@ -255,30 +356,33 @@ function spokares_handle_save_rota(): void {
 	// then reads the rows fresh, so the per-row conflict check sees both.
 	spokares_lock_option( 'spk_rota', array( 'spk_rota_saved', 'spk_rota_prev' ) );
 
-	$weeks  = isset( $_POST['weeks'] ) ? absint( $_POST['weeks'] ) : 13;
+	$weeks  = isset( $_POST['weeks'] ) ? max( 13, min( 52, absint( $_POST['weeks'] ) ) ) : 13;
 	$posted = isset( $_POST['rota'] ) && is_array( $_POST['rota'] ) ? wp_unslash( $_POST['rota'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- each field is sanitised below.
 	$stored = spokares_opt( 'spk_rota' );
 	$saver  = get_option( 'spk_rota_saved', array() );
 	$prev   = array();
 	$held   = array();
 	$errors = array();
-	$notes  = array();
-	$forms  = spokares_winlink_forms();
+	$cut    = array();
 
 	foreach ( $posted as $ymd => $p ) {
 		$ymd = (string) $ymd;
 		if ( ! spokares_is_ymd( $ymd ) || 2 !== spokares_weekday( $ymd ) || ! is_array( $p ) ) {
 			continue;
 		}
-		$label   = spokares_fmt_date( $ymd, 'short-noyear' );
 		$orig    = sanitize_text_field( spokares_post_str( $p, 'h' ) );
 		$cur     = $stored[ $ymd ] ?? null;
 		$state   = spokares_post_str( $p, 'state' );
-		$state   = in_array( $state, array( 'call', 'open', 'tbd' ), true ) ? $state : 'tbd';
+		$state   = in_array( $state, array( 'call', 'open', 'none', 'tbd' ), true ) ? $state : 'tbd';
 		$typed   = sanitize_text_field( spokares_post_str( $p, 'call' ) );
 		$wl_form = sanitize_text_field( spokares_post_str( $p, 'wl_form' ) );
 		if ( '__other' === $wl_form ) {
 			$wl_form = sanitize_text_field( spokares_post_str( $p, 'wl_form_other' ) );
+		}
+		// "ICS-213 (usual)" is the blank choice. A row stored as 'ICS-213'
+		// shows it, so a blank from that row is the stored value, unchanged.
+		if ( '' === $wl_form && 'ICS-213' === ( $cur['wl_form'] ?? '' ) ) {
+			$wl_form = 'ICS-213';
 		}
 		$typed_row = array(
 			'state'   => $state,
@@ -297,12 +401,8 @@ function spokares_handle_save_rota(): void {
 			} else {
 				$cs = spokares_call_sign( $typed );
 				if ( '' === $cs['call'] ) {
-					$errors[ "$ymd-call" ] = sprintf(
-						/* translators: %s: date. */
-						__( '%s not saved: call sign only, no names.', 'spokares-core' ),
-						$label
-					);
-					$held[ $ymd ] = $typed_row;
+					$errors[ "$ymd-call" ] = __( 'Type a call sign, like NZ2S, not a name.', 'spokares-core' );
+					$held[ $ymd ]          = $typed_row;
 					continue;
 				}
 				$call    = $cs['call'];
@@ -322,9 +422,8 @@ function spokares_handle_save_rota(): void {
 		}
 		if ( ! hash_equals( $orig, spokares_rota_hash( $cur ) ) ) {
 			$errors[ "$ymd-row" ] = sprintf(
-				/* translators: 1: date, 2: a person's name. */
-				__( '%1$s was changed by %2$s while you were editing. Your entry wasn’t saved.', 'spokares-core' ),
-				$label,
+				/* translators: %s: a person's name. */
+				__( '%s changed this Tuesday while you were editing. Your entry wasn’t saved.', 'spokares-core' ),
 				spokares_user_name( (int) ( $saver['by'] ?? 0 ) )
 			);
 			$held[ $ymd ] = $typed_row;
@@ -341,14 +440,10 @@ function spokares_handle_save_rota(): void {
 		) as $field => $max ) {
 			// The form's maxlength, checked again (a request can skip it).
 			if ( spokares_too_long( $cand[ $field ], $max ) ) {
-				$errors[ "$ymd-$field" ] = sprintf(
-					/* translators: 1: date, 2: number of characters. */
-					__( '%1$s: this wasn’t saved because it is longer than %2$d characters.', 'spokares-core' ),
-					$label,
-					$max
-				);
-				$held[ $ymd ][ $field ] = $cand[ $field ];
-				$cand[ $field ]         = (string) ( $cur[ $field ] ?? '' );
+				/* translators: %d: number of characters. */
+				$errors[ "$ymd-$field" ] = sprintf( __( 'Keep it to %d characters.', 'spokares-core' ), $max );
+				$held[ $ymd ][ $field ]  = $cand[ $field ];
+				$cand[ $field ]          = (string) ( $cur[ $field ] ?? '' );
 			}
 		}
 		foreach ( array( 'note', 'wl_task' ) as $field ) {
@@ -357,13 +452,7 @@ function spokares_handle_save_rota(): void {
 			}
 			$check = spokares_check_field( $cand[ $field ], $field, $confirmed, ! empty( $p[ 'confirm_' . $field ] ) );
 			if ( $check['block'] || $check['confirm'] ) {
-				$what                    = $check['block'] ? $check['block'] : wp_list_pluck( $check['confirm'], 'what' );
-				$errors[ "$ymd-$field" ] = sprintf(
-					/* translators: 1: date, 2: what was found. */
-					__( '%1$s: this wasn’t saved because it mentions %2$s.', 'spokares-core' ),
-					$label,
-					spokares_and_list( $what )
-				);
+				$errors[ "$ymd-$field" ] = spokares_problem_sentence( $check );
 				if ( ! $check['block'] ) {
 					$errors[ "$ymd-$field-confirm" ] = spokares_confirm_label( $check['confirm'] );
 				}
@@ -381,6 +470,8 @@ function spokares_handle_save_rota(): void {
 		}
 
 		$prev[ $ymd ] = $cur;
+		// A Not posted yet row with nothing in it is no row at all. A No net
+		// row is kept, even empty: it is posted.
 		if ( 'tbd' === $cand['state'] && '' === $cand['note'] && '' === $cand['wl_task'] && '' === $cand['wl_form'] ) {
 			unset( $stored[ $ymd ] );
 		} else {
@@ -390,15 +481,12 @@ function spokares_handle_save_rota(): void {
 			$stored[ $ymd ] = $cand;
 		}
 		if ( $dropped ) {
-			$notes[] = sprintf(
-				/* translators: 1: date, 2: call sign. */
-				__( '%1$s: saved %2$s only. One call sign per Tuesday; names are never stored.', 'spokares-core' ),
-				$label,
-				$call
-			);
+			/* translators: %s: call sign. */
+			$cut[ $ymd ] = sprintf( __( '%s (names aren’t posted)', 'spokares-core' ), $call );
 		}
 	}
 
+	$saved = array_keys( $prev );
 	if ( $prev ) {
 		// Prune rows more than a year old.
 		$cutoff = spokares_add_days( spokares_today(), -365 );
@@ -410,28 +498,44 @@ function spokares_handle_save_rota(): void {
 		$stamp = spokares_stamp();
 		update_option( 'spk_rota', $stored );
 		update_option( 'spk_rota_prev', array_merge( $stamp, array( 'rows' => $prev ) ), false );
-		update_option( 'spk_rota_saved', $stamp, false );
+		update_option( 'spk_rota_saved', array_merge( $stamp, array( 'dates' => $saved ) ), false );
+		set_transient( 'spokares_rota_changed_' . get_current_user_id(), $saved, 5 * MINUTE_IN_SECONDS );
 		spokares_purge_cache();
-		spokares_add_notice(
-			'success',
-			sprintf(
-				/* translators: %d: number of Tuesdays. */
-				_n( 'Saved %d Tuesday.', 'Saved %d Tuesdays.', count( $prev ), 'spokares-core' ),
-				count( $prev )
-			),
-			spokares_site_url( '/members/', 'rota' ),
-			__( 'See it on For members', 'spokares-core' )
+	}
+
+	// One notice for the whole save.
+	$bad  = spokares_rota_error_dates( $errors );
+	$link = spokares_site_url( '/members/', 'rota' );
+	$see  = __( 'See it on the For members page', 'spokares-core' );
+	if ( $saved && ! $bad ) {
+		$rows  = spokares_rota_rows( 5 );
+		$fifth = (string) end( $rows )['date'];
+		$text  = sprintf(
+			/* translators: %s: the Tuesdays saved, e.g. "Oct 13 and Oct 20". */
+			__( 'Saved %s.', 'spokares-core' ),
+			spokares_rota_dates_phrase( $saved, $cut )
 		);
-	} elseif ( ! $errors ) {
-		spokares_add_notice( 'info', __( 'Nothing changed, so nothing was saved.', 'spokares-core' ) );
-	}
-	foreach ( $notes as $note ) {
-		spokares_add_notice( 'warning', $note );
-	}
-	foreach ( $errors as $key => $message ) {
-		if ( ! str_ends_with( (string) $key, '-confirm' ) ) {
-			spokares_add_notice( 'error', $message );
+		if ( max( $saved ) > $fifth ) {
+			$text .= ' ' . __( 'The For members page lists the next five Tuesdays.', 'spokares-core' );
 		}
+		spokares_add_notice( 'success', $text, $link, $see );
+	} elseif ( $saved ) {
+		spokares_add_notice(
+			'warning',
+			sprintf(
+				/* translators: 1: the Tuesdays saved, 2: the Tuesdays not saved. */
+				__( 'Saved %1$s. Not saved: %2$s (outlined in red).', 'spokares-core' ),
+				spokares_rota_dates_phrase( $saved, $cut ),
+				spokares_rota_dates_phrase( $bad )
+			),
+			$link,
+			$see
+		);
+	} elseif ( $bad ) {
+		/* translators: %s: the Tuesdays not saved. */
+		spokares_add_notice( 'error', sprintf( __( 'Not saved: %s (outlined in red).', 'spokares-core' ), spokares_rota_dates_phrase( $bad ) ) );
+	} else {
+		spokares_add_notice( 'info', __( 'Nothing changed, so nothing was saved.', 'spokares-core' ) );
 	}
 	if ( $held || $errors ) {
 		spokares_retain( 'spokares-rota', $held, $errors );
@@ -441,16 +545,18 @@ function spokares_handle_save_rota(): void {
 add_action( 'admin_post_spokares_save_rota', 'spokares_handle_save_rota' );
 
 /**
- * Undo the last save: put back the rows it changed (whoever made it).
+ * Undo the last save: put back the rows it changed (whoever made it). Undo
+ * again after an undo is Redo: it puts the saved rows back.
  */
 function spokares_handle_undo_rota(): void {
 	spokares_verify_form( 'spokares_undo_rota', 'spokares_edit_rota' );
 	spokares_lock_option( 'spk_rota', array( 'spk_rota_saved', 'spk_rota_prev' ) );
-	$weeks = isset( $_POST['weeks'] ) ? absint( $_POST['weeks'] ) : 13;
+	$weeks = isset( $_POST['weeks'] ) ? max( 13, min( 52, absint( $_POST['weeks'] ) ) ) : 13;
+	$args  = $weeks > 13 ? array( 'weeks' => $weeks ) : array();
 	$prev  = get_option( 'spk_rota_prev', array() );
 	if ( ! is_array( $prev ) || empty( $prev['rows'] ) || ! is_array( $prev['rows'] ) ) {
 		spokares_add_notice( 'info', __( 'There is nothing to undo.', 'spokares-core' ) );
-		spokares_redirect_to( 'spokares-rota' );
+		spokares_redirect_to( 'spokares-rota', $args );
 	}
 	$stored = spokares_opt( 'spk_rota' );
 	$redo   = array();
@@ -466,35 +572,52 @@ function spokares_handle_undo_rota(): void {
 			unset( $stored[ $ymd ] );
 		}
 	}
-	$stamp = spokares_stamp();
+	$undoing = empty( $prev['undo'] );
+	$dates   = array_keys( $redo );
+	$stamp   = spokares_stamp();
 	update_option( 'spk_rota', $stored );
-	// The next "undo" puts back what this one took away: flag it, so its
-	// button and notice say so instead of "Undo last save".
+	// What this took away, flagged as an undo so the title line offers Redo
+	// (and a Redo's rows go back to offering Undo).
 	update_option(
 		'spk_rota_prev',
 		array_merge(
 			$stamp,
 			array(
 				'rows' => $redo,
-				'undo' => empty( $prev['undo'] ),
+				'undo' => $undoing,
 			)
 		),
 		false
 	);
-	update_option( 'spk_rota_saved', $stamp, false );
-	spokares_purge_cache();
-	$who  = spokares_user_name( (int) ( $prev['by'] ?? 0 ) );
-	$when = wp_date( 'D, M j, g:i A', (int) strtotime( (string) ( $prev['at'] ?? '' ) ) );
-	spokares_add_notice(
-		'success',
-		empty( $prev['undo'] )
-			/* translators: 1: a person's name, 2: date and time of their save. */
-			? sprintf( __( 'Undone: %1$s’s save of %2$s. The Tuesdays it changed are back as they were.', 'spokares-core' ), $who, $when )
-			/* translators: 1: a person's name, 2: date and time of their undo. */
-			: sprintf( __( 'Put back: the Tuesdays %1$s undid on %2$s.', 'spokares-core' ), $who, $when ),
-		spokares_site_url( '/members/', 'rota' ),
-		__( 'See it on For members', 'spokares-core' )
+	update_option(
+		'spk_rota_saved',
+		array_merge(
+			$stamp,
+			array(
+				'dates'  => $dates,
+				'undone' => $undoing,
+			)
+		),
+		false
 	);
-	spokares_redirect_to( 'spokares-rota', $weeks > 13 ? array( 'weeks' => $weeks ) : array() );
+	set_transient( 'spokares_rota_changed_' . get_current_user_id(), $dates, 5 * MINUTE_IN_SECONDS );
+	spokares_purge_cache();
+	$phrase = spokares_rota_dates_phrase( $dates );
+	$one    = 1 === count( $dates );
+	if ( $undoing ) {
+		$text = $one
+			/* translators: %s: a Tuesday, e.g. "Oct 13". */
+			? sprintf( __( 'Undone: %s is back as it was.', 'spokares-core' ), $phrase )
+			/* translators: %s: the Tuesdays, e.g. "Oct 13 and Oct 20". */
+			: sprintf( __( 'Undone: %s are back as they were.', 'spokares-core' ), $phrase );
+	} else {
+		$text = $one
+			/* translators: %s: a Tuesday, e.g. "Oct 13". */
+			? sprintf( __( 'Redone: %s is back as it was saved.', 'spokares-core' ), $phrase )
+			/* translators: %s: the Tuesdays, e.g. "Oct 13 and Oct 20". */
+			: sprintf( __( 'Redone: %s are back as they were saved.', 'spokares-core' ), $phrase );
+	}
+	spokares_add_notice( 'success', $text, spokares_site_url( '/members/', 'rota' ), __( 'See it on the For members page', 'spokares-core' ) );
+	spokares_redirect_to( 'spokares-rota', $args );
 }
 add_action( 'admin_post_spokares_undo_rota', 'spokares_handle_undo_rota' );

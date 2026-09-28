@@ -14,7 +14,7 @@
 //                     1024: table 885px in an 822px wrap, page 1067px
 //                     (Note inputs clipped). It fits at 1100 and up.
 //
-// On a phone, Tab to "Words for slot 1" or a meeting Note moves focus to a
+// On a phone, Tab to "Words for slot 1" (now "Words on button 1") or a meeting Note moves focus to a
 // field far off the right edge, so the page pans sideways and the row's
 // heading and slot disappear (WCAG 1.4.10 Reflow; 720px is 1440px at 200%
 // zoom).
@@ -28,12 +28,12 @@
 
 const SCREENS = {
   'Hub tiles': { path: '/wp-admin/edit.php?post_type=spk_document&page=spokares-tiles', table: '.spk-tiles-table' },
-  'Regular meetings': { path: '/wp-admin/edit.php?post_type=spk_event&page=spokares-meetings', table: '.spk-meetings-table' },
+  'Regular meetings': { path: '/wp-admin/admin.php?page=spokares-meetings', table: '.spk-meetings-table' },
   'Net rota': { path: '/wp-admin/admin.php?page=spokares-rota', table: '.spk-rota-table' },
 };
 
 // 390 = a phone, 720 = 1440 at 200% zoom (both under WordPress's 782px
-// breakpoint), 783 = just above it (admin menu folded), 1024 = a small
+// breakpoint), 783 = just above it (admin menu open: editors keep its labels, UX spec §2), 1024 = a small
 // laptop or a tablet on its side (admin menu open).
 const WIDTHS = [
   { width: 390, height: 844, mobile: true },
@@ -192,7 +192,7 @@ export const tests = [
     },
   },
   {
-    name: 'ares-editor (phone): Tab to "Words for slot 1" and to a meeting Note keeps the field on screen without panning',
+    name: 'ares-editor (phone): Tab to "Words on button 1" and to a meeting Note keeps the field on screen without panning',
     role: 'ares-editor',
     viewport: 'phone',
     async run(t) {
@@ -204,7 +204,7 @@ export const tests = [
 
       await t.goto(SCREENS['Hub tiles'].path);
       await t.expectStatus(200);
-      check('Hub tiles', await tabTo(t, '.spk-tiles-table input[aria-label="Words for slot 1"]'));
+      check('Hub tiles', await tabTo(t, '.spk-tiles-table input[aria-label="Words on button 1"]'));
 
       await t.goto(SCREENS['Regular meetings'].path);
       await t.expectStatus(200);

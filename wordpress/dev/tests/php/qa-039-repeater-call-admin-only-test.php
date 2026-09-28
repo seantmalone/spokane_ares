@@ -41,6 +41,32 @@ function qa039_call_tag( string $html ): string {
 }
 
 /**
+ * The repeater call sign as a user with only the grant sees it: plain text,
+ * not a box (#spk-p-call is a span).
+ *
+ * @param string $html Screen HTML.
+ */
+function qa039_call_text( string $html ): string {
+	if ( ! preg_match( '#<span\b[^>]*\bid="spk-p-call"[^>]*>(.*?)</span>#s', $html, $m ) ) {
+		fail( 'the Net Settings screen shows no repeater call sign text (#spk-p-call)' );
+	}
+	return trim( html_entity_decode( wp_strip_all_tags( $m[1] ), ENT_QUOTES, 'UTF-8' ) );
+}
+
+/**
+ * The "Members see" lines of the Net Settings screen, as one text.
+ *
+ * @param string $html Screen HTML.
+ */
+function qa039_members_see( string $html ): string {
+	preg_match_all( '#<(td|li)\b[^>]*\bdata-preview="[^"]*"[^>]*>(.*?)</\1>#s', $html, $m );
+	if ( ! $m[2] ) {
+		fail( 'the Net Settings screen has no "Members see" lines ([data-preview])' );
+	}
+	return implode( ' ', array_map( 'wp_strip_all_tags', $m[2] ) );
+}
+
+/**
  * One attribute of a tag, decoded (null when absent).
  *
  * @param string $tag  The tag.
@@ -139,32 +165,21 @@ test(
 );
 
 test(
-	'Net details shows the repeater call sign read-only to a user with only the grant',
+	'Net Settings shows the repeater call sign as plain text to a user with only the grant',
 	function () {
 		as_role( 'ares-net' );
-		$tag = qa039_call_tag( qa039_screen() );
-		assert_same( 'W7GBU', qa039_attr( $tag, 'value' ), 'the box shows the stored call sign' );
-		assert_true( null !== qa039_attr( $tag, 'readonly' ), 'the call-sign box is editable for qa-ares-net: ' . $tag );
-		assert_true( 'radio[primary][call]' !== qa039_attr( $tag, 'name' ), 'the read-only box is still posted with the save: ' . $tag );
+		$html = qa039_screen();
+		assert_contains( 'W7GBU', qa039_call_text( $html ), 'the text shows the stored call sign' );
+		assert_false( (bool) preg_match( '/<input\b[^>]*\bid="spk-p-call"/', $html ), 'a call-sign box is drawn for qa-ares-net' );
+		assert_false( (bool) preg_match( '/\bname="radio\[primary\]\[call\]"/', $html ), 'the call sign is posted with qa-ares-net\'s save' );
 	}
 );
 
 test(
-	'Net details says why the call sign is read-only, tied to the box',
+	'Net Settings says who changes the call sign, next to it',
 	function () {
 		as_role( 'ares-net' );
-		$html = qa039_screen();
-		$tag  = qa039_call_tag( $html );
-		$by   = (string) qa039_attr( $tag, 'aria-describedby' );
-		assert_true( '' !== $by, 'the read-only box has no aria-describedby: ' . $tag );
-		$ids   = preg_split( '/\s+/', trim( $by ) );
-		$found = '';
-		foreach ( $ids as $id ) {
-			if ( preg_match( '/<[^>]*\bid="' . preg_quote( $id, '/' ) . '"[^>]*>(.*?)<\//s', $html, $m ) ) {
-				$found .= ' ' . wp_strip_all_tags( $m[1] );
-			}
-		}
-		assert_matches( '/administrator/i', $found, 'the description tied to the box says who can change it' );
+		assert_same( 'W7GBU (the webmaster changes this)', qa039_call_text( qa039_screen() ), 'the call sign and who changes it' );
 	}
 );
 
@@ -200,12 +215,14 @@ test(
 );
 
 test(
-	'a refused call sign is not held in the read-only box on the next screen',
+	'a refused call sign is not shown on the next screen, and the line under it says who changes it',
 	function () {
 		as_role( 'ares-net' );
 		qa039_save( qa039_fields( 'K7XYZ', true ) );
-		$tag = qa039_call_tag( qa039_screen() );
-		assert_same( 'W7GBU', qa039_attr( $tag, 'value' ), 'the read-only box shows a call sign that isn\'t stored' );
+		$html = qa039_screen();
+		assert_contains( 'W7GBU', qa039_call_text( $html ), 'the call sign shown' );
+		assert_not_contains( 'K7XYZ', $html, 'the screen shows a call sign that isn\'t stored' );
+		assert_contains( 'The webmaster changes the repeater call sign.', $html, 'the line under the call sign' );
 	}
 );
 
@@ -224,11 +241,12 @@ test(
 );
 
 test(
-	'a user with only the grant who posts the stored call sign unchanged gets a plain "Saved." (control)',
+	'a user with only the grant who posts the stored call sign unchanged is told nothing changed (control)',
 	function () {
 		as_role( 'ares-net' );
 		$said = qa039_save( qa039_fields( 'W7GBU' ) );
-		assert_same( array( 'success' ), array_values( array_unique( wp_list_pluck( $said, 'type' ) ) ), 'the save: ' . wp_json_encode( $said ) );
+		assert_same( array( 'info' ), array_values( array_unique( wp_list_pluck( $said, 'type' ) ) ), 'the save: ' . wp_json_encode( $said ) );
+		assert_same( array( 'Nothing changed, so nothing was saved.' ), wp_list_pluck( $said, 'text' ), 'the notice' );
 		assert_same( 'W7GBU', qa039_call(), 'the call sign' );
 	}
 );
@@ -252,9 +270,6 @@ test(
 		$html = qa039_screen();
 		$tag  = qa039_call_tag( $html );
 		assert_same( 'Frank', qa039_attr( $tag, 'value' ), 'the administrator\'s typed "Frank" is not kept in the box' );
-		if ( ! preg_match( '#<div[^>]*id="spk-net-preview"[^>]*>.*?</dl>#s', $html, $m ) ) {
-			fail( 'the Net details screen has no preview box (#spk-net-preview)' );
-		}
-		assert_not_contains( 'frank', strtolower( wp_strip_all_tags( $m[0] ) ), 'the preview shows the refused call sign' );
+		assert_not_contains( 'frank', strtolower( qa039_members_see( $html ) ), 'the "Members see" lines show the refused call sign' );
 	}
 );

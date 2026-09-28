@@ -5,7 +5,7 @@
 	"title": "Net facts",
 	"category": "spokares",
 	"icon": "microphone",
-	"description": "The weekly net: settings, rota and Winlink. Edit it in Net rota and Net details.",
+	"description": "The weekly net: its settings, the Net Control Schedule and Winlink assignments. Edit them on the Net Control Schedule and Net Settings screens.",
 	"textdomain": "spokares-core",
 	"attributes": {
 		"view": {
@@ -24,7 +24,7 @@
 		"weeks": {
 			"type": "integer",
 			"default": 5,
-			"label": "Weeks (rota)"
+			"label": "Weeks shown"
 		},
 		"limit": {
 			"type": "integer",

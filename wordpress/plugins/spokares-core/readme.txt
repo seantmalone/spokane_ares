@@ -3,7 +3,7 @@ Contributors: spokane-county-ares-acs
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.1.1
+Stable tag: 0.2.0
 License: GPL-2.0-or-later
 Update URI: false
 
@@ -49,6 +49,13 @@ The full contract is `wordpress/PLAN.md` §6; build notes are in
 `wordpress/build-notes/plugin.md`.
 
 == Changelog ==
+
+= 0.2.0 =
+* Volunteer-editor review (wordpress/ux/SPEC.md, REPORT.md): one plain vocabulary everywhere ("Net Control Schedule", "Net Settings", "Most Used", "Cancel or Move a Meeting", "Meeting Schedule"); menus regrouped around real tasks.
+* Net Control Schedule: "No net" and "Volunteer needed" choices, typing is never lost (warns before leaving; "Show more" keeps entries), Undo/Redo say what they change.
+* Meetings: a note without cancelling, and schedule changes that take effect on a date.
+* Events and documents: Add and Edit show the same fields; duplicate warnings with "Open it"; one notice per save that says what changed and where it shows.
+* Most Used buttons keep their words in step with the chosen document.
 
 = 0.1.1 =
 * Fixes from the 2026-09-27 QA sweep (wordpress/qa/ISSUES.md).

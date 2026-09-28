@@ -5,7 +5,7 @@
 	"title": "Schedule as of",
 	"category": "spokares",
 	"icon": "calendar",
-	"description": "Today's date, for the members hub.",
+	"description": "Today’s date, for the For members page.",
 	"textdomain": "spokares-core",
 	"supports": {
 		"autoRegister": true,

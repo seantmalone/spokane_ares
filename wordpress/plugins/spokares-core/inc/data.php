@@ -24,13 +24,14 @@ function spokares_doc_sections(): array {
 }
 
 /**
- * Event kinds (value => label).
+ * Types of event (value => label). The keys are stored; the labels are what
+ * the form, the list and the errors say.
  */
 function spokares_event_kinds(): array {
 	return array(
 		'exercise'       => __( 'Exercise', 'spokares-core' ),
-		'training'       => __( 'Training', 'spokares-core' ),
-		'on-air'         => __( 'On the air', 'spokares-core' ),
+		'training'       => __( 'Training or meeting', 'spokares-core' ),
+		'on-air'         => __( 'On the air (from home stations)', 'spokares-core' ),
 		'public-service' => __( 'Public service', 'spokares-core' ),
 	);
 }
@@ -43,21 +44,21 @@ function spokares_register_data_model(): void {
 		'spk_event',
 		array(
 			'labels'              => array(
-				'name'                   => __( 'Events', 'spokares-core' ),
+				'name'                   => __( 'Exercises & Events', 'spokares-core' ),
 				'singular_name'          => __( 'Event', 'spokares-core' ),
-				'menu_name'              => __( 'Events', 'spokares-core' ),
-				'all_items'              => __( 'All events', 'spokares-core' ),
-				'add_new'                => __( 'Add event', 'spokares-core' ),
-				'add_new_item'           => __( 'Add event', 'spokares-core' ),
-				'edit_item'              => __( 'Edit event', 'spokares-core' ),
-				'new_item'               => __( 'New event', 'spokares-core' ),
+				'menu_name'              => __( 'Exercises & Events', 'spokares-core' ),
+				'all_items'              => __( 'All Events', 'spokares-core' ),
+				'add_new'                => __( 'Add an Event', 'spokares-core' ),
+				'add_new_item'           => __( 'Add an Event', 'spokares-core' ),
+				'edit_item'              => __( 'Edit Event', 'spokares-core' ),
+				'new_item'               => __( 'New Event', 'spokares-core' ),
 				'view_item'              => __( 'View event', 'spokares-core' ),
 				'search_items'           => __( 'Search events', 'spokares-core' ),
-				'not_found'              => __( 'No events found.', 'spokares-core' ),
-				'not_found_in_trash'     => __( 'No events in the trash.', 'spokares-core' ),
-				'item_published'         => __( 'Event published.', 'spokares-core' ),
-				'item_updated'           => __( 'Event updated.', 'spokares-core' ),
-				'item_reverted_to_draft' => __( 'Event saved as a draft.', 'spokares-core' ),
+				'not_found'              => __( 'No events here.', 'spokares-core' ),
+				'not_found_in_trash'     => __( 'No events in the Trash.', 'spokares-core' ),
+				'item_published'         => __( 'Published.', 'spokares-core' ),
+				'item_updated'           => __( 'Saved.', 'spokares-core' ),
+				'item_reverted_to_draft' => __( 'Draft saved. It isn’t on the site until you Publish.', 'spokares-core' ),
 			),
 			'description'         => __( 'Exercises, training, on-air and public-service events for the members pages.', 'spokares-core' ),
 			'public'              => false,
@@ -89,17 +90,17 @@ function spokares_register_data_model(): void {
 				'name'               => __( 'Documents', 'spokares-core' ),
 				'singular_name'      => __( 'Document', 'spokares-core' ),
 				'menu_name'          => __( 'Documents', 'spokares-core' ),
-				'all_items'          => __( 'All documents', 'spokares-core' ),
-				'add_new'            => __( 'Add document', 'spokares-core' ),
-				'add_new_item'       => __( 'Add document', 'spokares-core' ),
-				'edit_item'          => __( 'Edit document', 'spokares-core' ),
-				'new_item'           => __( 'New document', 'spokares-core' ),
+				'all_items'          => __( 'All Documents', 'spokares-core' ),
+				'add_new'            => __( 'Add a Document', 'spokares-core' ),
+				'add_new_item'       => __( 'Add a Document', 'spokares-core' ),
+				'edit_item'          => __( 'Edit Document', 'spokares-core' ),
+				'new_item'           => __( 'New Document', 'spokares-core' ),
 				'view_item'          => __( 'View document', 'spokares-core' ),
 				'search_items'       => __( 'Search documents', 'spokares-core' ),
-				'not_found'          => __( 'No documents found.', 'spokares-core' ),
-				'not_found_in_trash' => __( 'No documents in the trash.', 'spokares-core' ),
+				'not_found'          => __( 'No documents here.', 'spokares-core' ),
+				'not_found_in_trash' => __( 'No documents in the Trash.', 'spokares-core' ),
 			),
-			'description'         => __( 'The members document library.', 'spokares-core' ),
+			'description'         => __( 'The documents on the Documents & forms page.', 'spokares-core' ),
 			'public'              => false,
 			'publicly_queryable'  => false,
 			'exclude_from_search' => true,
@@ -127,8 +128,8 @@ function spokares_register_data_model(): void {
 		array( 'spk_document' ),
 		array(
 			'labels'             => array(
-				'name'          => __( 'Library sections', 'spokares-core' ),
-				'singular_name' => __( 'Library section', 'spokares-core' ),
+				'name'          => __( 'Sections', 'spokares-core' ),
+				'singular_name' => __( 'Section', 'spokares-core' ),
 				'menu_name'     => __( 'Sections', 'spokares-core' ),
 				'all_items'     => __( 'All sections', 'spokares-core' ),
 				'edit_item'     => __( 'Edit section', 'spokares-core' ),
@@ -192,7 +193,7 @@ function spokares_register_post_meta(): void {
 
 	$event    = array(
 		'spk_kind'         => array( 'string', $text ),
-		'spk_date_mode'    => array( 'string', $text ),
+		'spk_date_mode'    => array( 'string', 'spokares_sanitize_meta_date_mode' ),
 		'spk_start'        => array( 'string', $date ),
 		'spk_end'          => array( 'string', $date ),
 		'spk_time_start'   => array( 'string', $time ),
@@ -206,6 +207,7 @@ function spokares_register_post_meta(): void {
 		'spk_extra_doc'    => array( 'integer', 'absint' ),
 		'spk_contact_call' => array( 'string', $text ),
 		'spk_keep_past'    => array( 'string', $bool ),
+		'spk_cancelled'    => array( 'string', $bool ),
 		'spk_precision'    => array( 'string', $text ),
 		'spk_needs_check'  => array( 'string', $bool ),
 		'spk_confirmed'    => array( 'array', $array ),
@@ -215,6 +217,7 @@ function spokares_register_post_meta(): void {
 	$document = array(
 		'spk_source'       => array( 'string', $text ),
 		'spk_file'         => array( 'integer', 'absint' ),
+		'spk_file_name'    => array( 'string', $text ),
 		'spk_url'          => array( 'string', $url ),
 		'spk_source_label' => array( 'string', $text ),
 		'spk_format'       => array( 'string', $text ),
@@ -311,6 +314,23 @@ function spokares_sanitize_meta_date( $v ): string {
 function spokares_sanitize_meta_time( $v ): string {
 	$v = is_string( $v ) ? trim( $v ) : '';
 	return spokares_is_hhmm( $v ) ? $v : '';
+}
+
+/**
+ * Sanitise an event's When choice: date (On a date), postponed, not-posted
+ * (Date not posted yet) or as-requested; anything else is On a date.
+ *
+ * @param mixed $v Value.
+ */
+function spokares_sanitize_meta_date_mode( $v ): string {
+	return in_array( $v, spokares_event_date_modes(), true ) ? $v : 'date';
+}
+
+/**
+ * The stored values of an event's When choice.
+ */
+function spokares_event_date_modes(): array {
+	return array( 'date', 'postponed', 'not-posted', 'as-requested' );
 }
 
 /**
@@ -501,14 +521,21 @@ function spokares_sanitize_opt_meetings( $v ): array {
 		$m['name']       = spokares_clean_str( $m['name'] );
 		$m['time_text']  = spokares_clean_str( $m['time_text'] );
 		$m['home_extra'] = spokares_clean_str( $m['home_extra'] );
-		$meetings[]      = $m;
+		if ( isset( $m['next'] ) ) {
+			// A pattern that takes effect on a later date ("Takes effect on").
+			foreach ( array( 'name', 'time_text', 'home_extra' ) as $key ) {
+				$m['next'][ $key ] = spokares_clean_str( $m['next'][ $key ] );
+			}
+		}
+		$meetings[] = $m;
 	}
 	$changes = array();
 	foreach ( (array) ( $v['changes'] ?? array() ) as $c ) {
 		if ( ! is_array( $c ) || ! spokares_is_ymd( $c['date'] ?? '' ) || empty( $c['meeting'] ) ) {
 			continue;
 		}
-		$kind      = in_array( $c['kind'] ?? '', array( 'cancelled', 'moved' ), true ) ? $c['kind'] : 'cancelled';
+		// A note on its own is a one-date change too ("Starts at 10:00 AM this time").
+		$kind      = in_array( $c['kind'] ?? '', array( 'cancelled', 'moved', 'note' ), true ) ? $c['kind'] : 'cancelled';
 		$changes[] = array(
 			'date'     => $c['date'],
 			'meeting'  => sanitize_key( $c['meeting'] ),

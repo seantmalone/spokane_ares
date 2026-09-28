@@ -948,6 +948,8 @@ h2.m-head, .doc-group__head h2 { font-size: clamp(1.6rem, 1.3rem + .8vw, 2rem); 
 /* A Tuesday nobody has filled in yet: quieter than a call sign or an Open slot. */
 .rota-tbd { color: var(--faint); font-size: 14.5px; }
 .hub-rota td:last-child { color: var(--ink-2); }
+/* “Volunteer needed” is one pill; the Note column wraps instead. */
+.hub-rota .tag { white-space: nowrap; }
 .hub-open { margin-top: 12px; font-size: 15px; color: var(--ink-2); }
 .hub-most { margin-top: var(--s5); }
 .hub-most .tile { align-items: center; padding: 18px 20px; }
@@ -1332,7 +1334,10 @@ nav.footer__links .wp-block-navigation-item > .wp-block-navigation-item__content
   /* Hub */
   .netbar { padding: 14px 14px 14px 18px; }
   .netbar__time { display: block; margin: 0 0 2px; padding: 0; border: 0; }
-  .hub-rota th, .hub-rota td { padding-inline: 8px; }
+  /* Room for a one-line “Volunteer needed” pill beside the date and the note,
+     with text spacing too (WCAG 1.4.12). */
+  .hub-rota th, .hub-rota td { padding-inline: 6px; }
+  .hub-rota .tag { padding-inline: 8px; }
   .hub-most .quick { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .hub-search .searchbar__field { flex-basis: 180px; }
   .hub-search input { font-size: 16px; }

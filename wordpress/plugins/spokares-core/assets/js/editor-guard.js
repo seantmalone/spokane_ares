@@ -11,27 +11,42 @@
  *     button can't be dragged or deleted from its row. The server's layout
  *     check is the real lock; this only tidies the editor.
  *  2. Inserting: only list items. The layout check refuses every other new
- *     block, so the editor no longer offers them.
+ *     block, so the editor no longer offers them. Headings offer no level
+ *     switcher (their variations are dropped), buttons no Fill/Outline.
  *  3. Pasting several paragraphs into one paragraph: core would add new
  *     paragraphs, which the lock forbids, so the paste did nothing at all.
  *     Now they arrive as one paragraph with line breaks (one line in a
  *     heading or a button), and a notice says so. List items still split.
- *  4. After each save, a warning if the page text, or the page's excerpt
- *     (its meta description), looks like something we never publish
- *     (hospital nets, channels, 800 MHz, phone numbers, personal e-mail
- *     addresses), if a new item in a "title" list (What we do, the
- *     timeline, the message hops) has no bold first words, if a list item
- *     is empty (the server leaves empty items out of the saved page), or if
- *     a new or changed link doesn't start with https://. Saving is never
- *     blocked.
+ *  4. After each save, a warning if the page text looks like something we
+ *     never publish (hospital nets, channels, 800 MHz, phone numbers,
+ *     personal e-mail addresses), naming what was found; if a new item in a
+ *     "title" list (What we do, the timeline, the message hops) has no bold
+ *     first words; if a list item is empty (the server leaves empty items out
+ *     of the saved page); if a new or changed link doesn't start with
+ *     https://; or if a link shows its web address as its words. Saving is
+ *     never blocked. A save the server refuses shows only the server's
+ *     sentence (not core's "Updating failed." in front of it).
  *  5. The Page panel's Status, Publish, Slug, Author, Template and Trash
- *     rows, the Slug/Parent/Featured image panels, the Fill/Outline button
- *     styles, the Welcome Guide and the starter-pattern window are off. The
- *     server keeps status, password, date, slug and template anyway.
- *     The page card's ⋮ menu offers no Order and no Trash: the server tells
- *     the editor that editors can't delete pages and that pages have no
- *     page attributes for them (governance.php, roles.php), and a style
- *     rule hides the More menu's "Manage patterns" (governance.php).
+ *     rows, the Slug/Parent/Featured image/Excerpt panels, the Welcome Guide
+ *     and the starter-pattern window are off. The server keeps status,
+ *     password, date, slug and template anyway, and tells the editor that
+ *     pages have no page attributes, title or notes for editors
+ *     (governance.php), so the page card's ⋮ menu offers no Order, Rename or
+ *     Trash and the block menu no "Add note". A style (governance.php) hides
+ *     the ⋮ Options menu, list Indent/Outdent, the sidebar's Content list,
+ *     the hero photo's extra Replace choices, the fields of the media window
+ *     that do nothing here, and, while a Button is selected (this script
+ *     marks the page), Unlink and Remove link.
+ *  6. The settings sidebar starts closed, except on About, where the Page
+ *     review box is. The media window's "Alt Text" reads "Describe the photo
+ *     in a few words", its way in and its title read "Choose a photo", and
+ *     a photo that isn't JPEG, PNG or WebP (an iPad's HEIC) gets one plain
+ *     sentence.
+ *  7. After a new photo is saved, the editor no longer says the page has
+ *     unsaved changes: the Cover works out the photo's colour after the
+ *     upload and marks that as a change not worth an undo step, and at the
+ *     end of the save the editor sends the same blocks again as a new edit.
+ *     That edit changes nothing, so it is dropped.
  */
 ( function ( wp ) {
 	'use strict';
@@ -39,8 +54,17 @@
 		return;
 	}
 	var data = wp.data;
-	var cfg = window.spokaresGuard || { patterns: [], allowed: '', message: '%s', leadIns: [] };
+	var cfg = window.spokaresGuard || { patterns: [], allowed: '', message: '%1$s (%2$s)', leadIns: [], refusals: [] };
 	var BE = 'core/block-editor';
+
+	/* Plain words for the photo window's way in: "Open Media Library" and
+	   the window's title read "Choose a photo" (cfg.words). Added before the
+	   editor draws anything, so every use of the words gets ours. */
+	if ( cfg.words && wp.hooks && typeof wp.hooks.addFilter === 'function' ) {
+		wp.hooks.addFilter( 'i18n.gettext', 'spokares/editor-guard/words', function ( translation, text, domain ) {
+			return ( ! domain || 'default' === domain ) && Object.prototype.hasOwnProperty.call( cfg.words, text ) ? cfg.words[ text ] : translation;
+		} );
+	}
 
 	/* Blocks that hold words an editor may change. Everything else on the
 	   page is disabled (not selectable, not movable, nothing inserted in it). */
@@ -131,10 +155,16 @@
 			return !! blockType && 'core/list-item' === blockType.name;
 		} );
 		// No Fill/Outline choice on buttons (a class editors can't keep). The
-		// style class already on a button stays in its saved markup.
+		// style class already on a button stays in its saved markup. No
+		// heading levels: in 7.1 the level switcher in the toolbar and the
+		// sidebar are the heading's variations (h1-h6), and a new level is a
+		// layout change the server refuses. The level already set stays.
 		wp.hooks.addFilter( 'blocks.registerBlockType', 'spokares/editor-guard', function ( settings, name ) {
 			if ( 'core/button' === name && settings && Array.isArray( settings.styles ) ) {
 				return Object.assign( {}, settings, { styles: [] } );
+			}
+			if ( 'core/heading' === name && settings && Array.isArray( settings.variations ) ) {
+				return Object.assign( {}, settings, { variations: [] } );
 			}
 			return settings;
 		} );
@@ -154,16 +184,114 @@
 		// The pages are fixed: the server keeps status, password, publish date,
 		// slug, parent, author and template, so these rows and panels only
 		// invite confusion ("post-status" is the Page panel's Status, Publish,
-		// Slug, Author, Template, Revisions and Move to trash rows).
+		// Slug, Author, Template, Revisions and Move to trash rows). The
+		// excerpt is the search-engine description, the webmaster's job.
 		try {
 			var ed = data.dispatch( 'core/editor' );
 			if ( ed && typeof ed.removeEditorPanel === 'function' ) {
-				[ 'post-status', 'post-link', 'page-attributes', 'featured-image', 'discussion-panel' ].forEach( function ( panel ) {
+				[ 'post-status', 'post-link', 'page-attributes', 'featured-image', 'discussion-panel', 'post-excerpt' ].forEach( function ( panel ) {
 					ed.removeEditorPanel( panel );
 				} );
 			}
 		} catch ( e ) {
 			// Older editor: panels stay; nothing breaks.
+		}
+	}
+
+	/* The settings sidebar starts closed (on an iPad it covers half the page),
+	   except on About, where the Page review box is. Set once, when the
+	   editor has the page. */
+	var sidebarSet = false;
+	function sidebarOnOpen() {
+		var ed = data.select( 'core/editor' );
+		var ep = data.dispatch( 'core/edit-post' );
+		if ( sidebarSet || ! ed || ! ep || typeof ed.getCurrentPostId !== 'function' || ! ed.getCurrentPostId() ) {
+			return;
+		}
+		sidebarSet = true;
+		try {
+			if ( cfg.reviewBox ) {
+				ep.openGeneralSidebar( 'edit-post/document' );
+			} else {
+				ep.closeGeneralSidebar();
+			}
+		} catch ( e ) {
+			// Older editor: the sidebar stays as it was.
+		}
+	}
+
+	/* While a Button is selected the page carries a class, so the style
+	   (governance.php) can hide Unlink and Remove link for buttons only. */
+	var buttonSelected = null;
+	function markButton() {
+		var be = data.select( BE );
+		var id = be && be.getSelectedBlockClientId();
+		var on = !! id && 'core/button' === be.getBlockName( id );
+		if ( on !== buttonSelected && document.body ) {
+			buttonSelected = on;
+			document.body.classList.toggle( 'spk-button-selected', on );
+		}
+	}
+
+	/* The media window's templates are read the first time the window opens,
+	   so the alt text's label is changed in them before that. */
+	function mediaWindow() {
+		if ( cfg.altLabel ) {
+			var label = String( cfg.altLabel ).replace( /[&<>"]/g, function ( c ) {
+				return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ c ];
+			} );
+			[ 'tmpl-attachment-details', 'tmpl-attachment-details-two-column' ].forEach( function ( id ) {
+				var tpl = document.getElementById( id );
+				if ( tpl && ! tpl.spokaresAlt ) {
+					tpl.spokaresAlt = true;
+					tpl.textContent = tpl.textContent.replace( /(<label for="attachment-details(?:-two-column)?-alt-text"[^>]*>)[^<]*(<\/label>)/, function ( all, open, close ) {
+						return open + label + close;
+					} );
+				}
+			} );
+		}
+		// The window's own uploader: a photo type it refuses.
+		if ( cfg.photoType && wp.Uploader && wp.Uploader.errorMap ) {
+			wp.Uploader.errorMap.FILE_EXTENSION_ERROR = cfg.photoType;
+		}
+	}
+
+	/* Two error notices say it better in one plain sentence: a save the
+	   server refused (core puts "Updating failed." in front of the server's
+	   sentence), and a photo that isn't JPEG, PNG or WebP (an iPad's HEIC).
+	   The notice is replaced under its own id. */
+	var PHOTO_TYPE = /\.(heic|heif)\b|not allowed to upload this file type|file type is not permitted/i;
+	var lastNotices = null;
+	function tidyNotices() {
+		var sel = data.select( 'core/notices' );
+		var list = sel && sel.getNotices();
+		if ( ! list || list === lastNotices ) {
+			return;
+		}
+		lastNotices = list;
+		var swaps = [];
+		list.forEach( function ( n ) {
+			var text = String( n.content || '' );
+			if ( 'error' !== n.status ) {
+				return;
+			}
+			var refusal = ( cfg.refusals || [] ).filter( function ( r ) {
+				return r && text !== r && text.indexOf( r ) !== -1;
+			} )[ 0 ];
+			if ( refusal ) {
+				swaps.push( [ n, refusal ] );
+			} else if ( cfg.photoType && text !== cfg.photoType && PHOTO_TYPE.test( text ) ) {
+				swaps.push( [ n, cfg.photoType ] );
+			}
+		} );
+		if ( swaps.length ) {
+			// Outside the subscribe callback, so the store can settle first.
+			window.setTimeout( function () {
+				var notices = data.dispatch( 'core/notices' );
+				swaps.forEach( function ( swap ) {
+					notices.createErrorNotice( swap[ 1 ], { id: swap[ 0 ].id, type: swap[ 0 ].type, isDismissible: true } );
+				} );
+			}, 0 );
 		}
 	}
 
@@ -287,20 +415,54 @@
 	/* ------------------------------------------------------ after each save */
 
 	var wasSaving = false;
+	var sentContent = null;
+	var settleBy = 0;
 	function checkAfterSave() {
 		var ed = data.select( 'core/editor' );
 		if ( ! ed || typeof ed.isSavingPost !== 'function' ) {
 			return;
 		}
 		var saving = ed.isSavingPost() && ! ed.isAutosavingPost();
+		var started = saving && ! wasSaving;
 		var justSaved = wasSaving && ! saving;
 		// Record the state first: reading the content below can dispatch (and
 		// so call this subscriber again) before this call returns.
 		wasSaving = saving;
+		if ( started ) {
+			sentContent = null;
+			window.setTimeout( function () {
+				sentContent = ed.getEditedPostContent();
+			}, 0 );
+		}
 		if ( justSaved ) {
+			settleBy = ed.didPostSaveRequestFail() ? 0 : Date.now() + 5000;
 			// Outside the subscribe callback, so the store can settle first.
 			window.setTimeout( scanSavedContent, 0 );
+		} else if ( settleBy && ! saving && ed.isEditedPostDirty() ) {
+			if ( settleBy > Date.now() ) {
+				window.setTimeout( dropEmptyEdit, 0 );
+			}
+			settleBy = 0;
 		}
+	}
+
+	/* Just after a save, an edit that changes nothing: the page as it is now
+	   is the page that was saved, and the only unsaved thing is the page's
+	   content (core resent the same blocks when it marked the Cover's colour
+	   change as kept). Drop it, so leaving doesn't ask "Leave site?". */
+	function dropEmptyEdit() {
+		var ed = data.select( 'core/editor' );
+		var core = data.select( 'core' );
+		if ( ! ed.isEditedPostDirty() || null === sentContent || ! core || typeof core.getEntityRecordNonTransientEdits !== 'function' ) {
+			return;
+		}
+		var type = ed.getCurrentPostType();
+		var id = ed.getCurrentPostId();
+		var edits = core.getEntityRecordNonTransientEdits( 'postType', type, id ) || {};
+		if ( Object.keys( edits ).join() !== 'content' || ed.getEditedPostContent() !== sentContent ) {
+			return;
+		}
+		data.dispatch( 'core' ).editEntityRecord( 'postType', type, id, { content: undefined }, { undoIgnore: true } );
 	}
 
 	/* A new item in a list whose items start with bold words (the item's
@@ -344,13 +506,20 @@
 		return false;
 	}
 
-	/* The link addresses in some block markup, decoded. */
+	/* Some markup's text, entities decoded. */
+	var decoder = document.createElement( 'textarea' );
+	function plainText( html ) {
+		decoder.innerHTML = String( html || '' ).replace( /<!--[\s\S]*?-->/g, ' ' ).replace( /<[^>]+>/g, ' ' );
+		return decoder.value.replace( /\s+/g, ' ' ).trim();
+	}
+
+	/* The links in some block markup: each address (decoded) and its words. */
 	function linksIn( html ) {
 		var out = [];
-		var re = /<a\s[^>]*?href="([^"]*)"/gi;
+		var re = /<a\s[^>]*?href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/gi;
 		var m;
 		while ( ( m = re.exec( html ) ) ) {
-			out.push( m[ 1 ].replace( /&amp;/g, '&' ).trim() );
+			out.push( { href: m[ 1 ].replace( /&amp;/g, '&' ).trim(), words: plainText( m[ 2 ] ) } );
 		}
 		return out;
 	}
@@ -365,8 +534,16 @@
 		}
 		var html = ed.getEditedPostContent() || '';
 		if ( html ) {
-			linksAtStart = linksIn( html );
+			linksAtStart = linksIn( html ).map( function ( l ) {
+				return l.href + '\n' + l.words;
+			} );
 		}
+	}
+	function isNewLink( link ) {
+		return ( linksAtStart || [] ).indexOf( link.href + '\n' + link.words ) === -1;
+	}
+	function short( text ) {
+		return text.length > 60 ? text.slice( 0, 60 ) + '…' : text;
 	}
 
 	/* A new or changed link that isn't https://, mailto:, or a link within
@@ -374,12 +551,22 @@
 	   and "www.example.org" without https:// is a link to a page on this
 	   site, so both break silently. */
 	function badLink( html ) {
-		var start = linksAtStart || [];
-		var links = linksIn( html );
+		var links = linksIn( html ).filter( isNewLink );
 		for ( var i = 0; i < links.length; i++ ) {
-			var href = links[ i ];
-			if ( ! /^(https:\/\/|mailto:|\/|#|\?)/i.test( href ) && start.indexOf( href ) === -1 ) {
-				return href.length > 60 ? href.slice( 0, 60 ) + '…' : href;
+			if ( ! /^(https:\/\/|mailto:|\/|#|\?)/i.test( links[ i ].href ) ) {
+				return short( links[ i ].href );
+			}
+		}
+		return '';
+	}
+
+	/* A new or changed link whose words are a web address (a pasted address
+	   becomes a link to itself): visitors should read what they will get. */
+	function addressLink( html ) {
+		var links = linksIn( html ).filter( isNewLink );
+		for ( var i = 0; i < links.length; i++ ) {
+			if ( /^(https?:\/\/|www\.)\S+$/i.test( links[ i ].words ) ) {
+				return short( links[ i ].words );
 			}
 		}
 		return '';
@@ -396,23 +583,33 @@
 
 	/* What the never-publish, phone and e-mail patterns find in some page
 	   text or markup (block comments and tags left out; role addresses
-	   @spokares.org are fine). */
+	   @spokares.org are fine): each kind once, with the first words that
+	   matched. */
 	function neverPublish( html ) {
-		var text = String( html || '' ).replace( /<!--[\s\S]*?-->/g, ' ' ).replace( /<[^>]+>/g, ' ' );
+		var text = plainText( html );
 		if ( cfg.allowed ) {
 			text = text.replace( new RegExp( cfg.allowed, 'gi' ), ' ' );
 		}
 		var found = [];
 		( cfg.patterns || [] ).forEach( function ( p ) {
 			try {
-				if ( new RegExp( p.re, 'iu' ).test( text ) && found.indexOf( p.what ) === -1 ) {
-					found.push( p.what );
+				var m = new RegExp( p.re, 'iu' ).exec( text );
+				if ( m && ! found.some( function ( f ) { return f.what === p.what; } ) ) {
+					found.push( { what: p.what, match: m[ 0 ].trim().slice( 0, 60 ) } );
 				}
 			} catch ( e ) {
 				// An old browser without lookbehind: skip that pattern.
 			}
 		} );
 		return found;
+	}
+
+	/* "a, b and c". */
+	function andList( items ) {
+		if ( items.length < 2 ) {
+			return items[ 0 ] || '';
+		}
+		return items.slice( 0, -1 ).join( ', ' ) + ' ' + ( cfg.and || 'and' ) + ' ' + items[ items.length - 1 ];
 	}
 
 	function scanSavedContent() {
@@ -422,31 +619,38 @@
 		}
 		var html = ed.getEditedPostContent() || '';
 		var found = neverPublish( html );
-		// The excerpt is the page's <meta name="description">: public too.
-		var inExcerpt = cfg.excerpt && typeof ed.getEditedPostAttribute === 'function' ? neverPublish( ed.getEditedPostAttribute( 'excerpt' ) ) : [];
 		var notices = data.dispatch( 'core/notices' );
 		if ( ! notices ) {
 			return;
 		}
-		toggleNotice( notices, 'spokares-never-publish', found.length ? String( cfg.message ).replace( '%s', found.join( ', ' ) ) : '' );
-		toggleNotice( notices, 'spokares-never-publish-excerpt', inExcerpt.length ? String( cfg.excerpt ).replace( '%s', inExcerpt.join( ', ' ) ) : '' );
+		var warning = found.length ? String( cfg.message )
+			.replace( '%1$s', andList( found.map( function ( f ) { return f.what; } ) ) )
+			.replace( '%2$s', found.map( function ( f ) { return f.match; } ).join( ', ' ) ) : '';
+		toggleNotice( notices, 'spokares-never-publish', warning );
 		var bare = cfg.noLeadIn ? missingLeadIn() : '';
 		toggleNotice( notices, 'spokares-lead-in', bare ? String( cfg.noLeadIn ).replace( '%s', bare ) : '' );
 		toggleNotice( notices, 'spokares-empty-item', cfg.emptyItem && hasEmptyItem() ? String( cfg.emptyItem ) : '' );
 		var link = cfg.badLink ? badLink( html ) : '';
 		toggleNotice( notices, 'spokares-bad-link', link ? String( cfg.badLink ).replace( '%s', link ) : '' );
+		var address = cfg.addressLink ? addressLink( html ) : '';
+		toggleNotice( notices, 'spokares-address-link', address ? String( cfg.addressLink ).replace( '%s', address ) : '' );
 	}
 
 	limitInserting();
 	wp.domReady( function () {
 		preferences();
+		mediaWindow();
 		applyModes();
 		watchPaste();
 		rememberLinks();
+		sidebarOnOpen();
 		data.subscribe( function () {
 			applyModes();
 			watchPaste();
 			rememberLinks();
+			sidebarOnOpen();
+			markButton();
+			tidyNotices();
 			checkAfterSave();
 		} );
 	} );

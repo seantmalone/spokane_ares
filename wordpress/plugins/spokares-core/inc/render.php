@@ -47,7 +47,7 @@ function spokares_render_events( array $a ): string {
 						. '<span class="date-slab__dow">' . esc_html( $slab['dow'] ) . '</span></span>';
 					$html .= '<span class="event__body"><span class="event__title">' . spokares_text( $ev['title'] ) . '</span>'
 						. '<span class="event__meta"><span class="vh">' . spokares_text( spokares_fmt_date_range( $ev['start'], $ev['end'] ) ) . '. </span>'
-						. spokares_text( spokares_fmt_when( $ev, 'meta' ) )
+						. spokares_text( spokares_fmt_when( $ev, 'meta' ) ) . spokares_cancelled_tag( $ev )
 						. ( '' !== trim( $ev['where'] ) ? '<span class="event__where"> · ' . spokares_text( $ev['where'] ) . '</span>' : '' ) . '</span>';
 					if ( $now ) {
 						$html .= '<span class="event__now"><span class="tag tag--now">' . esc_html__( 'Happening now', 'spokares-core' ) . '</span></span>';
@@ -102,7 +102,7 @@ function spokares_render_events( array $a ): string {
 				$target = spokares_event_title_target( $ev );
 				$title  = '' !== $target ? spokares_link( $target, $ev['title'] ) : spokares_text( $ev['title'] );
 				$html  .= '<tr id="' . esc_attr( $ev['slug'] ) . '"' . ( $ev['check'] ? ' class="needs-verify"' : '' ) . '>'
-					. '<th scope="row">' . spokares_text( spokares_fmt_when( $ev, 'row' ) ) . '</th>'
+					. '<th scope="row">' . spokares_text( spokares_fmt_when( $ev, 'row' ) ) . spokares_cancelled_tag( $ev ) . '</th>'
 					. '<td>' . $title . spokares_later_rest( $ev, $target )
 						. ( '' !== trim( $ev['where'] ) ? '<span class="ex-where"> ' . spokares_text( '(' . $ev['where'] . ')' ) . '</span>' : '' ) . '</td></tr>';
 			}
@@ -123,7 +123,7 @@ function spokares_render_events( array $a ): string {
 				$call  = spokares_call_sign( $ev['contact'] )['call'];
 				$html .= '<tr id="' . esc_attr( $ev['slug'] ) . '"' . ( $ev['check'] ? ' class="needs-verify"' : '' ) . '>'
 					. '<th scope="row">' . spokares_text( $ev['title'] ) . ( '' !== trim( $ev['where'] ) ? '<span class="ex-where"> ' . spokares_text( '(' . $ev['where'] . ')' ) . '</span>' : '' ) . '</th>'
-					. '<td data-label="' . esc_attr__( 'When', 'spokares-core' ) . '">' . spokares_text( spokares_fmt_when( $ev, 'row' ) ) . '</td>'
+					. '<td data-label="' . esc_attr__( 'When', 'spokares-core' ) . '">' . spokares_text( spokares_fmt_when( $ev, 'row' ) ) . spokares_cancelled_tag( $ev ) . '</td>'
 					. '<td data-label="' . esc_attr__( 'Volunteer through', 'spokares-core' ) . '">' . esc_html( $call ) . '</td></tr>';
 			}
 			$html .= '</tbody></table>';
@@ -143,6 +143,16 @@ function spokares_render_events( array $a ): string {
 			return $html . spokares_block_tail( 'events' ) . '</div>';
 	}
 	return spokares_block_placeholder( __( 'Pick a view for this list.', 'spokares-core' ) );
+}
+
+/**
+ * The "Cancelled" tag printed after a cancelled event's When text (its row
+ * stays listed until the date passes), or ''.
+ *
+ * @param array $ev Event data.
+ */
+function spokares_cancelled_tag( array $ev ): string {
+	return empty( $ev['cancelled'] ) ? '' : ' <span class="tag tag--line">' . esc_html__( 'Cancelled', 'spokares-core' ) . '</span>';
 }
 
 /**
@@ -314,7 +324,7 @@ function spokares_render_event_card( array $ev, bool $first ): string {
 	$links   = 'public-service' !== $ev['kind'] ? spokares_clean_links( array_slice( $ev['links'], 0, 3 ) ) : array();
 	$html    = '<article class="' . esc_attr( $classes ) . '" id="' . esc_attr( $ev['slug'] ) . '">';
 	$html   .= '<h3>' . spokares_text( $ev['title'] ) . '</h3>';
-	$html   .= '<p class="ex-when"><time datetime="' . esc_attr( $ev['start'] ) . '">' . spokares_text( spokares_fmt_when( $ev, 'card' ) ) . '</time>';
+	$html   .= '<p class="ex-when"><time datetime="' . esc_attr( $ev['start'] ) . '">' . spokares_text( spokares_fmt_when( $ev, 'card' ) ) . '</time>' . spokares_cancelled_tag( $ev );
 	if ( spokares_event_is_now( $ev ) ) {
 		$html .= ' <span class="ex-status"><span class="tag tag--now">' . esc_html__( 'Happening now', 'spokares-core' ) . '</span></span>';
 	}
@@ -339,7 +349,7 @@ function spokares_render_event_card( array $ev, bool $first ): string {
 		}
 		$doc = $ev['extra_doc'] ? spokares_public_document( $ev['extra_doc'] ) : null;
 		if ( $doc ) {
-			$html .= '<p class="ex-form">' . esc_html__( 'Extra form:', 'spokares-core' ) . ' <a href="' . esc_url( spokares_site_url( '/members/documents/', $doc->post_name ) ) . '">' . spokares_text( get_the_title( $doc ) ) . '</a></p>';
+			$html .= '<p class="ex-form">' . esc_html__( 'You’ll need:', 'spokares-core' ) . ' <a href="' . esc_url( spokares_site_url( '/members/documents/', $doc->post_name ) ) . '">' . spokares_text( get_the_title( $doc ) ) . '</a></p>';
 		}
 	}
 	if ( 'public-service' !== $ev['kind'] ) {
@@ -401,7 +411,7 @@ function spokares_render_net( array $a ): string {
 				. spokares_copy_button( spokares_radio_line( 'copy' ), __( 'radio settings', 'spokares-core' ), 'btn btn--light btn--sm' )
 				. '</div>';
 			wp_enqueue_script_module( '@spokares/copy' );
-			// Not a list, and the rota under it has its own link (Net rota).
+			// Not a list, and the schedule under it has its own link.
 			return $html . spokares_block_tail( 'net-details', true, spokares_settings_link_words() ) . '</div>';
 
 		case 'settings':
@@ -445,7 +455,8 @@ function spokares_render_net( array $a ): string {
 			foreach ( spokares_opt( 'spk_rota' ) as $ymd => $row ) {
 				// Only a Tuesday the rota calls a Winlink night: a task typed
 				// under weeks Net details has since moved is not listed.
-				if ( $ymd >= $today && '' !== trim( $row['wl_task'] ) && 2 === spokares_weekday( (string) $ymd ) && 'winlink' === spokares_net_on( (string) $ymd )['kind'] ) {
+				// No net that Tuesday: no assignment either.
+				if ( $ymd >= $today && 'none' !== ( $row['state'] ?? '' ) && '' !== trim( $row['wl_task'] ) && 2 === spokares_weekday( (string) $ymd ) && 'winlink' === spokares_net_on( (string) $ymd )['kind'] ) {
 					$rows[ $ymd ] = $row;
 				}
 			}
@@ -510,7 +521,7 @@ function spokares_render_net( array $a ): string {
 			}
 			if ( ! $items ) {
 				if ( spokares_is_editor_preview() ) {
-					return spokares_block_placeholder( __( 'No other nets are set in Net details.', 'spokares-core' ), 'net-details' );
+					return spokares_block_placeholder( __( 'No other nets are set on the Net Settings screen.', 'spokares-core' ), 'net-details' );
 				}
 				// The "Other nets" heading is page text, so say so rather than leave it empty.
 				return spokares_block_open( $view ) . '<p>' . esc_html__( 'No other nets are scheduled right now.', 'spokares-core' ) . '</p>'
@@ -535,7 +546,9 @@ function spokares_copy_button( string $text, string $what, string $classes ): st
 }
 
 /**
- * The Net control cell of a rota row.
+ * The Net control cell of a Net Control Schedule row: the call sign,
+ * "Volunteer needed" (it links to the line under the table), "No net" or
+ * "Not posted yet".
  *
  * @param array $row spokares_net_on() row.
  */
@@ -544,18 +557,25 @@ function spokares_rota_who( array $row ): string {
 		return '<b>' . esc_html( $row['call'] ) . '</b>';
 	}
 	if ( 'open' === $row['state'] ) {
-		return '<a class="tag tag--open" href="#open-slot">' . esc_html__( 'Open', 'spokares-core' ) . '</a>';
+		return '<a class="tag tag--open" href="#open-slot">' . esc_html__( 'Volunteer needed', 'spokares-core' ) . '</a>';
 	}
-	return '<span class="rota-tbd">' . esc_html__( 'Not yet published', 'spokares-core' ) . '</span>';
+	if ( 'none' === $row['state'] ) {
+		return '<span class="rota-tbd rota-none">' . esc_html__( 'No net', 'spokares-core' ) . '</span>';
+	}
+	return '<span class="rota-tbd">' . esc_html__( 'Not posted yet', 'spokares-core' ) . '</span>';
 }
 
 /**
- * The Note cell of a rota row: the rule note (linked where it helps), then
- * the row's own note after "; ".
+ * The Note cell of a Net Control Schedule row: the rule note (linked where
+ * it helps), then the row's own note after "; ". A No net Tuesday has only
+ * its own note (the rule note would name a net that isn't held).
  *
  * @param array $row spokares_net_on() row.
  */
 function spokares_rota_note( array $row ): string {
+	if ( 'none' === $row['state'] ) {
+		return '' !== trim( $row['row_note'] ) ? spokares_text( $row['row_note'] ) : '';
+	}
 	$parts = array();
 	if ( 'simplex' === $row['kind'] ) {
 		$parts[] = '<a href="' . esc_url( spokares_site_url( '/members/documents/', 'net-scripts' ) ) . '">' . esc_html( $row['note'] ) . '</a>';
@@ -599,6 +619,9 @@ function spokares_render_meetings( array $a ): string {
 				if ( 'moved' === $next['kind'] ) {
 					/* translators: %s: short date, e.g. "Oct 10". */
 					$extra = ' ' . sprintf( __( '(moved from %s)', 'spokares-core' ), spokares_fmt_date( $next['orig'], 'day' ) );
+				} elseif ( 'note' === $next['kind'] && '' !== trim( $next['note'] ) ) {
+					// That date's own words: "(Starts at 10:00 AM this time)".
+					$extra = ' (' . rtrim( trim( $next['note'] ), '.' ) . ')';
 				} elseif ( $item['cancelled'] ) {
 					/* translators: %s: short dates, e.g. "Oct 10". */
 					$extra = ' ' . sprintf( __( '(%s cancelled)', 'spokares-core' ), spokares_and_list( array_map( static fn( $d ) => spokares_fmt_date( $d, 'day' ), $item['cancelled'] ) ) );
@@ -635,6 +658,11 @@ function spokares_render_meetings( array $a ): string {
 				if ( 'moved' === $c['kind'] && spokares_is_ymd( $c['new_date'] ) ) {
 					/* translators: 1: date, 2: meeting name, 3: new date. */
 					$text = sprintf( __( '%1$s: %2$s moved to %3$s.', 'spokares-core' ), $date, $name, spokares_fmt_date( $c['new_date'], 'short' ) );
+				} elseif ( 'note' === $c['kind'] ) {
+					// A note on its own: "Sat, Nov 14: Second Saturday Workshop. Starts at 10:00 AM this time."
+					/* translators: 1: date, 2: meeting name. */
+					$text      = sprintf( __( '%1$s: %2$s.', 'spokares-core' ), $date, $name );
+					$c['note'] = spokares_sentence( $c['note'] );
 				} else {
 					/* translators: 1: date, 2: meeting name. */
 					$text = sprintf( __( '%1$s: %2$s cancelled.', 'spokares-core' ), $date, $name );
@@ -760,10 +788,14 @@ function spokares_library_documents(): array {
 			),
 		)
 	);
+	// The four Most Used buttons' documents are always under the Most used
+	// filter, with any document ticked "Also list under Most used".
+	$tiles  = array_filter( array_map( 'absint', wp_list_pluck( array_slice( (array) spokares_opt( 'spk_tiles' ), 0, 4 ), 'doc' ) ) );
 	$groups = array();
 	foreach ( $posts as $post ) {
 		$doc = spokares_document_data( $post );
 		if ( $doc && '' !== $doc['section'] ) {
+			$doc['most_used']            = $doc['most_used'] || in_array( (int) $doc['id'], $tiles, true );
 			$groups[ $doc['section'] ][] = $doc;
 		}
 	}
@@ -849,7 +881,7 @@ function spokares_render_docs( array $a ): string {
 			$items .= '<li><a class="tile" href="' . esc_url( home_url( '/docs/' . $doc->post_name . '/' ) ) . '">' . spokares_icon( $slot['icon'] ) . '<span class="tile__label">' . spokares_text( $label ) . '</span></a></li>';
 		}
 		if ( '' === $items ) {
-			return spokares_block_placeholder( __( 'Hub tiles: none set.', 'spokares-core' ), 'tiles' );
+			return spokares_block_placeholder( __( 'Most used: no buttons set.', 'spokares-core' ), 'tiles' );
 		}
 		return spokares_block_open( $view ) . '<ul class="quick">' . $items . '</ul>' . spokares_block_tail( 'tiles' ) . '</div>';
 	}
@@ -940,7 +972,8 @@ function spokares_render_docs( array $a ): string {
 }
 
 /**
- * The Document cell: the title (linked by source), then the how-to link or note.
+ * The Document cell: the title (linked by source), then the note, then the
+ * how-to link, each on its own line.
  *
  * @param array $doc Document data.
  */
@@ -969,10 +1002,11 @@ function spokares_document_title_cell( array $doc ): string {
 	} else {
 		$cell = '<span class="doc-title' . $verify . '">' . spokares_text( $doc['title'] ) . '</span>';
 	}
+	if ( '' !== trim( $doc['note'] ) ) {
+		$cell .= '<span class="doc-note">' . spokares_text( $doc['note'] ) . '</span>';
+	}
 	if ( '' !== $doc['howto_url'] && '' !== trim( $doc['howto_lbl'] ) ) {
 		$cell .= '<span class="doc-note">' . spokares_link( $doc['howto_url'], $doc['howto_lbl'] ) . '</span>';
-	} elseif ( '' !== trim( $doc['note'] ) ) {
-		$cell .= '<span class="doc-note">' . spokares_text( $doc['note'] ) . '</span>';
 	}
 	return $cell;
 }

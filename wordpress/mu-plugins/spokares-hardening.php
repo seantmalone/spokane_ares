@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Spokane ARES hardening
  * Description:       Security floor for spokares.org: XML-RPC and enumeration closed, security headers, upload checks, two-factor enforcement, authenticated SMTP and the old-URL map. Must-use, so it can't be switched off from wp-admin.
- * Version:           0.1.1
+ * Version:           0.2.0
  * Requires at least: 7.1
  * Requires PHP:      8.3
  * Author:            Spokane County ARES-ACS
@@ -17,7 +17,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SPOKARES_HARDENING_VERSION', '0.1.1' );
+define( 'SPOKARES_HARDENING_VERSION', '0.2.0' );
 
 /**
  * True only in the local dev environment (environment type `local` AND the

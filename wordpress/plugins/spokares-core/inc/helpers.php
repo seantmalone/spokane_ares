@@ -119,7 +119,7 @@ function spokares_option_defaults(): array {
 			'gmrs_nth'       => array( 3 ),
 			'gmrs_time'      => '19:30',
 			'winlink_howto'  => 'Answer on an ICS-213 unless another form is named. Send to NV2Z and AG7QP between 5:00 and 9:00 PM on the date shown. Radio preferred; Telnet OK.',
-			'open_slot_line' => 'Open slot? Tell the Net Manager (AG7QP) on the net or on groups.io.',
+			'open_slot_line' => 'Can you take a Tuesday marked “Volunteer needed”? Tell the Net Manager (AG7QP) on the net or on groups.io.',
 			'needs_check'    => true,
 		),
 		'spk_radio'      => array(
@@ -362,7 +362,18 @@ function spokares_opt_read( string $name ): array {
 }
 
 /**
- * One meeting rule with every key present.
+ * The fields of a meeting that make up its pattern (what "Takes effect on"
+ * can change from a later date).
+ */
+function spokares_meeting_pattern_keys(): array {
+	return array( 'name', 'nth', 'weekday', 'start', 'end', 'time_text', 'home_extra', 'skip_months' );
+}
+
+/**
+ * One meeting rule with every key present. A valid pending change
+ * (`next` = {from, name, nth, weekday, start, end, time_text, home_extra,
+ * skip_months}) is kept while its date is in the future; once `from` is today
+ * or earlier it becomes the rule and is dropped.
  *
  * @param array $m Stored meeting.
  */
@@ -385,19 +396,68 @@ function spokares_normalize_meeting( array $m ): array {
 		$m
 	);
 
-	$m['nth']         = array_values( array_filter( array_map( 'intval', (array) $m['nth'] ), static fn( $n ) => $n >= 1 && $n <= 5 ) );
-	$m['skip_months'] = array_values( array_filter( array_map( 'intval', (array) $m['skip_months'] ), static fn( $n ) => $n >= 1 && $n <= 12 ) );
-	$m['weekday']     = max( 0, min( 6, (int) $m['weekday'] ) );
-	$m['start']       = spokares_is_hhmm( $m['start'] ) ? $m['start'] : '';
-	$m['end']         = spokares_is_hhmm( $m['end'] ) ? $m['end'] : '';
+	$m = spokares_normalize_meeting_pattern( $m );
+
 	$m['show_home']   = (bool) $m['show_home'];
 	$m['active']      = (bool) $m['active'];
 	$m['needs_check'] = (bool) $m['needs_check'];
+
+	$next = is_array( $m['next'] ?? null ) ? $m['next'] : null;
+	unset( $m['next'] );
+	if ( $next && spokares_is_ymd( $next['from'] ?? '' ) ) {
+		$next = spokares_normalize_meeting_pattern(
+			array_merge(
+				array(
+					'name'        => $m['name'],
+					'nth'         => array(),
+					'weekday'     => $m['weekday'],
+					'start'       => '',
+					'end'         => '',
+					'time_text'   => '',
+					'home_extra'  => '',
+					'skip_months' => array(),
+				),
+				array_intersect_key( $next, array_flip( array_merge( array( 'from' ), spokares_meeting_pattern_keys() ) ) )
+			)
+		);
+		if ( '' === trim( (string) $next['name'] ) ) {
+			$next['name'] = $m['name'];
+		}
+		if ( $next['nth'] ) {
+			if ( $next['from'] <= spokares_today() ) {
+				// The change has started: it is the rule now.
+				foreach ( spokares_meeting_pattern_keys() as $key ) {
+					$m[ $key ] = $next[ $key ];
+				}
+			} else {
+				$m['next'] = $next;
+			}
+		}
+	}
 	return $m;
 }
 
 /**
- * One rota row with every key present.
+ * The pattern fields of a meeting (or of its pending change) in their
+ * stored shapes: weeks 1-5, months 1-12, a weekday 0-6, H:i times.
+ *
+ * @param array $p Meeting or pending change.
+ */
+function spokares_normalize_meeting_pattern( array $p ): array {
+	$p['name']        = (string) ( $p['name'] ?? '' );
+	$p['nth']         = array_values( array_filter( array_map( 'intval', (array) ( $p['nth'] ?? array() ) ), static fn( $n ) => $n >= 1 && $n <= 5 ) );
+	$p['skip_months'] = array_values( array_filter( array_map( 'intval', (array) ( $p['skip_months'] ?? array() ) ), static fn( $n ) => $n >= 1 && $n <= 12 ) );
+	$p['weekday']     = max( 0, min( 6, (int) ( $p['weekday'] ?? 6 ) ) );
+	$p['start']       = spokares_is_hhmm( $p['start'] ?? '' ) ? $p['start'] : '';
+	$p['end']         = spokares_is_hhmm( $p['end'] ?? '' ) ? $p['end'] : '';
+	$p['time_text']   = (string) ( $p['time_text'] ?? '' );
+	$p['home_extra']  = (string) ( $p['home_extra'] ?? '' );
+	return $p;
+}
+
+/**
+ * One Net Control Schedule row with every key present. State is call (a call
+ * sign), open (Volunteer needed), none (No net) or tbd (Not posted yet).
  *
  * @param array $row Stored row.
  */
@@ -412,7 +472,7 @@ function spokares_normalize_rota_row( array $row ): array {
 		),
 		$row
 	);
-	$row['state'] = in_array( $row['state'], array( 'call', 'open', 'tbd' ), true ) ? $row['state'] : 'tbd';
+	$row['state'] = in_array( $row['state'], array( 'call', 'open', 'none', 'tbd' ), true ) ? $row['state'] : 'tbd';
 	if ( 'call' !== $row['state'] ) {
 		$row['call'] = '';
 	}

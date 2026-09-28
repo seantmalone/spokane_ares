@@ -18,7 +18,7 @@
 //   export const tests = [
 //     { name: 'the rota opens', role: 'ares-editor', async run(t) {
 //         await t.goto('/wp-admin/admin.php?page=spokares-rota');
-//         await t.expectText('h1', 'Net rota');
+//         await t.expectText('h1', 'Net Control Schedule');
 //     } },
 //   ];
 

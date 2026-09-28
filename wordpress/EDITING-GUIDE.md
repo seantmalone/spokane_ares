@@ -4,13 +4,13 @@ This page is for the volunteers who keep the website up to date. You don't need 
 
 **You can't break the layout.** The site's design is locked, and long words or pasted web addresses wrap to fit their column. If something looks wrong, undo it or ask the webmaster; nothing you do in these five jobs can take the site down.
 
-| Job | How often | Should take |
-|---|---|---|
-| 1. Post the net-control rota | Monthly | 3 minutes |
-| 2. Add or change an event or exercise | As needed | 3 minutes |
-| 3. Cancel or move a meeting | As needed | 1 minute |
-| 4. Add or replace a document | As needed | 3 minutes |
-| 5. Change words on a page | Now and then | 5 minutes |
+| # | Job | How often | Time |
+|---|---|---|---|
+| 1 | Update the Net Control Schedule | Monthly | 3 min |
+| 2 | Add or change an exercise or event | As needed | 3 min |
+| 3 | Cancel or move a meeting | As needed | 1 min |
+| 4 | Add, replace or change a document | As needed | 3 min |
+| 5 | Change words on a page | Now and then | 5 min |
 
 ---
 
@@ -18,111 +18,94 @@ This page is for the volunteers who keep the website up to date. You don't need 
 
 1. Go to **spokares.org/wp-admin** (bookmark it).
 2. Type your own username and password.
-3. Type the 6-digit code from the app on your phone. If you don't have your phone, use the code sent to your e-mail. If neither works, use one of your printed backup codes, then tell the webmaster.
+3. Type the code from the app on your phone. No phone? Click **E-mail me a code**. Neither works? Click **Use a printed backup code**, then tell the webmaster.
 
 Never share your sign-in. Sign out on a shared computer (your name, top right, then **Log Out**).
 
 ## Your Dashboard: "Site tasks"
 
-After you sign in you land on the Dashboard. The **Site tasks** card has a button for each job, and it tells you what's coming up: how far ahead the rota is posted, the next event, the next meeting.
+After you sign in you land on the Dashboard. The **Site tasks** card has a section for each job, and it tells you what's coming up: how far ahead the Net Control Schedule is posted, the next event, the next meeting. Anything that needs you comes first, under **Needs attention**, with a link to fix it.
 
-<img src="shots/final/admin-dashboard.png" width="600" alt="The Dashboard's Site tasks card, with buttons Update the rota, Add an event, Cancel or move a meeting, Add a document and Replace a document, and links to the three pages.">
+<img src="shots/final/admin-dashboard.png" width="600" alt="The Dashboard's Site tasks card: Net Control Schedule with Update the schedule, Exercises & Events, Meetings, Documents with Replace or change a document, and Page Text.">
 
-**Shortcut from the website:** while you are signed in and looking at the site, every list has a small link under it, such as "Edit this list in Net rota". The black bar at the top of the site also has an **Update lists** menu.
+**Shortcut from the website:** while you are signed in and looking at the site, every list has a small link under it, such as “Edit this list in Net Control Schedule”. The black bar at the top of the site also has an **Update lists** menu.
 
 ---
 
-## Job 1: Post the net-control rota (monthly, 3 minutes)
+## Job 1: Update the Net Control Schedule (monthly, 3 minutes)
 
-1. On the Dashboard, click **Update the rota**. You'll see the next 13 Tuesdays, with Winlink nights, GMRS nets and simplex weeks already marked.
-2. For each Tuesday, either:
-   - type the **call sign** in the box (typing picks "Call sign" for you), or
-   - choose **Open** if we need a volunteer, or
-   - leave it on **Not posted yet**.
-3. On Winlink nights, type the **Winlink assignment** and pick the **Form**.
-4. Use **Note** only for something unusual, such as "No net: county exercise".
-5. Click **Save rota**. The message at the top links to the page ("See it on For members").
+1. On the Dashboard, click **Update the schedule**. You'll see the next 13 Tuesdays, with Winlink nights, GMRS nets and simplex weeks already marked.
+2. For each Tuesday, type the call sign, or choose **Volunteer needed**, **No net** or **Not posted yet**.
+3. On Winlink nights, type the assignment and pick the form (**ICS-213 (usual)** unless another is named).
+4. Click **Save**. The message names the Tuesdays and links to the For members page.
 
-<img src="shots/final/admin-net-rota.png" width="600" alt="The Net rota screen: one row per Tuesday with Call sign, Open and Not posted yet choices, a Shows column, Winlink assignment, Form and Note.">
+<img src="shots/final/admin-net-rota.png" width="600" alt="The Net Control Schedule screen: one row per Tuesday with a call-sign box and Volunteer needed, No net and Not posted yet, then Winlink assignment, Form and Note.">
 
-- **Call signs only, never names.** If you type "Frank AG7QP", only AG7QP is saved and the message says so. If a row has no call sign in it, that row isn't saved: your typing stays in the box, outlined in red, so you can fix it.
-- The **Shows** column tells you what the public will see.
-- **Made a mistake?** Click **Undo last save**. It puts back the rows from the last save. Click it again ("Put back what was undone") if you change your mind.
-- Need a Tuesday further out? Click **Show 13 more** under the list.
+- **Call signs only.**
+- **Show 13 more Tuesdays** keeps your typing.
+- **Undo** is next to "Last saved" at the top; **Redo** takes the undo back.
 
-## Job 2: Add or change an event or exercise (3 minutes)
+## Job 2: Add or change an exercise or event (3 minutes)
 
-1. On the Dashboard, click **Add an event**.
-2. **Pick the kind first:** Exercise, Training, On the air or Public service. The form then shows only the boxes that kind needs, and a blue note says where the event will appear.
-3. Type the **event name** as members will see it.
-4. **When:** leave "On a date" chosen and pick the **First day** (and a **Last day** if it runs longer). "All day" is ticked; untick it to add a start and end time. If the date isn't set yet, choose **Date not posted yet**.
-5. Optional: a **Short line for lists** (90 characters), **Where** (a place, or "From your own station"), **What members do** (one task per line), the **Main link** (web address and button words), **More links**, and an **Extra form** from the library.
-6. Click **Publish**. The message says where it shows now and links to it ("See it on Exercises & events").
+1. On the Dashboard, click **Add an event**. If a line under the name says it's already there, click **Open it** instead.
+2. Pick the **Type of event**. The form then shows only the boxes that type needs.
+3. Type the **Event name** as members will see it.
+4. **When:** pick the **First day** (and a **Last day** if it runs longer). "All day" is ticked; untick it to add a start and end time. No date yet? Choose **Date not posted yet**.
+5. Click **Publish**. The message says where it shows.
 
-<img src="shots/final/admin-event-set.png" width="600" alt="The event form filled in for the Simulated Emergency Test: kind Exercise, a date, the short line, tasks one per line, links and an extra form, with Update in the Save box.">
+<img src="shots/final/admin-event-set.png" width="600" alt="The event form for the Simulated Emergency Test: Type of event Exercise, the date, a short description, tasks one per line, the Button and a Document members need, with Save in the Save box.">
 
-- **Web addresses go in the link boxes.** An address pasted into the Short line or Where wraps onto the next line, so it can't break the page, but it's hard to read. Put it in **Main link** or **More links** instead.
-- **Where events appear:** in "Later this season" on Exercises & events straight away. When it becomes one of the next two exercises it gets a "Next up" card with its tasks and links, and it shows under "This week" on the members page. **Events never show on Home.**
-- **Change an event:** Events, then **All events**, click its name, change it, click **Update**.
-- **Same event next year:** in **All events**, point at last year's event and click **Duplicate**. Set the new date, check the words, **Publish**.
-- **Called off?** Open it and click **Move to Trash**, or **Save as draft (takes it off the site)**.
-- You don't need to delete past events. They leave the lists by themselves the day after they end. Tick **Keep in Past exercises** on an exercise to list it under "Past exercises" afterwards.
+- **Change one:** on the Dashboard, click **Change or cancel an event**.
+- **Next year:** open last year's, then click **Make a copy**.
+- **Called off:** tick **Cancelled** under When.
+- **Postponed:** choose **Postponed** under When.
+- **Added by mistake:** click **Take it off the site** (Undo brings it back).
 
 ## Job 3: Cancel or move a meeting (1 minute)
 
 1. On the Dashboard, click **Cancel or move a meeting**.
-2. Find the date. Tick **Cancelled**, or pick the new date under **Moved to**.
-3. Add a short **Note** if it helps ("Room unavailable").
-4. Click **Save**.
+2. Find the date. Tick **Cancelled**, or pick the new date under **Moved to**. A different time or room that day: type it in the **Note**, like "Starts at 10:00 AM this time". To take back a cancellation, untick **Cancelled**.
+3. Click **Save**.
 
-<img src="shots/final/admin-meetings.png" width="600" alt="Regular meetings: each upcoming date with a Cancelled tick box, a Moved to date and a Note.">
+<img src="shots/final/admin-meetings.png" width="600" alt="The Cancel or Move a Meeting screen: each upcoming date with a Cancelled tick box, a Moved to date and a Note.">
 
-Home then shows, for example, "Next: Sat, Nov 14 (Oct 10 cancelled)", and the members page shows the cancellation for the two weeks before. Changing a meeting's regular day or time is the webmaster's job.
+If your menu has Meeting Schedule: change a meeting's regular day or time there, with **Takes effect on** for a change from a later date.
 
-## Job 4: Add or replace a document (3 minutes)
+## Job 4: Add, replace or change a document (3 minutes)
 
 **Add one**
 1. On the Dashboard, click **Add a document**.
-2. Type the **document name** and pick its **Library section**.
-3. Under **Where the file is**, choose **Upload a file** (or **Link to another site** and paste the web address).
-4. Read the **Privacy check** and tick it. This unlocks **Choose File**. Then choose the file (PDF, DOCX, XLSX, JPEG or PNG).
-5. Optional: **Version or date**, and a **Short note** of 8 words or fewer.
-6. Click **Publish**. The file uploads now, not before.
+2. Type the **Document name** and pick its **Section**.
+3. Under **Where the file is**, choose **Upload a file** (or **Link to another site**, paste the web address and tick **I checked the page it links to**).
+4. Tick **I checked this file**. This unlocks **Choose File**. Choose the file.
+5. Type the **Version or date** and a **Short note (60 characters)** if they help.
+6. Click **Publish**.
 
-<img src="shots/review-editor/32-doc-add-filled.png" width="600" alt="The Add document form: name, library section, Upload a file chosen, the Privacy check ticked, a PDF chosen, version and short note, with Save draft and Publish.">
+<img src="shots/final/admin-document-ics-213.png" width="600" alt="The form of the ICS 213 General Message document, a link to another site: Document name, Section, Where the file is with the web address and its tick, Version or date and Short note, with Save in the Save box.">
 
-*(Taken during the editor review; the side box is now called "Webmaster check".)*
-
-**Replace one with a new version**
-1. On the Dashboard, click **Replace a document**, then click the document's name.
-2. Under **Replace with**, click **Choose File** and pick the new file. Leave **Remove the old file from the web (recommended)** ticked.
-3. Change the **Version or date**, then click **Update**.
-
-The document's link stays the same, so nobody's bookmarks break, and the old file is taken off the web.
-
-**The four "Most used" tiles** on the members page are set on Documents, then **Hub tiles**. Pick a document for each slot and click **Save tiles**. Picking one that's already in another slot swaps the two.
-
-**The library's "Most used" filter** is a separate list: tick **Show under "Most used"** on a document's form. Keep the four tiles' documents ticked, so the filter lists everything the tiles do.
+- **Replace or change one:** on the Dashboard, click **Replace or change a document**, then the document's name. Choose the new file (under **Replace with**, or **Upload a file instead** for a link), tick the “I checked” box, change the version and click **Save**. For a Most Used document (the net script), the Most Used screen's **Replace or change it** link goes straight to it.
+- **Take one down:** click **Take it off the site**.
+- **Most Used:** Documents › **Most Used**. Pick a document for each button and click **Save**.
 
 ## Job 5: Change words on a page (5 minutes)
 
-You can change the words on **Home**, **How it works** and **About ARES & ACS**. (The members pages are built from the forms above, so they have no words to edit.)
+You can change the words on **Home**, **How it works** and **About ARES & ACS**. (The members pages are built on the screens above.)
 
-1. On the Dashboard, under **Page text**, click the page. Or, while looking at the page on the site, click **Edit page** in the black bar at the top.
+1. On the Dashboard, under **Page Text**, click the page. Or, while looking at the page on the site, click **Edit Page Text** in the black bar at the top.
 2. Click into any heading, paragraph, list item, button or table cell and type.
-   - **A button's link:** click the button, then the link icon in the small toolbar above it.
-   - **The Home photo:** click the photo, then **Replace**. Fill in the alternative text on the right (a few words describing the photo).
+   - **A button's link:** click the button; the box under it shows where it goes: click the pencil, paste the new address, press Enter, then Save.
+   - **The Home photo:** click the photo, then **Replace › Choose a photo**. Click **Upload a photo**, pick the photo, describe it in a few words, then click **Select**.
    - **A new list item** (for example in "What we do"): put the cursor at the end of an item and press Enter. **Bold the first words** of the new item (select them, then Ctrl+B, or Cmd+B on a Mac), because they become its title. Pressing Enter in a paragraph starts a new line in the same paragraph.
    - **Pasting** from an e-mail or Word: paste one paragraph at a time into the paragraph that's already there. If you paste several paragraphs at once, they arrive as one paragraph with line breaks, and a message tells you so.
-3. Click the blue **Save** button at the top right. You'll see "Page updated."
+3. Click the blue **Save** button at the top right. You'll see "Saved. It's on the site now."
 
-<img src="shots/final/admin-editor-home.png" width="600" alt="The Home page in the editor with the photo selected: Replace in the toolbar, focal point and alternative text on the right, and the blue Save button top right.">
+<img src="shots/final/admin-editor-home.png" width="600" alt="The Home page in the editor with the photo selected: Replace in the toolbar and the blue Save button top right.">
 
 - **Undo before you save:** Ctrl+Z (Cmd+Z on a Mac), or the curved Undo arrow at the top left.
-- **"Layout changes need an administrator."** You changed something other than words, for example you moved or removed a section. Press Ctrl+Z (or click the Undo arrow) until it's back, then click **Save** again.
-- **"This page may contain something we never publish"** (a yellow message after you save): the page's words look like a phone number, a personal e-mail address or something on the "Please don't" list below. The page's **excerpt** is checked the same way: it's the short description in the right-hand **Page** panel that search engines show, and its message starts "This page's excerpt". The page is saved either way. Check it, change anything that shouldn't be public, and save again. Until then the Dashboard lists it under **Needs attention**.
-- **About only:** the **Page review** box on the right has **Mark reviewed today when I save**. Tick it when you've checked the whole page; the date then shows under the page title.
-- **The ⋮ menu by the page's name**, at the top of the right-hand **Page** panel, has two choices. **View** opens the page on the site. **Rename** changes the name the site's search results show, and the browser tab's name for How it works and About. The big heading is changed on the page itself. Moving, reordering or deleting a page isn't offered: the six pages are fixed.
+- **A red message starting "Not saved:"** says what to click to put it right. Nothing on the site changed.
+- **A yellow message starting "On the site now:"** means the words look like a phone number, a personal e-mail address or something on the "Please don't" list below. The page is saved; the Dashboard lists it under **Needs attention** until you change it.
+- **About:** tick **Mark reviewed today when I save** once you've checked the whole page.
+- **A one-off notice** (“no nets over the holidays”): mark those Tuesdays **No net** and add a Note. Anything else, like “Field Day photos are up”, has no place on the site yet: ask the webmaster.
 - Getting back an older version of a page after you've saved is the webmaster's job. So is adding a section, a table row or a new page (see "For the webmaster" at the end).
 
 ---
@@ -132,7 +115,7 @@ You can change the words on **Home**, **How it works** and **About ARES & ACS**.
 - **Publish anything on this list:** the roster or any member list; personal phone numbers, e-mails or home addresses; county, hospital, SHARES or 800 MHz channels or talkgroups; the Hospital Net or its channel; simplex frequencies or GMRS repeater details; a "current readiness level". The forms stop the most common ones and ask you to confirm a phone number or e-mail address.
 - **Use names.** Call signs only, everywhere.
 - **Type the same fact in two places.** The net time, the repeater and the meeting place come from one form and appear on every page automatically.
-- **Ask for access you don't need.** Net details (repeater, tone, net weeks) and Meeting rules are changed by the webmaster or someone the Emergency Coordinator names. The repeater's call sign, W7GBU, is the club's own and only the webmaster changes it: on Net details it shows greyed out for everyone else.
+- **Ask for access you don't need.** **Net Settings** (repeater, tone, net weeks) and the **Meeting Schedule** are changed by the webmaster or someone the Emergency Coordinator names.
 
 **House style:** 12-hour times ("8:00 PM", never "2000"). Dates like "Sat, Oct 3". Short sentences.
 
@@ -151,12 +134,12 @@ The layout lock doesn't apply to administrators, so these changes are made in th
 **Add a section to Home, How it works or About**
 
 1. Open the page in the block editor and open **List View** (the icon with three lines, top left).
-2. Select the section most like the new one, then choose ⋮ > **Duplicate**. The copy keeps the section's background, spacing and inner column (a Group with the class `wrap`). Move it into place with the arrows or by dragging it in List View.
+2. Select the section most like the new one, then copy it from its ⋮ menu (the first item; Shift+Cmd+D, or Ctrl+Shift+D on Windows). The copy keeps the section's background, spacing and inner column (a Group with the class `wrap`). Move it into place with the arrows or by dragging it in List View.
 3. Change the copy's words. If its heading has an **HTML anchor** (Block > Advanced), give the copy a new one: two headings with the same anchor break the jump links.
 4. Click **Save**. Editors can change the new section's words straight away. Their layout check compares against the page as you saved it.
 5. Copy the section into the page's pattern file in git (`theme/spokares/patterns/`: `home-*.php`, `how-*.php` or `about-*.php`) for the next release.
 
-A single paragraph, heading or list added at the page's top level sits in the site's column, with the side margins, by itself. A new Group or Columns block at the top level is different: it runs the full width of the window with no margins. Duplicate a section instead, or put the content in a Group with the class `wrap` (Block > Advanced > Additional CSS class(es)).
+A single paragraph, heading or list added at the page's top level sits in the site's column, with the side margins, by itself. A new Group or Columns block at the top level is different: it runs the full width of the window with no margins. Copy a section instead, or put the content in a Group with the class `wrap` (Block > Advanced > Additional CSS class(es)).
 
 **Add a new page** (for example the Privacy Policy)
 

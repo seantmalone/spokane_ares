@@ -16,11 +16,11 @@
 
 const SCREEN = '/wp-admin/admin.php?page=spokares-net-details';
 
-/** Every preview line's text, no-break spaces as spaces. */
+/** Every "Members see" line's text, no-break spaces as spaces. */
 function previewTexts(t) {
   return t.evaluate(() => {
     const out = {};
-    document.querySelectorAll('#spk-net-preview [data-preview]').forEach((el) => {
+    document.querySelectorAll('#spk-net-form [data-preview]').forEach((el) => {
       out[el.getAttribute('data-preview')] = el.textContent.replace(/ /g, ' ').replace(/\s+/g, ' ').trim();
     });
     return out;
@@ -38,13 +38,19 @@ function setValue(t, sel, value) {
   }, sel, value);
 }
 
-/** Tick exactly these weeks for one "Which Tuesdays" row, firing change. */
+/**
+ * Make exactly these weeks one kind of net on the "Which Tuesdays" selects
+ * (the other weeks of that kind become regular nets), firing change.
+ */
 function tickWeeks(t, name, weeks) {
   return t.evaluate((n, w) => {
-    document.querySelectorAll(`input[name="nets[${n}][]"]`).forEach((box) => {
-      box.checked = w.includes(parseInt(box.value, 10));
-      box.dispatchEvent(new Event('change', { bubbles: true }));
-    });
+    const kind = n.replace(/_nth$/, '');
+    for (let week = 1; week <= 5; week++) {
+      const sel = document.querySelector(`select[name="nets[week][${week}]"]`);
+      if (w.includes(week)) sel.value = kind;
+      else if (sel.value === kind) sel.value = 'regular';
+      sel.dispatchEvent(new Event('change', { bubbles: true }));
+    }
   }, name, weeks);
 }
 
@@ -55,7 +61,7 @@ export const tests = [
     async run(t) {
       await t.goto(SCREEN);
       await t.expectStatus(200);
-      await t.waitFor('#spk-net-preview [data-preview="gmrs"]');
+      await t.waitFor('#spk-net-form [data-preview="gmrs"]');
       await tickWeeks(t, 'gmrs_nth', [3]);
       await setValue(t, '#spk-gmrs-time', '');
       const p = await previewTexts(t);
@@ -87,7 +93,7 @@ export const tests = [
 
       await t.type('#spk-p-call', 'Frank', { clear: true });
       const p = await previewTexts(t);
-      for (const key of ['bar', 'copy', 'settings', 'simplex']) {
+      for (const key of ['bar', 'simplex']) {
         t.expect((p[key] || '').toUpperCase(), `live "${key}" preview after typing Frank (the save refuses it)`).not.toContain('FRANK');
       }
       t.expectNoConsoleErrors();
@@ -109,7 +115,7 @@ export const tests = [
 
       await t.goto(SCREEN);
       await t.expectStatus(200);
-      await t.waitFor('#spk-net-preview [data-preview="alt"]');
+      await t.waitFor('#spk-net-form [data-preview="alt"]');
       const onLoad = await previewTexts(t);
       t.expect(onLoad.alt, 'alternate preview on load').toContain(site);
       t.expect(onLoad.alt, 'alternate preview on load (Copy-button wording)').not.toContain('offset');

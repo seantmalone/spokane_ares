@@ -5,7 +5,7 @@
  * Categories: spokares-members
  * Inserter: no
  * Viewport Width: 1440
- * Description: Used by the page-exercises template. Cards and tables come from Events and Net rota in wp-admin; the Bring, After and tips lines are theme text.
+ * Description: Used by the page-exercises template. Cards and tables come from the Exercises & Events and Net Control Schedule screens; the Bring, After and tips lines are theme text.
  *
  * @package spokares
  */

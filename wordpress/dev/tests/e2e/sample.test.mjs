@@ -25,18 +25,18 @@ export const tests = [
     },
   },
   {
-    name: 'the ARES Editor opens Net rota from the admin menu',
+    name: 'the ARES Editor opens the Net Control Schedule from the admin menu',
     role: 'ares-editor',
     async run(t) {
       await t.goto('/wp-admin/');
       await t.clickAndWait('#adminmenu a[href="admin.php?page=spokares-rota"]');
       t.expect(await t.url()).toContain('page=spokares-rota');
-      await t.expectText('.wrap h1', 'Net rota');
+      await t.expectText('.wrap h1', 'Net Control Schedule');
       await t.expectVisible('form input[name="action"][value="spokares_save_rota"] ~ *, .wrap form');
     },
   },
   {
-    name: 'a subscriber is refused the Net rota screen',
+    name: 'a subscriber is refused the Net Control Schedule screen',
     role: 'subscriber',
     async run(t) {
       await t.goto('/wp-admin/admin.php?page=spokares-rota');

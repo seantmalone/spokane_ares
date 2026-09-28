@@ -65,6 +65,22 @@ gh secret set DEPLOY_SSH_KEY --env production --repo seantmalone/spokane_ares < 
 
 If routes, post types or the `/docs/` rule changed, also flush the rewrite rules. Run a manual deploy of the tag with `flush_rewrites` ticked. `spokares-core` also rebuilds them itself the first time a new version runs.
 
+### One-off steps for a release
+
+A deploy changes code, never stored content, so a release that renames words stored in the database lists them here. Run them once, after that release is live, on the host in `public_html` (`ssh spokares-live`, then `cd public_html`). Each is safe to repeat.
+
+**The release that ships the volunteer-editor review (after v0.1.1; UX spec §7: "rota" becomes "Net Control Schedule", "Open slot" becomes "Volunteer needed"):**
+
+1. The For members page's search-engine description (its excerpt) still says "rota":
+   ```bash
+   wp post update $(wp post list --post_type=page --name=members --field=ID) --post_excerpt='This week’s exercises, the Net Control Schedule and the most-used documents for Spokane County ARES-ACS members.'
+   ```
+2. If Net Settings › **Asking for volunteers** still reads "Open slot? Tell the Net Manager (AG7QP) on the net or on groups.io.", change it there, or:
+   ```bash
+   wp option patch update spk_nets open_slot_line 'Can you take a Tuesday marked “Volunteer needed”? Tell the Net Manager (AG7QP) on the net or on groups.io.'
+   ```
+3. Check: `curl -s https://spokares.org/members/ | grep -o '<meta name="description"[^>]*>'` shows the new sentence. (The page's `id="rota"` anchor and `rota-…` classes are identifiers and stay.)
+
 ## Manual deploy
 
 From GitHub (the gate and the checks run the same way):

@@ -5,7 +5,7 @@
  * Categories: spokares-sections
  * Inserter: no
  * Viewport Width: 1440
- * Description: From home (net time and frequency from Net details) and in person (place and meetings from ARES site and Regular meetings).
+ * Description: From home (net time and frequency from Net Settings) and in person (place and meetings from ARES site and Meetings).
  *
  * @package spokares
  */

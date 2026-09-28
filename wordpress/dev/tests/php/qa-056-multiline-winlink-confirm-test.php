@@ -135,7 +135,8 @@ function qa056_assert_saved( array $out, string $msg ): void {
 	assert_false( isset( $out['errors']['winlink_howto'] ), $msg . ': the confirmed Winlink sentence was held back again ("' . ( $out['errors']['winlink_howto'] ?? '' ) . '")' );
 	assert_false( isset( $out['errors']['winlink_howto-confirm'] ), $msg . ': the "Publish it" tick was asked for again' );
 	assert_count( 0, $out['errors'], $msg . ': unexpected field errors' );
-	assert_contains( 'Saved.', $out['notices'], $msg . ': no plain "Saved." notice' );
+	assert_count( 1, $out['notices'], $msg . ': one notice' );
+	assert_matches( '/^(Saved: .+\.|Nothing changed, so nothing was saved\.)$/', (string) ( $out['notices'][0] ?? '' ), $msg . ': the notice says it was saved (or that nothing changed), not that something was held back' );
 }
 
 test(

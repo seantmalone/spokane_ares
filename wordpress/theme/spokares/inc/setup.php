@@ -115,7 +115,7 @@ add_action( 'wp_enqueue_scripts', 'spokares_theme_enqueue' );
 function spokares_theme_template_descriptions(): array {
 	return array(
 		'page-members'      => __( 'The For members page (/members/): This week, the Tuesday net and the most used documents. Every list on it is edited in wp-admin.', 'spokares' ),
-		'page-exercises'    => __( 'The Exercises & events page (/members/exercises/): next up, later this season, Winlink assignments, public service and past exercises, from Events and the Net rota in wp-admin.', 'spokares' ),
+		'page-exercises'    => __( 'The Exercises & events page (/members/exercises/): next up, later this season, Winlink assignments, public service and past exercises, from Exercises & Events and the Net Control Schedule in wp-admin.', 'spokares' ),
 		'page-documents'    => __( 'The Documents & forms page (/members/documents/): the document library, from Documents in wp-admin.', 'spokares' ),
 		'page-how-it-works' => __( 'The How it works page: header, the page’s own full-width sections (its heading included), footer.', 'spokares' ),
 		'page-about'        => __( 'The About ARES & ACS page: header, the page’s own head and long read with its contents, footer.', 'spokares' ),

@@ -91,7 +91,7 @@ function qa024_notices(): array {
 function qa024_save( array $m ): array {
 	qa024_notices();
 	$res = post_form( 'spokares_save_meetings', array( 'm' => $m ) );
-	assert_contains( 'page=spokares-meetings', (string) $res['redirect'], 'the save redirects back to Regular meetings' );
+	assert_contains( 'page=spokares-meetings', (string) $res['redirect'], 'the save redirects back to Cancel or Move a Meeting' );
 	\spokares_opt_flush();
 	return array(
 		'notices'  => qa024_notices(),
@@ -118,7 +118,7 @@ function qa024_assert_refused( array $out, string $mid, string $date, string $mo
 	assert_not_contains( 'success', $types, $msg . ': no "Saved." notice (' . implode( ' | ', $texts ) . ')' );
 	$errors = array_values( wp_list_pluck( array_filter( $out['notices'], static fn( $n ) => 'error' === $n['type'] ), 'text' ) );
 	assert_count( 1, $errors, $msg . ': one error notice (' . implode( ' | ', $texts ) . ')' );
-	assert_contains( qa024_meeting( $mid )['name'], (string) ( $errors[0] ?? '' ), $msg . ': the notice names the meeting' );
+	assert_same( 'Not saved: ' . \spokares_fmt_date( $date, 'short' ) . ' (outlined in red).', (string) ( $errors[0] ?? '' ), $msg . ': the notice names the date' );
 
 	$key = $mid . '|' . $date;
 	assert_true( isset( $out['retained']['errors'][ $key ] ), $msg . ': the row is outlined (held errors: ' . implode( ', ', array_keys( $out['retained']['errors'] ) ) . ')' );
@@ -126,7 +126,7 @@ function qa024_assert_refused( array $out, string $mid, string $date, string $mo
 }
 
 test(
-	'Regular meetings: a Moved to date before today is not saved',
+	'Cancel or Move a Meeting: a Moved to date before today is not saved',
 	function () {
 		foreach ( array( 'ares-editor', 'ares-net' ) as $role ) {
 			as_role( $role );
@@ -148,7 +148,7 @@ test(
 );
 
 test(
-	'Regular meetings: a Moved to date of long ago (2025-01-01) is not saved',
+	'Cancel or Move a Meeting: a Moved to date of long ago (2025-01-01) is not saved',
 	function () {
 		as_role( 'ares-editor' );
 		$date = qa024_dates( 'workshop' )[1];
@@ -158,7 +158,7 @@ test(
 );
 
 test(
-	'Regular meetings: a Moved to date on another scheduled date of the same meeting is not saved',
+	'Cancel or Move a Meeting: a Moved to date on another scheduled date of the same meeting is not saved',
 	function () {
 		as_role( 'ares-net' );
 		$dates = qa024_dates( 'third-thursday' );
@@ -168,7 +168,7 @@ test(
 );
 
 test(
-	'Regular meetings: moving a date onto an earlier date cancelled in the same save is refused, the cancellation is saved',
+	'Cancel or Move a Meeting: moving a date onto an earlier date cancelled in the same save is refused, the cancellation is saved',
 	function () {
 		as_role( 'ares-editor' );
 		$dates = qa024_dates( 'third-thursday' );
@@ -184,14 +184,17 @@ test(
 		assert_same( 'cancelled', (string) ( $cancel['kind'] ?? '' ), $dates[0] . ' is cancelled' );
 		$c = \spokares_meeting_change( 'third-thursday', $dates[1] );
 		assert_true( null === $c, $dates[1] . ' moved onto the cancelled ' . $dates[0] . ' is not stored (stored: ' . wp_json_encode( $c ) . ')' );
-		$errors = array_values( wp_list_pluck( array_filter( $out['notices'], static fn( $n ) => 'error' === $n['type'] ), 'text' ) );
-		assert_count( 1, $errors, 'one error notice (' . implode( ' | ', wp_list_pluck( $out['notices'], 'text' ) ) . ')' );
+		// One notice for the save: what was saved, then the date that wasn't.
+		assert_count( 1, $out['notices'], 'one notice (' . implode( ' | ', wp_list_pluck( $out['notices'], 'text' ) ) . ')' );
+		assert_same( 'warning', $out['notices'][0]['type'], 'partly saved is a warning' );
+		assert_contains( 'Not saved: ' . \spokares_fmt_date( $dates[1], 'short' ) . ' (outlined in red).', $out['notices'][0]['text'], 'the notice names the refused date' );
+		assert_contains( \spokares_fmt_date( $dates[0], 'short' ) . ' cancelled', $out['notices'][0]['text'], 'the notice names the saved cancellation' );
 		assert_true( isset( $out['retained']['errors'][ 'third-thursday|' . $dates[1] ] ), 'the refused row is outlined' );
 	}
 );
 
 test(
-	'Regular meetings: a Moved to date later than today and off the schedule is still saved',
+	'Cancel or Move a Meeting: a Moved to date later than today and off the schedule is still saved',
 	function () {
 		as_role( 'ares-editor' );
 		$date  = qa024_dates( 'workshop' )[1];
@@ -206,7 +209,7 @@ test(
 );
 
 test(
-	'Regular meetings: an unchanged row whose stored Moved to date has since passed does not block the save',
+	'Cancel or Move a Meeting: an unchanged row whose stored Moved to date has since passed does not block the save',
 	function () {
 		as_role( 'ares-editor' );
 		$dates = qa024_dates( 'workshop' );

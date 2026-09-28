@@ -4,16 +4,16 @@
  * the smaller admin-screen problems that had no regression test of their
  * own. Each test names its issue.
  *
- * - QA-034 Regular meetings lists only the meetings the site shows.
+ * - QA-034 Cancel or Move a Meeting lists only the meetings the site shows.
  * - QA-035 "Pull this file now" asks before it deletes.
  * - QA-036 A section that holds documents can't be deleted; a new section
  *   goes after the last one.
  * - QA-076 An account with no site tasks gets a sentence, not an empty Dashboard.
- * - QA-078 No command palette for an account that edits nothing.
+ * - QA-078 No command palette for anyone but administrators.
  * - QA-079 The Edit Media screen of one file is closed to non-admins.
- * - QA-080 Site tasks are numbered as printed.
- * - QA-081 A file refused for the Privacy tick says so under the chooser.
- * - QA-084 Holders of the Net details grant get a link to Meeting rules.
+ * - QA-080 Site tasks carry no number badges (they read as steps in order).
+ * - QA-081 A file refused for the "I checked this file" tick says so under the chooser.
+ * - QA-084 Holders of the Net Settings grant get a link to Meeting Schedule.
  * - QA-085 The GMRS time field is named.
  * - QA-086 An events search looks through every view.
  * - QA-087 Restore says the event came back as a draft.
@@ -21,7 +21,7 @@
  * - QA-089 A refused Page owner is said in the Page review box.
  * - QA-090 No "Mark reviewed today" in the Trash view; no file tick without a file.
  * - QA-091 Opening Navigation in the Site Editor creates no menu.
- * - QA-093 Every Regular meetings row names its meeting for screen readers.
+ * - QA-093 Every Cancel or Move a Meeting row names its meeting for screen readers.
  *
  * @package spokares-dev
  */
@@ -75,12 +75,12 @@ function qa_admin_document( string $title, string $source = 'link' ): int {
 }
 
 test(
-	'QA-034 and QA-093: Regular meetings lists only shown meetings, and every row names its meeting',
+	'QA-034 and QA-093: Cancel or Move a Meeting lists only shown meetings, and every row names its meeting',
 	function () {
 		as_role( 'ares-editor' );
 		$html = qa_admin_render( '\spokares_meetings_page' );
 		assert_not_contains( 'Winlink workshop on', $html, 'a meeting the site doesn’t show has rows' );
-		assert_contains( 'Not listed: Winlink workshop', $html, 'the screen says which meeting is not listed' );
+		assert_not_contains( 'Not listed', $html, 'no "Not listed: …" line about a meeting nobody sees' );
 		preg_match_all( '#<tr class="spk-meeting-row[^"]*">\s*<th scope="row"[^>]*>(.*?)</th>#s', $html, $m );
 		assert_true( count( $m[1] ) > 2, 'set-up: the table has rows' );
 		foreach ( $m[1] as $th ) {
@@ -90,14 +90,15 @@ test(
 );
 
 test(
-	'QA-084: Regular meetings links Meeting rules for the grant holder only',
+	'QA-084: Cancel or Move a Meeting links Meeting Schedule for the grant holder only',
 	function () {
 		as_role( 'ares-net' );
-		assert_contains( 'page=spokares-meeting-rules', qa_admin_render( '\spokares_meetings_page' ), 'grant holder: no link to Meeting rules' );
+		assert_matches( '#<a class="page-title-action" href="[^"]*page=spokares-meeting-rules">Meeting Schedule</a>#', qa_admin_render( '\spokares_meetings_page' ), 'grant holder: the h1 button to Meeting Schedule' );
 		as_role( 'ares-editor' );
 		$html = qa_admin_render( '\spokares_meetings_page' );
 		assert_not_contains( 'page=spokares-meeting-rules', $html, 'an editor without the grant is linked to a screen they can’t open' );
-		assert_contains( 'ask the webmaster', $html, 'an editor without the grant is told whom to ask' );
+		// Said once, in the screen's Help (R3): the regular times are the webmaster's.
+		assert_contains( 'ask the webmaster', implode( ' ', \spokares_help_lines()['spokares-meetings'] ), 'an editor without the grant is told whom to ask' );
 	}
 );
 
@@ -106,7 +107,7 @@ test(
 	function () {
 		as_role( 'ares-net' );
 		$html = qa_admin_render( '\spokares_net_details_page' );
-		assert_matches( '#<label for="spk-gmrs-time">at <span class="screen-reader-text">\(ACS GMRS net time\)</span></label>#', $html, 'GMRS time label' );
+		assert_matches( '#<label for="spk-gmrs-time">GMRS net time</label>#', $html, 'GMRS time label' );
 		assert_matches( '#id="spk-p-freq"[^>]*aria-describedby="spk-p-freq-hint"#', $html, 'the frequency hint is tied to its field' );
 	}
 );
@@ -142,7 +143,7 @@ test(
 		} finally {
 			$wp_meta_boxes = $saved; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- restoring.
 		}
-		assert_contains( 'Move to Trash', $html, 'set-up: the Save box is drawn' );
+		assert_contains( 'Take it off the site', $html, 'set-up: the Save box is drawn (a published document)' );
 		assert_not_contains( 'Also remove its file', $html, 'a link document is offered to remove a file it doesn’t have' );
 	}
 );
@@ -182,7 +183,7 @@ test(
 );
 
 test(
-	'QA-076 and QA-080: accounts without site tasks get a sentence; tasks are numbered as printed',
+	'QA-076 and QA-080: accounts without site tasks get a sentence; tasks carry no number badges',
 	function () {
 		foreach ( array( 'subscriber', 'contributor', 'author' ) as $role ) {
 			as_role( $role );
@@ -191,23 +192,24 @@ test(
 		}
 		as_role( 'core-editor' );
 		$html = qa_admin_render( '\spokares_dashboard_widget' );
-		preg_match_all( '#<span class="spk-task__n">(\d+)</span>#', $html, $m );
-		assert_true( count( $m[1] ) >= 1, 'set-up: the core Editor has a task' );
-		assert_same( range( 1, count( $m[1] ) ), array_map( 'intval', $m[1] ), 'tasks are numbered 1, 2, … as printed' );
+		assert_true( substr_count( $html, '<section class="spk-task">' ) >= 1, 'set-up: the core Editor has a task' );
+		assert_not_contains( 'spk-task__n', $html, 'a task carries a number badge' );
 	}
 );
 
 test(
-	'QA-078: no command palette for an account that edits nothing',
+	'QA-078: no command palette for anyone but administrators',
 	function () {
-		as_role( 'subscriber' );
+		foreach ( array( 'subscriber', 'ares-editor', 'ares-net' ) as $role ) {
+			as_role( $role );
+			add_action( 'admin_enqueue_scripts', 'wp_enqueue_command_palette_assets' );
+			\spokares_no_command_palette();
+			assert_false( has_action( 'admin_enqueue_scripts', 'wp_enqueue_command_palette_assets' ), 'the palette is still enqueued for ' . $role );
+		}
 		add_action( 'admin_enqueue_scripts', 'wp_enqueue_command_palette_assets' );
+		as_role( 'admin' );
 		\spokares_no_command_palette();
-		assert_false( has_action( 'admin_enqueue_scripts', 'wp_enqueue_command_palette_assets' ), 'the palette is still enqueued for a subscriber' );
-		add_action( 'admin_enqueue_scripts', 'wp_enqueue_command_palette_assets' );
-		as_role( 'ares-editor' );
-		\spokares_no_command_palette();
-		assert_true( (bool) has_action( 'admin_enqueue_scripts', 'wp_enqueue_command_palette_assets' ), 'an ARES Editor keeps the palette' );
+		assert_true( (bool) has_action( 'admin_enqueue_scripts', 'wp_enqueue_command_palette_assets' ), 'an administrator keeps the palette' );
 	}
 );
 
@@ -259,7 +261,7 @@ test(
 );
 
 test(
-	'QA-081: a file refused for the Privacy tick says so under the chooser after the save',
+	'QA-081: a file refused for the "I checked this file" tick says so under the chooser after the save',
 	function () {
 		as_role( 'ares-editor' );
 		$id  = create_post(
@@ -307,8 +309,8 @@ test(
 		}
 		// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited, WordPress.Security.NonceVerification
 		$html = qa_admin_render( '\spokares_document_form_fields', get_post( $id ) );
-		assert_contains( 'tick the Privacy check first', $html, 'the field says why the file wasn’t uploaded' );
-		assert_not_contains( 'Choose the file to upload.', $html, 'the field asks for a file although one was chosen' );
+		assert_contains( 'Tick “I checked this file” first, then choose the file again.', $html, 'the field says why the file wasn’t uploaded' );
+		assert_not_contains( 'Tick “I checked this file”, then choose the file.', $html, 'the field asks for a file although one was chosen' );
 	}
 );
 
@@ -380,17 +382,31 @@ test(
 	'QA-087: Restore says the event came back as a draft',
 	function () {
 		as_role( 'ares-editor' );
-		$id = create_post(
+		// The list's notice after core's redirect (edit.php?post_type=spk_event&untrashed=1),
+		// which doesn't name what it restored.
+		$notice = static fn(): string => (string) ( call_request(
+			'GET',
+			array(
+				'post_type' => 'spk_event',
+				'untrashed' => '1',
+			),
+			array(),
+			static fn() => apply_filters( 'bulk_post_updated_messages', array(), array( 'untrashed' => 1 ) ) // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- core's filter.
+		)['returned']['spk_event']['untrashed'] ?? '' );
+		$id     = create_post(
 			array(
 				'post_type'   => 'spk_event',
 				'post_status' => 'draft',
 				'post_title'  => 'QA admin restored',
 			)
 		);
-		$r  = call_request( 'GET', array( 'ids' => (string) $id ), array(), static fn() => \spokares_bulk_message( true, 'untrashed', 1 ) );
-		assert_contains( 'as a draft', (string) $r['returned'], 'the restore message' );
-		$r = call_request( 'GET', array( 'ids' => (string) post_id( 'spk_event', 'set-2026' ) ), array(), static fn() => \spokares_bulk_message( true, 'untrashed', 1 ) );
-		assert_not_contains( 'as a draft', (string) $r['returned'], 'an Undo that restored a published event says draft' );
+		wp_trash_post( $id );
+		wp_untrash_post( $id );
+		assert_same( '“QA admin restored” is back as a draft.', $notice(), 'the restore message' );
+		$set = post_id( 'spk_event', 'set-2026' );
+		wp_trash_post( $set );
+		wp_untrash_post( $set );
+		assert_not_contains( 'as a draft', $notice(), 'an Undo that restored a published event says draft' );
 	}
 );
 

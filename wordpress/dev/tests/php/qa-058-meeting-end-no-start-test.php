@@ -188,7 +188,7 @@ function qa058_save( array $fields ): array {
 	unset( $fields['_wpnonce'], $fields['_wp_http_referer'] );
 	$res = post_form( 'spokares_save_meeting_rules', $fields );
 	assert_same( null, $res['die'], 'the save did not wp_die()' );
-	assert_contains( 'page=spokares-meeting-rules', (string) $res['redirect'], 'the save redirects back to Meeting rules' );
+	assert_contains( 'page=spokares-meeting-rules', (string) $res['redirect'], 'the save redirects back to Meeting Schedule' );
 	\spokares_unlock_option( 'spk_meetings' );
 	\spokares_opt_flush();
 	return qa058_notices();
@@ -232,7 +232,7 @@ function qa058_redrawn_card( string $html, int $index ): array {
 }
 
 test(
-	'Meeting rules: an End time with no Start is not saved, the stored times stay, and the typed End comes back outlined with a sentence',
+	'Meeting Schedule: an End time with no Start is not saved, the stored times stay, and the typed End comes back outlined with a sentence',
 	function () {
 		foreach ( array( 'ares-net', 'admin' ) as $role ) {
 			as_role( $role );
@@ -259,9 +259,12 @@ test(
 				$role . ': the workshop was stored as start "' . ( $after['start'] ?? '' ) . '" / end "' . ( $after['end'] ?? '' ) . '" although an End time with no Start is refused by PLAN §4.4 (notices: ' . $said . ')'
 			);
 			assert_not_contains( 'success', wp_list_pluck( $notices, 'type' ), $role . ': a plain "Saved." notice for a save that should have been held back (' . $said . ')' );
-			$errors = array_values( wp_list_pluck( array_filter( $notices, static fn( $n ) => 'error' === $n['type'] ), 'text' ) );
-			assert_true( count( $errors ) > 0, $role . ': no error notice for the End time with no Start (' . $said . ')' );
-			assert_contains( 'Second Saturday Workshop', implode( ' ', $errors ), $role . ': the error notice names the meeting (' . $said . ')' );
+			// One notice: "Saved, except Second Saturday Workshop (outlined in red)." (a warning when
+			// the other card's change is saved), or "Not saved: …" (an error) when nothing else changed.
+			$errors = array_values( wp_list_pluck( array_filter( $notices, static fn( $n ) => in_array( $n['type'], array( 'error', 'warning' ), true ) ), 'text' ) );
+			assert_count( 1, $notices, $role . ': one notice for the save (' . $said . ')' );
+			assert_true( count( $errors ) > 0, $role . ': no error or warning notice for the End time with no Start (' . $said . ')' );
+			assert_matches( '/^(Saved, except|Not saved:) Second Saturday Workshop \(outlined in red\)\./', implode( ' ', $errors ), $role . ': the notice names the meeting (' . $said . ')' );
 
 			// Every other field is saved (§4.4 settings screens).
 			assert_same( 'Thursday evenings', (string) ( qa058_meeting( 'third-thursday' )['time_text'] ?? '' ), $role . ': the other meeting\'s change in the same save is saved' );
@@ -278,7 +281,7 @@ test(
 );
 
 test(
-	'Meeting rules: after an End time with no Start is refused, Home and the hub still show the meeting time',
+	'Meeting Schedule: after an End time with no Start is refused, Home and the hub still show the meeting time',
 	function () {
 		as_role( 'ares-net' );
 		$fields = qa058_browser_fields( qa058_screen() );
@@ -307,7 +310,7 @@ test(
 );
 
 test(
-	'Meeting rules: a new meeting with an End time and no Start is not added',
+	'Meeting Schedule: a new meeting with an End time and no Start is not added',
 	function () {
 		foreach ( array( 'ares-net', 'admin' ) as $role ) {
 			as_role( $role );
@@ -333,7 +336,7 @@ test(
 );
 
 test(
-	'Meeting rules: a Start with no End, and a Start before End, are still saved (control)',
+	'Meeting Schedule: a Start with no End, and a Start before End, are still saved (control)',
 	function () {
 		as_role( 'ares-net' );
 		$fields = qa058_browser_fields( qa058_screen() );
@@ -358,18 +361,19 @@ test(
 );
 
 test(
-	'Meeting rules: a meeting with time words and no times (Third Thursday) still saves unchanged (control)',
+	'Meeting Schedule: a meeting with time words and no times (Third Thursday) still saves unchanged (control)',
 	function () {
 		as_role( 'admin' );
 		$notices = qa058_save( qa058_browser_fields( qa058_screen() ) );
-		assert_contains( 'success', wp_list_pluck( $notices, 'type' ), 'an unchanged save says "Saved." (' . qa058_said( $notices ) . ')' );
+		assert_not_contains( 'error', wp_list_pluck( $notices, 'type' ), 'an unchanged save is not refused (' . qa058_said( $notices ) . ')' );
+		assert_same( array( 'Nothing changed, so nothing was saved.' ), array_values( wp_list_pluck( $notices, 'text' ) ), 'an unchanged save says so (' . qa058_said( $notices ) . ')' );
 		$tt = qa058_meeting( 'third-thursday' );
 		assert_same( array( '', '', 'evenings' ), array( (string) $tt['start'], (string) $tt['end'], (string) $tt['time_text'] ), 'Third Thursday keeps its time words and no times' );
 	}
 );
 
 test(
-	'Meeting rules: an End time before the Start is still refused (control)',
+	'Meeting Schedule: an End time before the Start is still refused (control)',
 	function () {
 		as_role( 'ares-net' );
 		$fields = qa058_browser_fields( qa058_screen() );

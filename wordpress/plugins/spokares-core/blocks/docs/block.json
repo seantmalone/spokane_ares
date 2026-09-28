@@ -5,7 +5,7 @@
 	"title": "Documents",
 	"category": "spokares",
 	"icon": "media-document",
-	"description": "The document library, its search box and the hub tiles. Edit them in Documents and Hub tiles.",
+	"description": "The document library, its search box and the Most Used buttons. Edit them on the Documents and Most Used screens.",
 	"textdomain": "spokares-core",
 	"attributes": {
 		"view": {

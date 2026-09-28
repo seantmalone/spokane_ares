@@ -31,7 +31,7 @@ A cold start takes about 15–40 seconds. It needs network access: every start i
 
 `?dev_login=` works on any URL, and it drops itself from the address after signing in. Both accounts also work at `/wp-login.php` with the password `password`.
 
-There is also one QA account per user level, created at every start from `setup/qa-users.json`: `?dev_login=qa-subscriber`, `qa-contributor`, `qa-author`, `qa-core-editor` (WordPress's own Editor role) and `qa-ares-net` (an ARES Editor with the Net details and Meeting rules grant). The password is `password` for all of them. The crawler and the tests use them: see [`tests/README.md`](tests/README.md).
+There is also one QA account per user level, created at every start from `setup/qa-users.json`: `?dev_login=qa-subscriber`, `qa-contributor`, `qa-author`, `qa-core-editor` (WordPress's own Editor role) and `qa-ares-net` (an ARES Editor with the Net Settings and Meeting Schedule grant). The password is `password` for all of them. The crawler and the tests use them: see [`tests/README.md`](tests/README.md).
 
 The switch lives in `mu-plugins/spokares-dev-login.php` and acts only when all of these hold:
 

@@ -5,7 +5,7 @@
  * Categories: spokares-sections
  * Inserter: no
  * Viewport Width: 1440
- * Description: Settings box (from Net details), the six-step run-sheet with the visitor cue, and the other nets (from Net details).
+ * Description: Settings box (from Net Settings), the six-step run-sheet with the visitor cue, and the other nets (from Net Settings).
  *
  * @package spokares
  */
