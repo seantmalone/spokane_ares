@@ -31,6 +31,8 @@ A cold start takes about 15–40 seconds. It needs network access: every start i
 
 `?dev_login=` works on any URL, and it drops itself from the address after signing in. Both accounts also work at `/wp-login.php` with the password `password`.
 
+There is also one QA account per user level, created at every start from `setup/qa-users.json`: `?dev_login=qa-subscriber`, `qa-contributor`, `qa-author`, `qa-core-editor` (WordPress's own Editor role) and `qa-ares-net` (an ARES Editor with the Net details and Meeting rules grant). The password is `password` for all of them. The crawler and the tests use them: see [`tests/README.md`](tests/README.md).
+
 The switch lives in `mu-plugins/spokares-dev-login.php` and acts only when all of these hold:
 
 - the environment type is `local`
@@ -58,10 +60,10 @@ Dev-only extras, all switched on by `SPOKARES_DEV`:
    - permalinks `/%postname%/`
    - registration, comments and pings off
 3. The Two-Factor plugin from WordPress.org, activated.
-4. `setup/mu.php` writes two one-line loaders into `wp-content/mu-plugins/`: the dev login, and `spokares-hardening`, both read from the mounted repo. Edits to the must-use plugin are live.
+4. `setup/mu.php` writes three one-line loaders into `wp-content/mu-plugins/`: the dev login, the QA endpoints and `spokares-hardening`, all read from the mounted repo. Edits to the must-use plugin are live.
 5. Activates the `spokares` theme and the `spokares-core` plugin. `start.sh` drops either step when its files are missing.
 6. `setup/setup.php` (a new request, after `init`):
-   - creates the `editor` user
+   - creates the `editor` user and the QA users (`setup/qa-users.json`)
    - runs `seed/import.php` in `dev` mode
    - runs `setup/pages.php`
    - deletes WordPress's sample content
@@ -80,7 +82,7 @@ The theme, the plugin, the must-use plugin and this folder are **mounted**, not 
   - the two undated public-service rows
   - the SET short line and its Extra form (the WA State Field Situation Report, which B linked from task 1), and the WSDOT button words
   - the Home meeting extras
-  - the hub tile slots
+  - the hub tile slots, and the same PLAN §2.3 swap for the library's Most used flags (`mostUsed`: ICS 214 in, ICS 309 out)
   - page excerpts (B's meta descriptions) and About's page owner
 - `seed/import.php` writes both through the §6.3 schema only. Every run:
   - creates 7 library sections and 37 documents
@@ -157,6 +159,19 @@ It exits 1 on any failure. It checks:
 
 The case "a Draft document's `/docs/<slug>/` gives 404" can't be checked here, because the dev seed publishes every document. It was checked on a production-mode boot, where every document is a Draft: `/docs/ics-213/` gave 404.
 
+## Tests and the QA crawl
+
+```bash
+wordpress/dev/tests/run-all.sh <PORT>        # checks.sh + PHP integration tests + browser tests
+node wordpress/dev/qa/crawl.mjs <PORT> wordpress/qa/runs/<name> --shots=wordpress/qa/shots/<name>
+```
+
+- `tests/run-php.sh` runs `tests/php/*-test.php` inside WordPress, through the dev-only endpoint in `mu-plugins/spokares-dev-qa.php`.
+- `tests/run-e2e.mjs` runs `tests/e2e/*.test.mjs` in Chrome.
+- `qa/crawl.mjs` visits every public page, admin screen and forbidden screen as every user level. For each one it records a screenshot and its findings: errors, PHP messages, overflow, accessibility, and access leaks.
+
+All of it is described in [`tests/README.md`](tests/README.md).
+
 ## Files
 
 | File | What |
@@ -164,11 +179,16 @@ The case "a Draft document's `/docs/<slug>/` gives 404" can't be checked here, b
 | `start.sh`, `stop.sh` | Start or stop Playground on a port, with the mounts |
 | `blueprint.json` | The site recipe (no login step, so front-end shots are logged out) |
 | `setup/mu.php` | Writes the must-use loaders |
-| `setup/setup.php` | Last blueprint step: editor user, import, pages, sample content, rewrite flush |
+| `setup/setup.php` | Last blueprint step: editor and QA users, import, pages, sample content, rewrite flush |
 | `setup/pages.php` | The six pages and the hero photo (also `wp eval-file` at launch) |
 | `seed/convert.mjs`, `seed/data.json` | data.js to JSON |
 | `seed/extra.json` | Page-text facts, with sources |
 | `seed/import.php` | The importer (`dev` / `production`) |
 | `mu-plugins/spokares-dev-login.php` | `?dev_login=` and `?dev_edit=`, local and loopback only |
+| `mu-plugins/spokares-dev-qa.php` | QA endpoints (`?dev_qa=whoami\|ids\|unlock\|accounts`) and the PHP test endpoint, local and loopback only |
+| `setup/qa-users.json` | The dev accounts, one per user level (created by `setup/setup.php`) |
+| `lib/cdp.mjs`, `lib/site.mjs`, `lib/inspect.mjs` | The shared Chrome driver, site helpers and in-page checks |
+| `qa/crawl.mjs` | The QA crawl (all roles × all pages) |
+| `tests/` | The PHP and browser test runners, the tests and `run-all.sh` ([README](tests/README.md)) |
 | `shots.sh`, `shots.mjs`, `shoot.sh` | Screenshots |
 | `checks.sh` | The checks above |

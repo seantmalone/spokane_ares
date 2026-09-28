@@ -15,6 +15,13 @@
 #   SPOKARES_DROPINS=""      # wp-content/*.php drop-ins besides index.php, recorded at setup
 #   SPOKARES_ALERT_EMAIL=webmaster@spokares.org
 #
+# Checks: no PHP under uploads; nothing unexpected in plugins, themes,
+# mu-plugins or drop-ins; then (not with --find-only) core and plugin
+# checksums, Two-Factor active, exactly the expected administrators, 2FA for
+# every user who can edit, no dev constants, DISALLOW_UNFILTERED_HTML and
+# DISALLOW_FILE_EDIT on, and no Site Editor copies of templates, template
+# parts or global styles in the database (PLAN §5.2, §5.7, §5.8).
+#
 # Success: pings SPOKARES_PING_URL (a dead-man service e-mails the admins when
 # no success arrives within 8 days). Failure: pings <url>/fail with the summary
 # and also tries wp_mail. Exit 1 on failure.
@@ -94,6 +101,29 @@ if (( ! FIND_ONLY )); then
 
   devconst=$(wp eval 'foreach ( array( "SPOKARES_DEV", "SPOKARES_TODAY", "WP_DEVELOPMENT_MODE" ) as $c ) { if ( defined( $c ) && constant( $c ) ) { echo $c, " "; } }' 2>&1)
   if [[ -z $devconst ]]; then ok "no dev constants"; else note "dev constants defined: $devconst"; fi
+
+  # PLAN §5.2: wp-config.php must switch these on. DISALLOW_UNFILTERED_HTML is
+  # also what strips per-block custom CSS from editors (§4.3 layer 5).
+  needconst=$(wp eval 'foreach ( array( "DISALLOW_UNFILTERED_HTML", "DISALLOW_FILE_EDIT" ) as $c ) { if ( ! defined( $c ) || ! constant( $c ) ) { echo $c, " "; } }' 2>&1)
+  if [[ -z $needconst ]]; then ok "wp-config.php: DISALLOW_UNFILTERED_HTML and DISALLOW_FILE_EDIT are on"; else note "wp-config.php constants missing or off: $needconst"; fi
+
+  # PLAN §5.7 and risk 10: templates, template parts and styles live in git.
+  # A Site Editor save stores a copy in the database that silently replaces
+  # the theme's file (check-live.sh compares files, so it can't see it). A
+  # wp_global_styles post holding only its version marker (the Site Editor
+  # creates one when it opens) changes nothing and is allowed.
+  overrides=$(wp eval '
+    $found = array();
+    foreach ( get_posts( array( "post_type" => array( "wp_template", "wp_template_part" ), "post_status" => "any", "numberposts" => -1, "suppress_filters" => true ) ) as $p ) {
+      $found[] = $p->post_type . ":" . $p->post_name;
+    }
+    foreach ( get_posts( array( "post_type" => "wp_global_styles", "post_status" => "any", "numberposts" => -1, "suppress_filters" => true ) ) as $p ) {
+      $data = json_decode( $p->post_content, true );
+      if ( is_array( $data ) ) { unset( $data["version"], $data["isGlobalStylesUserThemeJSON"] ); }
+      if ( ! is_array( $data ) || array_filter( $data ) ) { $found[] = "wp_global_styles:" . $p->post_name; }
+    }
+    echo implode( " ", $found );' 2>&1)
+  if [[ -z $overrides ]]; then ok "no Site Editor overrides of templates, parts or styles in the database"; else note "Site Editor overrides in the database (reset them in Appearance > Editor, and make the change in git): $overrides"; fi
 fi
 
 # --- result -------------------------------------------------------------------

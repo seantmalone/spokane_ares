@@ -1,0 +1,13 @@
+{
+ "_comment": "DEV ONLY. One dev sign-in account per WordPress user level, the single list read by setup/setup.php (creates the qa-* users), mu-plugins/spokares-dev-login.php (?dev_login=<login>), mu-plugins/spokares-dev-qa.php and the QA crawler and test runners (dev/lib/site.mjs). 'key' is the role key used by dev/qa and dev/tests; 'dev_login' is the ?dev_login= value (defaults to the login); 'caps' are extra per-user capabilities. Every password is \"password\"; every e-mail is <login>@example.invalid.",
+ "accounts": [
+  { "key": "anonymous", "login": "", "label": "Anonymous visitor" },
+  { "key": "subscriber", "login": "qa-subscriber", "role": "subscriber", "name": "QA Subscriber", "label": "Subscriber (core role)" },
+  { "key": "contributor", "login": "qa-contributor", "role": "contributor", "name": "QA Contributor", "label": "Contributor (core role)" },
+  { "key": "author", "login": "qa-author", "role": "author", "name": "QA Author", "label": "Author (core role)" },
+  { "key": "core-editor", "login": "qa-core-editor", "role": "editor", "name": "QA Core Editor", "label": "Editor (core role)" },
+  { "key": "ares-editor", "login": "editor", "dev_login": "editor", "role": "ares_editor", "name": "Test Editor", "label": "ARES Editor" },
+  { "key": "ares-net", "login": "qa-ares-net", "role": "ares_editor", "caps": [ "spokares_edit_net_details" ], "name": "QA Net Details", "label": "ARES Editor + Net details and Meeting rules grant" },
+  { "key": "admin", "login": "admin", "dev_login": "1", "role": "administrator", "name": "admin", "label": "Administrator" }
+ ]
+}

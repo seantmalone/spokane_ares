@@ -14,14 +14,19 @@
 input.spk-field-error,
 textarea.spk-field-error,
 select.spk-field-error { outline: 2px solid #d63638 !important; outline-offset: 1px; }
-.spk-card.spk-field-error, fieldset.spk-field-error { box-shadow: 0 0 0 2px #d63638; }
-.spk-row-error > * { background: #fcf0f1 !important; }
+.spk-card.spk-field-error, fieldset.spk-field-error, .spk-card.spk-row-error { box-shadow: 0 0 0 2px #d63638; }
+/* A table row with a problem is tinted; a card (Meeting rules) is outlined, above. */
+tr.spk-row-error > * { background: #fcf0f1 !important; }
+.spk-card.spk-row-error { background: #fffafa; }
 .spk-error-text { display: block; margin-top: 4px; color: #b32d2e; font-weight: 600; }
+.spk-error-text[hidden] { display: none; }
 .spk-confirm { display: block; margin-top: 6px; padding: 6px 8px; background: #fcf9e8; border: 1px solid #dba617; border-radius: 3px; }
 .spk-flag { color: #b32d2e; font-weight: 600; }
 .spk-danger { color: #b32d2e; }
 .spk-choice { display: inline-block; margin: 0 14px 6px 0; white-space: nowrap; }
 .spk-card { border: 1px solid #c3c4c7; background: #fff; border-radius: 4px; padding: 10px 16px 12px; margin: 0 0 16px; }
+/* A fieldset is min-content wide by default: let it shrink with the screen. */
+.spk-screen fieldset, .spk-event-form fieldset, .spk-doc-form fieldset, .spk-kind-box { min-width: 0; }
 .spk-card > legend { padding: 0 6px; font-weight: 600; font-size: 14px; }
 .spk-field { margin: 0 0 16px; }
 .spk-field > label:first-child, .spk-field > legend, .spk-label { display: block; font-weight: 600; margin-bottom: 4px; }
@@ -61,7 +66,7 @@ select.spk-field-error { outline: 2px solid #d63638 !important; outline-offset: 
 .spk-rota-table .spk-form-select { max-width: 170px; }
 .spk-rota-table .spk-form-other { display: block; margin-top: 4px; width: 100%; max-width: 170px; }
 .spk-rota-table .spk-form-other[hidden] { display: none; }
-.spk-rota-table .spk-note input { width: 100%; min-width: 7em; }
+.spk-rota-table .spk-note input[type="text"] { width: 100%; min-width: 7em; }
 .spk-rota-more { margin: 10px 0; }
 @media (min-width: 1300px) {
 	.spk-rota-table td.spk-nc { min-width: 400px; }
@@ -91,6 +96,7 @@ select.spk-field-error { outline: 2px solid #d63638 !important; outline-offset: 
 .spk-privacy { background: #fcf9e8; border: 1px solid #dba617; padding: 8px 10px; border-radius: 3px; }
 .spk-upload, .spk-link { margin-top: 10px; }
 .spk-sublinks .spk-wide { width: 7em; }
+.spk-event-form select, .spk-doc-form select { max-width: 100%; }
 [data-kinds][hidden], [data-source][hidden] { display: none !important; }
 
 /* ---------- Site tasks ---------- */
@@ -104,18 +110,40 @@ select.spk-field-error { outline: 2px solid #d63638 !important; outline-offset: 
 .spk-attention ul { margin: 4px 0 4px 18px; list-style: disc; }
 .spk-stuck { margin: 12px 0 0; color: #50575e; }
 
-/* ---------- editors: shorter profile (name, e-mail, password, two-factor) ---------- */
+/* ---------- editors: shorter profile (name, e-mail, password, two-factor) ----------
+   Non-admins open their own profile at profile.php (user-edit.php?user_id=<self>
+   redirects there); the user-edit-php rules cover a save that lands there. */
 .spk-editor.profile-php .user-rich-editing-wrap,
 .spk-editor.profile-php .user-syntax-highlighting-wrap,
 .spk-editor.profile-php .user-comment-shortcuts-wrap,
 .spk-editor.profile-php .user-admin-bar-front-wrap,
+.spk-editor.profile-php .user-infinite-scrolling-wrap,
 .spk-editor.profile-php .user-language-wrap,
 .spk-editor.profile-php .user-url-wrap,
 .spk-editor.profile-php .user-description-wrap,
 .spk-editor.profile-php .user-profile-picture,
 .spk-editor.profile-php .application-passwords,
-.spk-editor.profile-php .user-admin-color-wrap { display: none; }
-.spk-editor.profile-php h2:has(+ table .user-description-wrap) { display: none; }
+.spk-editor.profile-php .user-admin-color-wrap,
+.spk-editor.user-edit-php .user-rich-editing-wrap,
+.spk-editor.user-edit-php .user-syntax-highlighting-wrap,
+.spk-editor.user-edit-php .user-comment-shortcuts-wrap,
+.spk-editor.user-edit-php .user-admin-bar-front-wrap,
+.spk-editor.user-edit-php .user-infinite-scrolling-wrap,
+.spk-editor.user-edit-php .user-language-wrap,
+.spk-editor.user-edit-php .user-url-wrap,
+.spk-editor.user-edit-php .user-description-wrap,
+.spk-editor.user-edit-php .user-profile-picture,
+.spk-editor.user-edit-php .application-passwords,
+.spk-editor.user-edit-php .user-admin-color-wrap { display: none; }
+/* Headings over tables whose rows are all hidden: "Personal Options" (every
+   row of it is hidden for non-admins) and "About Yourself". */
+.spk-editor.profile-php h2:has(+ table .user-admin-bar-front-wrap),
+.spk-editor.profile-php h2:has(+ table .user-description-wrap),
+.spk-editor.user-edit-php h2:has(+ table .user-admin-bar-front-wrap),
+.spk-editor.user-edit-php h2:has(+ table .user-description-wrap) { display: none; }
+
+/* ---------- Dashboard for editors: no empty "Add boxes" zones ---------- */
+.spk-editor.index-php #dashboard-widgets .postbox-container .empty-container { display: none; }
 
 @media (max-width: 782px) {
 	.spk-rota-table { table-layout: fixed; width: 100%; }
@@ -125,14 +153,66 @@ select.spk-field-error { outline: 2px solid #d63638 !important; outline-offset: 
 	/* The column headings are hidden on a phone, so each box says what it is. */
 	.spk-rota-table td[data-label]:not([data-label=""])::before { content: attr(data-label); display: block; margin-bottom: 4px; font-weight: 600; font-size: 12px; color: #50575e; }
 	.spk-rota-table td[data-label=""] { display: none; }
-	.spk-rota-table .spk-wl-task, .spk-rota-table .spk-note input, .spk-rota-table .spk-form-select, .spk-rota-table .spk-form-other { min-width: 0; max-width: 100%; width: 100%; box-sizing: border-box; }
+	.spk-rota-table .spk-wl-task, .spk-rota-table .spk-note input[type="text"], .spk-rota-table .spk-form-select, .spk-rota-table .spk-form-other { min-width: 0; max-width: 100%; width: 100%; box-sizing: border-box; }
 	.spk-rota-table td.spk-nc { min-width: 0; }
 	.spk-screen .spk-saved { display: block; margin: 6px 0 0; }
+}
+
+/* ---------- the tables fit the screen (WCAG 1.4.10) ----------
+   Above WordPress's 782px breakpoint the Hub tiles and Regular meetings tables
+   share the width they have (the fields shrink), and so does the Net rota
+   until there is room for one line per Tuesday. Below it, every row becomes a
+   card and each box says what it is, as the rota does. */
+.spk-tiles-table select, .spk-tiles-table input[type="text"], .spk-meetings-table input[type="text"], .spk-meetings-table input[type="date"] { max-width: 100%; box-sizing: border-box; }
+@media (min-width: 783px) {
+	.spk-tiles-table, .spk-meetings-table { table-layout: fixed; width: 100%; }
+	.spk-tiles-table td select, .spk-tiles-table td input[type="text"], .spk-meetings-table td input[type="text"], .spk-meetings-table td input[type="date"] { width: 100%; }
+	.spk-tiles-table thead th:nth-child(1) { width: 12%; }
+	.spk-tiles-table thead th:nth-child(2) { width: 38%; }
+	.spk-tiles-table thead th:nth-child(3) { width: 34%; }
+	.spk-tiles-table thead th:nth-child(4) { width: 16%; }
+	.spk-meetings-table thead th:nth-child(1) { width: 19%; }
+	.spk-meetings-table thead th:nth-child(2) { width: 13%; }
+	.spk-meetings-table thead th:nth-child(3) { width: 13%; }
+	.spk-meetings-table thead th:nth-child(4) { width: 20%; }
+	.spk-meetings-table thead th:nth-child(5) { width: 35%; }
+}
+@media (min-width: 783px) and (max-width: 1299px) {
+	.spk-rota-table { table-layout: fixed; width: 100%; }
+	.spk-rota-table thead th:nth-child(1) { width: 11%; }
+	.spk-rota-table thead th:nth-child(2) { width: 25%; }
+	.spk-rota-table thead th:nth-child(3) { width: 11%; }
+	.spk-rota-table thead th:nth-child(4) { width: 21%; }
+	.spk-rota-table thead th:nth-child(5) { width: 14%; }
+	.spk-rota-table thead th:nth-child(6) { width: 18%; }
+	.spk-rota-table th[scope="row"], .spk-rota-table .spk-shows { white-space: normal; }
+	.spk-rota-table .spk-call { width: 6.5em; max-width: 100%; box-sizing: border-box; }
+	.spk-rota-table .spk-wl-task, .spk-rota-table .spk-note input[type="text"], .spk-rota-table .spk-form-select, .spk-rota-table .spk-form-other { min-width: 0; width: 100%; max-width: 100%; box-sizing: border-box; }
+}
+@media (max-width: 782px) {
+	.spk-tiles-table, .spk-meetings-table { table-layout: fixed; width: 100%; }
+	.spk-tiles-table thead, .spk-meetings-table thead { display: none; }
+	.spk-tiles-table tr, .spk-meetings-table tr, .spk-meetings-table tbody.spk-meeting { display: block; }
+	.spk-tiles-table tr, .spk-meetings-table tbody.spk-meeting { border-bottom: 2px solid #c3c4c7; }
+	.spk-meetings-table tr + tr { border-top: 1px solid #dcdcde; }
+	.spk-tiles-table th, .spk-tiles-table td, .spk-meetings-table th, .spk-meetings-table td { display: block; box-sizing: border-box; width: auto; max-width: 100%; }
+	.spk-tiles-table td[data-label]::before, .spk-meetings-table td[data-label]::before { content: attr(data-label); display: block; margin-bottom: 4px; font-weight: 600; font-size: 12px; color: #50575e; }
+	.spk-tiles-table td select, .spk-tiles-table td input[type="text"], .spk-meetings-table td input[type="text"], .spk-meetings-table td input[type="date"] { width: 100%; max-width: 100%; box-sizing: border-box; }
+	/* The meeting's name shows once; the later dates keep it for screen readers only. */
+	.spk-meetings-table th[scope="row"] { font-weight: 600; font-size: 14px; }
+	.spk-meetings-table th.spk-name-repeat { padding: 0; }
+	/* The edit forms: fields as wide as the screen, never wider. */
+	.spk-event-form input[type="text"], .spk-event-form input[type="url"], .spk-event-form select, .spk-event-form textarea,
+	.spk-doc-form input[type="text"], .spk-doc-form input[type="url"], .spk-doc-form select, .spk-doc-form textarea,
+	.spk-rules input[type="text"], .spk-rules select { max-width: 100%; box-sizing: border-box; }
+	.spk-links .spk-link-row label, .spk-sublinks label { display: block; margin: 0 0 8px; }
+	.spk-links .spk-link-row input, .spk-sublinks input:not([type="hidden"]) { width: 100%; }
 }
 
 /* Buttons and the links beside them. */
 .spk-tasks .spk-task p .button + a,
 .spk-tasks .spk-task p a + a { margin-left: 12px; }
+.spk-account-actions .button + a { margin-left: 12px; }
 
 /* ---------- block editor, pages, for editors (spk-editor = not an administrator) ----------
    The page is words only: no block inserter, no Styles tab, no Advanced panel
@@ -157,5 +237,6 @@ select.spk-field-error { outline: 2px solid #d63638 !important; outline-offset: 
 .post-type-spk_document .wp-list-table .column-title { width: 28%; }
 .post-type-spk_event .wp-list-table .column-title { width: 34%; }
 .post-type-spk_event .wp-list-table .column-spk_when { width: 18%; }
-.spk-net input.spk-freq { width: 8em; }
+/* Net details: room for the whole frequency ("146.880"), phones included. */
+.spk-net .form-table input.spk-freq { width: 8em; max-width: 100%; }
 .spk-meetings-table td, .spk-meetings-table th, .spk-tiles-table td, .spk-tiles-table th { vertical-align: middle; }

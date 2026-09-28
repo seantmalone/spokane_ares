@@ -1,7 +1,8 @@
 <?php
 /**
- * Theme setup: supports, the one stylesheet, the two theme blocks, pattern
- * categories. PLAN.md §6.7 (filters 5 and 8) and §6.2 (names).
+ * Theme setup: supports, the one stylesheet and the header script, the two
+ * theme blocks, pattern categories, template descriptions. PLAN.md §6.7
+ * (filters 5 and 8) and §6.2 (names).
  *
  * @package spokares
  */
@@ -80,7 +81,9 @@ remove_action( 'wp_print_styles', 'print_emoji_styles' );
 add_filter( 'should_load_remote_block_patterns', '__return_false' );
 
 /**
- * The one stylesheet, front end. Handle "spokares-site" (§6.2).
+ * The one stylesheet, front end. Handle "spokares-site" (§6.2). Plus one
+ * small deferred script for the header: it closes the phone menu when the
+ * window grows past the 1020px breakpoint (assets/js/header.js).
  */
 function spokares_theme_enqueue(): void {
 	wp_enqueue_style(
@@ -89,8 +92,67 @@ function spokares_theme_enqueue(): void {
 		array(),
 		spokares_theme_asset_version( 'assets/css/site.css' )
 	);
+	wp_enqueue_script(
+		'spokares-header',
+		get_theme_file_uri( 'assets/js/header.js' ),
+		array(),
+		spokares_theme_asset_version( 'assets/js/header.js' ),
+		array(
+			'in_footer' => true,
+			'strategy'  => 'defer',
+		)
+	);
 }
 add_action( 'wp_enqueue_scripts', 'spokares_theme_enqueue' );
+
+/**
+ * What each of the theme's page templates is for, shown under its name in
+ * Appearance › Editor › Templates. theme.json ("customTemplates") names them
+ * but has no description field.
+ *
+ * @return array<string, string> Template slug => description.
+ */
+function spokares_theme_template_descriptions(): array {
+	return array(
+		'page-members'      => __( 'The For members page (/members/): This week, the Tuesday net and the most used documents. Every list on it is edited in wp-admin.', 'spokares' ),
+		'page-exercises'    => __( 'The Exercises & events page (/members/exercises/): next up, later this season, Winlink assignments, public service and past exercises, from Events and the Net rota in wp-admin.', 'spokares' ),
+		'page-documents'    => __( 'The Documents & forms page (/members/documents/): the document library, from Documents in wp-admin.', 'spokares' ),
+		'page-how-it-works' => __( 'The How it works page: header, the page’s own full-width sections (its heading included), footer.', 'spokares' ),
+		'page-about'        => __( 'The About ARES & ACS page: header, the page’s own head and long read with its contents, footer.', 'spokares' ),
+	);
+}
+
+/**
+ * Give one of the theme's templates its description when it has none.
+ *
+ * @param WP_Block_Template|null $template Template.
+ * @return WP_Block_Template|null
+ */
+function spokares_theme_describe_template( $template ) {
+	if ( ! $template instanceof WP_Block_Template || 'wp_template' !== $template->type || get_stylesheet() !== $template->theme || '' !== (string) $template->description ) {
+		return $template;
+	}
+	$descriptions = spokares_theme_template_descriptions();
+	if ( isset( $descriptions[ $template->slug ] ) ) {
+		$template->description = $descriptions[ $template->slug ];
+	}
+	return $template;
+}
+add_filter( 'get_block_template', 'spokares_theme_describe_template' );
+
+/**
+ * The same for every template in a list (the Site Editor's Templates screen).
+ *
+ * @param WP_Block_Template[] $templates Templates.
+ * @return WP_Block_Template[]
+ */
+function spokares_theme_describe_templates( $templates ) {
+	if ( is_array( $templates ) ) {
+		array_map( 'spokares_theme_describe_template', $templates );
+	}
+	return $templates;
+}
+add_filter( 'get_block_templates', 'spokares_theme_describe_templates' );
 
 /**
  * The two design-only PHP blocks (block.json + render.php, autoRegister) and

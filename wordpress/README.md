@@ -2,7 +2,7 @@
 
 This folder is the WordPress build of the new spokares.org for Spokane County ARES-ACS. It takes the round-3 design the owner chose, Option B "Carry the Message" (`design/round3/option-b-lines-down/`), and turns it into a block theme plus a small site plugin. Volunteers keep the changing facts current from wp-admin: the net-control rota, events and exercises, meeting changes, the document library and page text.
 
-- **Status:** built and reviewed on a local WordPress 7.1.2 site; not yet deployed. The code carries version 0.1.0. See [Known limitations and open questions](#known-limitations-and-open-questions) before launch.
+- **Status:** built and reviewed on a local WordPress 7.1.2 site; not yet deployed. The code carries version 0.1.1 (0.1.0 plus the QA fix pass and the owner's four decisions of 2026-09-27: QA-038, QA-039, QA-103, QA-104). See [Known limitations and open questions](#known-limitations-and-open-questions) before launch.
 - **Decision record and build contract:** [`PLAN.md`](PLAN.md). Where this README and PLAN.md disagree, PLAN.md wins.
 - **For volunteer editors:** [`EDITING-GUIDE.md`](EDITING-GUIDE.md), one page covering the five common jobs.
 - **Review page:** [`review/index.html`](review/index.html). Open it from disk. It shows the mockup and WordPress side by side for all six pages, the admin screens, and the reviewer scores.

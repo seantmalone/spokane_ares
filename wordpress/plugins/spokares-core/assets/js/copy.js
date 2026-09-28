@@ -9,18 +9,31 @@
 let toastEl = null;
 let toastTimer = 0;
 
-function toast( message ) {
+/*
+ * The one status region. It is made, empty, when the module starts, so it is
+ * in the page before its first message: a screen reader announces a change
+ * to a live region it already knows, not a region added with its text.
+ */
+function region() {
 	if ( ! toastEl ) {
 		toastEl = document.createElement( 'div' );
 		toastEl.className = 'toast';
 		toastEl.setAttribute( 'role', 'status' );
 		toastEl.setAttribute( 'aria-live', 'polite' );
+		toastEl.setAttribute( 'aria-atomic', 'true' );
 		document.body.appendChild( toastEl );
 	}
-	toastEl.textContent = message;
-	toastEl.classList.add( 'is-on' );
+	return toastEl;
+}
+
+function toast( message ) {
+	const el = region();
+	// The same message twice in a row is still a change (a trailing no-break
+	// space), so the second copy is announced too.
+	el.textContent = el.textContent === message ? `${ message }\u00A0` : message;
+	el.classList.add( 'is-on' );
 	clearTimeout( toastTimer );
-	toastTimer = setTimeout( () => toastEl.classList.remove( 'is-on' ), 3600 );
+	toastTimer = setTimeout( () => el.classList.remove( 'is-on' ), 3600 );
 }
 
 function fallbackCopy( text ) {
@@ -54,9 +67,13 @@ async function copyText( text ) {
 }
 
 function init() {
-	document.querySelectorAll( 'button[data-copy-text]' ).forEach( ( b ) => {
+	const buttons = document.querySelectorAll( 'button[data-copy-text]' );
+	buttons.forEach( ( b ) => {
 		b.hidden = false;
 	} );
+	if ( buttons.length ) {
+		region();
+	}
 	document.addEventListener( 'click', async ( e ) => {
 		const b = e.target.closest( 'button[data-copy-text]' );
 		if ( ! b ) {

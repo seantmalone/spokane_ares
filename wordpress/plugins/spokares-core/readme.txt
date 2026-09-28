@@ -3,7 +3,7 @@ Contributors: spokane-county-ares-acs
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.1.0
+Stable tag: 0.1.1
 License: GPL-2.0-or-later
 Update URI: false
 
@@ -26,7 +26,10 @@ the data stays in the database.
   `spokares/last-reviewed`, `spokares/asof`.
 * Governance: the ARES Editor role, a shorter admin, and the server-side
   layout check that lets editors change words on Home, How it works and
-  About but not the layout.
+  About but not the layout. Only Administrator and ARES Editor are offered
+  as roles; only administrators delete or trash a page, edit or delete
+  someone else's Media Library file, or make synced patterns; the Net
+  details grant counts only while its holder is an ARES Editor.
 * Stable document links: `/docs/<slug>/`.
 
 The security floor (XML-RPC, headers, uploads, two-factor, SMTP, old URLs)
@@ -46,6 +49,11 @@ The full contract is `wordpress/PLAN.md` §6; build notes are in
 `wordpress/build-notes/plugin.md`.
 
 == Changelog ==
+
+= 0.1.1 =
+* Fixes from the 2026-09-27 QA sweep (wordpress/qa/ISSUES.md).
+* Settings > ARES site: the unused groups.io address fields are removed; the screen holds the meeting place only (QA-038).
+* Net details: the repeater call sign (W7GBU) is administrators only, enforced on save (QA-039).
 
 = 0.1.0 =
 * First build.

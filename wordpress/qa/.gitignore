@@ -1,0 +1,2 @@
+# Screenshots of failed browser tests (dev/tests/run-e2e.mjs); cleared on every run.
+e2e-failures/

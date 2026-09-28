@@ -101,8 +101,13 @@ if ( ! function_exists( 'spokares_dev_import' ) ) {
 		$log[] = 'import: ' . $order . ' library sections';
 
 		// 2. Documents, in data order; menu_order 10, 20, ... within each section.
-		$doc_ids  = array();
-		$position = array();
+		// "Most used" follows data.js mostUsed with the §2.3 swap from
+		// extra.json applied (ICS-214 in, ICS-309 out), so the library's Most
+		// used filter holds the same forms as the hub tiles.
+		$doc_ids     = array();
+		$position    = array();
+		$most_add    = array_map( 'strval', (array) ( $extra['mostUsed']['add'] ?? array() ) );
+		$most_remove = array_map( 'strval', (array) ( $extra['mostUsed']['remove'] ?? array() ) );
 		foreach ( $data['documents'] as $d ) {
 			$section              = $d['category'];
 			$position[ $section ] = ( $position[ $section ] ?? 0 ) + 10;
@@ -137,7 +142,7 @@ if ( ! function_exists( 'spokares_dev_import' ) ) {
 					'spk_howto_label'  => (string) ( $howto['label'] ?? '' ),
 					'spk_howto_url'    => (string) ( $howto['href'] ?? '' ),
 					'spk_sublinks'     => $subs,
-					'spk_most_used'    => ! empty( $d['mostUsed'] ),
+					'spk_most_used'    => ( ! empty( $d['mostUsed'] ) || in_array( (string) $d['id'], $most_add, true ) ) && ! in_array( (string) $d['id'], $most_remove, true ),
 					'spk_keywords'     => implode( ', ', (array) ( $d['tags'] ?? array() ) ),
 					'spk_privacy_ok'   => $dev,
 					// Dev publishes with the Privacy check ticked, which the form
@@ -306,9 +311,7 @@ if ( ! function_exists( 'spokares_dev_import' ) ) {
 		update_option(
 			'spk_site',
 			array(
-				'groupsio_main'  => (string) $data['links']['groupsio']['main'],
-				'groupsio_files' => (string) $data['links']['groupsio']['files'],
-				'place'          => array(
+				'place' => array(
 					'name'        => (string) $place['name'],
 					'street'      => (string) $place['street'],
 					'city'        => (string) $place['city'],

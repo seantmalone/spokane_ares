@@ -8,6 +8,7 @@
  *  3 External links in page text: class "ext" + a visually hidden "(opens …)".
  *  4 Navigation links: aria-current="page" by path ("is-section" also matches below it).
  *  9 No-break space between a number and AM, PM, MHz, kHz or Hz.
+ * 10 Search results: the document-library link carries the query.
  *
  * All of them run on the server, so the markup is right without JavaScript.
  *
@@ -308,3 +309,35 @@ foreach ( array( 'core/paragraph', 'core/heading', 'core/list-item', 'core/table
 	add_filter( 'render_block_' . $spokares_block_name, 'spokares_theme_nbsp_units', 30, 2 );
 }
 unset( $spokares_block_name );
+
+/*
+ * ------------------------------------------------------------------ 10. Search results
+ */
+
+/**
+ * Filter 10: on the search results page (templates/search.html) the paragraph
+ * with the class "search-library" sends its first link to the document
+ * library with the same query (?q=, which the library filters by on the
+ * server too), since site search only covers page text. Anywhere else, or
+ * with an empty query, the link is left as typed.
+ *
+ * @param string $html  Rendered block.
+ * @param array  $block Parsed block.
+ * @return string
+ */
+function spokares_theme_search_library_link( string $html, array $block ): string {
+	if ( ! is_search() || ! in_array( 'search-library', spokares_theme_block_classes( $block ), true ) ) {
+		return $html;
+	}
+	$query = trim( (string) get_search_query( false ) );
+	if ( '' === $query ) {
+		return $html;
+	}
+	$processor = new WP_HTML_Tag_Processor( $html );
+	if ( $processor->next_tag( 'A' ) ) {
+		$url = add_query_arg( 'q', rawurlencode( mb_substr( $query, 0, 100 ) ), home_url( '/members/documents/' ) ) . '#search';
+		$processor->set_attribute( 'href', esc_url_raw( $url ) );
+	}
+	return $processor->get_updated_html();
+}
+add_filter( 'render_block_core/paragraph', 'spokares_theme_search_library_link', 10, 2 );

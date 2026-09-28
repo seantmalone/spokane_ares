@@ -1,7 +1,7 @@
 <?php
 /**
- * Settings › ARES site (administrators): groups.io addresses and the meeting
- * place (spk_site).
+ * Settings › ARES site (administrators): the meeting place (spk_site).
+ * The groups.io links are page text and theme parts, so they are not settings.
  *
  * @package spokares-core
  */
@@ -27,29 +27,12 @@ function spokares_site_page(): void {
 		'state'  => __( 'State', 'spokares-core' ),
 		'zip'    => __( 'ZIP code', 'spokares-core' ),
 	);
-	$addr     = __( 'Web address (copy it from your browser’s address bar)', 'spokares-core' );
 	?>
 	<div class="wrap spk-screen spk-site">
 		<h1><?php esc_html_e( 'ARES site', 'spokares-core' ); ?></h1>
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 			<input type="hidden" name="action" value="spokares_save_site">
 			<?php wp_nonce_field( 'spokares_save_site' ); ?>
-			<h2><?php esc_html_e( 'groups.io', 'spokares-core' ); ?></h2>
-			<table class="form-table" role="presentation">
-				<?php
-				foreach ( array(
-					'groupsio_main'  => __( 'Main group', 'spokares-core' ),
-					'groupsio_files' => __( 'Member files', 'spokares-core' ),
-				) as $key => $label ) :
-					?>
-					<tr>
-						<th scope="row"><label for="spk-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></label></th>
-						<td><input type="url" class="large-text<?php echo esc_attr( spokares_err_class( $errors, $key ) ); ?>" id="spk-<?php echo esc_attr( $key ); ?>" name="site[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( (string) ( $held[ $key ] ?? $site[ $key ] ) ); ?>" placeholder="https://">
-							<p class="description"><?php echo esc_html( $addr ); ?></p>
-							<?php spokares_err_text( $errors, $key ); ?></td>
-					</tr>
-				<?php endforeach; ?>
-			</table>
 			<h2><?php esc_html_e( 'Meeting place (Home, “In person”)', 'spokares-core' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<?php foreach ( $fields as $key => $label ) : ?>
@@ -80,16 +63,6 @@ function spokares_handle_save_site(): void {
 	$held   = array();
 	$errors = array();
 
-	foreach ( array( 'groupsio_main', 'groupsio_files' ) as $key ) {
-		$typed = sanitize_text_field( spokares_post_str( $in, $key ) );
-		$clean = spokares_clean_url( $typed );
-		if ( '' === $typed || '' !== $clean ) {
-			$site[ $key ] = $clean;
-		} else {
-			$held[ $key ]   = $typed;
-			$errors[ $key ] = __( 'Not saved: the address must start with https://', 'spokares-core' );
-		}
-	}
 	$place = is_array( $in['place'] ?? null ) ? $in['place'] : array();
 	foreach ( array( 'name', 'street', 'city', 'state', 'zip' ) as $key ) {
 		$typed = sanitize_text_field( spokares_post_str( $place, $key ) );

@@ -185,9 +185,7 @@ function spokares_option_defaults(): array {
 			'changes'  => array(),
 		),
 		'spk_site'       => array(
-			'groupsio_main'  => 'https://spokaneares-acs.groups.io/g/main',
-			'groupsio_files' => 'https://spokaneares-acs.groups.io/g/main/files',
-			'place'          => array(
+			'place' => array(
 				'name'        => 'Spokane County Emergency Management',
 				'street'      => '1121 W Gardner Ave',
 				'city'        => 'Spokane',
@@ -330,8 +328,11 @@ function spokares_opt_read( string $name ): array {
 			);
 			break;
 		case 'spk_site':
-			$value          = array_merge( $default, $value );
-			$value['place'] = array_merge( $default['place'], is_array( $value['place'] ) ? $value['place'] : array() );
+			// Only the meeting place; an older stored value's groups.io
+			// addresses are not settings any more and are left out.
+			$value = array(
+				'place' => array_merge( $default['place'], is_array( $value['place'] ?? null ) ? $value['place'] : array() ),
+			);
 			break;
 		case 'spk_tiles':
 			$tiles = array();

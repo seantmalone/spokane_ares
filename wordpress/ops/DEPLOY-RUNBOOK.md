@@ -106,7 +106,22 @@ Deploys never overlap: the workflow's concurrency group `deploy-production` queu
 
 - It compares the host's code with the deployed commit (`rsync -rcn`).
 - It runs the file checks from `weekly-check.sh --find-only`: no PHP under uploads, and nothing unexpected in plugins, themes or mu-plugins. The expected lists are in `~/.spokares-weekly.env` on the host, or the script's defaults until that file exists.
-- It runs the PLAN §5.11 curl list: status codes, security headers, enumeration closed, and the 301/410 map.
+- It records the upload cap over SSH (PLAN §5.3: 32 MB in php.ini). It reads the CLI's php.ini, which can differ from the web server's, so anything other than 32 MB is a NOTE, not a failure: confirm the real value on Media > Add New.
+- It runs the PLAN §5.11 curl list: status codes, security headers, enumeration closed, and the 301/410 map. The security headers are checked on `/`, `/wp-login.php`, `/wp-admin/`, and on `admin-ajax.php` and `admin-post.php`, which run wp-admin's `admin_init` for anyone. Each must carry the whole Content-Security-Policy (`frame-ancestors 'self'`, `base-uri 'self'`, `form-action 'self'`, `object-src 'none'`), not just `frame-ancestors`. The script has no sign-in, so the go-live list checks one signed-in screen by hand.
+
+### What the weekly check does
+
+`~/bin/weekly-check.sh` runs on the host from the Enhance cron job (PLAN §5.8). It runs the file checks above, then these WordPress checks:
+
+- core and plugin checksums
+- Two-Factor is active
+- the administrators are exactly `SPOKARES_ADMINS`
+- every user who can edit has a Two-Factor method
+- no dev constants (`SPOKARES_DEV`, `SPOKARES_TODAY`, `WP_DEVELOPMENT_MODE`)
+- `DISALLOW_UNFILTERED_HTML` and `DISALLOW_FILE_EDIT` are on in `wp-config.php` (PLAN §5.2)
+- no Site Editor copies of templates, template parts or global styles in the database (PLAN §5.7, risk 10)
+
+A Site Editor save (Appearance > Editor) stores a copy of the template, part or styles in the database, and that copy silently replaces the theme's file. `check-live.sh` compares files, so it can't see these copies. When the weekly check reports one, open it in Appearance > Editor and use **Reset** (or **Clear customizations** for styles). Then make the change in git, if it was wanted. An empty global-styles record, which the Site Editor creates just by opening, is not reported.
 
 Before the cutover, the workflow pins the curl checks to `DEPLOY_HOST` (`--resolve`, and `-k` for the self-signed certificate). The pin drops by itself once spokares.org resolves to the server, and the real certificate is then verified.
 
@@ -216,7 +231,10 @@ The owner decides when. Work top to bottom.
 - [ ] The administrator's e-mail is a real mailbox, not the placeholder `webmaster@spokares.org` (Users > Profile).
 - [ ] Mail for WordPress (PLAN §5.1): create the `website@spokares.org` mailbox wherever spokares.org mail will live. Put `SPOKARES_SMTP_HOST/PORT/USER/PASS` in `wp-config.php` on the host, never in git. Send a test password reset.
 - [ ] UpdraftPlus: connect a role-owned Google Drive. Set the database backup weekly (keep 8) and uploads monthly (keep 3). Confirm `/wp-content/updraft/` returns 403.
-- [ ] The weekly integrity cron (PLAN §5.8). This is an Enhance cron job, not crontab: `SPOKARES_PING_URL=https://hc-ping.com/<uuid> ~/bin/weekly-check.sh`. Also set up the dead-man service.
+- [ ] The weekly integrity cron (PLAN §5.8). This is an Enhance cron job, not crontab: `SPOKARES_PING_URL=https://hc-ping.com/<uuid> ~/bin/weekly-check.sh`. Also set up the dead-man service. Run `~/bin/weekly-check.sh --no-ping` once over SSH: it must say "all clear". It fails if `wp-config.php` lacks `DISALLOW_UNFILTERED_HTML` or `DISALLOW_FILE_EDIT`, or if the Site Editor has stored a copy of a template or the styles.
+- [ ] `wp-config.php` has every PLAN §5.2 constant: `DISALLOW_FILE_EDIT`, `DISALLOW_UNFILTERED_HTML`, `FORCE_SSL_ADMIN`, `WP_ENVIRONMENT_TYPE` `production`, `WP_DEBUG` false, `WP_POST_REVISIONS` 20, and file mode 600.
+- [ ] Upload cap (PLAN §5.3): in the site's PHP settings, `upload_max_filesize` is 32M and `post_max_size` is at least 32M. Signed in as an administrator, Media > Add New says "Maximum upload file size: 32 MB". Record both values here, and compare them with the NOTE or PASS line `check-live.sh` prints.
+- [ ] Headers on a signed-in screen (QA-007). Signed in, open the Dashboard, then DevTools > Network > the `wp-admin/` document > Response headers. `Content-Security-Policy` must list `frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'`, not `frame-ancestors` alone.
 - [ ] Run `wordpress/ops/first-run.sh <tag> production --preview`, then `--launch-cleanup` (above), if that hasn't been done yet.
 - [ ] Tag the launch release (for example `v1.0.0`) and let it deploy. `check-live.sh` should be all PASS.
 - [ ] About a day ahead, lower the TTL of the spokares.org records to 300 at the DNS host that is authoritative now: **InMotion's** nameservers `ns1/ns2.inmotionhosting.com`. The domain is registered at GoDaddy, but GoDaddy isn't serving its DNS.

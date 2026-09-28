@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Trim and extend the admin bar.
+ * Extend the admin bar: the "Update lists" menu on the front end.
  *
  * @param WP_Admin_Bar $bar Admin bar.
  */
@@ -18,13 +18,6 @@ function spokares_admin_bar( $bar ): void {
 	if ( ! $bar instanceof WP_Admin_Bar || ! is_user_logged_in() ) {
 		return;
 	}
-	if ( ! current_user_can( 'manage_options' ) ) {
-		foreach ( array( 'wp-logo', 'new-content', 'comments', 'customize', 'updates', 'search', 'site-editor', 'edit-site' ) as $node ) {
-			$bar->remove_node( $node );
-		}
-	}
-	$bar->remove_node( 'comments' );
-
 	if ( is_admin() ) {
 		return;
 	}
@@ -66,3 +59,38 @@ function spokares_admin_bar( $bar ): void {
 	}
 }
 add_action( 'admin_bar_menu', 'spokares_admin_bar', 999 );
+
+/**
+ * Remove what editors don't use (§4.2). This runs last: WordPress adds some
+ * nodes late (Search at 9999, after an earlier removal would have run).
+ *
+ * @param WP_Admin_Bar $bar Admin bar.
+ */
+function spokares_admin_bar_trim( $bar ): void {
+	if ( ! $bar instanceof WP_Admin_Bar || ! is_user_logged_in() ) {
+		return;
+	}
+	if ( ! current_user_can( 'manage_options' ) ) {
+		foreach ( array( 'wp-logo', 'new-content', 'comments', 'customize', 'updates', 'search', 'site-editor', 'edit-site' ) as $node ) {
+			$bar->remove_node( $node );
+		}
+	}
+	if ( ! current_user_can( 'edit_posts' ) ) {
+		// Nothing to find or open for an account that edits nothing.
+		$bar->remove_node( 'command-palette' );
+	}
+	$bar->remove_node( 'comments' );
+}
+add_action( 'admin_bar_menu', 'spokares_admin_bar_trim', PHP_INT_MAX );
+
+/**
+ * No command palette (Cmd/Ctrl+K) for accounts that edit nothing: it offers
+ * only "Dashboard" and "View site", and every keystroke fires a REST search
+ * the account may not make.
+ */
+function spokares_no_command_palette(): void {
+	if ( is_user_logged_in() && ! current_user_can( 'edit_posts' ) ) {
+		remove_action( 'admin_enqueue_scripts', 'wp_enqueue_command_palette_assets' );
+	}
+}
+add_action( 'admin_init', 'spokares_no_command_palette' );

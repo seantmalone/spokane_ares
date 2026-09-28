@@ -2,8 +2,8 @@
 /**
  * Uploads (§5.5): per-user type allowlists (photos only for editors in the
  * media window; administrators also PDF), SVG never, a 32 MB cap, EXIF and
- * GPS stripped from JPEG originals, and the DOCX/XLSX inspection the
- * Documents form uses.
+ * GPS stripped from photo originals (JPEG, PNG and WebP), and the DOCX/XLSX
+ * inspection the Documents form uses.
  *
  * spokares-core widens the list for one call (its Documents form) through the
  * `spokares_hard_upload_mimes` filter.
@@ -166,14 +166,24 @@ function spokares_hard_prefilter( $file ) {
 add_filter( 'wp_handle_upload_prefilter', 'spokares_hard_prefilter' );
 
 /**
- * Strip EXIF and GPS data from a JPEG original: turn it upright (WordPress's
- * own orientation fix) and save it again through the GD editor, which keeps
- * no metadata.
+ * Strip EXIF and GPS data from a photo original. A JPEG is turned upright
+ * (WordPress's own orientation fix) and saved again through the GD editor,
+ * which keeps no metadata. A PNG or WebP keeps its pixels exactly: only its
+ * metadata chunks are taken out (spokares_hard_strip_png_meta(),
+ * spokares_hard_strip_webp_meta()), so a lossless file stays lossless.
  *
  * @param array $upload Upload result: file, url, type.
  */
 function spokares_hard_strip_exif( $upload ) {
-	if ( ! is_array( $upload ) || empty( $upload['file'] ) || 'image/jpeg' !== ( $upload['type'] ?? '' ) ) {
+	if ( ! is_array( $upload ) || empty( $upload['file'] ) ) {
+		return $upload;
+	}
+	$type = (string) ( $upload['type'] ?? '' );
+	if ( 'image/png' === $type || 'image/webp' === $type ) {
+		spokares_hard_strip_chunks( (string) $upload['file'], $type );
+		return $upload;
+	}
+	if ( 'image/jpeg' !== $type ) {
 		return $upload;
 	}
 	if ( ! class_exists( 'WP_Image_Editor_GD' ) ) {
@@ -198,3 +208,90 @@ function spokares_hard_strip_exif( $upload ) {
 	return $upload;
 }
 add_filter( 'wp_handle_upload', 'spokares_hard_strip_exif', 5 );
+
+/**
+ * Rewrite a PNG or WebP file without its metadata chunks. The file is left
+ * as it is when it can't be read as one (the upload checks decide about it).
+ *
+ * @param string $file Path.
+ * @param string $type image/png or image/webp.
+ */
+function spokares_hard_strip_chunks( string $file, string $type ): void {
+	if ( ! is_readable( $file ) || ! wp_is_writable( $file ) ) {
+		return;
+	}
+	$bytes = (string) file_get_contents( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- a local upload being cleaned in place.
+	$clean = 'image/png' === $type ? spokares_hard_strip_png_meta( $bytes ) : spokares_hard_strip_webp_meta( $bytes );
+	if ( null !== $clean && $clean !== $bytes ) {
+		file_put_contents( $file, $clean ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- rewriting the upload in place, before WordPress reads it.
+	}
+}
+
+/**
+ * A PNG without its metadata chunks: eXIf (EXIF and GPS), the text chunks
+ * (tEXt, zTXt, iTXt: XMP and "Raw profile type exif" live there) and tIME.
+ * The image, its transparency and its colour chunks (iCCP, sRGB, gAMA,
+ * cHRM) stay byte for byte. Null when the bytes aren't a well-formed PNG.
+ *
+ * @param string $bytes File contents.
+ */
+function spokares_hard_strip_png_meta( string $bytes ): ?string {
+	if ( "\x89PNG\r\n\x1a\n" !== substr( $bytes, 0, 8 ) ) {
+		return null;
+	}
+	$drop = array( 'eXIf', 'tEXt', 'zTXt', 'iTXt', 'tIME' );
+	$out  = substr( $bytes, 0, 8 );
+	$size = strlen( $bytes );
+	$pos  = 8;
+	while ( $pos + 12 <= $size ) {
+		$len  = unpack( 'N', substr( $bytes, $pos, 4 ) )[1];
+		$type = substr( $bytes, $pos + 4, 4 );
+		$end  = $pos + 12 + $len;
+		if ( $end > $size ) {
+			return null;
+		}
+		if ( ! in_array( $type, $drop, true ) ) {
+			$out .= substr( $bytes, $pos, 12 + $len );
+		}
+		$pos = $end;
+		if ( 'IEND' === $type ) {
+			break;
+		}
+	}
+	return $out;
+}
+
+/**
+ * A WebP without its EXIF and XMP chunks, with the VP8X header's EXIF and
+ * XMP flags cleared and the RIFF size corrected. The image (VP8, VP8L,
+ * ALPH, animation) and ICC profile stay byte for byte. Null when the bytes
+ * aren't a well-formed WebP.
+ *
+ * @param string $bytes File contents.
+ */
+function spokares_hard_strip_webp_meta( string $bytes ): ?string {
+	if ( 'RIFF' !== substr( $bytes, 0, 4 ) || 'WEBP' !== substr( $bytes, 8, 4 ) ) {
+		return null;
+	}
+	$body = '';
+	$size = min( strlen( $bytes ), 8 + unpack( 'V', substr( $bytes, 4, 4 ) )[1] );
+	$pos  = 12;
+	while ( $pos + 8 <= $size ) {
+		$type = substr( $bytes, $pos, 4 );
+		$len  = unpack( 'V', substr( $bytes, $pos + 4, 4 ) )[1];
+		$end  = $pos + 8 + $len + ( $len % 2 );
+		if ( $pos + 8 + $len > $size ) {
+			return null;
+		}
+		$chunk = substr( $bytes, $pos, $end - $pos );
+		if ( 'VP8X' === $type && $len >= 1 ) {
+			// Flags byte: 0x08 EXIF, 0x04 XMP.
+			$chunk[8] = chr( ord( $chunk[8] ) & ~0x0C );
+		}
+		if ( 'EXIF' !== $type && 'XMP ' !== $type ) {
+			$body .= $chunk;
+		}
+		$pos = $end;
+	}
+	return 'RIFF' . pack( 'V', 4 + strlen( $body ) ) . 'WEBP' . $body;
+}

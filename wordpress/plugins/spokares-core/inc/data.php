@@ -135,6 +135,7 @@ function spokares_register_data_model(): void {
 				'add_new_item'  => __( 'Add section', 'spokares-core' ),
 				'search_items'  => __( 'Search sections', 'spokares-core' ),
 				'not_found'     => __( 'No sections.', 'spokares-core' ),
+				'no_terms'      => __( 'No section', 'spokares-core' ),
 			),
 			'public'             => false,
 			'publicly_queryable' => false,
@@ -534,10 +535,9 @@ function spokares_sanitize_opt_meetings( $v ): array {
 function spokares_sanitize_opt_site( $v ): array {
 	$v = is_array( $v ) ? $v : array();
 	$p = is_array( $v['place'] ?? null ) ? $v['place'] : array();
+	// Only the meeting place: older keys (the groups.io addresses) are dropped.
 	return array(
-		'groupsio_main'  => spokares_clean_url( (string) ( $v['groupsio_main'] ?? '' ) ),
-		'groupsio_files' => spokares_clean_url( (string) ( $v['groupsio_files'] ?? '' ) ),
-		'place'          => array(
+		'place' => array(
 			'name'        => spokares_clean_str( $p['name'] ?? '' ),
 			'street'      => spokares_clean_str( $p['street'] ?? '' ),
 			'city'        => spokares_clean_str( $p['city'] ?? '' ),

@@ -158,3 +158,24 @@ All runs used WordPress 7.1.2 and PHP 8.4.25 in Playground CLI 3.1.55, on port 9
 9. **The server is stopped:** no listener and no Playground processes on 9424. No headless Chrome is left over.
 
 Not verified: the ops scripts against a real Enhance host; PHPCompatibilityWP, which isn't available without a local PHP toolchain.
+
+## QA round: tooling, seed and ops fixes (2026-09-27)
+
+- **Clicks land on the element (QA-005).** The theme sets `html { scroll-behavior: smooth }` for visitors without a reduced-motion preference, and headless Chrome has none. So `scrollIntoView()` only started an animation, and `Page.click()` (`t.click`, `t.clickAndWait`, the crawler) pressed the mouse at the element's position before the scroll. It hit `<html>` or another control. `Page.click()` now scrolls with `behavior: 'instant'` and measures the element only once its box has held still for two frames. `Page.type()` scrolls instantly too. The driver doesn't emulate reduced motion, so screenshots still show the page as visitors get it. Test: `dev/tests/e2e/qa-005-smooth-scroll-click.test.mjs`.
+- **Chrome that is slow, won't start or dies (QA-068).** `dev/lib/cdp.mjs`:
+  - `Browser.launch()` gives each attempt `SPOKARES_CHROME_CONNECT_MS` (default 60000; it was a fixed 20 s for the port file and 10 s for the WebSocket) and tries three times.
+  - When Chrome's process exits or its WebSocket closes, every pending command and page wait fails at once with a `BrowserClosedError`, and `Page.goto()` throws one instead of answering "HTTP 0".
+  - The crawler restarts Chrome and signs in again before any visit, HTTP check or REST probe when Chrome has died. It throws a visit away, and retries it, when Chrome died during it. If Chrome can't be restarted, the role stops.
+  - The crawl exits 1 when a role couldn't start or stopped (the report is still written); findings still never change the exit code.
+
+  Test: `dev/tests/e2e/qa-068-crawler-resilience.test.mjs` runs the real crawler behind a stand-in Chrome that is slow, exits at once, or is killed mid-crawl.
+- **Crawler coverage (QA-109).**
+  - `domFacts()` reports `innerOverflow`: content that sticks out of its own box, for example a long link running out of a grid column over the next one. It is reported even when the page doesn't scroll sideways (`.wp-site-blocks` clips it). Clipped and visually hidden boxes (the phone tables' `<thead>`), absolutely placed children and deliberate negative margins (`.prose .bleed`) are left out. The crawler adds `overflow-inner` findings (warning on public and plugin screens, info on core's). A pasted 90-character link in the "Later this season" table is found (321 px over its 588 px column at 1440); the seeded site gives none.
+  - The event-anchor check expects anchors for **published** events only: `?dev_qa=ids` now returns `status` (events and documents by slug) and `media.hero`.
+  - New known screens, each held to the site's policy (`manage_options`): Categories, Tags, Pattern Categories, Patterns (`edit.php?post_type=wp_block`), `media-upload.php`, and Edit Media for the Home hero (uploaded by an administrator).
+  - A REST write probe, `POST /wp/v2/blocks`. Anything it manages to create is deleted at once (force), and a copy left behind is reported.
+  - Policy checks now cover Bulk actions: Move to Trash on Pages and Documents, and bulk Edit on all three lists.
+  - For non-admins, the crawler opens the block editor page card's ⋮ menu and reports Order or Trash (`editor-card`).
+  - The first run after these changes reported `media-upload.php` opening for the Author, the core Editor and the ARES Editor, and the core Editor's Categories and Tags screens (QA-042).
+- **Seed: Most used (QA-108).** `extra.json` `mostUsed` applies the PLAN §2.3 swap to the library's Most used flags, as the tile slots already did: ICS 214 in, ICS 309 (Soon, no file) out. The importer applies it in both modes. `data.json` stays generated.
+- **Ops (QA-110).** `check-live.sh` checks all four §5.3 CSP directives, not just `frame-ancestors`, on `/`, `/wp-login.php`, `/wp-admin/`, and on `admin-ajax.php` and `admin-post.php`, which run `admin_init` signed out (the path QA-007 broke). Over SSH it records the upload cap, and anything other than 32 MB is a NOTE: the CLI's php.ini can differ from the web server's. `weekly-check.sh` fails when `DISALLOW_UNFILTERED_HTML` or `DISALLOW_FILE_EDIT` is off, and on any `wp_template` or `wp_template_part` post or any `wp_global_styles` post with styles in it. The empty marker the Site Editor creates when it opens doesn't count. Its PHP snippets were run inside the dev site with fixtures: nothing on the seeded site, templates, parts and styled global styles reported, the empty marker ignored. The runbook's go-live list gained the signed-in CSP check and the upload-cap record.

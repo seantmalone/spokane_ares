@@ -39,25 +39,49 @@ function spokares_next_weekday( string $ymd, int $weekday ): string {
 }
 
 /**
+ * The weeks of the month each net group really has. A week ticked in two
+ * groups on Net details belongs to the first of simplex, Winlink, GMRS (the
+ * rule the screen states), so the rota, How it works › Other nets and the
+ * Winlink assignments all agree.
+ *
+ * @param array|null $nets spk_nets (default: the stored option).
+ * @return array{simplex:int[],winlink:int[],gmrs:int[]}
+ */
+function spokares_net_weeks( ?array $nets = null ): array {
+	$nets  = $nets ?? spokares_opt( 'spk_nets' );
+	$taken = array();
+	$out   = array();
+	foreach ( array( 'simplex', 'winlink', 'gmrs' ) as $kind ) {
+		$weeks = array_values( array_diff( array_unique( array_map( 'intval', (array) ( $nets[ $kind . '_nth' ] ?? array() ) ) ), $taken ) );
+		sort( $weeks );
+		$out[ $kind ] = $weeks;
+		$taken        = array_merge( $taken, $weeks );
+	}
+	return $out;
+}
+
+/**
  * What the Tuesday net is on a date, and who has net control.
  * Port of B's fn.netOn(): fifth Tuesday → Simplex; else 2nd/4th → Winlink
- * night; else 3rd → GMRS net at its time. Weeks and time come from spk_nets.
+ * night; else 3rd → GMRS net at its time. Weeks and time come from spk_nets,
+ * a week ticked twice going to the first group (spokares_net_weeks()).
  *
  * @param string $ymd A Tuesday.
  * @return array{date:string,nth:int,kind:string,note:string,state:string,call:string,row_note:string,wl_task:string,wl_form:string,stored:bool}
  */
 function spokares_net_on( string $ymd ): array {
-	$nets = spokares_opt( 'spk_nets' );
-	$nth  = spokares_nth( $ymd );
-	$kind = '';
-	$note = '';
-	if ( in_array( $nth, $nets['simplex_nth'], true ) ) {
+	$nets  = spokares_opt( 'spk_nets' );
+	$weeks = spokares_net_weeks( $nets );
+	$nth   = spokares_nth( $ymd );
+	$kind  = '';
+	$note  = '';
+	if ( in_array( $nth, $weeks['simplex'], true ) ) {
 		$kind = 'simplex';
 		$note = __( 'Simplex', 'spokares-core' );
-	} elseif ( in_array( $nth, $nets['winlink_nth'], true ) ) {
+	} elseif ( in_array( $nth, $weeks['winlink'], true ) ) {
 		$kind = 'winlink';
 		$note = __( 'Winlink night', 'spokares-core' );
-	} elseif ( in_array( $nth, $nets['gmrs_nth'], true ) ) {
+	} elseif ( in_array( $nth, $weeks['gmrs'], true ) ) {
 		$kind = 'gmrs';
 		$time = spokares_fmt_time( $nets['gmrs_time'] );
 		/* translators: %s: time, e.g. "7:30 PM". */
@@ -230,13 +254,30 @@ function spokares_meeting_home_line( array $m ): string {
 }
 
 /**
- * The hub line of a meeting on a date: "Sat, Oct 10, 9:00 AM, Second Saturday Workshop".
+ * A meeting's time words for one date: Home's recurring "evenings" (or
+ * "Thursday evenings") becomes "evening" ("Thursday evening"), as B prints a
+ * single dated meeting ("Evening"). Other words are kept as typed.
+ *
+ * @param string $words Time words.
+ */
+function spokares_time_words_once( string $words ): string {
+	return (string) preg_replace(
+		'/\b(morning|afternoon|evening|night|weeknight|weekend|lunchtime|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)s\b/iu',
+		'$1',
+		$words
+	);
+}
+
+/**
+ * The hub line of a meeting on a date: "Sat, Oct 10, 9:00 AM, Second Saturday
+ * Workshop", or with time words for that one date: "Thu, Oct 15, evening,
+ * Third Thursday training meeting".
  *
  * @param array  $m   Meeting.
  * @param string $ymd Date.
  */
 function spokares_meeting_hub_line( array $m, string $ymd ): string {
-	$when  = '' !== $m['start'] ? spokares_fmt_time( $m['start'] ) : $m['time_text'];
+	$when  = '' !== $m['start'] ? spokares_fmt_time( $m['start'] ) : spokares_time_words_once( $m['time_text'] );
 	$parts = array_filter( array( spokares_fmt_date( $ymd, 'short' ), $when, $m['name'] ), static fn( $p ) => '' !== trim( (string) $p ) );
 	return implode( ', ', $parts );
 }
@@ -247,8 +288,10 @@ function spokares_meeting_hub_line( array $m, string $ymd ): string {
  * Views (§3.5):
  *  upcoming       types, limit, days: dated, of those kinds, not ended, starting within `days`
  *  next-up        types, limit: first N upcoming dated events of those kinds
- *  later          types, limit, cardTypes, cardLimit: every upcoming event of `types`
- *                 except the next-up cards; dated by start, then undated
+ *  later          types, cardTypes, cardLimit: every upcoming event of `types`
+ *                 except the next-up cards; dated by start, then undated.
+ *                 `limit` is not applied here: an event must never vanish
+ *                 from Exercises (§2.3 #14), so the list is never cut
  *  public-service dated and not past, then undated
  *  past           limit: exercises kept after they end, newest first
  *  all-upcoming   every upcoming published event (dashboard)
@@ -357,8 +400,8 @@ function spokares_events( string $view, array $args = array() ): array {
 			$undated = array_values( array_filter( $mine, static fn( $e ) => 'date' !== $e['mode'] ) );
 			usort( $dated, $dated_sort );
 			usort( $undated, $undated_sort );
-			$list = array_merge( $dated, $undated );
-			break;
+			// Every one, whatever the block's `limit` says (§2.3 #14 over §3.5's 12).
+			return array_merge( $dated, $undated );
 
 		case 'upcoming':
 			$days = max( 1, (int) ( $args['days'] ?? 60 ) );

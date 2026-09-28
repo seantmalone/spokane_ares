@@ -181,8 +181,26 @@ function spokares_document_field_names(): array {
 		'howto_lbl' => __( 'the “How to” text', 'spokares-core' ),
 		'label'     => __( 'the source', 'spokares-core' ),
 		'sublinks'  => __( 'the extra-link text', 'spokares-core' ),
+		'owner'     => __( 'who keeps it current', 'spokares-core' ),
 	);
 }
+
+/**
+ * The form's length limits (its maxlength attributes), enforced on save too.
+ */
+function spokares_document_max_lengths(): array {
+	return array(
+		'note'      => 60,
+		'label'     => 40,
+		'howto_lbl' => 60,
+		'owner'     => 60,
+	);
+}
+
+/**
+ * How many words the short note may have ("8 words or fewer").
+ */
+const SPOKARES_NOTE_WORDS = 8;
 
 /**
  * What stops a document from being published.
@@ -211,10 +229,24 @@ function spokares_document_problems( array $v, int $post_id, array $confirmed, s
 	}
 	if ( 'upload' === $v['source'] ) {
 		$has = absint( get_post_meta( $post_id, 'spk_file', true ) ) && wp_get_attachment_url( absint( get_post_meta( $post_id, 'spk_file', true ) ) );
-		if ( '' !== $upload && 'ok' !== $upload ) {
+		// A refused file under "Replace with" is reported (spokares_save_document()),
+		// but it only stops publishing when there is no good file to show:
+		// the current file stays, and so does the document.
+		if ( ! $has && '' !== $upload && 'ok' !== $upload ) {
 			$problems['upload'] = $upload;
 		} elseif ( ! $has && 'ok' !== $upload ) {
 			$problems['upload'] = __( 'Choose the file to upload.', 'spokares-core' );
+		}
+	}
+	// The browser's maxlength, checked again here (a request can skip it).
+	foreach ( spokares_document_max_lengths() as $field => $max ) {
+		if ( spokares_too_long( (string) $v[ $field ], $max ) ) {
+			$problems[ $field ] = sprintf(
+				/* translators: 1: field, e.g. "the short note"; 2: number of characters. */
+				__( '%1$s is longer than %2$d characters. Shorten it.', 'spokares-core' ),
+				ucfirst( $names[ $field ] ?? $field ),
+				$max
+			);
 		}
 	}
 	if ( 'link' === $v['source'] && '' === spokares_clean_url( $v['url'] ) ) {
@@ -236,6 +268,9 @@ function spokares_document_problems( array $v, int $post_id, array $confirmed, s
 		'sublinks'  => implode( ' ', array_merge( wp_list_pluck( $v['sublinks'], 'label' ), wp_list_pluck( $v['sublinks'], 'title' ) ) ),
 	);
 	foreach ( $texts as $field => $text ) {
+		if ( isset( $problems[ $field ] ) ) {
+			continue; // Already a problem (too long).
+		}
 		$check = spokares_check_field( $text, $field, $confirmed, in_array( $field, $v['confirm'], true ) );
 		if ( $check['block'] ) {
 			$problems[ $field ] = sprintf(
@@ -444,20 +479,54 @@ function spokares_save_document( $post_id ): void {
 		$meta['spk_keywords']    = $v['keywords'];
 		$meta['spk_sublinks']    = $v['sublinks'];
 	}
+	$old_note = (string) get_post_meta( $post_id, 'spk_note', true );
 	foreach ( $meta as $key => $value ) {
 		if ( '' === $value || array() === $value ) {
 			delete_post_meta( $post_id, $key );
 		} else {
-			update_post_meta( $post_id, $key, $value );
+			// The values are unslashed already, and update_post_meta() unslashes
+			// again: slash them so a typed backslash ("C:\ARES") is kept.
+			update_post_meta( $post_id, $key, wp_slash( $value ) );
 		}
 	}
 	if ( $confirmed ) {
 		update_post_meta( $post_id, 'spk_confirmed', $confirmed );
 	}
 
-	// The file: only with the Privacy check, only now, only the allowed types.
 	$file     = spokares_document_upload();
 	$messages = array();
+	$warnings = array();
+
+	// "Where the file is" moved away from "Upload a file": the uploaded file is
+	// out of use, and the form no longer shows it. Take it off the web, as
+	// Replace and Trash do (§5.5), unless another document or a page uses it;
+	// with "Remove the old file from the web" unticked, keep it and say so.
+	$old_file = absint( get_post_meta( $post_id, 'spk_file', true ) );
+	if ( $old_file && 'upload' !== $meta['spk_source'] ) {
+		if ( $v['remove_old'] ) {
+			$note = spokares_remove_document_file( $old_file, $post_id );
+			if ( '' !== $note ) {
+				// Kept for the other use; this document no longer points at it.
+				delete_post_meta( $post_id, 'spk_file' );
+				$warnings[] = $note;
+			}
+		} else {
+			$warnings[] = __( 'The old uploaded file stays on the web at its address (“Remove the old file from the web” was unticked). Ask the webmaster to pull it if it should come down.', 'spokares-core' );
+		}
+	}
+
+	// "8 words or fewer": a longer note (typed now) still saves, with a word.
+	$words = count( (array) preg_split( '/\s+/u', trim( $v['note'] ), -1, PREG_SPLIT_NO_EMPTY ) );
+	if ( $v['note'] !== $old_note && $words > SPOKARES_NOTE_WORDS ) {
+		$warnings[] = sprintf(
+			/* translators: 1: number of words typed, 2: the limit. */
+			__( 'The short note has %1$d words; the library reads best with %2$d or fewer. Shorten it if you can.', 'spokares-core' ),
+			$words,
+			SPOKARES_NOTE_WORDS
+		);
+	}
+
+	// The file: only with the Privacy check, only now, only the allowed types.
 	if ( $file && 'upload' === $v['source'] && 'ok' === ( $result['upload'] ?? '' ) ) {
 		$old = absint( get_post_meta( $post_id, 'spk_file', true ) );
 		$att = spokares_document_do_upload( $post_id, $file );
@@ -485,6 +554,9 @@ function spokares_save_document( $post_id ): void {
 		}
 	} elseif ( $file && 'upload' === $v['source'] && '' !== ( $result['upload'] ?? '' ) && 'ok' !== $result['upload'] ) {
 		$messages[] = $result['upload'];
+		// The form checks again after the redirect, with no file chosen: keep
+		// this sentence for the field too, not "Choose the file to upload."
+		spokares_retain( 'spk_document_' . $post_id, array(), array( 'upload' => $result['upload'] ) );
 	}
 
 	$names     = spokares_document_field_names();
@@ -499,6 +571,9 @@ function spokares_save_document( $post_id ): void {
 	}
 	foreach ( $messages as $m ) {
 		spokares_add_notice( 'error', $m );
+	}
+	foreach ( $warnings as $w ) {
+		spokares_add_notice( 'warning', $w );
 	}
 	if ( $sentences ) {
 		$lead = ! empty( $result['demoted'] )
@@ -553,6 +628,60 @@ function spokares_document_trashed( $post_id ): void {
 add_action( 'trashed_post', 'spokares_document_trashed' );
 
 /**
+ * Does this document say "Upload a file" but have no file on the web (its
+ * file was removed when it went to the Trash)?
+ *
+ * @param int $post_id Document.
+ */
+function spokares_document_lost_file( int $post_id ): bool {
+	if ( 'spk_document' !== get_post_type( $post_id ) || 'upload' !== (string) get_post_meta( $post_id, 'spk_source', true ) ) {
+		return false;
+	}
+	$att = absint( get_post_meta( $post_id, 'spk_file', true ) );
+	return ! $att || ! wp_get_attachment_url( $att );
+}
+
+/**
+ * Undo (or Restore) of a document whose file was removed with "Also remove
+ * its file from the web": it comes back as a Draft, never Published without
+ * a file. WordPress's Undo adds wp_untrash_post_set_previous_status at 10;
+ * this runs after it.
+ *
+ * @param string $status  Status to restore to.
+ * @param int    $post_id Post.
+ */
+function spokares_document_untrash_status( $status, $post_id ) {
+	if ( 'draft' !== $status && spokares_document_lost_file( (int) $post_id ) ) {
+		return 'draft';
+	}
+	return $status;
+}
+add_filter( 'wp_untrash_post_status', 'spokares_document_untrash_status', 20, 2 );
+
+/**
+ * Tell the user when a restored document has no file to show.
+ *
+ * @param int $post_id Post.
+ */
+function spokares_document_untrashed( $post_id ): void {
+	$post_id = (int) $post_id;
+	if ( ! spokares_document_lost_file( $post_id ) ) {
+		return;
+	}
+	spokares_add_notice(
+		'warning',
+		sprintf(
+			/* translators: %s: document name. */
+			__( '“%s” is back as a draft, so it isn’t on the site: its file was removed from the web when it went to the Trash. Upload the file again, then Publish.', 'spokares-core' ),
+			html_entity_decode( get_the_title( $post_id ), ENT_QUOTES, 'UTF-8' )
+		),
+		(string) get_edit_post_link( $post_id, 'url' ),
+		__( 'Edit document', 'spokares-core' )
+	);
+}
+add_action( 'untrashed_post', 'spokares_document_untrashed' );
+
+/**
  * Pull this file now (administrators): delete the file at once, set the
  * document to "Soon" and Draft, and record who and when.
  */
@@ -595,7 +724,8 @@ function spokares_document_form_values( WP_Post $post ): array {
 	$terms = get_the_terms( $post, 'spk_doc_cat' );
 	$subs  = $get( 'spk_sublinks' );
 	return array(
-		'title'      => $post->post_title,
+		// The name as typed (stored titles are HTML-filtered: "&" is "&amp;").
+		'title'      => html_entity_decode( $post->post_title, ENT_QUOTES, 'UTF-8' ),
 		'section'    => ( $terms && ! is_wp_error( $terms ) ) ? $terms[0]->slug : '',
 		'source'     => (string) $get( 'spk_source' ),
 		'privacy'    => '1' === (string) $get( 'spk_privacy_ok' ),
@@ -643,10 +773,15 @@ function spokares_document_form_fields( $post ): void {
 	$pulled    = get_post_meta( $post->ID, 'spk_pulled', true );
 	$tile      = 0;
 	$tiles     = spokares_opt( 'spk_tiles' );
+	$refused   = $new ? array() : spokares_retained( 'spk_document_' . $post->ID )['errors'];
 	for ( $i = 0; $i < 4; $i++ ) {
 		if ( $tiles[ $i ]['doc'] === $post->ID ) {
 			$tile = $i + 1;
 		}
+	}
+	if ( isset( $p['upload'] ) && ! empty( $refused['upload'] ) ) {
+		// The last save refused the chosen file: say why, not "Choose the file".
+		$p['upload'] = (string) $refused['upload'];
 	}
 	wp_nonce_field( 'spokares_document_meta', 'spokares_document_nonce' );
 	?>
@@ -732,7 +867,7 @@ function spokares_document_form_fields( $post ): void {
 			<?php spokares_event_confirm( $c, 'note' ); ?>
 		</div>
 
-		<details class="spk-more"<?php echo ( isset( $p['howto_url'] ) || isset( $p['howto_lbl'] ) || isset( $c['howto_lbl'] ) || isset( $p['label'] ) ) ? ' open' : ''; ?>>
+		<details class="spk-more"<?php echo ( isset( $p['howto_url'] ) || isset( $p['howto_lbl'] ) || isset( $c['howto_lbl'] ) || isset( $p['label'] ) || isset( $c['label'] ) || isset( $p['owner'] ) ) ? ' open' : ''; ?>>
 			<summary><?php esc_html_e( 'More options', 'spokares-core' ); ?></summary>
 			<div class="spk-field">
 				<label for="spk-label"><?php esc_html_e( 'Source shown on the page', 'spokares-core' ); ?></label>
@@ -777,7 +912,8 @@ function spokares_document_form_fields( $post ): void {
 			</div>
 			<div class="spk-field">
 				<label for="spk-owner"><?php esc_html_e( 'Who keeps it current', 'spokares-core' ); ?></label>
-				<input type="text" id="spk-owner" name="spk_owner" class="regular-text" maxlength="60" value="<?php echo esc_attr( $v['owner'] ); ?>">
+				<input type="text" id="spk-owner" name="spk_owner" class="regular-text<?php echo esc_attr( spokares_err_class( $p, 'owner' ) ); ?>" maxlength="60" value="<?php echo esc_attr( $v['owner'] ); ?>">
+				<?php spokares_err_text( $p, 'owner' ); ?>
 				<label for="spk-reviewed"><?php esc_html_e( 'Last reviewed', 'spokares-core' ); ?></label>
 				<input type="date" id="spk-reviewed" name="spk_reviewed" value="<?php echo esc_attr( $v['reviewed'] ); ?>">
 				<button type="button" class="button spk-reviewed-today" data-target="spk-reviewed"><?php esc_html_e( 'Mark reviewed today', 'spokares-core' ); ?></button>
@@ -831,7 +967,7 @@ function spokares_document_form_fields( $post ): void {
 				</div>
 				<div class="spk-field">
 					<label for="spk-slug"><?php esc_html_e( 'Link name (slug)', 'spokares-core' ); ?></label>
-					<input type="text" id="spk-slug" name="post_name" class="regular-text" value="<?php echo esc_attr( $post->post_name ); ?>" pattern="[a-z0-9-]*">
+					<input type="text" id="spk-slug" name="post_name" class="regular-text" value="<?php echo esc_attr( $post->post_name ); ?>" pattern="[a-z0-9\-]*">
 					<p class="description"><?php esc_html_e( 'The row anchor and the stable link /docs/<slug>/. Changing it breaks old links.', 'spokares-core' ); ?></p>
 				</div>
 			</details>
@@ -849,7 +985,10 @@ function spokares_document_boxes(): void {
 		'spokares_savebox',
 		__( 'Save', 'spokares-core' ),
 		static function ( $post ) {
-			$note = '<p class="spk-trash-file"><label><input type="checkbox" id="spk-trash-file" checked> ' . esc_html__( 'Also remove its file from the web', 'spokares-core' ) . '</label></p>';
+			// The file tick only when there is an uploaded file to remove.
+			$note = absint( get_post_meta( $post->ID, 'spk_file', true ) )
+				? '<p class="spk-trash-file"><label><input type="checkbox" id="spk-trash-file" checked> ' . esc_html__( 'Also remove its file from the web', 'spokares-core' ) . '</label></p>'
+				: '';
 			spokares_render_save_box( $post, $note );
 		},
 		'spk_document',
@@ -985,9 +1124,52 @@ function spokares_document_list_query( $q ): void {
 			)
 		);
 	}
+	if ( spokares_list_needs_check() ) {
+		$q->set(
+			'meta_query',
+			array(
+				array(
+					'key'   => 'spk_needs_check',
+					'value' => '1',
+				),
+			)
+		);
+	}
 	if ( 'spk_reviewed' === $q->get( 'orderby' ) ) {
-		$q->set( 'meta_key', 'spk_reviewed' );
-		$q->set( 'orderby', 'meta_value' );
+		// Sort only: a document never reviewed has no spk_reviewed row, and a
+		// plain meta_key sort (an INNER JOIN) would drop it from the list. The
+		// NOT EXISTS clause's LEFT JOIN carries the key in its ON, so its
+		// meta_value is the date or NULL ("Not yet", sorted as the oldest).
+		$order = 'DESC' === strtoupper( (string) $q->get( 'order' ) ) ? 'DESC' : 'ASC';
+		$meta  = $q->get( 'meta_query' );
+		$sort  = array(
+			'relation'         => 'OR',
+			'spk_reviewed_day' => array(
+				'key'     => 'spk_reviewed',
+				'compare' => 'NOT EXISTS',
+			),
+			array(
+				'key'     => 'spk_reviewed',
+				'compare' => 'EXISTS',
+			),
+		);
+		$q->set(
+			'meta_query',
+			is_array( $meta ) && $meta
+				? array(
+					'relation' => 'AND',
+					$sort,
+					$meta,
+				)
+				: $sort
+		);
+		$q->set(
+			'orderby',
+			array(
+				'spk_reviewed_day' => $order,
+				'title'            => 'ASC',
+			)
+		);
 	} elseif ( ! $q->get( 'orderby' ) ) {
 		$q->set( 'orderby', 'title' );
 		$q->set( 'order', 'ASC' );
@@ -1004,8 +1186,13 @@ function spokares_document_filter_ui( $post_type ): void {
 	if ( 'spk_document' !== $post_type ) {
 		return;
 	}
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- list filtering only.
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- list filtering only.
 	$current = isset( $_GET['spk_section'] ) ? sanitize_key( wp_unslash( $_GET['spk_section'] ) ) : '';
+	if ( '' === $current && isset( $_GET['taxonomy'], $_GET['term'] ) && 'spk_doc_cat' === $_GET['taxonomy'] ) {
+		// The Section column's links filter with taxonomy=…&term=…: show that section chosen.
+		$current = sanitize_key( wp_unslash( $_GET['term'] ) );
+	}
+	// phpcs:enable
 	echo '<label class="screen-reader-text" for="spk-section-filter">' . esc_html__( 'Filter by section', 'spokares-core' ) . '</label>';
 	echo '<select name="spk_section" id="spk-section-filter"><option value="">' . esc_html__( 'All sections', 'spokares-core' ) . '</option>';
 	foreach ( spokares_library_sections() as $slug => $label ) {
@@ -1022,7 +1209,12 @@ add_action( 'restrict_manage_posts', 'spokares_document_filter_ui' );
  */
 function spokares_document_bulk_actions( $actions ): array {
 	unset( $actions['edit'], $actions['trash'] );
-	$actions['spk_mark_reviewed'] = __( 'Mark reviewed today', 'spokares-core' );
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- which list view; read-only.
+	$in_trash = isset( $_GET['post_status'] ) && 'trash' === $_GET['post_status'];
+	if ( ! $in_trash ) {
+		// The Trash view keeps only Restore and Delete permanently.
+		$actions['spk_mark_reviewed'] = __( 'Mark reviewed today', 'spokares-core' );
+	}
 	return $actions;
 }
 add_filter( 'bulk_actions-edit-spk_document', 'spokares_document_bulk_actions', 20 );
@@ -1072,9 +1264,202 @@ function spokares_document_row_actions( $actions, $post ) {
 		$out['view-site'] = '<a href="' . esc_url( spokares_site_url( '/members/documents/', $post->post_name ) ) . '">' . esc_html__( 'View on site', 'spokares-core' ) . '</a>';
 	}
 	if ( current_user_can( 'manage_options' ) && absint( get_post_meta( $post->ID, 'spk_file', true ) ) ) {
-		$url         = wp_nonce_url( admin_url( 'admin-post.php?action=spokares_pull_file&post=' . $post->ID ), 'spokares_pull_file_' . $post->ID );
-		$out['pull'] = '<a class="spk-danger" href="' . esc_url( $url ) . '">' . esc_html__( 'Pull this file now', 'spokares-core' ) . '</a>';
+		$url = wp_nonce_url( admin_url( 'admin-post.php?action=spokares_pull_file&post=' . $post->ID ), 'spokares_pull_file_' . $post->ID );
+		$ask = sprintf(
+			/* translators: %s: document name. */
+			__( 'Delete the file of “%s” from the web now? This can’t be undone: the document becomes a “Soon” draft until a file is uploaded again.', 'spokares-core' ),
+			html_entity_decode( get_the_title( $post ), ENT_QUOTES, 'UTF-8' )
+		);
+		$out['pull'] = '<a class="spk-danger" data-spk-ask="' . esc_attr( $ask ) . '" href="' . esc_url( $url ) . '">' . esc_html__( 'Pull this file now', 'spokares-core' ) . '</a>';
 	}
 	return $out;
 }
 add_filter( 'post_row_actions', 'spokares_document_row_actions', 20, 2 );
+
+/* -------------------------------------------------------- library sections */
+
+/**
+ * Documents filed in a section (any status but the Trash).
+ *
+ * @param int $term_id Section.
+ */
+function spokares_section_document_count( int $term_id ): int {
+	$q = new WP_Query(
+		array(
+			'post_type'      => 'spk_document',
+			'post_status'    => array( 'publish', 'draft', 'pending', 'future', 'private' ),
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+			'no_found_rows'  => false,
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- one small library, on the Sections screen only.
+			'tax_query'      => array(
+				array(
+					'taxonomy' => 'spk_doc_cat',
+					'field'    => 'term_id',
+					'terms'    => $term_id,
+				),
+			),
+		)
+	);
+	return (int) $q->found_posts;
+}
+
+/**
+ * The next free position (after the last section), so a new section goes
+ * to the end of the library instead of the top.
+ */
+function spokares_section_next_order(): int {
+	$max   = 0;
+	$terms = get_terms(
+		array(
+			'taxonomy'   => 'spk_doc_cat',
+			'hide_empty' => false,
+			'fields'     => 'ids',
+		)
+	);
+	foreach ( is_array( $terms ) ? $terms : array() as $id ) {
+		$max = max( $max, (int) get_term_meta( (int) $id, 'spk_order', true ) );
+	}
+	return $max + 1;
+}
+
+/**
+ * Sections › Add: the Position field.
+ */
+function spokares_section_add_fields(): void {
+	?>
+	<div class="form-field">
+		<label for="spk-order"><?php esc_html_e( 'Position', 'spokares-core' ); ?></label>
+		<input type="number" name="spk_order" id="spk-order" min="0" step="1" value="" placeholder="<?php esc_attr_e( 'last', 'spokares-core' ); ?>">
+		<p><?php esc_html_e( 'Where the section sits on Documents & forms (lower shows first). Empty: after the last section.', 'spokares-core' ); ?></p>
+	</div>
+	<?php
+}
+add_action( 'spk_doc_cat_add_form_fields', 'spokares_section_add_fields' );
+
+/**
+ * Sections › Edit: the Position field, and what changing the slug does.
+ *
+ * @param WP_Term $term Section.
+ */
+function spokares_section_edit_fields( $term ): void {
+	if ( ! $term instanceof WP_Term ) {
+		return;
+	}
+	?>
+	<tr class="form-field">
+		<th scope="row"><label for="spk-order"><?php esc_html_e( 'Position', 'spokares-core' ); ?></label></th>
+		<td><input type="number" name="spk_order" id="spk-order" min="0" step="1" value="<?php echo esc_attr( (string) (int) get_term_meta( $term->term_id, 'spk_order', true ) ); ?>">
+			<p class="description"><?php esc_html_e( 'Where the section sits on Documents & forms (lower shows first).', 'spokares-core' ); ?></p></td>
+	</tr>
+	<tr class="form-field">
+		<th scope="row"><?php esc_html_e( 'Before you change the slug', 'spokares-core' ); ?></th>
+		<td><p class="description spk-flag">
+			<?php
+			echo esc_html(
+				sprintf(
+					/* translators: %s: the section's slug, e.g. "training". */
+					__( 'The slug is the section’s link on Documents & forms (#%s). Pages link to it (for example About), so changing it breaks those links.', 'spokares-core' ),
+					$term->slug
+				)
+			);
+			?>
+		</p></td>
+	</tr>
+	<?php
+}
+add_action( 'spk_doc_cat_edit_form_fields', 'spokares_section_edit_fields' );
+
+/**
+ * Save the Position (core checked the form's nonce and manage_terms).
+ *
+ * @param int $term_id Section.
+ */
+function spokares_section_save( $term_id ): void {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- the Add/Edit term forms' own nonces are checked by core before these hooks.
+	$typed = isset( $_POST['spk_order'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['spk_order'] ) ) ) : null;
+	if ( null === $typed ) {
+		return; // Not our form (Quick Edit is off; a term made in code keeps its own).
+	}
+	$order = '' === $typed ? ( 'created_spk_doc_cat' === current_action() ? spokares_section_next_order() : 0 ) : absint( $typed );
+	update_term_meta( (int) $term_id, 'spk_order', $order );
+}
+add_action( 'created_spk_doc_cat', 'spokares_section_save' );
+add_action( 'edited_spk_doc_cat', 'spokares_section_save' );
+
+/**
+ * Sections list: a Position column.
+ *
+ * @param array $cols Columns.
+ */
+function spokares_section_columns( $cols ): array {
+	$cols              = is_array( $cols ) ? $cols : array();
+	$cols['spk_order'] = __( 'Position', 'spokares-core' );
+	return $cols;
+}
+add_filter( 'manage_edit-spk_doc_cat_columns', 'spokares_section_columns' );
+
+/**
+ * Sections list: the Position value.
+ *
+ * @param string $out     Output.
+ * @param string $column  Column.
+ * @param int    $term_id Section.
+ */
+function spokares_section_column( $out, $column, $term_id ) {
+	if ( 'spk_order' === $column ) {
+		return esc_html( (string) (int) get_term_meta( (int) $term_id, 'spk_order', true ) );
+	}
+	return $out;
+}
+add_filter( 'manage_spk_doc_cat_custom_column', 'spokares_section_column', 10, 3 );
+
+/**
+ * Sections list: no Quick Edit (it changes the slug with no warning), and no
+ * Delete for a section that still holds documents.
+ *
+ * @param array   $actions Row actions.
+ * @param WP_Term $term    Section.
+ */
+function spokares_section_row_actions( $actions, $term ) {
+	unset( $actions['inline hide-if-no-js'] );
+	if ( $term instanceof WP_Term && isset( $actions['delete'] ) && spokares_section_document_count( (int) $term->term_id ) ) {
+		$actions['delete'] = '<span class="description">' . esc_html__( 'Move its documents to another section to delete it', 'spokares-core' ) . '</span>';
+	}
+	return $actions;
+}
+add_filter( 'spk_doc_cat_row_actions', 'spokares_section_row_actions', 10, 2 );
+
+/**
+ * Never delete a section that still holds documents: they would stay
+ * published but drop out of the library without a word.
+ *
+ * @param int    $term_id  Term.
+ * @param string $taxonomy Taxonomy.
+ */
+function spokares_section_delete_guard( $term_id, $taxonomy ): void {
+	if ( 'spk_doc_cat' !== $taxonomy ) {
+		return;
+	}
+	$n = spokares_section_document_count( (int) $term_id );
+	if ( $n ) {
+		wp_die(
+			esc_html(
+				sprintf(
+					/* translators: %d: number of documents. */
+					_n( 'This section still holds %d document. Move it to another section first, then delete the section.', 'This section still holds %d documents. Move them to another section first, then delete the section.', $n, 'spokares-core' ),
+					$n
+				)
+			),
+			esc_html__( 'Section not deleted', 'spokares-core' ),
+			array(
+				'response'  => 409,
+				'back_link' => true,
+			)
+		);
+	}
+}
+add_action( 'pre_delete_term', 'spokares_section_delete_guard', 10, 2 );

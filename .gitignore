@@ -41,3 +41,7 @@ design/round3/**/shots/
 design/round3/_gallery.png
 wordpress/shots/*
 !wordpress/shots/final/
+
+# QA crawl screenshots and raw reports (regenerate with wordpress/dev/qa/crawl.mjs)
+wordpress/qa/shots/
+wordpress/qa/runs/

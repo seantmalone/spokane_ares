@@ -10,13 +10,13 @@
 // Writes <page>-desktop.png, <page>-mobile-390.png, members-mobile-390-editor.png
 // and admin-<screen>.png, and prints one line per shot plus any browser
 // console errors. Exit status 1 if a shot failed or the block editor reported
-// invalid blocks. Sign-in uses the dev-only ?dev_login= switch.
+// invalid blocks. Sign-in uses the dev-only ?dev_login= switch. The Chrome
+// driver is lib/cdp.mjs (shared with qa/crawl.mjs and tests/run-e2e.mjs).
 
-import { spawn } from 'node:child_process';
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { Browser, DESKTOP, PHONE, sleep } from './lib/cdp.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const args = process.argv.slice(2);
@@ -29,7 +29,6 @@ const only = (args.find((a) => a.startsWith('--only=')) || '').slice(7);
 const outdir = path.resolve(args.find((a) => !/^\d+$/.test(a) && !a.startsWith('--')) || path.join(here, 'shots'));
 fs.mkdirSync(outdir, { recursive: true });
 const base = `http://127.0.0.1:${port}`;
-const CHROME = process.env.CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
 const PAGES = [
   ['home', '/'],
@@ -39,8 +38,6 @@ const PAGES = [
   ['documents', '/members/documents/'],
   ['exercises', '/members/exercises/'],
 ];
-const DESKTOP = { width: 1440, height: 900, mobile: false };
-const PHONE = { width: 390, height: 844, mobile: true };
 
 // Admin screens: [file, who, url or dev_edit spec, options].
 const ADMIN = [
@@ -60,107 +57,14 @@ const ADMIN = [
   ['meeting-rules', 'admin', '/wp-admin/admin.php?page=spokares-meeting-rules'],
 ];
 
-/* ------------------------------------------------------------- CDP client */
-
-let ws;
-let nextId = 0;
-const pending = new Map();
-const listeners = new Set();
-
-function send(method, params = {}, sessionId) {
-  const id = ++nextId;
-  const msg = { id, method, params };
-  if (sessionId) msg.sessionId = sessionId;
-  return new Promise((resolve, reject) => {
-    pending.set(id, { resolve, reject, method });
-    ws.send(JSON.stringify(msg));
-  });
-}
-
-function waitFor(method, sessionId, ms = 60000) {
-  return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => {
-      listeners.delete(fn);
-      reject(new Error(`timeout waiting for ${method}`));
-    }, ms);
-    const fn = (m) => {
-      if (m.method === method && m.sessionId === sessionId) {
-        clearTimeout(timer);
-        listeners.delete(fn);
-        resolve(m.params);
-      }
-    };
-    listeners.add(fn);
-  });
-}
-
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
-// Never leave a headless Chrome behind: kill it on exit, on a signal, and
-// keep going if whoever reads our output goes away (EPIPE).
-let chromeProc = null;
-const killChrome = () => { try { chromeProc?.kill('SIGKILL'); } catch {} };
-process.on('exit', killChrome);
-for (const sig of ['SIGINT', 'SIGTERM', 'SIGHUP']) process.on(sig, () => { killChrome(); process.exit(130); });
-process.stdout.on('error', () => {});
-
-async function launch() {
-  const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'spokares-shots-'));
-  const chrome = spawn(
-    CHROME,
-    [
-      '--headless=new',
-      '--disable-gpu',
-      '--hide-scrollbars',
-      '--no-first-run',
-      '--no-default-browser-check',
-      '--disable-extensions',
-      '--mute-audio',
-      '--remote-debugging-port=0',
-      `--user-data-dir=${profile}`,
-      'about:blank',
-    ],
-    { stdio: 'ignore' }
-  );
-  chromeProc = chrome;
-  const portFile = path.join(profile, 'DevToolsActivePort');
-  for (let i = 0; i < 150 && !fs.existsSync(portFile); i++) await sleep(100);
-  if (!fs.existsSync(portFile)) throw new Error('Chrome did not start (no DevToolsActivePort)');
-  await sleep(100);
-  const [devPort, wsPath] = fs.readFileSync(portFile, 'utf8').trim().split('\n');
-  ws = new WebSocket(`ws://127.0.0.1:${devPort}${wsPath}`);
-  await new Promise((resolve, reject) => {
-    ws.onopen = resolve;
-    ws.onerror = () => reject(new Error('DevTools WebSocket failed'));
-  });
-  ws.onmessage = (ev) => {
-    const m = JSON.parse(ev.data);
-    if (m.id && pending.has(m.id)) {
-      const p = pending.get(m.id);
-      pending.delete(m.id);
-      m.error ? p.reject(new Error(`${p.method}: ${m.error.message}`)) : p.resolve(m.result);
-    } else if (m.method) {
-      for (const fn of [...listeners]) fn(m);
-    }
-  };
-  return () => {
-    try { ws.close(); } catch {}
-    chrome.kill();
-    setTimeout(() => fs.rmSync(profile, { recursive: true, force: true }), 500);
-  };
-}
-
-async function evaluate(sessionId, expression, awaitPromise = true) {
-  const r = await send('Runtime.evaluate', { expression, awaitPromise, returnByValue: true }, sessionId);
-  if (r.exceptionDetails) throw new Error(`page script: ${r.exceptionDetails.exception?.description || r.exceptionDetails.text}`);
-  return r.result.value;
-}
-
 /* ------------------------------------------------------------------ shots */
 
+// The CDP driver lives in lib/cdp.mjs (shared with qa/crawl.mjs and
+// tests/run-e2e.mjs). One browser context per signed-in user.
+let browser;
 const contexts = {};
 async function context(who) {
-  if (!contexts[who]) contexts[who] = (await send('Target.createBrowserContext', { disposeOnDetach: true })).browserContextId;
+  if (!contexts[who]) contexts[who] = await browser.newContext();
   return contexts[who];
 }
 
@@ -175,76 +79,49 @@ const report = [];
 
 async function shot(name, who, url, view, opts = {}) {
   const file = path.join(outdir, `${name}.png`);
-  const { targetId } = await send('Target.createTarget', { url: 'about:blank', browserContextId: await context(who) });
-  const { sessionId } = await send('Target.attachToTarget', { targetId, flatten: true });
-  const errors = [];
-  const onMsg = (m) => {
-    if (m.sessionId !== sessionId) return;
-    if (m.method === 'Runtime.exceptionThrown') errors.push(m.params.exceptionDetails.exception?.description?.split('\n')[0] || m.params.exceptionDetails.text);
-    if (m.method === 'Runtime.consoleAPICalled' && m.params.type === 'error') errors.push(m.params.args.map((a) => a.value ?? a.description ?? '').join(' ').slice(0, 200));
-    if (m.method === 'Log.entryAdded' && m.params.entry.level === 'error' && !/favicon/.test(m.params.entry.url || '')) errors.push(`${m.params.entry.text} ${m.params.entry.url || ''}`.slice(0, 200));
-  };
-  listeners.add(onMsg);
+  let page;
   try {
-    await send('Page.enable', {}, sessionId);
-    await send('Runtime.enable', {}, sessionId);
-    await send('Log.enable', {}, sessionId);
-    await send('Emulation.setDeviceMetricsOverride', { width: view.width, height: view.height, deviceScaleFactor: 1, mobile: view.mobile }, sessionId);
-    const loaded = waitFor('Page.loadEventFired', sessionId, 90000);
-    const nav = await send('Page.navigate', { url: base + withLogin(url, who) }, sessionId);
-    if (nav.errorText) throw new Error(nav.errorText);
-    await loaded;
+    page = await browser.newPage({ context: await context(who), viewport: view });
+    const nav = await page.goto(base + withLogin(url, who), { timeout: 90000 });
+    if (nav.error && nav.error !== 'net::ERR_ABORTED') throw new Error(nav.error);
     // Redirect chains (dev login, dev_edit) end in one more load.
     for (let i = 0; i < 3; i++) {
-      const state = await evaluate(sessionId, 'document.readyState + "|" + location.href');
+      const state = await page.evaluate('document.readyState + "|" + location.href');
       if (state.startsWith('complete') && !/dev_login=|dev_edit=/.test(state)) break;
-      await waitFor('Page.loadEventFired', sessionId, 30000).catch(() => {});
+      await page.waitForEvent('Page.loadEventFired', { timeout: 30000 }).catch(() => {});
     }
-    await evaluate(sessionId, 'document.fonts ? document.fonts.ready.then(() => true) : true');
+    await page.evaluate('document.fonts ? document.fonts.ready.then(() => true) : true');
 
     let extra = '';
     if (opts.blockEditor) {
-      extra = await prepareBlockEditor(sessionId);
+      extra = await prepareBlockEditor(page);
     } else {
       // A full-page shot shows images below the fold, so load lazy images now
       // (in this browser only; the page itself is unchanged) and wait for them.
-      await evaluate(sessionId, `(async () => {
-        document.querySelectorAll('img[loading="lazy"]').forEach(i => { i.loading = 'eager'; });
-        await Promise.all([...document.images].map(i => i.decode ? i.decode().catch(() => {}) : null));
-        await Promise.all([...document.images].filter(i => !i.complete).map(i => new Promise(r => { i.onload = i.onerror = r; setTimeout(r, 5000); })));
-        return true; })()`);
+      await page.loadImages();
     }
     await sleep(opts.blockEditor ? 1200 : 500);
 
-    const title = await evaluate(sessionId, 'document.title');
-    const finalUrl = await evaluate(sessionId, 'location.href');
-    let shotParams = { format: 'png' };
-    let size = `${view.width}x${view.height}`;
-    if (!opts.blockEditor) {
-      const m = await send('Page.getLayoutMetrics', {}, sessionId);
-      const h = Math.ceil(m.cssContentSize.height);
-      shotParams = { format: 'png', captureBeyondViewport: true, clip: { x: 0, y: 0, width: view.width, height: h, scale: 1 } };
-      size = `${view.width}x${h}`;
-    }
-    const { data } = await send('Page.captureScreenshot', shotParams, sessionId);
-    fs.writeFileSync(file, Buffer.from(data, 'base64'));
-    const line = `ok   ${path.basename(file)}  ${size}  ${finalUrl.replace(base, '')}  "${title}"${extra ? '  ' + extra : ''}`;
+    const title = await page.evaluate('document.title');
+    const finalUrl = await page.evaluate('location.href');
+    const s = await page.screenshot(file, { fullPage: !opts.blockEditor });
+    const line = `ok   ${path.basename(file)}  ${s.width}x${s.height}  ${finalUrl.replace(base, '')}  "${title}"${extra ? '  ' + extra : ''}`;
     report.push(line);
     console.log(line);
-    for (const e of [...new Set(errors)]) console.log(`     console error: ${e}`);
+    const errors = [...page.exceptions.map((e) => e.text), ...page.consoleErrors.map((e) => `${e.text} ${e.url || ''}`.trim())].filter((e) => !/favicon/.test(e));
+    for (const e of [...new Set(errors)]) console.log(`     console error: ${e.slice(0, 200)}`);
   } catch (err) {
     failures++;
     console.log(`FAIL ${path.basename(file)}  ${err.message}`);
   } finally {
-    listeners.delete(onMsg);
-    await send('Target.closeTarget', { targetId }).catch(() => {});
+    await page?.close();
   }
 }
 
 // Block editor: wait for the blocks, check they are all valid, select the
 // hero Cover (Home) and open the block sidebar.
-async function prepareBlockEditor(sessionId) {
-  const ok = await evaluate(sessionId, `(async () => {
+async function prepareBlockEditor(page) {
+  const ok = await page.evaluate(`(async () => {
     for (let i = 0; i < 240; i++) {
       try { if (window.wp?.data?.select('core/block-editor').getBlocks().length) return true; } catch (e) {}
       await new Promise(r => setTimeout(r, 250));
@@ -253,7 +130,7 @@ async function prepareBlockEditor(sessionId) {
   if (!ok) throw new Error('block editor did not load');
   // Pages open with the template shown (plugin: defaultRenderingMode), so the
   // canvas also waits for the template, its parts and the server previews.
-  await evaluate(sessionId, `(async () => {
+  await page.evaluate(`(async () => {
     for (let i = 0; i < 120; i++) {
       const doc = document.querySelector('iframe[name="editor-canvas"]')?.contentDocument;
       // Server previews (the brand in the header, the plugin's lists) show
@@ -266,7 +143,7 @@ async function prepareBlockEditor(sessionId) {
     }
     return false; })()`);
   await sleep(1500);
-  const info = await evaluate(sessionId, `(() => {
+  const info = await page.evaluate(`(() => {
     const be = wp.data.select('core/block-editor');
     const all = [];
     // getBlocks(clientId) also reaches the page's own blocks inside the
@@ -295,7 +172,7 @@ async function prepareBlockEditor(sessionId) {
 
 /* ------------------------------------------------------------------- main */
 
-const stop = await launch();
+browser = await Browser.launch();
 try {
   if (only !== 'admin') {
     for (const [name, url] of PAGES) {
@@ -311,7 +188,7 @@ try {
     }
   }
 } finally {
-  stop();
+  await browser.close();
 }
 console.log(`shots: ${report.length} written to ${outdir}${failures ? `, ${failures} problem(s)` : ''}`);
 process.exit(failures ? 1 : 0);

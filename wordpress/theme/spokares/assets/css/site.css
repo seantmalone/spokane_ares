@@ -136,14 +136,24 @@
 
 /* ============================================================ 3. Base and typography */
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+/* Only the masthead is sticky, so one offset serves every page (plus the admin
+   bar when it is fixed). scroll-padding keeps the band under the masthead out
+   of every scroll into view: a link reached with Tab or Shift+Tab, an anchor,
+   the About "On this page" button (WCAG 2.2 2.4.11, focus not obscured). */
+html {
+  -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--mast-h) + var(--spk-bar) + 16px);
+}
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+/* overflow-wrap: a word longer than its line (a pasted link in an event or a
+   document note) breaks instead of running out of its card or column. */
 body {
   margin: 0; min-width: 320px;
   background: var(--paper); color: var(--ink);
   font: 400 var(--fs-body)/1.6 var(--sans);
   -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
   font-feature-settings: "kern" 1;
+  overflow-wrap: break-word;
 }
 img, svg, video { max-width: 100%; height: auto; }
 img { display: block; }
@@ -151,8 +161,8 @@ h1, h2, h3, h4, h5, p, ul, ol, dl, dd, figure, blockquote { margin: 0; }
 ul, ol { padding: 0; }
 button, input, select, textarea { font: inherit; color: inherit; }
 [hidden] { display: none !important; }
-/* Only the masthead is sticky, so one offset serves every page (plus the admin bar when it is fixed). */
-[id] { scroll-margin-top: calc(var(--mast-h) + 24px + var(--spk-bar)); }
+/* An anchor lands 24px under the masthead: html's scroll-padding plus this. */
+[id] { scroll-margin-top: 8px; }
 
 a { color: var(--link); text-decoration-line: underline; text-decoration-color: var(--link-line); text-decoration-thickness: 1.5px; text-underline-offset: .2em; }
 a:hover { text-decoration-thickness: 3px; text-decoration-color: var(--link-hover); }
@@ -170,7 +180,11 @@ h4, .h4 { font: 600 1.1875rem/1.3 var(--sans); letter-spacing: -.005em; }
 .muted { color: var(--muted); }
 .tnum { font-variant-numeric: tabular-nums lining-nums; }
 time, .freq { font-variant-numeric: lining-nums; }
-.nowrap { white-space: nowrap; }
+/* Kept on one line when the line has room ("147.300 MHz,", "IS-120"): an atomic
+   inline box moves to the next line whole, and wraps inside itself only when
+   it is wider than the whole line (320px screens, WCAG text spacing, large
+   default text), where plain nowrap was cut off at the screen edge. */
+.nowrap { display: inline-block; max-width: 100%; }
 abbr[title] { text-decoration-thickness: 1px; text-underline-offset: .18em; }
 
 /* ============================================================ 4. Layout
@@ -203,8 +217,12 @@ abbr[title] { text-decoration-thickness: 1px; text-underline-offset: .18em; }
 
 /* ============================================================ 7. Masthead, primary nav, menu
    parts/header.html: header.site-header > .masthead > .wrap.masthead__bar >
-   brand + core Navigation (nav.nav, overlayMenu "always") + Buttons (Join).
-   Core puts the nav's classes on its inner <ul> as well, so rules say "nav.nav". */
+   brand + Buttons "masthead__actions" (Join) + core Navigation (nav.nav,
+   overlayMenu "always": the four links, then Buttons "site-header__actions" (Join)).
+   Core puts the nav's classes on its inner <ul> as well, so rules say "nav.nav".
+   The markup order is the drawn order at every width; nothing here reorders
+   the bar with order, reversed directions, grid placement or reading-flow
+   (QA-103, owner 2026-09-27). */
 .site-header { position: sticky; top: var(--spk-bar); z-index: 60; }
 /* The frosted night bar is painted by a pseudo-element: a backdrop-filter on
    .masthead itself would become the containing block of the menu overlay
@@ -306,17 +324,37 @@ nav.nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-naviga
   nav.nav .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__responsive-container-close { display: none; }
 }
 
-.site-header__actions { flex: none; gap: 0; }
+/* Two "Join the team" buttons, one drawn at a time (QA-103), so the bar reads
+   in markup order at every width:
+   - under 1020px: brand, .masthead__actions (the bar's Join), then Menu; the
+     nav's own Join is the last item of the phone menu;
+   - from 1020px: brand, the four links, then the nav's Join
+     (.site-header__actions), with .masthead__actions not drawn. */
+.masthead__actions, .site-header__actions { flex: none; gap: 0; }
+nav.nav .wp-block-navigation__responsive-container.is-menu-open .site-header__actions { margin-top: 20px; }
+@media (min-width: 1020px) {
+  .masthead__bar > .masthead__actions { display: none; } /* beats core's "body .is-layout-flex" */
+  /* The links and Join in one row, as far apart as the bar's items (18px up to 1180px). */
+  nav.nav .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__responsive-container-content {
+    display: flex; flex-direction: row; flex-wrap: nowrap; align-items: center; gap: 28px;
+  }
+}
+@media (min-width: 1020px) and (max-width: 1180px) {
+  nav.nav .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__responsive-container-content { gap: 18px; }
+}
 
 /* ============================================================ 8. Buttons and links
    .btn (plugin markup) and core Button (.wp-block-button__link) are the same
    pill. A core Button's look comes from a class on the block: btn--red
    (default when none), btn--ghost, btn--light, btn--ink; size btn--lg, btn--sm.
    One filled .btn--red per page (and the header's Join). No arrow glyphs. */
+/* A pill stays on one line wherever it fits (it takes its full width first);
+   only a label wider than its column wraps, centred, instead of being cut off
+   (320px screens, WCAG text spacing). */
 .btn, .wp-block-button__link {
-  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px; max-width: 100%;
   min-height: 44px; padding: 10px 22px; border-radius: var(--r-pill); border: 1.5px solid transparent;
-  font: 600 16px/1.2 var(--sans); letter-spacing: normal; text-decoration: none; white-space: nowrap; cursor: pointer;
+  font: 600 16px/1.2 var(--sans); letter-spacing: normal; text-align: center; text-decoration: none; cursor: pointer;
   transition: background-color .18s, border-color .18s, color .18s;
 }
 .btn:hover, .wp-block-button__link:hover { text-decoration: none; }
@@ -350,9 +388,9 @@ nav.nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-naviga
 
 /* ============================================================ 9. Tags and badges */
 .tag {
-  display: inline-flex; align-items: center; gap: 6px; width: fit-content; min-height: 26px; padding: 3px 10px;
+  display: inline-flex; align-items: center; gap: 6px; width: fit-content; max-width: 100%; min-height: 26px; padding: 3px 10px;
   border-radius: var(--r-pill); background: var(--tag-bg); color: var(--fg);
-  font: 500 13.5px/1.2 var(--sans); white-space: nowrap;
+  font: 500 13.5px/1.2 var(--sans);
 }
 .tag--line { background: none; border: 1px dashed var(--line-strong); color: var(--muted); }
 .tag--amber { background: var(--amber); color: var(--night); font-weight: 600; }
@@ -407,6 +445,17 @@ a.tag--open:hover { border-style: solid; }
     linear-gradient(90deg, rgba(14, 26, 51, .88) 0%, rgba(14, 26, 51, .62) 42%, rgba(14, 26, 51, .12) 78%),
     linear-gradient(180deg, rgba(14, 26, 51, .55) 0%, rgba(14, 26, 51, 0) 30%, rgba(14, 26, 51, 0) 58%, rgba(14, 26, 51, .92) 92%, var(--night) 100%);
 }
+/* Phones and tablets (the Menu-button header): the text runs across most of
+   the photo, over the bright sky that B's desktop gradient leaves almost bare,
+   so the night overlay stays dark all the way across. .72 night gives the lede
+   4.5:1 over any photo an editor might swap in, even pure white (WCAG 1.4.3). */
+@media (max-width: 1019.98px) {
+  .wp-block-cover.hero::before {
+    background:
+      linear-gradient(90deg, rgba(14, 26, 51, .88) 0%, rgba(14, 26, 51, .78) 50%, rgba(14, 26, 51, .72) 100%),
+      linear-gradient(180deg, rgba(14, 26, 51, .35) 0%, rgba(14, 26, 51, 0) 30%, rgba(14, 26, 51, 0) 58%, rgba(14, 26, 51, .92) 92%, var(--night) 100%);
+  }
+}
 .wp-block-cover.hero .wp-block-cover__inner-container { position: relative; width: 100%; color: var(--fg); }
 .hero__body { padding-block: 72px 88px; }
 .hero__title { max-width: 18.5ch; }
@@ -453,6 +502,12 @@ a.tag--open:hover { border-style: solid; }
 .table tbody th { font-weight: 600; }
 .table time { white-space: nowrap; }
 .table .is-past { color: var(--faint); }
+/* Cells that print what editors type (event titles, places and short lines,
+   document notes, rota notes) break a long word, such as a pasted link, instead
+   of widening the table past its column. "anywhere", unlike body's
+   break-word, also lowers the cell's min-content width, which is what the
+   table layout (and a phone's flex rows) sizes columns by. */
+.ex-table th, .ex-table td, .doc-table td, .hub-rota td:last-child { overflow-wrap: anywhere; }
 .table .is-next > * { background: var(--amber-wash); }
 .table .is-next > :first-child { box-shadow: inset 3px 0 0 var(--amber); padding-left: 12px; }
 .dark .table .is-next > *, .bg-night .table .is-next > * { background: rgba(255, 200, 87, .08); }
@@ -574,10 +629,14 @@ a.tag--open:hover { border-style: solid; }
 
 .steps { list-style: none; margin: 0; padding: 0; counter-reset: spk-step -1; }
 /* Each step is a two-column grid: the title and an optional "Optional" pill
-   share the first row; every other paragraph spans both columns. */
+   share the first row; every other paragraph spans both columns. The title's
+   column never takes the pill's room (minmax(0, max-content) beside a 1fr
+   that keeps at least the pill's width): with large text or at 320px the
+   title wraps instead of pushing the pill off the screen. A step without a
+   pill gives its title the whole row. */
 .steps__item {
   position: relative; counter-increment: spk-step;
-  display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 12px; align-items: center; justify-items: start;
+  display: grid; grid-template-columns: minmax(0, max-content) 1fr; column-gap: 12px; align-items: center; justify-items: start;
   padding: 10px 0 44px 84px;
 }
 .steps__item:last-child { padding-bottom: 0; }
@@ -591,8 +650,8 @@ a.tag--open:hover { border-style: solid; }
 .steps__item:not(:last-child)::after { content: ""; position: absolute; left: 26.5px; top: 56px; bottom: 0; width: 3px; background: var(--red); }
 .steps__item:nth-last-child(2)::after { background: repeating-linear-gradient(180deg, var(--red) 0 9px, transparent 9px 16px); }
 .steps__title { font: 500 var(--fs-h3)/1.15 var(--serif); color: var(--fg); }
-.steps__item > .steps__title { grid-column: 1; }
-.steps__item > .tag { grid-column: 2; margin: 0; }
+.steps__item:has(> .tag) > .steps__title { grid-column: 1; }
+.steps__item > .tag { grid-column: 2; min-width: auto; margin: 0; }   /* its word sets the column's floor */
 .steps__title abbr { text-decoration: none; }   /* the title attribute still expands it */
 .steps__text { margin-top: 6px; max-width: 54ch; color: var(--muted); }
 .steps__action { margin-top: 4px; }
@@ -606,7 +665,7 @@ a.tag--open:hover { border-style: solid; }
 .searchbar__field { position: relative; flex: 1 1 280px; min-width: 0; }
 .searchbar__field .icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--ink-2); pointer-events: none; }
 .searchbar__field input { width: 100%; min-height: 52px; padding: 10px 14px 10px 44px; border: 1.5px solid var(--field); border-radius: 10px; background: #fff; font: 500 17px/1.3 var(--sans); color: var(--ink); }
-.searchbar__field input::placeholder { color: #7B859A; }
+.searchbar__field input::placeholder { color: var(--off); }   /* 6.1:1 on white (WCAG 1.4.3) */
 .searchbar__field input:hover { border-color: var(--ink-2); }
 .searchbar__field input:focus-visible { border-color: var(--ink); }
 
@@ -705,6 +764,12 @@ a.tag--open:hover { border-style: solid; }
 .contents-fab { position: fixed; right: 16px; bottom: 16px; z-index: 50; box-shadow: 0 12px 26px -12px rgba(5, 11, 26, .7); transition: opacity .2s, visibility .2s; }
 .contents-fab.is-parked { opacity: 0; visibility: hidden; }
 @media (min-width: 1024px) { .contents-fab { display: none !important; } }
+/* While the button can show (toc.js unhides it), a link scrolled into view by
+   Tab stops above it, and the footer's last line can scroll clear of it. */
+@media (max-width: 1023px) {
+  html:has(.contents-fab:not([hidden])) { scroll-padding-bottom: calc(16px + 44px + 16px); }
+  body:has(.contents-fab:not([hidden])) .site-footer { padding-bottom: calc(28px + 16px + 44px); }
+}
 
 /* Chapters: a hairline and a heading, nothing else. */
 .prose .chapter { margin-top: 0; }
@@ -865,10 +930,14 @@ h2.m-head, .doc-group__head h2 { font-size: clamp(1.6rem, 1.3rem + .8vw, 2rem); 
 .m-line b, .m-line strong { font-weight: 600; }
 .workspace .table { background: transparent; }
 
-/* Hub: a switchboard. Head with search; This week beside Tuesday net; four tiles. */
+/* Hub: a switchboard. Head with search; Tuesday net beside This week; four tiles.
+   QA-104 (owner, 2026-09-27): the Tuesday net is first in the markup
+   (patterns/members-hub.php) at every width, so it is drawn first everywhere
+   with no CSS reordering: above This week on phones, in the left column on
+   wider screens. Each section keeps its width (the net 7fr, This week 5fr). */
 .hub-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 520px); gap: 24px 56px; align-items: end; }
 .hub-search__label { flex-basis: 100%; font: 600 15px/1.35 var(--sans); color: var(--ink); }
-.hub-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s5) 72px; align-items: start; }
+.hub-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--s5) 72px; align-items: start; }
 .hub-bring { margin-top: 16px; }
 .hub-meeting { margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--rule); }
 .wp-block-spokares-meetings.is-view-next { margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--rule); }
@@ -929,7 +998,10 @@ h2.m-head, .doc-group__head h2 { font-size: clamp(1.6rem, 1.3rem + .8vw, 2rem); 
 .footer__nav > * { font-size: 15px; }
 .footer__nav > nav.footer__links,
 .footer__nav > nav.footer__links > .wp-block-navigation__container { display: inline; }
-.footer__nav > nav.footer__links .wp-block-navigation-item { display: inline-flex; align-items: center; min-height: 44px; margin-right: 26px; vertical-align: top; }
+/* The doubled class outranks the editor canvas's own
+   ".editor-styles-wrapper .wp-block-navigation .wp-block-navigation-item.wp-block { margin: revert }",
+   which ran the links together in the Site Editor and in page editors. */
+.footer__nav > nav.footer__links .wp-block-navigation-item.wp-block-navigation-item { display: inline-flex; align-items: center; min-height: 44px; margin-right: 26px; vertical-align: top; }
 .footer__nav > .footer__privacy { vertical-align: top; }
 .site-footer a,
 nav.footer__links .wp-block-navigation-item > .wp-block-navigation-item__content {
@@ -1032,6 +1104,9 @@ nav.footer__links .wp-block-navigation-item > .wp-block-navigation-item__content
 .spk-edit-link { margin-top: 10px; font: 500 13.5px/1.4 var(--sans); }
 .spk-edit-link a { color: var(--muted); text-decoration-style: dashed; text-decoration-color: var(--line-strong); }
 .spk-edit-link a:hover { color: var(--fg); text-decoration-style: solid; text-decoration-color: currentColor; }
+/* QA-096: under the hub's net bar the settings link sits with the bar, clear of
+   the rota table below it, so it doesn't read as the rota's edit link. */
+.wp-block-spokares-net.is-view-bar > .spk-edit-link { margin: -8px 0 20px; }
 .spk-edit-hint {
   margin-top: 10px; padding: 8px 12px; border-radius: var(--r-sm);
   background: var(--amber-wash); color: var(--amber-ink); border: 1px dashed #D7A53A;
@@ -1041,23 +1116,55 @@ nav.footer__links .wp-block-navigation-item > .wp-block-navigation-item__content
 .spk-verify .needs-verify { outline: 2px dashed var(--amber-ink); outline-offset: 2px; }
 .spk-verify .bg-night .needs-verify, .spk-verify .bg-storm .needs-verify, .spk-verify .site-footer .needs-verify { outline-color: var(--amber); }
 
-/* Plain pages (404, search results, any page without a pattern layout). */
+/* Plain pages (404, search results, and templates/page.html: any page an
+   administrator adds, such as the Privacy Policy). The title is the one h1;
+   the text sits in the site column, set like About's long read. */
 .plain-page { padding: 64px 0 96px; }
 .plain-page__title { margin-bottom: 24px; }
 .plain-page__line { font: 400 var(--fs-lede)/1.5 var(--serif); color: var(--ink-2); max-width: 46ch; }
 .plain-page__body > * + * { margin-top: 1em; }
+.plain-page__body.prose > :is(h2, h3) { margin-top: 1.6em; }
+.plain-page__body.prose > :first-child { margin-top: 0; }
 .results__list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
 .results__list > li { padding: 20px 0; border-bottom: 1px solid var(--rule); }
 .results__title { font-size: var(--fs-h3); }
 .results__title a { color: var(--ink); text-decoration-color: var(--red-ink); }
 .results__excerpt { margin-top: 6px; color: var(--ink-2); }
 .results__excerpt .wp-block-post-excerpt__more-link { display: none; }
+.results__more { margin-top: 28px; max-width: 64ch; color: var(--ink-2); }
+/* Search results: core's Search block (filled with the query), dressed as the library's search bar. */
+.search-again { margin-bottom: 32px; max-width: 640px; }
+.search-again .wp-block-search__label { display: block; margin-bottom: 8px; font: 600 15px/1.35 var(--sans); color: var(--ink); }
+.search-again .wp-block-search__inside-wrapper { display: flex; flex-wrap: wrap; gap: 10px; }
+.search-again .wp-block-search__input {
+  flex: 1 1 240px; min-width: 0; min-height: 52px; margin: 0; padding: 10px 14px;
+  border: 1.5px solid var(--field); border-radius: 10px; background: #fff; font: 500 17px/1.3 var(--sans); color: var(--ink);
+}
+.search-again .wp-block-search__input:hover { border-color: var(--ink-2); }
+.search-again .wp-block-search__input:focus-visible { border-color: var(--ink); }
+.search-again .wp-block-search__button {
+  min-height: 44px; margin: 0; padding: 10px 22px; border: 1.5px solid var(--ink); border-radius: var(--r-pill);
+  background: var(--ink); color: #fff; font: 600 16px/1.2 var(--sans); cursor: pointer;
+}
+.search-again .wp-block-search__button:hover { background: #22304F; border-color: #22304F; }
+
+/* Home, How it works and About: the page's own blocks are full-width
+   sections (Groups carrying a bg-* class and an inner "wrap" Group), the hero
+   (Cover) and dawn strips (Spacers). Any other block an administrator adds at
+   that level (a paragraph, heading, list, image, buttons…) sits in the site
+   column with the side gutter instead of running to the window edge.
+   (templates/front-page.html, page-how-it-works.html, page-about.html) */
+.page-sections > :not(.wp-block-group, .wp-block-cover, .wp-block-spacer, .wp-block-template-part) { width: var(--wrap); margin-inline: auto; }
+.page-sections > :not(.wp-block-group, .wp-block-cover, .wp-block-spacer, .wp-block-template-part) + :not(.wp-block-group, .wp-block-cover, .wp-block-spacer, .wp-block-template-part) { margin-top: 1em; }
 
 /* Block editor canvas only (these classes never reach the front end). In the
    post editor WordPress holds page-level blocks to the 760px content width
    because post content isn't at the template's root; B's sections are full
    width and set their own spacing, as on the front end. */
 .editor-styles-wrapper .block-editor-block-list__layout.is-root-container > * { max-width: none !important; margin-left: 0 !important; margin-right: 0 !important; }
+/* With "Show template" off the page's blocks are the root: a bare block keeps
+   the site column there too, as .page-sections and page.html's column do on the site. */
+.editor-styles-wrapper .block-editor-block-list__layout.is-root-container > :not(.wp-block-group, .wp-block-cover, .wp-block-spacer, .wp-block-template-part, .wp-block-post-content) { width: var(--wrap); margin-left: auto !important; margin-right: auto !important; }
 .editor-styles-wrapper .editor-visual-editor__post-title-wrapper > .wp-block-post-title { width: var(--wrap); margin: 32px auto 24px; }
 /* When an editor selects a section, core outlines each editable block with an
    absolutely positioned ::after. After balanced text (text-wrap: balance) Chrome
@@ -1092,10 +1199,28 @@ nav.footer__links .wp-block-navigation-item > .wp-block-navigation-item__content
   .ex-grid { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 1019.98px) {
-  /* The primary nav collapses behind "Menu"; Join stays visible in the bar. */
-  .masthead__bar > nav.nav { order: 3; }
-  .masthead__bar > .site-header__actions { order: 2; }
+  /* The primary nav collapses behind "Menu"; the bar's own Join
+     (.masthead__actions) sits before it in the markup (B's order: brand,
+     Join, Menu), so Tab and screen readers follow it in every browser. */
   .masthead__bar { gap: 10px; }
+}
+/* Without JavaScript core's overlay can't open, so instead of a Menu button
+   that does nothing the four links sit in a row of their own under the bar
+   (PLAN §3.1: every page works without JavaScript). The two-row header is
+   not sticky. */
+@media (scripting: none) and (max-width: 1019.98px) {
+  .site-header { position: relative; top: auto; }
+  .masthead__bar { flex-wrap: wrap; height: auto; row-gap: 0; }
+  .masthead__bar > .brand, .masthead__bar > .masthead__actions { min-height: var(--mast-h); }
+  .masthead__bar > nav.nav { flex: 1 1 100%; min-width: 0; margin-inline: -12px; }
+  nav.nav .site-header__actions { display: none; } /* the bar's Join is in row one */
+  nav.nav .wp-block-navigation__responsive-container-open,
+  nav.nav .wp-block-navigation__responsive-container-close { display: none; }
+  nav.nav .wp-block-navigation__responsive-container {
+    display: block; position: static; inset: auto; width: auto; z-index: auto; background: none !important; padding-bottom: 6px;
+  }
+  nav.nav .wp-block-navigation__responsive-container-content,
+  nav.nav .wp-block-navigation__container { flex-wrap: wrap; justify-content: flex-start; gap: 0; }
 }
 @media (max-width: 900px) {
   :root { --mast-h: 64px; }
@@ -1110,7 +1235,6 @@ nav.footer__links .wp-block-navigation-item > .wp-block-navigation-item__content
   .workspace { padding-top: 28px; }
   .hub-head, .hub-grid { grid-template-columns: minmax(0, 1fr); }
   .hub-head { gap: 24px; }
-  .hub-net { order: -1; }   /* Round-3 review: the Tuesday net first on phones. */
   .ex-cards { grid-template-columns: minmax(0, 1fr); }
   /* How it works opener stacks: heading, the picture, then the hops that explain it. */
   .how-open { padding: 40px 0 48px; }
@@ -1134,7 +1258,7 @@ nav.footer__links .wp-block-navigation-item > .wp-block-navigation-item__content
   .brand { gap: 9px; }
   .brand__name { font-size: 11.5px; }
   .brand__name strong { font-size: 16px; }
-  .site-header__join > .wp-block-button__link { min-height: 44px; padding: 8px 14px; font-size: 14.5px; }
+  .masthead__join > .wp-block-button__link { min-height: 44px; padding: 8px 14px; font-size: 14.5px; }
   nav.nav .wp-block-navigation__responsive-container-open.wp-block-navigation__responsive-container-open,
   nav.nav .wp-block-navigation__responsive-container-close.wp-block-navigation__responsive-container-close { padding: 0 12px; font-size: 14.5px; gap: 6px; }
   .wp-block-cover.hero { min-height: 0; }
@@ -1160,7 +1284,7 @@ nav.footer__links .wp-block-navigation-item > .wp-block-navigation-item__content
   nav.member-nav .wp-block-navigation-item > .wp-block-navigation-item__content { padding: 0 12px; font-size: 15px; }
   /* Footer */
   .footer__nav { margin-right: -20px; }
-  .footer__nav > nav.footer__links .wp-block-navigation-item { margin-right: 20px; }
+  .footer__nav > nav.footer__links .wp-block-navigation-item.wp-block-navigation-item { margin-right: 20px; }
   .footer__bottom { flex-direction: column; }
   /* How it works: the story stays within one screen before #nets (390x844), so the figure is dropped here. */
   .how-ch { padding-bottom: 72px; }
@@ -1250,7 +1374,7 @@ nav.footer__links .wp-block-navigation-item > .wp-block-navigation-item__content
 @media (max-width: 460px) {
   .brand__name > span { display: none; }
   .masthead__bar { gap: 8px; }
-  .site-header__join > .wp-block-button__link { padding: 8px 13px; }
+  .masthead__join > .wp-block-button__link { padding: 8px 13px; }
   nav.nav .wp-block-navigation__responsive-container-open { padding: 0 11px; }
   .msgpath { --mp-fs: 21px; --mp-pill: 1.25; }
 }
@@ -1260,6 +1384,19 @@ nav.footer__links .wp-block-navigation-item > .wp-block-navigation-item__content
   nav.member-nav > .wp-block-navigation__container { width: calc(var(--wrap) + 20px); }
   nav.member-nav .wp-block-navigation-item > .wp-block-navigation-item__content { padding: 0 10px; }
 }
+@media (max-width: 359.98px) {
+  /* 320px (WCAG 1.4.10 reflow): the hub rota's three columns don't fit once
+     text is spaced out or enlarged, so each Tuesday becomes a row of its own:
+     the date, then net control and the note (as the Winlink table on phones). */
+  .hub-rota thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .hub-rota, .hub-rota tbody { display: block; width: 100%; }
+  .hub-rota tr { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+  .hub-rota th, .hub-rota td { display: block; padding: 0 !important; border: 0; }
+  .hub-rota th[scope="row"] { flex: 1 1 100%; }
+  .hub-rota td:empty { display: none; }
+  .hub-rota tr.is-next { padding-inline: 12px; border-radius: 8px; background: var(--amber-wash); }
+  .table.hub-rota tr.is-next > * { background: none; box-shadow: none; }
+}
 
 /* Reduced motion: no transitions, no smooth scroll. */
 @media (prefers-reduced-motion: reduce) {
@@ -1267,7 +1404,7 @@ nav.footer__links .wp-block-navigation-item > .wp-block-navigation-item__content
 }
 
 @media print {
-  nav.nav, .site-header__actions, nav.member-nav, .toast, .contents-fab, .spk-edit-link { display: none !important; }
+  nav.nav, .masthead__actions, .site-header__actions, nav.member-nav, .toast, .contents-fab, .spk-edit-link { display: none !important; }
   .site-header { position: static; }
   body { background: #fff; }
 }

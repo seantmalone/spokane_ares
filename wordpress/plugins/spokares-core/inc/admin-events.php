@@ -25,6 +25,18 @@ function spokares_event_field_names(): array {
 }
 
 /**
+ * The form's length limits (its maxlength attributes), enforced on save too.
+ */
+function spokares_event_max_lengths(): array {
+	return array(
+		'summary'    => 90,
+		'where'      => 80,
+		'main_label' => 60,
+		'links'      => 60,
+	);
+}
+
+/**
  * The event form's values from the request (nonce already verified by the
  * caller), sanitised, typed text kept.
  */
@@ -106,8 +118,27 @@ function spokares_event_problems( array $v, array $confirmed ): array {
 		}
 		if ( '' !== $v['t_start'] && ! spokares_is_hhmm( $v['t_start'] ) ) {
 			$problems['t_start'] = __( 'The start time isn’t a time.', 'spokares-core' );
-		} elseif ( '' !== $v['t_end'] && ( ! spokares_is_hhmm( $v['t_end'] ) || '' === $v['t_start'] || $v['t_end'] <= $v['t_start'] ) ) {
+		} elseif ( '' !== $v['t_end'] && ! spokares_is_hhmm( $v['t_end'] ) ) {
+			$problems['t_end'] = __( 'The end time isn’t a time.', 'spokares-core' );
+		} elseif ( '' !== $v['t_end'] && '' === $v['t_start'] ) {
+			// An end time alone: say what is missing, beside the empty box.
+			$problems['t_start'] = __( 'The start time is missing: type it, or clear the end time (or tick All day).', 'spokares-core' );
+		} elseif ( '' !== $v['t_end'] && $v['t_end'] <= $v['t_start'] ) {
 			$problems['t_end'] = __( 'The end time must be after the start time.', 'spokares-core' );
+		}
+	}
+	// The browser's maxlength, checked again here (a request can skip it).
+	foreach ( spokares_event_max_lengths() as $field => $max ) {
+		$texts_to_cap = 'links' === $field ? wp_list_pluck( $v['links'], 'label' ) : array( (string) $v[ $field ] );
+		foreach ( $texts_to_cap as $text ) {
+			if ( spokares_too_long( (string) $text, $max ) ) {
+				$problems[ $field ] = sprintf(
+					/* translators: 1: field, e.g. "the short line"; 2: number of characters. */
+					__( '%1$s is longer than %2$d characters. Shorten it.', 'spokares-core' ),
+					ucfirst( $names[ $field ] ?? $field ),
+					$max
+				);
+			}
 		}
 	}
 	if ( 'public-service' !== $kind ) {
@@ -147,6 +178,9 @@ function spokares_event_problems( array $v, array $confirmed ): array {
 		$texts['links']      = implode( ' ', wp_list_pluck( $v['links'], 'label' ) );
 	}
 	foreach ( $texts as $field => $text ) {
+		if ( isset( $problems[ $field ] ) ) {
+			continue; // Already held back (too long).
+		}
 		$check = spokares_check_field( $text, $field, $confirmed, in_array( $field, $v['confirm'], true ) );
 		if ( $check['block'] ) {
 			$problems[ $field ] = sprintf(
@@ -256,12 +290,15 @@ function spokares_event_insert_without_form( array $data, int $post_id ): array 
  * The stored fields behind each form field (for holding a field back).
  */
 function spokares_event_field_meta(): array {
+	// The first and last day, and the start and end time, are pairs: holding
+	// back one while saving the other would publish a half-applied change
+	// ("1:00 PM–noon"), so a problem with either holds back both.
 	return array(
 		'kind'       => array( 'spk_kind' ),
-		'start'      => array( 'spk_start', 'spk_date_mode' ),
-		'end'        => array( 'spk_end' ),
-		't_start'    => array( 'spk_time_start' ),
-		't_end'      => array( 'spk_time_end' ),
+		'start'      => array( 'spk_start', 'spk_end', 'spk_date_mode' ),
+		'end'        => array( 'spk_start', 'spk_end', 'spk_date_mode' ),
+		't_start'    => array( 'spk_time_start', 'spk_time_end' ),
+		't_end'      => array( 'spk_time_start', 'spk_time_end' ),
 		'summary'    => array( 'spk_summary' ),
 		'where'      => array( 'spk_where' ),
 		'tasks'      => array( 'spk_tasks' ),
@@ -304,8 +341,9 @@ function spokares_save_event( $post_id ): void {
 	$confirmed = is_array( $confirmed ) ? $confirmed : array();
 	$result    = $GLOBALS['spokares_event_check'] ?? spokares_event_problems( $v, $confirmed );
 
-	// Record "Publish it" ticks for the fields whose text is now confirmed.
-	foreach ( array( 'title', 'summary', 'tasks', 'main_label', 'links' ) as $field ) {
+	// Record "Publish it" ticks for the fields whose text is now confirmed
+	// (every field spokares_event_problems() checks).
+	foreach ( array( 'title', 'summary', 'where', 'tasks', 'main_label', 'links' ) as $field ) {
 		if ( in_array( $field, $v['confirm'], true ) ) {
 			$text = 'links' === $field ? implode( ' ', wp_list_pluck( $v['links'], 'label' ) ) : (string) $v[ $field ];
 			if ( '' !== $text ) {
@@ -319,22 +357,34 @@ function spokares_save_event( $post_id ): void {
 	$held_keys = array();
 	$typed     = array();
 	if ( $hold ) {
-		$map = spokares_event_field_meta();
+		$map   = spokares_event_field_meta();
+		$pairs = array(
+			'start'   => array( 'start', 'end' ),
+			'end'     => array( 'start', 'end' ),
+			't_start' => array( 't_start', 't_end' ),
+			't_end'   => array( 't_start', 't_end' ),
+		);
 		foreach ( array_keys( $result['problems'] + $result['confirm'] ) as $field ) {
 			foreach ( $map[ $field ] ?? array() as $key ) {
 				$held_keys[ $key ] = true;
 			}
 			$base = str_starts_with( (string) $field, 'links' ) ? 'links' : (string) $field;
-			if ( array_key_exists( $base, $v ) ) {
-				$typed[ $base ] = $v[ $base ];
+			// Keep both halves of a held-back pair in the form, as typed.
+			foreach ( $pairs[ $base ] ?? array( $base ) as $one ) {
+				if ( array_key_exists( $one, $v ) ) {
+					$typed[ $one ] = $v[ $one ];
+				}
 			}
 		}
 		foreach ( array_keys( $typed ) as $field ) {
 			unset( $confirmed[ $field ] );
 		}
-		if ( $typed ) {
-			spokares_retain( 'spk_event_' . $post_id, $typed, array() );
-		}
+	}
+	if ( $typed ) {
+		spokares_retain( 'spk_event_' . $post_id, $typed, array() );
+	} else {
+		// Nothing held back: forget any typing kept from an earlier save.
+		delete_transient( 'spokares_retain_' . get_current_user_id() . '_spk_event_' . $post_id );
 	}
 
 	$contact = '' !== $result['call'] ? $result['call'] : $v['contact'];
@@ -375,7 +425,9 @@ function spokares_save_event( $post_id ): void {
 		if ( '' === $value || array() === $value || 0 === $value ) {
 			delete_post_meta( $post_id, $key );
 		} else {
-			update_post_meta( $post_id, $key, $value );
+			// The values are unslashed already, and update_post_meta() unslashes
+			// again: slash them so a typed backslash ("C:\ARES") is kept.
+			update_post_meta( $post_id, $key, wp_slash( $value ) );
 		}
 	}
 	if ( $confirmed ) {
@@ -436,7 +488,7 @@ function spokares_event_kind_places(): array {
  * @param int $post_id Event.
  */
 function spokares_event_places_sentence( int $post_id ): string {
-	$in     = static fn( array $list ): bool => in_array( $post_id, array_map( 'intval', wp_list_pluck( $list, 'id' ) ), true );
+	$in     = static fn( array $events ): bool => in_array( $post_id, array_map( 'intval', wp_list_pluck( $events, 'id' ) ), true );
 	$places = array();
 	if ( $in(
 		spokares_events(
@@ -494,7 +546,8 @@ function spokares_event_form_values( WP_Post $post, bool $with_held = true ): ar
 	$mode      = (string) $get( 'spk_date_mode' );
 	$precision = (string) $get( 'spk_precision' );
 	$values    = array(
-		'title'      => $post->post_title,
+		// The name as typed (stored titles are HTML-filtered: "&" is "&amp;").
+		'title'      => html_entity_decode( $post->post_title, ENT_QUOTES, 'UTF-8' ),
 		'kind'       => (string) $get( 'spk_kind' ),
 		'mode'       => '' !== $mode ? $mode : 'date',
 		'start'      => (string) $get( 'spk_start' ),
@@ -570,10 +623,12 @@ function spokares_event_form_fields( $post ): void {
 	) : spokares_event_problems( $v, is_array( $confirmed ) ? $confirmed : array() );
 	$p         = $check['problems'];
 	$c         = $check['confirm'];
-	$all_day   = '' === $v['t_start'];
-	$addr      = __( 'Web address (copy it from your browser’s address bar)', 'spokares-core' );
-	$admin     = current_user_can( 'manage_options' );
-	$docs      = get_posts(
+	// All day only when neither time is filled in: an end time alone comes
+	// back with the time boxes showing, so its sentence points at them.
+	$all_day = '' === $v['t_start'] && '' === $v['t_end'];
+	$addr    = __( 'Web address (copy it from your browser’s address bar)', 'spokares-core' );
+	$admin   = current_user_can( 'manage_options' );
+	$docs    = get_posts(
 		array(
 			'post_type'   => 'spk_document',
 			'post_status' => 'publish',
@@ -582,7 +637,14 @@ function spokares_event_form_fields( $post ): void {
 			'order'       => 'ASC',
 		)
 	);
-	$links     = array_pad(
+	// A stored Extra form that isn't published right now (a draft, say) is
+	// still offered, chosen, so saving the form doesn't drop it; the card
+	// links it again once the document is published.
+	$held_doc = $v['extra_doc'] && ! in_array( $v['extra_doc'], array_map( 'intval', wp_list_pluck( $docs, 'ID' ) ), true ) ? get_post( $v['extra_doc'] ) : null;
+	if ( $held_doc && ( 'spk_document' !== $held_doc->post_type || 'trash' === $held_doc->post_status ) ) {
+		$held_doc = null;
+	}
+	$links = array_pad(
 		array_values( $v['links'] ),
 		3,
 		array(
@@ -682,6 +744,9 @@ function spokares_event_form_fields( $post ): void {
 			<label for="spk-extra-doc"><?php esc_html_e( 'Extra form', 'spokares-core' ); ?></label>
 			<select id="spk-extra-doc" name="spk_extra_doc">
 				<option value="0"><?php esc_html_e( '— none —', 'spokares-core' ); ?></option>
+				<?php if ( $held_doc ) : ?>
+					<option value="<?php echo esc_attr( (string) $held_doc->ID ); ?>" selected><?php echo esc_html( html_entity_decode( get_the_title( $held_doc ), ENT_QUOTES, 'UTF-8' ) . ' ' . __( '(not shown: the document isn’t published)', 'spokares-core' ) ); ?></option>
+				<?php endif; ?>
 				<?php foreach ( $docs as $doc ) : ?>
 					<option value="<?php echo esc_attr( (string) $doc->ID ); ?>" <?php selected( $doc->ID, $v['extra_doc'] ); ?>><?php echo esc_html( html_entity_decode( get_the_title( $doc ), ENT_QUOTES, 'UTF-8' ) ); ?></option>
 				<?php endforeach; ?>
@@ -838,9 +903,33 @@ function spokares_bulk_message( bool $is_event, string $action, int $n ): string
 			/* translators: %s: how many. */
 			return $is_event ? _n( '%s event moved to the Trash.', '%s events moved to the Trash.', $n, 'spokares-core' ) : _n( '%s document moved to the Trash.', '%s documents moved to the Trash.', $n, 'spokares-core' );
 		default:
+			if ( spokares_untrashed_as_drafts() ) {
+				// Restore brings an item back as a draft (WordPress's rule): say so,
+				// and where to find it, since the default views don't list drafts.
+				/* translators: %s: how many. */
+				return $is_event ? _n( '%s event restored from the Trash as a draft, so it isn’t on the site. Find it under Drafts, open it and Publish.', '%s events restored from the Trash as drafts, so they aren’t on the site. Find them under Drafts, open each and Publish.', $n, 'spokares-core' ) : _n( '%s document restored from the Trash as a draft, so it isn’t on the site. Open it and Publish.', '%s documents restored from the Trash as drafts, so they aren’t on the site. Open each and Publish.', $n, 'spokares-core' );
+			}
 			/* translators: %s: how many. */
 			return $is_event ? _n( '%s event restored from the Trash.', '%s events restored from the Trash.', $n, 'spokares-core' ) : _n( '%s document restored from the Trash.', '%s documents restored from the Trash.', $n, 'spokares-core' );
 	}
+}
+
+/**
+ * After a Restore (or Undo) on a list screen: are all the restored items
+ * drafts? The redirect names them in ?ids=.
+ */
+function spokares_untrashed_as_drafts(): bool {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- the message after core's own (nonce-checked) redirect; read-only.
+	$ids = isset( $_GET['ids'] ) ? array_filter( array_map( 'absint', explode( ',', sanitize_text_field( wp_unslash( $_GET['ids'] ) ) ) ) ) : array();
+	if ( ! $ids ) {
+		return false;
+	}
+	foreach ( $ids as $id ) {
+		if ( 'draft' !== get_post_status( $id ) ) {
+			return false;
+		}
+	}
+	return true;
 }
 add_filter( 'bulk_post_updated_messages', 'spokares_bulk_messages', 10, 2 );
 
@@ -904,11 +993,20 @@ function spokares_event_views( $views ): array {
 		'drafts'   => array( __( 'Drafts', 'spokares-core' ), $count( array( 'post_status' => 'draft' ) ) ),
 	);
 	$out     = array();
+	$all     = 'trash' !== $current && ( spokares_event_list_searching() || spokares_list_needs_check() );
+	if ( $all ) {
+		// A search (or the Needs checking link) lists every event, whatever view it was typed in.
+		$out['spk_all'] = sprintf(
+			'<a href="%1$s" class="current" aria-current="page">%2$s</a>',
+			esc_url( remove_query_arg( 'spk_view' ) ),
+			esc_html( spokares_list_needs_check() ? __( 'Marked “Needs checking” (upcoming, past and drafts)', 'spokares-core' ) : __( 'Search results from every event (upcoming, past and drafts)', 'spokares-core' ) )
+		);
+	}
 	foreach ( $defs as $key => [ $label, $n ] ) {
 		$out[ $key ] = sprintf(
 			'<a href="%1$s"%2$s>%3$s <span class="count">(%4$d)</span></a>',
 			esc_url( add_query_arg( 'spk_view', $key, $base ) ),
-			$current === $key ? ' class="current" aria-current="page"' : '',
+			! $all && $current === $key ? ' class="current" aria-current="page"' : '',
 			esc_html( $label ),
 			$n
 		);
@@ -937,6 +1035,14 @@ function spokares_event_list_view(): string {
 }
 
 /**
+ * Is the events list showing a search?
+ */
+function spokares_event_list_searching(): bool {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- list filtering only.
+	return isset( $_GET['s'] ) && '' !== trim( sanitize_text_field( wp_unslash( $_GET['s'] ) ) );
+}
+
+/**
  * Filter and order the events list for the chosen view.
  *
  * @param WP_Query $q Query.
@@ -954,7 +1060,22 @@ function spokares_event_list_query( $q ): void {
 	if ( 'trash' === $view ) {
 		return;
 	}
-	if ( 'drafts' === $view ) {
+	if ( spokares_event_list_searching() || spokares_list_needs_check() ) {
+		// A search, or the Dashboard's "Needs checking" link, looks through
+		// every event (upcoming, past and drafts), not just the view's.
+		$q->set( 'post_status', array( 'publish', 'draft', 'pending', 'future' ) );
+		if ( spokares_list_needs_check() ) {
+			$q->set(
+				'meta_query',
+				array(
+					array(
+						'key'   => 'spk_needs_check',
+						'value' => '1',
+					),
+				)
+			);
+		}
+	} elseif ( 'drafts' === $view ) {
 		$q->set( 'post_status', 'draft' );
 	} else {
 		$q->set( 'post_status', 'publish' );
@@ -1010,7 +1131,11 @@ function spokares_event_column( $col, $post_id ): void {
 	$ev = spokares_event_data( (int) $post_id );
 	switch ( $col ) {
 		case 'spk_when':
-			echo esc_html( str_replace( "\u{00A0}", ' ', spokares_fmt_when( $ev, 'row' ) ) );
+			// A month- or year-precision event (imported history) is stored on the
+			// 1st of its month or year: print what the public Past list prints
+			// ("Oct 2022", "2025"), never an invented day and weekday.
+			$style = 'date' === $ev['mode'] && in_array( $ev['precision'], array( 'month', 'year' ), true ) ? 'past' : 'row';
+			echo esc_html( str_replace( "\u{00A0}", ' ', spokares_fmt_when( $ev, $style ) ) );
 			break;
 		case 'spk_kind':
 			echo esc_html( spokares_event_kinds()[ $ev['kind'] ] ?? __( '(no kind)', 'spokares-core' ) );
@@ -1082,12 +1207,16 @@ function spokares_handle_duplicate_event(): void {
 	if ( ! $src || 'spk_event' !== $src->post_type || ! current_user_can( 'edit_post', $id ) || ! current_user_can( 'edit_spk_events' ) ) {
 		wp_die( esc_html__( 'Sorry, you are not allowed to copy this event.', 'spokares-core' ), '', array( 'response' => 403 ) );
 	}
+	// wp_insert_post() and update_post_meta() both expect slashed data: slash
+	// the stored values so their backslashes are copied as they are.
 	$new = wp_insert_post(
-		array(
-			'post_type'   => 'spk_event',
-			'post_status' => 'draft',
-			'post_title'  => $src->post_title,
-			'menu_order'  => $src->menu_order,
+		wp_slash(
+			array(
+				'post_type'   => 'spk_event',
+				'post_status' => 'draft',
+				'post_title'  => $src->post_title,
+				'menu_order'  => $src->menu_order,
+			)
 		),
 		true
 	);
@@ -1098,7 +1227,7 @@ function spokares_handle_duplicate_event(): void {
 	foreach ( $copy as $key ) {
 		$value = get_post_meta( $id, $key, true );
 		if ( '' !== $value && array() !== $value ) {
-			update_post_meta( $new, $key, $value );
+			update_post_meta( $new, $key, wp_slash( $value ) );
 		}
 	}
 	update_post_meta( $new, 'spk_date_mode', 'date' );

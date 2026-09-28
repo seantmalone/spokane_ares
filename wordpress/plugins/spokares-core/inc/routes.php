@@ -69,11 +69,31 @@ function spokares_doc_target( string $slug ): string {
 }
 
 /**
+ * The slug of a /docs/<slug>/ request typed with capitals (/docs/ICS-213/),
+ * which the lowercase rewrite rule doesn't match, or ''. Slugs are lowercase,
+ * so the link works however it is typed. Read from the request WordPress
+ * already parsed (and 404ed), so it needs no rewrite flush.
+ */
+function spokares_doc_slug_any_case(): string {
+	global $wp;
+	if ( ! is_404() || ! ( $wp instanceof WP ) ) {
+		return '';
+	}
+	if ( ! preg_match( '#^docs/([A-Za-z0-9-]+)/?$#', (string) $wp->request, $m ) || ! preg_match( '/[A-Z]/', $m[1] ) ) {
+		return '';
+	}
+	return strtolower( $m[1] );
+}
+
+/**
  * Handle /docs/<slug>/.
  */
 function spokares_doc_redirect(): void {
 	$slug = get_query_var( 'spk_doc' );
 	if ( ! is_string( $slug ) || '' === $slug ) {
+		$slug = spokares_doc_slug_any_case();
+	}
+	if ( '' === $slug ) {
 		return;
 	}
 	$target = spokares_doc_target( $slug );

@@ -16,15 +16,22 @@
  *     paragraphs, which the lock forbids, so the paste did nothing at all.
  *     Now they arrive as one paragraph with line breaks (one line in a
  *     heading or a button), and a notice says so. List items still split.
- *  4. After each save, a warning if the page text looks like something we
- *     never publish (hospital nets, channels, 800 MHz, phone numbers,
- *     personal e-mail addresses), or if a new item in a "title" list (What
- *     we do, the timeline, the message hops) has no bold first words.
- *     Saving is never blocked.
+ *  4. After each save, a warning if the page text, or the page's excerpt
+ *     (its meta description), looks like something we never publish
+ *     (hospital nets, channels, 800 MHz, phone numbers, personal e-mail
+ *     addresses), if a new item in a "title" list (What we do, the
+ *     timeline, the message hops) has no bold first words, if a list item
+ *     is empty (the server leaves empty items out of the saved page), or if
+ *     a new or changed link doesn't start with https://. Saving is never
+ *     blocked.
  *  5. The Page panel's Status, Publish, Slug, Author, Template and Trash
  *     rows, the Slug/Parent/Featured image panels, the Fill/Outline button
  *     styles, the Welcome Guide and the starter-pattern window are off. The
  *     server keeps status, password, date, slug and template anyway.
+ *     The page card's ⋮ menu offers no Order and no Trash: the server tells
+ *     the editor that editors can't delete pages and that pages have no
+ *     page attributes for them (governance.php, roles.php), and a style
+ *     rule hides the More menu's "Manage patterns" (governance.php).
  */
 ( function ( wp ) {
 	'use strict';
@@ -318,13 +325,80 @@
 		return '';
 	}
 
-	function scanSavedContent() {
+	/* Is any list item on the page empty (no words, no inner list)? Pressing
+	   Enter at the start or end of an item leaves one; the server leaves it
+	   out of the saved page, so the editor shows an item the page doesn't. */
+	function hasEmptyItem() {
+		var be = data.select( BE );
+		var items = ( typeof be.getBlocksByName === 'function' ? be.getBlocksByName( 'core/list-item' ) : [] ) || [];
+		for ( var i = 0; i < items.length; i++ ) {
+			var item = be.getBlock( items[ i ] );
+			if ( ! item || ( item.innerBlocks && item.innerBlocks.length ) ) {
+				continue;
+			}
+			var words = String( item.attributes.content || '' ).replace( /<[^>]+>/g, ' ' ).replace( /&nbsp;|\u00a0/gi, ' ' ).trim();
+			if ( ! words ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/* The link addresses in some block markup, decoded. */
+	function linksIn( html ) {
+		var out = [];
+		var re = /<a\s[^>]*?href="([^"]*)"/gi;
+		var m;
+		while ( ( m = re.exec( html ) ) ) {
+			out.push( m[ 1 ].replace( /&amp;/g, '&' ).trim() );
+		}
+		return out;
+	}
+
+	/* The links the page had when the editor opened: only links added or
+	   changed since are checked, so an old link doesn't warn on every save. */
+	var linksAtStart = null;
+	function rememberLinks() {
 		var ed = data.select( 'core/editor' );
-		if ( ! ed ) {
+		if ( null !== linksAtStart || ! ed || typeof ed.getEditedPostContent !== 'function' || ! ed.getCurrentPostId() ) {
 			return;
 		}
 		var html = ed.getEditedPostContent() || '';
-		var text = html.replace( /<!--[\s\S]*?-->/g, ' ' ).replace( /<[^>]+>/g, ' ' );
+		if ( html ) {
+			linksAtStart = linksIn( html );
+		}
+	}
+
+	/* A new or changed link that isn't https://, mailto:, or a link within
+	   the site (/…, #…). A "javascript:" link is saved without its protocol,
+	   and "www.example.org" without https:// is a link to a page on this
+	   site, so both break silently. */
+	function badLink( html ) {
+		var start = linksAtStart || [];
+		var links = linksIn( html );
+		for ( var i = 0; i < links.length; i++ ) {
+			var href = links[ i ];
+			if ( ! /^(https:\/\/|mailto:|\/|#|\?)/i.test( href ) && start.indexOf( href ) === -1 ) {
+				return href.length > 60 ? href.slice( 0, 60 ) + '…' : href;
+			}
+		}
+		return '';
+	}
+
+	/* A warning notice when found, or remove it. */
+	function toggleNotice( notices, id, text ) {
+		if ( text ) {
+			notices.createWarningNotice( text, { id: id, isDismissible: true } );
+		} else {
+			notices.removeNotice( id );
+		}
+	}
+
+	/* What the never-publish, phone and e-mail patterns find in some page
+	   text or markup (block comments and tags left out; role addresses
+	   @spokares.org are fine). */
+	function neverPublish( html ) {
+		var text = String( html || '' ).replace( /<!--[\s\S]*?-->/g, ' ' ).replace( /<[^>]+>/g, ' ' );
 		if ( cfg.allowed ) {
 			text = text.replace( new RegExp( cfg.allowed, 'gi' ), ' ' );
 		}
@@ -338,21 +412,29 @@
 				// An old browser without lookbehind: skip that pattern.
 			}
 		} );
+		return found;
+	}
+
+	function scanSavedContent() {
+		var ed = data.select( 'core/editor' );
+		if ( ! ed ) {
+			return;
+		}
+		var html = ed.getEditedPostContent() || '';
+		var found = neverPublish( html );
+		// The excerpt is the page's <meta name="description">: public too.
+		var inExcerpt = cfg.excerpt && typeof ed.getEditedPostAttribute === 'function' ? neverPublish( ed.getEditedPostAttribute( 'excerpt' ) ) : [];
 		var notices = data.dispatch( 'core/notices' );
 		if ( ! notices ) {
 			return;
 		}
-		if ( found.length ) {
-			notices.createWarningNotice( String( cfg.message ).replace( '%s', found.join( ', ' ) ), { id: 'spokares-never-publish', isDismissible: true } );
-		} else {
-			notices.removeNotice( 'spokares-never-publish' );
-		}
+		toggleNotice( notices, 'spokares-never-publish', found.length ? String( cfg.message ).replace( '%s', found.join( ', ' ) ) : '' );
+		toggleNotice( notices, 'spokares-never-publish-excerpt', inExcerpt.length ? String( cfg.excerpt ).replace( '%s', inExcerpt.join( ', ' ) ) : '' );
 		var bare = cfg.noLeadIn ? missingLeadIn() : '';
-		if ( bare ) {
-			notices.createWarningNotice( String( cfg.noLeadIn ).replace( '%s', bare ), { id: 'spokares-lead-in', isDismissible: true } );
-		} else {
-			notices.removeNotice( 'spokares-lead-in' );
-		}
+		toggleNotice( notices, 'spokares-lead-in', bare ? String( cfg.noLeadIn ).replace( '%s', bare ) : '' );
+		toggleNotice( notices, 'spokares-empty-item', cfg.emptyItem && hasEmptyItem() ? String( cfg.emptyItem ) : '' );
+		var link = cfg.badLink ? badLink( html ) : '';
+		toggleNotice( notices, 'spokares-bad-link', link ? String( cfg.badLink ).replace( '%s', link ) : '' );
 	}
 
 	limitInserting();
@@ -360,9 +442,11 @@
 		preferences();
 		applyModes();
 		watchPaste();
+		rememberLinks();
 		data.subscribe( function () {
 			applyModes();
 			watchPaste();
+			rememberLinks();
 			checkAfterSave();
 		} );
 	} );

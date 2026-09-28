@@ -377,6 +377,78 @@ function spokares_layout_error( string $why = 'layout' ): WP_Error {
 }
 
 /**
+ * Take empty list items out of some content. Pressing Enter at the start or
+ * end of an item in the block editor leaves an empty one, and on the page it
+ * prints as an extra stop, year or hop with no words (a timeline dot with no
+ * text). The layout check lets list items be added and removed, so removing
+ * an empty one is never a layout change.
+ *
+ * @param string $content Post content.
+ * @return string The content, unchanged when it has no empty list item.
+ */
+function spokares_strip_empty_list_items( string $content ): string {
+	if ( ! str_contains( $content, 'wp:list-item' ) ) {
+		return $content;
+	}
+	$changed = false;
+	$blocks  = spokares_without_empty_list_items( parse_blocks( $content ), $changed );
+	return $changed ? serialize_blocks( $blocks ) : $content;
+}
+
+/**
+ * Remove empty core/list-item blocks from parsed blocks (any depth).
+ *
+ * @param array $blocks  parse_blocks() output.
+ * @param bool  $changed Set to true when something was removed.
+ */
+function spokares_without_empty_list_items( array $blocks, bool &$changed ): array {
+	foreach ( $blocks as $i => $b ) {
+		if ( empty( $b['innerBlocks'] ) ) {
+			continue;
+		}
+		$kept    = array();
+		$content = array();
+		$child   = 0;
+		foreach ( (array) ( $b['innerContent'] ?? array() ) as $piece ) {
+			if ( is_string( $piece ) ) {
+				$content[] = $piece;
+				continue;
+			}
+			$inner = $b['innerBlocks'][ $child++ ] ?? null;
+			if ( null === $inner ) {
+				continue;
+			}
+			if ( spokares_is_empty_list_item( $inner ) ) {
+				$changed = true;
+				// Drop the whitespace that separated it from the item before.
+				if ( $content && is_string( end( $content ) ) && '' === trim( (string) end( $content ) ) ) {
+					array_pop( $content );
+				}
+				continue;
+			}
+			$kept[]    = $inner;
+			$content[] = null;
+		}
+		$blocks[ $i ]['innerBlocks']  = spokares_without_empty_list_items( $kept, $changed );
+		$blocks[ $i ]['innerContent'] = $content;
+	}
+	return $blocks;
+}
+
+/**
+ * Is this parsed block a list item with no words and no inner list?
+ *
+ * @param array $block A parsed block.
+ */
+function spokares_is_empty_list_item( array $block ): bool {
+	if ( 'core/list-item' !== ( $block['blockName'] ?? '' ) || ! empty( $block['innerBlocks'] ) ) {
+		return false;
+	}
+	$text = html_entity_decode( wp_strip_all_tags( (string) ( $block['innerHTML'] ?? '' ) ), ENT_QUOTES, 'UTF-8' );
+	return '' === trim( str_replace( "\u{00A0}", ' ', $text ) );
+}
+
+/**
  * Would a non-admin's new page content be refused? Returns '' when it may be
  * saved, else 'layout' or 'empty-button'.
  *
@@ -470,14 +542,40 @@ function spokares_page_insert_guard( $data, $postarr ) {
 		}
 	}
 	if ( spokares_layout_locked_for_user() && isset( $data['post_content'] ) ) {
-		$new = wp_unslash( (string) $data['post_content'] );
-		if ( '' !== spokares_page_content_problem( (string) $stored->post_content, $new ) ) {
+		$new   = wp_unslash( (string) $data['post_content'] );
+		$clean = spokares_strip_empty_list_items( $new );
+		if ( '' !== spokares_page_content_problem( (string) $stored->post_content, $clean ) ) {
 			$data['post_content'] = wp_slash( $stored->post_content );
+		} elseif ( $clean !== $new ) {
+			$data['post_content'] = wp_slash( $clean );
 		}
 	}
 	return $data;
 }
 add_filter( 'wp_insert_post_data', 'spokares_page_insert_guard', 20, 2 );
+
+/**
+ * No non-administrator moves a page to the Trash or deletes it, whatever
+ * path asks (§4.1: the six pages are fixed). The capability rules
+ * (roles.php) already refuse the Pages list, REST and the block editor;
+ * this is the floor for code that calls wp_trash_post() or wp_delete_post()
+ * directly. Trashing renames the slug to <slug>__trashed, so a refused
+ * trash must stop before WordPress touches the page at all.
+ *
+ * @param mixed   $check Short-circuit value (null to go on).
+ * @param WP_Post $post  Post.
+ */
+function spokares_page_trash_guard( $check, $post ) {
+	if ( null !== $check || ! $post instanceof WP_Post || 'page' !== $post->post_type || 'auto-draft' === $post->post_status ) {
+		return $check;
+	}
+	if ( ! is_user_logged_in() || ( defined( 'WP_CLI' ) && WP_CLI ) || current_user_can( 'manage_options' ) ) {
+		return $check;
+	}
+	return false;
+}
+add_filter( 'pre_trash_post', 'spokares_page_trash_guard', 10, 2 );
+add_filter( 'pre_delete_post', 'spokares_page_trash_guard', 10, 2 );
 
 /**
  * The three members pages' templates hold everything on those pages, so no
@@ -608,6 +706,46 @@ function spokares_navigation_list_for_editors( $result, $server, $request ) {
 add_filter( 'rest_pre_dispatch', 'spokares_navigation_list_for_editors', 10, 3 );
 
 /**
+ * For non-admins, pages don't "support page attributes" as far as the block
+ * editor is told. The page card at the top of the Page sidebar builds its
+ * ⋮ menu from the post type's supports, and page-attributes adds Order (and
+ * the Parent field). The server keeps a non-admin's order and parent anyway
+ * (spokares_page_insert_guard), so Order said "Order updated." and changed
+ * nothing. The post type itself is unchanged; this is only the editor's copy.
+ *
+ * @param WP_REST_Response $response  Response.
+ * @param WP_Post_Type     $post_type Post type.
+ */
+function spokares_page_type_for_editors( $response, $post_type ) {
+	if ( ! $response instanceof WP_REST_Response || ! $post_type instanceof WP_Post_Type || 'page' !== $post_type->name || ! spokares_layout_locked_for_user() ) {
+		return $response;
+	}
+	$data = $response->get_data();
+	if ( is_array( $data ) && isset( $data['supports'] ) && is_array( $data['supports'] ) && isset( $data['supports']['page-attributes'] ) ) {
+		unset( $data['supports']['page-attributes'] );
+		$response->set_data( $data );
+	}
+	return $response;
+}
+add_filter( 'rest_prepare_post_type', 'spokares_page_type_for_editors', 10, 2 );
+
+/**
+ * For non-admins, a page doesn't offer "assign author": the server keeps a
+ * non-admin's page author anyway (spokares_page_insert_guard), and the
+ * editor's Author row, which the link switches on, asked for the author's
+ * account (GET /wp/v2/users/N), which only administrators may read.
+ *
+ * @param WP_REST_Response $response Response.
+ */
+function spokares_page_links_for_editors( $response ) {
+	if ( $response instanceof WP_REST_Response && spokares_layout_locked_for_user() ) {
+		$response->remove_link( 'https://api.w.org/action-assign-author' );
+	}
+	return $response;
+}
+add_filter( 'rest_prepare_page', 'spokares_page_links_for_editors' );
+
+/**
  * Welcome Guide and the starter-pattern window off for editors, stored with
  * their preferences before the editor loads. (The editor guard also switches
  * them off, but only after the editor has started, so on a first visit the
@@ -666,8 +804,8 @@ add_filter( 'allowed_block_types_all', 'spokares_allowed_blocks', 20, 2 );
 
 /**
  * The editor guard script: content-only editing modes, list items as the only
- * insertable block, never-publish/phone/e-mail warnings after a save, Welcome
- * Guide and starter patterns off.
+ * insertable block, never-publish/phone/e-mail warnings after a save (page
+ * text and excerpt), Welcome Guide and starter patterns off.
  */
 function spokares_enqueue_editor_guard(): void {
 	if ( ! spokares_layout_locked_for_user() ) {
@@ -695,19 +833,30 @@ function spokares_enqueue_editor_guard(): void {
 		'spokares-editor-guard',
 		'window.spokaresGuard = ' . wp_json_encode(
 			array(
-				'patterns' => $patterns,
-				'allowed'  => '[A-Z0-9._%+-]+@spokares\\.org\\b',
+				'patterns'  => $patterns,
+				'allowed'   => '[A-Z0-9._%+-]+@spokares\\.org\\b',
 				/* translators: %s: what was found, e.g. "a phone number". */
-				'message'  => __( 'This page may contain something we never publish: %s. Check it before you leave.', 'spokares-core' ),
-				'pasted'   => __( 'Pasted as one paragraph with line breaks: new paragraphs can’t be added to this page. To keep them apart, paste one paragraph at a time into the paragraphs that are already there.', 'spokares-core' ),
-				'pastedOn' => __( 'Pasted as one line: a heading or a button holds one line of words.', 'spokares-core' ),
+				'message'   => __( 'This page may contain something we never publish: %s. Check it before you leave.', 'spokares-core' ),
+				/* translators: %s: what was found, e.g. "a phone number". */
+				'excerpt'   => __( 'This page’s excerpt, the description search engines show, may contain something we never publish: %s. Check it in the Page panel before you leave.', 'spokares-core' ),
+				'pasted'    => __( 'Pasted as one paragraph with line breaks: new paragraphs can’t be added to this page. To keep them apart, paste one paragraph at a time into the paragraphs that are already there.', 'spokares-core' ),
+				'pastedOn'  => __( 'Pasted as one line: a heading or a button holds one line of words.', 'spokares-core' ),
 				// Lists whose items start with bold words that print as the item's title.
-				'leadIns'  => array( 'stops', 'years', 'hops' ),
+				'leadIns'   => array( 'stops', 'years', 'hops' ),
 				/* translators: %s: the first words of the list item. */
-				'noLeadIn' => __( 'A list item has no bold first words, so it shows with no title: “%s”. Select its first words and press Ctrl+B (Cmd+B on a Mac), then Save.', 'spokares-core' ),
+				'noLeadIn'  => __( 'A list item has no bold first words, so it shows with no title: “%s”. Select its first words and press Ctrl+B (Cmd+B on a Mac), then Save.', 'spokares-core' ),
+				'emptyItem' => __( 'A list item is empty, so it was left out when the page was saved. Click in it and press Backspace to remove it here too, or type its words and save again.', 'spokares-core' ),
+				/* translators: %s: the link address as typed. */
+				'badLink'   => __( 'A link doesn’t start with https:// (%s), so it may not work for visitors. Select the linked words, change the link to a full https:// address, then Save.', 'spokares-core' ),
 			)
 		) . ';',
 		'before'
 	);
+	// The More menu's "Manage patterns" leads to the synced-pattern list, which
+	// is administrators' only (for editors it answered "Sorry, you are not
+	// allowed"), so it isn't offered.
+	wp_register_style( 'spokares-editor-guard', false, array(), SPOKARES_CORE_VERSION );
+	wp_enqueue_style( 'spokares-editor-guard' );
+	wp_add_inline_style( 'spokares-editor-guard', '.components-menu-item__button[href*="post_type=wp_block"],.components-menu-item__button[href*="p=%2Fpattern"],.components-menu-item__button[href*="p=/pattern"]{display:none!important}' );
 }
 add_action( 'enqueue_block_editor_assets', 'spokares_enqueue_editor_guard' );

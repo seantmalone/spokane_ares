@@ -2,7 +2,7 @@
 /**
  * Hardening (§5.3; from the tested research/reference/hardening.php):
  * XML-RPC refused, application passwords off, comments and pings closed,
- * generic login errors, a login throttle, no generator tag.
+ * generic login errors, a login throttle, no generator tag, no Gravatar.
  *
  * @package spokares-hardening
  */
@@ -77,3 +77,20 @@ add_filter(
 // 6. Do not advertise the WordPress version.
 remove_action( 'wp_head', 'wp_generator' );
 add_filter( 'the_generator', '__return_empty_string' );
+
+// 7. No Gravatar (§2.2 #11 no third-party requests; §4.2 profile pictures
+// hidden). WordPress would put a hash of the signed-in user's e-mail address
+// in secure.gravatar.com URLs on every page (the toolbar's picture), on the
+// Profile and Users screens and in REST user objects. Avatars are off, and
+// an avatar asked for anyway (force_display) has no picture at all.
+add_filter( 'pre_option_show_avatars', '__return_zero' );
+add_filter(
+	'pre_get_avatar_data',
+	static function ( $args ) {
+		if ( is_array( $args ) ) {
+			$args['url']          = '';
+			$args['found_avatar'] = false;
+		}
+		return $args;
+	}
+);

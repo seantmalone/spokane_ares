@@ -78,6 +78,17 @@ if (( SSH_CHECKS )); then
 
   out=$(ssh "$SPK_SSH" "SPOKARES_WP_PATH='$WP' bash -s -- --find-only --no-ping" < "$W/ops/weekly-check.sh" 2>&1)
   if [[ $? -eq 0 ]]; then spk_pass "host file checks (tag's weekly-check.sh --find-only)"; else spk_fail "host file checks:"; echo "$out" | grep -v '^ok ' | sed 's/^/      /'; fi
+
+  # The upload cap (PLAN §5.3: 32 MB, set in php.ini). WP-CLI reads the CLI's
+  # php.ini, which can differ from the web server's (a .user.ini, say), so a
+  # mismatch is a NOTE to confirm on Media > Add New, not a failure.
+  cap=$(ssh "$SPK_SSH" "cd '$WP' && wp eval 'echo ini_get( \"upload_max_filesize\" ), \" \", ini_get( \"post_max_size\" ), \" \", wp_max_upload_size();'" 2>/dev/null || true)
+  read -r cap_upload cap_post cap_bytes <<<"$cap"
+  if [[ $cap_bytes == 33554432 ]]; then
+    spk_pass "upload cap 32 MB (upload_max_filesize=$cap_upload, post_max_size=$cap_post; CLI php.ini)"
+  else
+    echo "NOTE  upload cap: upload_max_filesize=${cap_upload:-?}, post_max_size=${cap_post:-?}, wp_max_upload_size=${cap_bytes:-?} bytes (CLI php.ini); PLAN §5.3 wants 32 MB. Confirm the web value on Media > Add New (\"Maximum upload file size: 32 MB\")"
+  fi
 else
   spk_skip "SSH comparison and host file checks (--no-ssh)"
 fi
@@ -125,14 +136,24 @@ rm_code=$(code "$U/readme.html")
 [[ $rm_code == 200 ]] && echo "NOTE  /readme.html -> 200: it names the WordPress version (deny it at the web server; ops/README.md)" || spk_pass "/readme.html -> $rm_code"
 powered=$("${CURL[@]}" -o /dev/null -D - -m 30 "$U/" | tr -d '\r' | grep -i '^x-powered-by:' || true)
 [[ -z $powered ]] && spk_pass "no X-Powered-By header on /" || spk_fail "X-Powered-By is sent: $powered"
-for path in / /wp-login.php /wp-admin/; do
+# Every header and every CSP directive of PLAN §5.3, on the front end, the
+# sign-in page, and wp-admin. Signed out, /wp-admin/ redirects before
+# admin_init, so admin-ajax.php and admin-post.php (which run admin_init for
+# anyone) stand in for the signed-in screens: core's send_frame_options_header()
+# on admin_init is what cut the policy down to frame-ancestors (QA-007).
+# The runbook's go-live list checks one signed-in screen by hand.
+CSP_DIRECTIVES=("frame-ancestors 'self'" "base-uri 'self'" "form-action 'self'" "object-src 'none'")
+for path in / /wp-login.php /wp-admin/ "/wp-admin/admin-ajax.php?action=spokares-header-check" "/wp-admin/admin-post.php?action=spokares-header-check"; do
   h=$("${CURL[@]}" -o /dev/null -D - -m 30 "$U$path" | tr -d '\r')
   missing=""
   grep -qi '^x-content-type-options: *nosniff' <<<"$h" || missing="$missing X-Content-Type-Options"
   grep -qi '^referrer-policy: *strict-origin-when-cross-origin' <<<"$h" || missing="$missing Referrer-Policy"
   grep -qi '^x-frame-options: *sameorigin' <<<"$h" || missing="$missing X-Frame-Options"
   grep -qi '^permissions-policy:' <<<"$h" || missing="$missing Permissions-Policy"
-  grep -qi "^content-security-policy:.*frame-ancestors 'self'" <<<"$h" || missing="$missing CSP(frame-ancestors)"
+  csp=$(grep -i '^content-security-policy:' <<<"$h")   # every policy sent is enforced, so any may carry a directive
+  for d in "${CSP_DIRECTIVES[@]}"; do
+    grep -qiF "$d" <<<"$csp" || missing="$missing CSP($d)"
+  done
   [[ $U == https://* ]] && { grep -qi '^strict-transport-security:' <<<"$h" || missing="$missing HSTS"; }
   [[ -z $missing ]] && spk_pass "security headers on $path" || spk_fail "security headers missing on $path:$missing"
 done

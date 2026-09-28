@@ -170,8 +170,30 @@ function spokares_err_class( array $errors, string $key ): string {
  */
 function spokares_err_text( array $errors, string $key ): void {
 	if ( isset( $errors[ $key ] ) ) {
+		// admin-forms.js ties the sentence to its outlined field
+		// (aria-invalid, aria-describedby).
 		echo '<span class="spk-error-text">' . esc_html( $errors[ $key ] ) . '</span>';
 	}
+}
+
+/**
+ * Is a typed value longer than a field allows? (The forms' maxlength is only
+ * the browser's check; the save handlers check again.)
+ *
+ * @param string $text Typed text.
+ * @param int    $max  Characters allowed.
+ */
+function spokares_too_long( string $text, int $max ): bool {
+	return mb_strlen( $text, 'UTF-8' ) > $max;
+}
+
+/**
+ * The events and documents lists narrowed to "Needs checking" (the
+ * Dashboard's link): edit.php?…&spk_check=1, administrators only.
+ */
+function spokares_list_needs_check(): bool {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- list filtering only.
+	return ! empty( $_GET['spk_check'] ) && current_user_can( 'manage_options' );
 }
 
 /**
@@ -256,12 +278,15 @@ function spokares_help_lines(): array {
 		'spokares-net-details'   => array(
 			__( 'These facts print on the members hub, How it works and Home at once.', 'spokares-core' ),
 			__( 'Amateur frequencies only. Never county, hospital, SHARES, 800 MHz or channel numbers.', 'spokares-core' ),
+			__( 'The repeater call sign is the club’s own call, so only an administrator can change it.', 'spokares-core' ),
 			__( 'Check the preview at the bottom before you save.', 'spokares-core' ),
 		),
 		'spokares-meetings'      => array(
-			__( 'Tick Cancelled beside a date, or type the new date in Moved to. Add a short note if it helps.', 'spokares-core' ),
+			__( 'Tick Cancelled beside a date, or type the new date in Moved to (today or later, and not another date of the same meeting). Add a short note if it helps.', 'spokares-core' ),
 			__( 'Home shows the next real date, and the members hub shows the change for two weeks before it.', 'spokares-core' ),
-			__( 'Meeting times and weeks are on Meeting rules (ask the webmaster).', 'spokares-core' ),
+			current_user_can( 'spokares_edit_net_details' )
+				? __( 'Meeting times and weeks are on Events › Meeting rules.', 'spokares-core' )
+				: __( 'Meeting times and weeks are on Meeting rules (ask the webmaster).', 'spokares-core' ),
 		),
 		'spokares-meeting-rules' => array(
 			__( 'Each row is a regular meeting: the weeks of the month, the day and the times.', 'spokares-core' ),
@@ -274,14 +299,28 @@ function spokares_help_lines(): array {
 			__( 'Choosing a document that is already in another slot swaps the two slots.', 'spokares-core' ),
 		),
 		'spokares-site'          => array(
-			__( 'The groups.io addresses and the meeting place used across the site.', 'spokares-core' ),
 			__( 'The meeting place prints on Home under “In person”.', 'spokares-core' ),
+			__( 'The groups.io links are part of the page text and the theme’s footer and members menu, not settings here.', 'spokares-core' ),
 		),
 		'spk_event'              => array(
 			__( 'Pick the kind first. Fields that don’t apply to that kind are hidden.', 'spokares-core' ),
 			__( 'All day is ticked by default; untick it to add times.', 'spokares-core' ),
 			__( 'A yearly event? Duplicate last year’s from All events, change the date, and Publish.', 'spokares-core' ),
 			__( 'Never publish county, hospital, SHARES or 800 MHz channels, or names, phones or e-mails.', 'spokares-core' ),
+		),
+		'dashboard'              => array(
+			__( 'Site tasks lists the jobs you can do here, with a button for each.', 'spokares-core' ),
+			__( 'Needs attention (when shown) says what to look at first, such as a rota that runs out soon.', 'spokares-core' ),
+		),
+		'dashboard-none'         => array(
+			__( 'This account can’t change anything on the site.', 'spokares-core' ),
+			__( 'Your profile has your name, e-mail, password and two-step sign-in.', 'spokares-core' ),
+		),
+		'profile'                => array(
+			__( 'Name: how your name shows to the other editors. Pick it in “Display name publicly as”.', 'spokares-core' ),
+			__( 'E-mail: where password resets and site notices go. It is never shown on the site.', 'spokares-core' ),
+			__( 'New password: click Set New Password, then Update Profile.', 'spokares-core' ),
+			__( 'Two-Factor Options: turn on a second step when you sign in (an app code or a security key).', 'spokares-core' ),
 		),
 		'spk_document'           => array(
 			__( 'Pick the section, then where the file is: upload it, link to another site, or “Soon”.', 'spokares-core' ),
@@ -401,18 +440,61 @@ function spokares_render_save_box( WP_Post $post, string $trash_note = '' ): voi
 }
 
 /**
- * Remove WordPress's Publish box (and the slug box for non-admins) on our types.
+ * Remove WordPress's Publish box (and the slug box) on our types. Documents
+ * have their own "Link name (slug)" field for administrators (Admin only);
+ * core's hidden slug box sent a second post_name later in the form, so its
+ * old value always won and the typed link name was ignored.
  */
 function spokares_replace_submitdiv(): void {
 	foreach ( array( 'spk_event', 'spk_document' ) as $type ) {
 		remove_meta_box( 'submitdiv', $type, 'side' );
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( 'spk_document' === $type || ! current_user_can( 'manage_options' ) ) {
 			remove_meta_box( 'slugdiv', $type, 'normal' );
 		}
 		remove_meta_box( 'pageparentdiv', $type, 'side' );
 	}
 }
 add_action( 'add_meta_boxes', 'spokares_replace_submitdiv', 99 );
+
+/**
+ * "Save draft" and "Save as draft (takes it off …)" are named saveasdraft,
+ * which WordPress's redirect_post() answers with message 4 ("Saved. See it
+ * on …", a link to the public list). A draft is not on the site: show
+ * message 10 ("Draft saved. Drafts never show on the site.") whenever an
+ * event or document is a draft after the save, whichever button was used.
+ *
+ * @param string $location Redirect location.
+ * @param int    $post_id  Post.
+ */
+function spokares_draft_saved_message( $location, $post_id ) {
+	$post_id = (int) $post_id;
+	if ( ! in_array( get_post_type( $post_id ), array( 'spk_event', 'spk_document' ), true ) || 'draft' !== get_post_status( $post_id ) ) {
+		return $location;
+	}
+	if ( ! str_contains( (string) $location, 'message=' ) ) {
+		return $location;
+	}
+	return add_query_arg( 'message', 10, (string) $location );
+}
+add_filter( 'redirect_post_location', 'spokares_draft_saved_message', 10, 2 );
+
+/**
+ * The name box of an event or document shows the name as typed. Nobody holds
+ * unfiltered_html here, so core stores "Q&A" as "Q&amp;A", and the edit
+ * screen escapes that again ("Q&amp;A" in the box). Decode it before core
+ * escapes it for the box; markup never gets in (the stored title is filtered,
+ * and the box escapes what it shows).
+ *
+ * @param string $title   Stored title.
+ * @param int    $post_id Post.
+ */
+function spokares_edit_title_as_typed( $title, $post_id ) {
+	if ( ! in_array( get_post_type( (int) $post_id ), array( 'spk_event', 'spk_document' ), true ) ) {
+		return $title;
+	}
+	return html_entity_decode( (string) $title, ENT_QUOTES, 'UTF-8' );
+}
+add_filter( 'edit_post_title', 'spokares_edit_title_as_typed', 10, 2 );
 
 /* ------------------------------------------------------------------ assets */
 
@@ -446,6 +528,10 @@ function spokares_admin_assets( $hook ): void {
 				'nowSlot'  => __( '(now slot %d)', 'spokares-core' ),
 				'every'    => __( 'Every Tuesday', 'spokares-core' ),
 				'weekdays' => array( 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ),
+				/* translators: 1: a Tuesday, e.g. "Tue, Oct 6"; 2: what the rota shows, e.g. "K7ABC". */
+				'rowShows' => __( '%1$s shows %2$s on the site', 'spokares-core' ),
+				// The amateur bands Net details accepts (the preview mirrors the save).
+				'bands'    => function_exists( 'spokares_amateur_bands' ) ? spokares_amateur_bands() : array(),
 			)
 		) . ';',
 		'before'

@@ -128,7 +128,7 @@ function spokares_rota_page(): void {
 					$other   = '' !== $v['wl_form'] && ! in_array( $v['wl_form'], $forms, true );
 					$row_err = isset( $errors[ "$d-call" ] ) || isset( $errors[ "$d-row" ] );
 					?>
-					<tr class="spk-rota-row<?php echo $row_err ? ' spk-row-error' : ''; ?>" data-date="<?php echo esc_attr( $d ); ?>">
+					<tr class="spk-rota-row<?php echo $row_err ? ' spk-row-error' : ''; ?>" data-date="<?php echo esc_attr( $d ); ?>" data-day="<?php echo esc_attr( $label ); ?>">
 						<th scope="row">
 							<?php echo esc_html( $label ); ?>
 							<?php if ( '' !== $row['note'] ) : ?>
@@ -147,7 +147,7 @@ function spokares_rota_page(): void {
 							<?php spokares_err_text( $errors, "$d-call" ); ?>
 							<?php spokares_err_text( $errors, "$d-row" ); ?>
 						</td>
-						<td class="spk-shows" aria-live="polite" data-label="<?php esc_attr_e( 'Shows on the site', 'spokares-core' ); ?>"><?php echo esc_html( spokares_rota_shows( spokares_normalize_rota_row( $stored ) ) ); ?></td>
+						<td class="spk-shows" data-label="<?php esc_attr_e( 'Shows on the site', 'spokares-core' ); ?>"><?php echo esc_html( spokares_rota_shows( spokares_normalize_rota_row( $stored ) ) ); ?></td>
 						<td class="spk-wl" data-label="<?php echo $winlink ? esc_attr__( 'Winlink assignment', 'spokares-core' ) : ''; ?>">
 							<?php if ( $winlink ) : ?>
 								<input type="text" class="spk-wl-task<?php echo esc_attr( spokares_err_class( $errors, "$d-wl_task" ) ); ?>" name="<?php echo esc_attr( $name ); ?>[wl_task]" value="<?php echo esc_attr( $v['wl_task'] ); ?>" maxlength="120" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: date. */ __( 'Winlink assignment for %s', 'spokares-core' ), $label ) ); ?>">
@@ -164,7 +164,8 @@ function spokares_rota_page(): void {
 									<?php endforeach; ?>
 									<option value="__other" <?php selected( $other ); ?>><?php esc_html_e( 'Other…', 'spokares-core' ); ?></option>
 								</select>
-								<input type="text" class="spk-form-other" name="<?php echo esc_attr( $name ); ?>[wl_form_other]" value="<?php echo esc_attr( $other ? $v['wl_form'] : '' ); ?>" maxlength="60" placeholder="<?php esc_attr_e( 'Form name', 'spokares-core' ); ?>" aria-label="<?php esc_attr_e( 'Other form name', 'spokares-core' ); ?>" <?php echo $other ? '' : 'hidden'; ?>>
+								<input type="text" class="spk-form-other<?php echo esc_attr( spokares_err_class( $errors, "$d-wl_form" ) ); ?>" name="<?php echo esc_attr( $name ); ?>[wl_form_other]" value="<?php echo esc_attr( $other ? $v['wl_form'] : '' ); ?>" maxlength="60" placeholder="<?php esc_attr_e( 'Form name', 'spokares-core' ); ?>" aria-label="<?php esc_attr_e( 'Other form name', 'spokares-core' ); ?>" <?php echo $other ? '' : 'hidden'; ?>>
+								<?php spokares_err_text( $errors, "$d-wl_form" ); ?>
 							<?php endif; ?>
 						</td>
 						<td class="spk-note" data-label="<?php esc_attr_e( 'Note', 'spokares-core' ); ?>">
@@ -176,18 +177,24 @@ function spokares_rota_page(): void {
 				<?php endforeach; ?>
 				</tbody>
 			</table>
+			<?php // One quiet status line for screen readers (admin-forms.js), instead of a live region in every Shows cell. ?>
+			<p class="screen-reader-text" id="spk-rota-status" role="status"></p>
 			<datalist id="spk-calls">
 				<?php foreach ( spokares_known_calls() as $call ) : ?>
 					<option value="<?php echo esc_attr( $call ); ?>"></option>
 				<?php endforeach; ?>
 			</datalist>
 			<p class="spk-rota-more">
-				<a href="<?php echo esc_url( add_query_arg( 'weeks', min( 52, $weeks + 13 ), admin_url( 'admin.php?page=spokares-rota' ) ) ); ?>">
-					<?php
-					/* translators: %d: number of Tuesdays. */
-					echo esc_html( sprintf( __( 'Showing %d Tuesdays from this week. Show 13 more', 'spokares-core' ), $weeks ) );
-					?>
-				</a>
+				<?php
+				/* translators: %d: number of Tuesdays. */
+				echo esc_html( sprintf( __( 'Showing %d Tuesdays from this week.', 'spokares-core' ), $weeks ) );
+				if ( $weeks < 52 ) {
+					// Only "Show 13 more" is the link, and only below the 52-week cap.
+					echo ' <a href="' . esc_url( add_query_arg( 'weeks', min( 52, $weeks + 13 ), admin_url( 'admin.php?page=spokares-rota' ) ) ) . '">' . esc_html__( 'Show 13 more', 'spokares-core' ) . '</a>';
+				} else {
+					echo ' ' . esc_html__( 'That is as far ahead as the rota goes.', 'spokares-core' );
+				}
+				?>
 			</p>
 			<p class="submit spk-submit">
 				<?php if ( is_array( $prev ) && ! empty( $prev['rows'] ) ) : ?>
@@ -327,7 +334,27 @@ function spokares_handle_save_rota(): void {
 		// Free-text fields: never-publish words hold the field back; phone
 		// numbers and e-mail addresses need the "Publish it" tick.
 		$confirmed = is_array( $cur['confirmed'] ?? null ) ? $cur['confirmed'] : array();
+		foreach ( array(
+			'note'    => 80,
+			'wl_task' => 120,
+			'wl_form' => 60,
+		) as $field => $max ) {
+			// The form's maxlength, checked again (a request can skip it).
+			if ( spokares_too_long( $cand[ $field ], $max ) ) {
+				$errors[ "$ymd-$field" ] = sprintf(
+					/* translators: 1: date, 2: number of characters. */
+					__( '%1$s: this wasn’t saved because it is longer than %2$d characters.', 'spokares-core' ),
+					$label,
+					$max
+				);
+				$held[ $ymd ][ $field ] = $cand[ $field ];
+				$cand[ $field ]         = (string) ( $cur[ $field ] ?? '' );
+			}
+		}
 		foreach ( array( 'note', 'wl_task' ) as $field ) {
+			if ( isset( $errors[ "$ymd-$field" ] ) ) {
+				continue;
+			}
 			$check = spokares_check_field( $cand[ $field ], $field, $confirmed, ! empty( $p[ 'confirm_' . $field ] ) );
 			if ( $check['block'] || $check['confirm'] ) {
 				$what                    = $check['block'] ? $check['block'] : wp_list_pluck( $check['confirm'], 'what' );

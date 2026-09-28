@@ -72,7 +72,7 @@ function spokares_tiles_page(): void {
 							<?php echo esc_html( sprintf( /* translators: %d: slot number. */ __( 'Slot %d', 'spokares-core' ), $i + 1 ) ); ?>
 							<input type="hidden" name="<?php echo esc_attr( $n ); ?>[orig]" value="<?php echo esc_attr( (string) $slot['doc'] ); ?>">
 						</th>
-						<td>
+						<td data-label="<?php esc_attr_e( 'Document', 'spokares-core' ); ?>">
 							<select name="<?php echo esc_attr( $n ); ?>[doc]" class="spk-tile-doc" aria-label="<?php echo esc_attr( sprintf( /* translators: %d: slot number. */ __( 'Document for slot %d', 'spokares-core' ), $i + 1 ) ); ?>">
 								<option value="0"><?php esc_html_e( '— none —', 'spokares-core' ); ?></option>
 								<?php if ( $slot['doc'] && ! isset( $docs[ $slot['doc'] ] ) ) : ?>
@@ -92,11 +92,11 @@ function spokares_tiles_page(): void {
 								<?php endforeach; ?>
 							</select>
 						</td>
-						<td>
+						<td data-label="<?php esc_attr_e( 'Words on the tile', 'spokares-core' ); ?>">
 							<input type="text" class="regular-text spk-tile-label<?php echo esc_attr( spokares_err_class( $errors, "t$i" ) ); ?>" name="<?php echo esc_attr( $n ); ?>[label]" value="<?php echo esc_attr( $label ); ?>" maxlength="30" aria-label="<?php echo esc_attr( sprintf( /* translators: %d: slot number. */ __( 'Words for slot %d', 'spokares-core' ), $i + 1 ) ); ?>">
 							<?php spokares_err_text( $errors, "t$i" ); ?>
 						</td>
-						<td>
+						<td data-label="<?php esc_attr_e( 'Icon', 'spokares-core' ); ?>">
 							<select name="<?php echo esc_attr( $n ); ?>[icon]" class="spk-tile-icon" aria-label="<?php echo esc_attr( sprintf( /* translators: %d: slot number. */ __( 'Icon for slot %d', 'spokares-core' ), $i + 1 ) ); ?>">
 								<?php foreach ( $icons as $key => $name ) : ?>
 									<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $slot['icon'] ); ?>><?php echo esc_html( $name ); ?></option>

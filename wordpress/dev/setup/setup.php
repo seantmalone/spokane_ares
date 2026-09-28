@@ -3,7 +3,8 @@
  * DEV ONLY: last blueprint step (PLAN.md §6.10 step 8). Runs in its own
  * request after the theme and plugin are active and `init` has run with them:
  *
- *   1. the "editor" test user (role ares_editor, or editor if the plugin is off)
+ *   1. the "editor" test user (role ares_editor, or editor if the plugin is off),
+ *      then one QA account per user level from qa-users.json (dev/qa, dev/tests)
  *   2. seed/import.php in dev mode
  *   3. setup/pages.php (six pages, hero photo, front page)
  *   4. delete the Sample Page, the Privacy Policy draft and "Hello world!"
@@ -82,6 +83,56 @@ spokares_dev_setup_step(
 			return array( 'setup: user editor FAILED: ' . $uid->get_error_message() );
 		}
 		return array( 'setup: user editor created (ID ' . $uid . ', role ' . $role . ')' );
+	}
+);
+
+// 1b. One QA account per user level (dev/setup/qa-users.json): qa-subscriber,
+// qa-contributor, qa-author, qa-core-editor (core Editor) and qa-ares-net
+// (ARES Editor with the Net details grant). admin and editor already exist.
+spokares_dev_setup_step(
+	'qa users',
+	static function (): array {
+		$data = wp_json_file_decode( __DIR__ . '/qa-users.json', array( 'associative' => true ) );
+		if ( ! is_array( $data ) || empty( $data['accounts'] ) ) {
+			return array( 'setup: qa users FAILED: qa-users.json does not parse' );
+		}
+		$log = array();
+		foreach ( $data['accounts'] as $account ) {
+			$login = (string) ( $account['login'] ?? '' );
+			if ( '' === $login ) {
+				continue;
+			}
+			$user = get_user_by( 'login', $login );
+			if ( ! $user ) {
+				$role = (string) ( $account['role'] ?? 'subscriber' );
+				if ( ! get_role( $role ) ) {
+					$role = 'ares_editor' === $role ? 'editor' : 'subscriber';
+				}
+				$uid = wp_insert_user(
+					array(
+						'user_login'   => $login,
+						'user_pass'    => 'password',
+						'display_name' => (string) ( $account['name'] ?? $login ),
+						'nickname'     => (string) ( $account['name'] ?? $login ),
+						'user_email'   => $login . '@example.invalid',
+						'role'         => $role,
+					)
+				);
+				if ( is_wp_error( $uid ) ) {
+					$log[] = 'setup: user ' . $login . ' FAILED: ' . $uid->get_error_message();
+					continue;
+				}
+				$user  = get_user_by( 'id', $uid );
+				$log[] = 'setup: user ' . $login . ' created (ID ' . $uid . ', role ' . $role . ')';
+			}
+			foreach ( (array) ( $account['caps'] ?? array() ) as $cap ) {
+				if ( $user && empty( $user->caps[ $cap ] ) ) {
+					$user->add_cap( (string) $cap );
+					$log[] = 'setup: user ' . $login . ' granted ' . $cap;
+				}
+			}
+		}
+		return $log ? $log : array( 'setup: qa users exist' );
 	}
 );
 

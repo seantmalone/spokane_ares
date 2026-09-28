@@ -71,7 +71,9 @@ function spokares_meetings_page(): void {
 				</thead>
 				<?php
 				foreach ( $data['meetings'] as $m ) :
-					if ( ! $m['active'] ) {
+					// Only the meetings the site shows: a change to a hidden one
+					// would appear nowhere (listed below the table instead).
+					if ( ! $m['active'] || ! $m['show_home'] ) {
 						continue;
 					}
 					$dates = spokares_meeting_admin_dates( $m );
@@ -91,14 +93,21 @@ function spokares_meetings_page(): void {
 						$label = spokares_fmt_date( $d, 'short' );
 						?>
 						<tr class="spk-meeting-row<?php echo isset( $errors[ $key ] ) ? ' spk-row-error' : ''; ?>">
-							<th scope="row"><?php echo 0 === $i ? esc_html( $m['name'] ) : ''; ?></th>
-							<td>
+							<th scope="row"<?php echo 0 === $i ? '' : ' class="spk-name-repeat"'; ?>>
+								<?php if ( 0 === $i ) : ?>
+									<?php echo esc_html( $m['name'] ); ?>
+								<?php else : ?>
+									<?php // Every row names its meeting for screen readers; the name shows once. ?>
+									<span class="screen-reader-text"><?php echo esc_html( $m['name'] ); ?></span>
+								<?php endif; ?>
+							</th>
+							<td class="spk-meeting-date" data-label="<?php esc_attr_e( 'Date', 'spokares-core' ); ?>">
 								<?php echo esc_html( $label ); ?>
 								<input type="hidden" name="<?php echo esc_attr( $name ); ?>[h]" value="<?php echo esc_attr( spokares_change_hash( $c ) ); ?>">
 							</td>
-							<td><label><input type="checkbox" class="spk-cancel" name="<?php echo esc_attr( $name ); ?>[cancelled]" value="1" <?php checked( (bool) $v['cancelled'] ); ?>> <span class="screen-reader-text"><?php echo esc_html( sprintf( /* translators: 1: meeting, 2: date. */ __( '%1$s on %2$s is cancelled', 'spokares-core' ), $m['name'], $label ) ); ?></span></label></td>
-							<td><input type="date" class="spk-moved" name="<?php echo esc_attr( $name ); ?>[moved]" value="<?php echo esc_attr( (string) $v['moved'] ); ?>" aria-label="<?php echo esc_attr( sprintf( /* translators: 1: meeting, 2: date. */ __( '%1$s on %2$s moved to', 'spokares-core' ), $m['name'], $label ) ); ?>"></td>
-							<td>
+							<td data-label="<?php esc_attr_e( 'Cancelled', 'spokares-core' ); ?>"><label><input type="checkbox" class="spk-cancel" name="<?php echo esc_attr( $name ); ?>[cancelled]" value="1" <?php checked( (bool) $v['cancelled'] ); ?>> <span class="screen-reader-text"><?php echo esc_html( sprintf( /* translators: 1: meeting, 2: date. */ __( '%1$s on %2$s is cancelled', 'spokares-core' ), $m['name'], $label ) ); ?></span></label></td>
+							<td data-label="<?php esc_attr_e( 'Moved to', 'spokares-core' ); ?>"><input type="date" class="spk-moved" name="<?php echo esc_attr( $name ); ?>[moved]" value="<?php echo esc_attr( (string) $v['moved'] ); ?>" aria-label="<?php echo esc_attr( sprintf( /* translators: 1: meeting, 2: date. */ __( '%1$s on %2$s moved to', 'spokares-core' ), $m['name'], $label ) ); ?>"></td>
+							<td data-label="<?php esc_attr_e( 'Note', 'spokares-core' ); ?>">
 								<input type="text" class="regular-text<?php echo esc_attr( spokares_err_class( $errors, $key . '-note' ) ); ?>" name="<?php echo esc_attr( $name ); ?>[note]" value="<?php echo esc_attr( (string) $v['note'] ); ?>" maxlength="120" aria-label="<?php echo esc_attr( sprintf( /* translators: 1: meeting, 2: date. */ __( 'Note for %1$s on %2$s', 'spokares-core' ), $m['name'], $label ) ); ?>">
 								<?php spokares_err_text( $errors, $key ); ?>
 								<?php spokares_err_text( $errors, $key . '-note' ); ?>
@@ -111,7 +120,34 @@ function spokares_meetings_page(): void {
 					</tbody>
 				<?php endforeach; ?>
 			</table>
-			<p class="description"><?php esc_html_e( 'Meeting times and weeks are on Meeting rules (ask the webmaster).', 'spokares-core' ); ?></p>
+			<?php
+			$hidden = array();
+			foreach ( $data['meetings'] as $m ) {
+				if ( $m['active'] && ! $m['show_home'] ) {
+					$hidden[] = $m['name'];
+				}
+			}
+			?>
+			<?php if ( $hidden ) : ?>
+				<p class="description">
+					<?php
+					echo esc_html(
+						sprintf(
+							/* translators: %s: meeting names. */
+							_n( 'Not listed: %s. The site doesn’t show it (Meeting rules › “On Home and the members hub”), so a change here would appear nowhere.', 'Not listed: %s. The site doesn’t show them (Meeting rules › “On Home and the members hub”), so a change here would appear nowhere.', count( $hidden ), 'spokares-core' ),
+							spokares_and_list( $hidden )
+						)
+					);
+					?>
+				</p>
+			<?php endif; ?>
+			<p class="description">
+				<?php if ( current_user_can( 'spokares_edit_net_details' ) ) : ?>
+					<?php esc_html_e( 'Meeting times and weeks are on', 'spokares-core' ); ?> <a href="<?php echo esc_url( admin_url( 'admin.php?page=spokares-meeting-rules' ) ); ?>"><?php esc_html_e( 'Meeting rules', 'spokares-core' ); ?></a>.
+				<?php else : ?>
+					<?php esc_html_e( 'Meeting times and weeks are on Meeting rules (ask the webmaster).', 'spokares-core' ); ?>
+				<?php endif; ?>
+			</p>
 			<p class="submit"><button type="submit" class="button button-primary button-large"><?php esc_html_e( 'Save', 'spokares-core' ); ?></button></p>
 		</form>
 	</div>
@@ -125,9 +161,14 @@ function spokares_handle_save_meetings(): void {
 	spokares_verify_form( 'spokares_save_meetings', 'spokares_edit_rota' );
 	// Read-change-write of one option: wait for a save in progress, then read fresh.
 	spokares_lock_option( 'spk_meetings' );
-	$posted  = isset( $_POST['m'] ) && is_array( $_POST['m'] ) ? wp_unslash( $_POST['m'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitised field by field below.
-	$data    = spokares_opt( 'spk_meetings' );
-	$ids     = wp_list_pluck( $data['meetings'], 'name', 'id' );
+	$posted = isset( $_POST['m'] ) && is_array( $_POST['m'] ) ? wp_unslash( $_POST['m'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitised field by field below.
+	$data   = spokares_opt( 'spk_meetings' );
+	$ids    = wp_list_pluck( $data['meetings'], 'name', 'id' );
+	$rules  = array();
+	foreach ( $data['meetings'] as $m ) {
+		$rules[ $m['id'] ] = $m;
+	}
+	$today   = spokares_today();
 	$changes = array();
 	foreach ( $data['changes'] as $c ) {
 		$changes[ $c['meeting'] . '|' . $c['date'] ] = $c;
@@ -192,6 +233,29 @@ function spokares_handle_save_meetings(): void {
 			if ( ! hash_equals( $orig, spokares_change_hash( $cur ) ) ) {
 				$errors[ $key ] = sprintf( /* translators: %s: meeting and date. */ __( '%s was changed by someone else while you were editing. Your entry wasn’t saved.', 'spokares-core' ), $label );
 				$held[ $key ]   = $typed;
+				continue;
+			}
+			// A new "Moved to" date must be a real later date (§4.4): not in
+			// the past (Home would skip the meeting without a word), and not
+			// one of this meeting's own scheduled dates.
+			if ( $cand && 'moved' === $cand['kind'] ) {
+				$problem = '';
+				if ( $moved < $today ) {
+					/* translators: %s: meeting and date. */
+					$problem = sprintf( __( '%s not saved: “Moved to” must be today or later.', 'spokares-core' ), $label );
+				} elseif ( spokares_meeting_on( $rules[ $mid ], $moved ) ) {
+					/* translators: %s: meeting and date. */
+					$problem = sprintf( __( '%s not saved: “Moved to” is already one of this meeting’s dates. Pick a different day, or tick Cancelled.', 'spokares-core' ), $label );
+				}
+				if ( '' !== $problem ) {
+					$errors[ $key ] = $problem;
+					$held[ $key ]   = $typed;
+					continue;
+				}
+			}
+			if ( $cand && spokares_too_long( $note, 120 ) ) {
+				$errors[ $key . '-note' ] = sprintf( /* translators: %s: meeting and date. */ __( '%s not saved: the note is longer than 120 characters.', 'spokares-core' ), $label );
+				$held[ $key ]             = $typed;
 				continue;
 			}
 			if ( $cand && '' !== $note ) {
@@ -260,24 +324,61 @@ function spokares_weekday_names(): array {
 	);
 }
 
+
+/**
+ * A meeting rule as its card shows it (field key => text), recorded in the
+ * card when it is drawn. A save changes only the fields the editor changed,
+ * so an older screen never puts back someone else's newer save (§8.2 #18).
+ *
+ * @param array $m Meeting.
+ */
+function spokares_meeting_form_state( array $m ): array {
+	$m    = spokares_normalize_meeting( $m );
+	$list = static function ( array $l ): string {
+		$l = array_values( array_unique( array_map( 'intval', $l ) ) );
+		sort( $l );
+		return implode( ',', $l );
+	};
+	return array(
+		'name'        => (string) $m['name'],
+		'nth'         => $list( $m['nth'] ),
+		'weekday'     => (string) (int) $m['weekday'],
+		'start'       => (string) $m['start'],
+		'end'         => (string) $m['end'],
+		'time_text'   => (string) $m['time_text'],
+		'home_extra'  => (string) $m['home_extra'],
+		'skip_months' => $list( $m['skip_months'] ),
+		'show_home'   => $m['show_home'] ? '1' : '',
+		'active'      => $m['active'] ? '1' : '',
+		'needs_check' => $m['needs_check'] ? '1' : '',
+	);
+}
+
 /**
  * One meeting's rule fields.
  *
  * @param int    $i      Index.
- * @param array  $m      Meeting (normalised).
+ * @param array  $m      Meeting (normalised; held-back typing laid over the stored rule).
  * @param array  $errors Errors.
  * @param bool   $admin  Show admin-only fields.
+ * @param array  $stored The stored rule (empty for "Add a meeting").
  */
-function spokares_meeting_rule_fields( int $i, array $m, array $errors, bool $admin ): void {
-	$n     = 'rules[' . $i . ']';
-	$new   = '' === $m['id'];
-	$names = spokares_weekday_names();
-	$pre   = 'spk-rule-' . $i . '-';
+function spokares_meeting_rule_fields( int $i, array $m, array $errors, bool $admin, array $stored = array() ): void {
+	$n      = 'rules[' . $i . ']';
+	$new    = '' === $m['id'];
+	$names  = spokares_weekday_names();
+	$pre    = 'spk-rule-' . $i . '-';
+	$error  = isset( $errors[ "r$i" ] ) || isset( $errors[ "r$i-conflict" ] );
+	$legend = $new ? __( 'Add a meeting', 'spokares-core' ) : (string) ( '' !== ( $stored['name'] ?? '' ) ? $stored['name'] : $m['name'] );
 	?>
-	<fieldset class="spk-card spk-rule<?php echo isset( $errors[ "r$i" ] ) ? ' spk-row-error' : ''; ?>">
-		<legend><?php echo $new ? esc_html__( 'Add a meeting', 'spokares-core' ) : esc_html( $m['name'] ); ?></legend>
+	<fieldset class="spk-card spk-rule<?php echo $error ? ' spk-row-error' : ''; ?>">
+		<legend><?php echo esc_html( $legend ); ?></legend>
 		<?php spokares_err_text( $errors, "r$i" ); ?>
+		<?php spokares_err_text( $errors, "r$i-conflict" ); ?>
 		<input type="hidden" name="<?php echo esc_attr( $n ); ?>[id]" value="<?php echo esc_attr( $m['id'] ); ?>">
+		<?php if ( $stored ) : ?>
+			<input type="hidden" name="<?php echo esc_attr( $n ); ?>[orig]" value="<?php echo esc_attr( (string) wp_json_encode( spokares_meeting_form_state( $stored ) ) ); ?>">
+		<?php endif; ?>
 		<p><label for="<?php echo esc_attr( $pre . 'name' ); ?>"><?php esc_html_e( 'Name', 'spokares-core' ); ?></label><br>
 			<input type="text" class="regular-text" id="<?php echo esc_attr( $pre . 'name' ); ?>" name="<?php echo esc_attr( $n ); ?>[name]" value="<?php echo esc_attr( $m['name'] ); ?>" maxlength="80"></p>
 		<div class="spk-rule-grid">
@@ -349,10 +450,11 @@ function spokares_meeting_rules_page(): void {
 			<?php wp_nonce_field( 'spokares_save_meeting_rules' ); ?>
 			<?php
 			foreach ( $rules as $i => $m ) {
+				$stored = '' !== $m['id'] ? $m : array();
 				if ( isset( $held[ $i ] ) && is_array( $held[ $i ] ) ) {
 					$m = spokares_normalize_meeting( array_merge( $m, $held[ $i ] ) );
 				}
-				spokares_meeting_rule_fields( (int) $i, $m, $errors, $admin );
+				spokares_meeting_rule_fields( (int) $i, $m, $errors, $admin, $stored );
 			}
 			?>
 			<p class="submit"><button type="submit" class="button button-primary button-large"><?php esc_html_e( 'Save meeting rules', 'spokares-core' ); ?></button></p>
@@ -379,6 +481,19 @@ function spokares_handle_save_meeting_rules(): void {
 	$held      = array();
 	$errors    = array();
 	$seen      = array();
+	$labels    = array(
+		'name'        => __( 'the name', 'spokares-core' ),
+		'nth'         => __( 'the weeks of the month', 'spokares-core' ),
+		'weekday'     => __( 'the day', 'spokares-core' ),
+		'start'       => __( 'the start time', 'spokares-core' ),
+		'end'         => __( 'the end time', 'spokares-core' ),
+		'time_text'   => __( 'the time words', 'spokares-core' ),
+		'home_extra'  => __( 'the extra words', 'spokares-core' ),
+		'skip_months' => __( 'the skipped months', 'spokares-core' ),
+		'show_home'   => __( '“On Home and the members hub”', 'spokares-core' ),
+		'active'      => __( '“Active”', 'spokares-core' ),
+		'needs_check' => __( '“Needs checking”', 'spokares-core' ),
+	);
 
 	foreach ( $posted as $i => $p ) {
 		if ( ! is_array( $p ) ) {
@@ -387,33 +502,83 @@ function spokares_handle_save_meeting_rules(): void {
 		$i    = (int) $i;
 		$id   = sanitize_key( spokares_post_str( $p, 'id' ) );
 		$old  = '' !== $id && isset( $by_id[ $id ] ) ? $by_id[ $id ] : null;
-		$name = sanitize_text_field( spokares_post_str( $p, 'name' ) );
 		$nth  = array_values( array_unique( array_filter( array_map( 'absint', array_filter( (array) ( $p['nth'] ?? array() ), 'is_scalar' ) ), static fn( $n ) => $n >= 1 && $n <= 5 ) ) );
+		$skip = array_values( array_unique( array_filter( array_map( 'absint', array_filter( (array) ( $p['skip_months'] ?? array() ), 'is_scalar' ) ), static fn( $n ) => $n >= 1 && $n <= 12 ) ) );
 		sort( $nth );
+		sort( $skip );
+		// What was typed, as typed (times too, so a bad one comes back in the form).
 		$typed                = array(
-			'name'        => $name,
+			'name'        => sanitize_text_field( spokares_post_str( $p, 'name' ) ),
 			'nth'         => $nth,
 			'weekday'     => max( 0, min( 6, absint( '' !== spokares_post_str( $p, 'weekday' ) ? spokares_post_str( $p, 'weekday' ) : 6 ) ) ),
-			'start'       => spokares_is_hhmm( spokares_post_str( $p, 'start' ) ) ? spokares_post_str( $p, 'start' ) : '',
-			'end'         => spokares_is_hhmm( spokares_post_str( $p, 'end' ) ) ? spokares_post_str( $p, 'end' ) : '',
+			'start'       => sanitize_text_field( spokares_post_str( $p, 'start' ) ),
+			'end'         => sanitize_text_field( spokares_post_str( $p, 'end' ) ),
 			'time_text'   => sanitize_text_field( spokares_post_str( $p, 'time_text' ) ),
 			'home_extra'  => sanitize_text_field( spokares_post_str( $p, 'home_extra' ) ),
-			'skip_months' => array_values( array_filter( array_map( 'absint', array_filter( (array) ( $p['skip_months'] ?? array() ), 'is_scalar' ) ), static fn( $n ) => $n >= 1 && $n <= 12 ) ),
+			'skip_months' => $skip,
 			'show_home'   => ! empty( $p['show_home'] ),
 			'active'      => ! empty( $p['active'] ),
 		);
 		$typed['needs_check'] = $admin ? ! empty( $p['needs_check'] ) : (bool) ( $old['needs_check'] ?? false );
 
-		if ( ! $old && '' === $name ) {
+		if ( ! $old && '' === $typed['name'] ) {
 			continue; // The empty "Add a meeting" card.
 		}
+
+		// A field this editor didn't change keeps what is stored now (maybe
+		// someone else's newer save); a field both changed is held back.
+		$use       = $typed;
+		$conflicts = array();
+		$orig      = $old ? spokares_posted_orig( $p['orig'] ?? '' ) : null;
+		if ( $old && null !== $orig ) {
+			$shown = spokares_meeting_form_state( array_merge( $old, $typed ) );
+			$now   = spokares_meeting_form_state( $old );
+			foreach ( $now as $key => $current ) {
+				if ( ! array_key_exists( $key, $orig ) || ( 'needs_check' === $key && ! $admin ) ) {
+					continue;
+				}
+				if ( 'start' === $key || 'end' === $key ) {
+					$shown[ $key ] = $typed[ $key ]; // As typed, even when it isn't a time.
+				}
+				if ( $shown[ $key ] === $orig[ $key ] ) {
+					$use[ $key ] = $old[ $key ];
+				} elseif ( $current !== $orig[ $key ] && $current !== $shown[ $key ] ) {
+					$use[ $key ]       = $old[ $key ];
+					$conflicts[ $key ] = $labels[ $key ];
+				}
+			}
+		}
+		$name = '' !== $use['name'] ? $use['name'] : (string) ( $old['name'] ?? '' );
+
 		$problem = '';
-		if ( '' === $name ) {
-			$problem = __( 'This meeting wasn’t saved: it needs a name.', 'spokares-core' );
-		} elseif ( ! $nth ) {
-			$problem = sprintf( /* translators: %s: meeting name. */ __( '%s wasn’t saved: tick at least one week of the month.', 'spokares-core' ), $name );
-		} elseif ( '' !== $typed['start'] && '' !== $typed['end'] && $typed['end'] <= $typed['start'] ) {
-			$problem = sprintf( /* translators: %s: meeting name. */ __( '%s wasn’t saved: the end time must be after the start.', 'spokares-core' ), $name );
+		if ( '' === $use['name'] ) {
+			$problem = '' !== $name
+				/* translators: %s: meeting name. */
+				? sprintf( __( '%s wasn’t saved: it needs a name.', 'spokares-core' ), $name )
+				: __( 'This meeting wasn’t saved: it needs a name.', 'spokares-core' );
+		} elseif ( spokares_too_long( $use['name'], 80 ) ) {
+			/* translators: %s: the start of the typed name. */
+			$problem = sprintf( __( '“%s…” wasn’t saved: the name is longer than 80 characters.', 'spokares-core' ), mb_substr( $use['name'], 0, 30, 'UTF-8' ) );
+		} elseif ( ! $use['nth'] ) {
+			/* translators: %s: meeting name. */
+			$problem = sprintf( __( '%s wasn’t saved: tick at least one week of the month.', 'spokares-core' ), $name );
+		} elseif ( '' !== $use['start'] && ! spokares_is_hhmm( $use['start'] ) ) {
+			/* translators: %s: meeting name. */
+			$problem = sprintf( __( '%s wasn’t saved: the start time isn’t a time.', 'spokares-core' ), $name );
+		} elseif ( '' !== $use['end'] && ! spokares_is_hhmm( $use['end'] ) ) {
+			/* translators: %s: meeting name. */
+			$problem = sprintf( __( '%s wasn’t saved: the end time isn’t a time.', 'spokares-core' ), $name );
+		} elseif ( '' !== $use['end'] && '' === $use['start'] ) {
+			// Home and the hub print a meeting's time from its start: an end
+			// alone would make the time vanish from both.
+			/* translators: %s: meeting name. */
+			$problem = sprintf( __( '%s wasn’t saved: an end time needs a start time. Type the start, or clear the end.', 'spokares-core' ), $name );
+		} elseif ( '' !== $use['start'] && '' !== $use['end'] && $use['end'] <= $use['start'] ) {
+			/* translators: %s: meeting name. */
+			$problem = sprintf( __( '%s wasn’t saved: the end time must be after the start.', 'spokares-core' ), $name );
+		} elseif ( spokares_too_long( $use['time_text'], 40 ) || spokares_too_long( $use['home_extra'], 120 ) ) {
+			/* translators: %s: meeting name. */
+			$problem = sprintf( __( '%s wasn’t saved: the time words (40 characters) or the extra words (120) are too long.', 'spokares-core' ), $name );
 		}
 		if ( '' !== $problem ) {
 			$errors[ "r$i" ] = $problem;
@@ -424,9 +589,20 @@ function spokares_handle_save_meeting_rules(): void {
 			}
 			continue;
 		}
-		$m = array_merge( $old ?? array(), $typed );
+		if ( $conflicts ) {
+			$errors[ "r$i-conflict" ] = sprintf(
+				/* translators: 1: meeting name, 2: the fields, e.g. "the start time and the end time". */
+				__( '%1$s: %2$s changed while you were editing (someone else saved first), so your change wasn’t saved. Check it and save again.', 'spokares-core' ),
+				$name,
+				spokares_and_list( array_values( $conflicts ) )
+			);
+			foreach ( array_keys( $conflicts ) as $key ) {
+				$held[ $i ][ $key ] = $typed[ $key ];
+			}
+		}
+		$m = array_merge( $old ?? array(), $use );
 		if ( ! $old ) {
-			$base = sanitize_title( $name );
+			$base = sanitize_title( $use['name'] );
 			$id   = '' !== $base ? $base : 'meeting';
 			$n    = 2;
 			while ( isset( $by_id[ $id ] ) || isset( $seen[ $id ] ) ) {

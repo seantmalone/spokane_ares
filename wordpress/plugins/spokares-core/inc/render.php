@@ -79,11 +79,13 @@ function spokares_render_events( array $a ): string {
 			return $html . spokares_block_tail( 'events' ) . '</div>';
 
 		case 'later':
+			// Every row, whatever `limit` says: an event must never vanish
+			// from Exercises (§2.3 #14), and its row is the #slug anchor that
+			// "View on site" and the save notice link to.
 			$events = spokares_events(
 				'later',
 				array(
 					'types'     => $types,
-					'limit'     => $limit,
 					'cardTypes' => (string) ( $a['cardTypes'] ?? 'exercise' ),
 					'cardLimit' => (int) ( $a['cardLimit'] ?? 2 ),
 				)
@@ -167,10 +169,68 @@ function spokares_event_title_target( array $ev ): string {
 }
 
 /**
+ * An event's usable "more links" (a URL and a label each), in order.
+ *
+ * @param array $links Stored links.
+ * @return array<int,array{label:string,url:string}>
+ */
+function spokares_clean_links( array $links ): array {
+	$out = array();
+	foreach ( $links as $link ) {
+		$url   = spokares_clean_url( (string) ( $link['url'] ?? '' ) );
+		$label = trim( (string) ( $link['label'] ?? '' ) );
+		if ( '' !== $url && '' !== $label ) {
+			$out[] = array(
+				'label' => $label,
+				'url'   => $url,
+			);
+		}
+	}
+	return $out;
+}
+
+/**
+ * Another site's name as a link label on its own line: "shakeout.org",
+ * "USGS", "The National Weather Service" ('' for a link to this site).
+ *
+ * @param string $url URL.
+ */
+function spokares_site_label( string $url ): string {
+	if ( ! spokares_is_external( $url ) ) {
+		return '';
+	}
+	$name = spokares_host_name( $url );
+	return str_starts_with( $name, 'the ' ) ? 'The ' . substr( $name, 4 ) : $name;
+}
+
+/**
+ * Make links inside an escaped short line: a link whose words appear in the
+ * line is made there (B's ShakeOut line links "DYFI" inside it). Returns the
+ * line and the links that found no place in it.
+ *
+ * @param string $summary Escaped text.
+ * @param array  $links   spokares_clean_links() entries.
+ * @return array{0:string,1:array}
+ */
+function spokares_weave_links( string $summary, array $links ): array {
+	$left = array();
+	foreach ( $links as $link ) {
+		$needle = spokares_text( $link['label'] );
+		$pos    = '' !== $summary ? spokares_word_pos( $summary, $needle ) : -1;
+		if ( $pos >= 0 ) {
+			$summary = substr( $summary, 0, $pos ) . spokares_link( $link['url'], $link['label'] ) . substr( $summary, $pos + strlen( $needle ) );
+		} else {
+			$left[] = $link;
+		}
+	}
+	return array( $summary, $left );
+}
+
+/**
  * The rest of a "Later this season" row after the title: ": summary", with
  * the event's other links kept. A link whose words appear in the summary is
- * made there (B's ShakeOut row links "DYFI" inside its line); any other link
- * follows the summary.
+ * made there; any other link follows the summary, after ". " (or just a
+ * space when the summary already ends in a mark: "asks you to: Forms").
  *
  * @param array  $ev     Event data.
  * @param string $target The URL the title already links to ('' for none).
@@ -190,24 +250,13 @@ function spokares_later_rest( array $ev, string $target ): string {
 				)
 			);
 		}
-		foreach ( array_slice( $links, 0, 4 ) as $link ) {
-			$url   = spokares_clean_url( (string) ( $link['url'] ?? '' ) );
-			$label = trim( (string) ( $link['label'] ?? '' ) );
-			if ( '' === $url || '' === $label || $url === $target ) {
-				continue;
-			}
-			$needle = spokares_text( $label );
-			$pos    = '' !== $summary ? spokares_word_pos( $summary, $needle ) : -1;
-			if ( $pos >= 0 ) {
-				$summary = substr( $summary, 0, $pos ) . spokares_link( $url, $label ) . substr( $summary, $pos + strlen( $needle ) );
-			} else {
-				$extra[] = spokares_link( $url, $label );
-			}
-		}
+		$links                   = array_values( array_filter( spokares_clean_links( array_slice( $links, 0, 4 ) ), static fn( $l ) => $l['url'] !== $target ) );
+		list( $summary, $extra ) = spokares_weave_links( $summary, $links );
 	}
 	$out = '' !== $summary ? ': ' . $summary : '';
 	if ( $extra ) {
-		$out .= ( '' !== $out ? '. ' : ': ' ) . implode( ', ', $extra );
+		$join = '' === $out ? ': ' : ( '' !== spokares_end_mark( $ev['summary'] ) ? ' ' : '. ' );
+		$out .= $join . implode( ', ', array_map( static fn( $l ) => spokares_link( $l['url'], $l['label'] ), $extra ) );
 	}
 	return $out;
 }
@@ -262,6 +311,7 @@ function spokares_default_main_label( string $url ): string {
  */
 function spokares_render_event_card( array $ev, bool $first ): string {
 	$classes = 'card ex-card' . ( $first ? ' card--red' : '' ) . ( $ev['check'] ? ' needs-verify' : '' );
+	$links   = 'public-service' !== $ev['kind'] ? spokares_clean_links( array_slice( $ev['links'], 0, 3 ) ) : array();
 	$html    = '<article class="' . esc_attr( $classes ) . '" id="' . esc_attr( $ev['slug'] ) . '">';
 	$html   .= '<h3>' . spokares_text( $ev['title'] ) . '</h3>';
 	$html   .= '<p class="ex-when"><time datetime="' . esc_attr( $ev['start'] ) . '">' . spokares_text( spokares_fmt_when( $ev, 'card' ) ) . '</time>';
@@ -272,8 +322,11 @@ function spokares_render_event_card( array $ev, bool $first ): string {
 	if ( '' !== trim( $ev['where'] ) ) {
 		$html .= '<p class="ex-where"><span class="vh">' . esc_html__( 'Where:', 'spokares-core' ) . ' </span>' . spokares_text( $ev['where'] ) . '</p>';
 	}
-	if ( '' !== $ev['summary'] ) {
-		$html .= '<p class="ex-summary">' . spokares_text( $ev['summary'] ) . '</p>';
+	if ( '' !== trim( $ev['summary'] ) ) {
+		// The list fragment ("send a DYFI report by Winlink…") stands alone on
+		// a card, so it is printed as a sentence, with its links made inside it.
+		list( $summary, $links ) = spokares_weave_links( spokares_text( spokares_sentence( $ev['summary'] ) ), array_values( $links ) );
+		$html                   .= '<p class="ex-summary">' . $summary . '</p>';
 	}
 	if ( 'exercise' === $ev['kind'] ) {
 		$tasks = array_slice( array_values( array_filter( array_map( 'trim', explode( "\n", $ev['tasks'] ) ) ) ), 0, 10 );
@@ -290,12 +343,15 @@ function spokares_render_event_card( array $ev, bool $first ): string {
 		}
 	}
 	if ( 'public-service' !== $ev['kind'] ) {
-		foreach ( array_slice( $ev['links'], 0, 3 ) as $link ) {
-			$url   = spokares_clean_url( (string) ( $link['url'] ?? '' ) );
-			$label = trim( (string) ( $link['label'] ?? '' ) );
-			if ( '' !== $url && '' !== $label ) {
-				$html .= '<p class="ex-link">' . spokares_link( $url, $label ) . '</p>';
+		foreach ( $links as $link ) {
+			// A more link named like the event ("Great ShakeOut", which titles
+			// the Later this season row) would repeat the card's title: its line
+			// names the site instead.
+			if ( spokares_same_words( $link['label'], $ev['title'] ) ) {
+				$site          = spokares_site_label( $link['url'] );
+				$link['label'] = '' !== $site ? $site : __( 'Details', 'spokares-core' );
 			}
+			$html .= '<p class="ex-link">' . spokares_link( $link['url'], $link['label'] ) . '</p>';
 		}
 		$main = spokares_clean_url( $ev['main_url'] );
 		if ( '' !== $main ) {
@@ -345,7 +401,8 @@ function spokares_render_net( array $a ): string {
 				. spokares_copy_button( spokares_radio_line( 'copy' ), __( 'radio settings', 'spokares-core' ), 'btn btn--light btn--sm' )
 				. '</div>';
 			wp_enqueue_script_module( '@spokares/copy' );
-			return $html . spokares_block_tail( 'net-details' ) . '</div>';
+			// Not a list, and the rota under it has its own link (Net rota).
+			return $html . spokares_block_tail( 'net-details', true, spokares_settings_link_words() ) . '</div>';
 
 		case 'settings':
 			$alt  = $radio['alternate'];
@@ -362,7 +419,7 @@ function spokares_render_net( array $a ): string {
 			}
 			$html .= '</dl></div>';
 			wp_enqueue_script_module( '@spokares/copy' );
-			return $html . spokares_block_tail( 'net-details' ) . '</div>';
+			return $html . spokares_block_tail( 'net-details', true, spokares_settings_link_words() ) . '</div>';
 
 		case 'rota':
 			$weeks = max( 1, min( 26, (int) ( $a['weeks'] ?? 5 ) ) );
@@ -386,7 +443,9 @@ function spokares_render_net( array $a ): string {
 			$today = spokares_today();
 			$rows  = array();
 			foreach ( spokares_opt( 'spk_rota' ) as $ymd => $row ) {
-				if ( $ymd >= $today && '' !== trim( $row['wl_task'] ) ) {
+				// Only a Tuesday the rota calls a Winlink night: a task typed
+				// under weeks Net details has since moved is not listed.
+				if ( $ymd >= $today && '' !== trim( $row['wl_task'] ) && 2 === spokares_weekday( (string) $ymd ) && 'winlink' === spokares_net_on( (string) $ymd )['kind'] ) {
 					$rows[ $ymd ] = $row;
 				}
 			}
@@ -417,38 +476,45 @@ function spokares_render_net( array $a ): string {
 				. esc_html__( 'listen to the Tuesday net,', 'spokares-core' ) . ' <strong>' . spokares_text( $time ) . '</strong>, '
 				. ( '' !== $p['freq'] ? '<strong>' . spokares_text( spokares_radio_line( 'freq' ) ) . '</strong>, ' : '' )
 				. esc_html__( 'on any scanner or 2-meter radio. No license needed.', 'spokares-core' ) . '</p>';
-			return $html . spokares_block_tail( 'net-details' ) . '</div>';
+			return $html . spokares_block_tail( 'net-details', true, spokares_settings_link_words() ) . '</div>';
 
 		case 'other-nets':
+			// Each week once, under the group the rota gives it.
+			$weeks = spokares_net_weeks( $nets );
 			$items = array();
-			if ( $nets['winlink_nth'] ) {
+			if ( $weeks['winlink'] ) {
 				$items[] = '<li><strong>' . esc_html__( 'Winlink nights:', 'spokares-core' ) . '</strong> '
 					/* translators: %s: weeks, e.g. "2nd and 4th". */
-					. esc_html( sprintf( __( '%s Tuesdays; net control gives a', 'spokares-core' ), spokares_ordinal_list( $nets['winlink_nth'] ) ) )
+					. esc_html( sprintf( __( '%s Tuesdays; net control gives a', 'spokares-core' ), spokares_ordinal_list( $weeks['winlink'] ) ) )
 					. ' <a href="' . esc_url( spokares_site_url( '/members/exercises/', 'winlink-assignments' ) ) . '">' . esc_html__( 'Winlink assignment', 'spokares-core' ) . '</a> '
 					. esc_html__( 'during the net.', 'spokares-core' ) . '</li>';
 			}
-			if ( $nets['simplex_nth'] ) {
+			if ( $weeks['simplex'] ) {
 				$items[] = '<li><strong>' . esc_html(
 					/* translators: %s: weeks, e.g. "Fifth". */
-					sprintf( __( '%s Tuesdays:', 'spokares-core' ), spokares_ordinal_list( $nets['simplex_nth'], true ) )
+					sprintf( __( '%s Tuesdays:', 'spokares-core' ), spokares_ordinal_list( $weeks['simplex'], true ) )
 				) . '</strong> '
 					/* translators: %s: repeater call sign. */
 					. esc_html( sprintf( __( 'the net starts on simplex, then moves to %s.', 'spokares-core' ), $p['call'] ) ) . '</li>';
 			}
-			if ( $nets['gmrs_nth'] ) {
+			if ( $weeks['gmrs'] ) {
 				$gmrs    = spokares_fmt_time( $nets['gmrs_time'] );
 				$items[] = '<li><strong>' . esc_html__( 'ACS GMRS net:', 'spokares-core' ) . '</strong> '
 					. spokares_text(
 						'' !== $gmrs
 							/* translators: 1: weeks, e.g. "3rd"; 2: time. */
-							? sprintf( __( '%1$s Tuesdays, %2$s, for county volunteers with GMRS licenses.', 'spokares-core' ), spokares_ordinal_list( $nets['gmrs_nth'] ), $gmrs )
+							? sprintf( __( '%1$s Tuesdays, %2$s, for county volunteers with GMRS licenses.', 'spokares-core' ), spokares_ordinal_list( $weeks['gmrs'] ), $gmrs )
 							/* translators: %s: weeks, e.g. "3rd". */
-							: sprintf( __( '%s Tuesdays, for county volunteers with GMRS licenses.', 'spokares-core' ), spokares_ordinal_list( $nets['gmrs_nth'] ) )
+							: sprintf( __( '%s Tuesdays, for county volunteers with GMRS licenses.', 'spokares-core' ), spokares_ordinal_list( $weeks['gmrs'] ) )
 					) . '</li>';
 			}
 			if ( ! $items ) {
-				return spokares_block_placeholder( __( 'No other nets are set in Net details.', 'spokares-core' ), 'net-details' );
+				if ( spokares_is_editor_preview() ) {
+					return spokares_block_placeholder( __( 'No other nets are set in Net details.', 'spokares-core' ), 'net-details' );
+				}
+				// The "Other nets" heading is page text, so say so rather than leave it empty.
+				return spokares_block_open( $view ) . '<p>' . esc_html__( 'No other nets are scheduled right now.', 'spokares-core' ) . '</p>'
+					. spokares_block_tail( 'net-details' ) . '</div>';
 			}
 			$html = spokares_block_open( $view ) . '<ul class="lines' . ( $nets['needs_check'] ? ' needs-verify' : '' ) . '">' . implode( '', $items ) . '</ul>';
 			return $html . spokares_block_tail( 'net-details' ) . '</div>';

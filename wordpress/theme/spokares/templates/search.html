@@ -2,9 +2,9 @@
 
 <!-- wp:group {"tagName":"main","anchor":"main","className":"bg-day plain-page","layout":{"type":"default"}} -->
 <main class="wp-block-group bg-day plain-page" id="main"><!-- wp:group {"className":"wrap","layout":{"type":"default"}} -->
-<div class="wp-block-group wrap"><!-- wp:heading {"level":1,"className":"plain-page__title"} -->
-<h1 class="wp-block-heading plain-page__title">Search results</h1>
-<!-- /wp:heading -->
+<div class="wp-block-group wrap"><!-- wp:query-title {"type":"search","level":1,"className":"plain-page__title"} /-->
+
+<!-- wp:search {"label":"Search the site","placeholder":"","buttonText":"Search","className":"search-again"} /-->
 
 <!-- wp:query {"queryId":1,"query":{"inherit":true,"perPage":20},"className":"results","layout":{"type":"default"}} -->
 <div class="wp-block-query results"><!-- wp:post-template {"className":"results__list","layout":{"type":"default"}} -->
@@ -15,10 +15,14 @@
 
 <!-- wp:query-no-results -->
 <!-- wp:paragraph {"className":"plain-page__line"} -->
-<p class="plain-page__line">Try <a href="/">Home</a>, <a href="/how-it-works/">How it works</a>, <a href="/about/">About ARES &amp; ACS</a> or <a href="/members/">For members</a>.</p>
+<p class="plain-page__line">Nothing on the site’s pages matched. Try other words, or start from <a href="/">Home</a>, <a href="/how-it-works/">How it works</a>, <a href="/about/">About ARES &amp; ACS</a> or <a href="/members/">For members</a>.</p>
 <!-- /wp:paragraph -->
 <!-- /wp:query-no-results --></div>
-<!-- /wp:query --></div>
+<!-- /wp:query -->
+
+<!-- wp:paragraph {"className":"results__more search-library"} -->
+<p class="results__more search-library">This search covers the site’s pages. Forms and documents have their own: <a href="/members/documents/#search">search the document library</a>. Exercises and events are listed on <a href="/members/exercises/">Exercises &amp; events</a>.</p>
+<!-- /wp:paragraph --></div>
 <!-- /wp:group --></main>
 <!-- /wp:group -->
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Spokane ARES dev login (DEV ONLY)
- * Description: Local development only. ?dev_login=1 signs in "admin", ?dev_login=editor signs in "editor"; ?dev_edit=<post_type>:<slug> opens that item's edit screen. Never shipped: it lives in wordpress/dev/ and is loaded only by the dev blueprint.
+ * Description: Local development only. ?dev_login=1 signs in "admin", ?dev_login=editor signs in "editor", ?dev_login=<login> signs in any account in dev/setup/qa-users.json (qa-subscriber, qa-contributor, qa-author, qa-core-editor, qa-ares-net); ?dev_edit=<post_type>:<slug> opens that item's edit screen. Never shipped: it lives in wordpress/dev/ and is loaded only by the dev blueprint.
  * Version:     0.1.0
  * License:     GPL-2.0-or-later
  * Text Domain: spokares
@@ -28,8 +28,52 @@ function spokares_dev_login_allowed(): bool {
 }
 
 /**
- * ?dev_login=1 (admin) or ?dev_login=editor: sign that user in and redirect
- * to the same URL without the parameter.
+ * The dev accounts (dev/setup/qa-users.json), keyed by role key. Each has at
+ * least 'login'; the anonymous entry has an empty login.
+ *
+ * @return array<string, array>
+ */
+function spokares_dev_accounts(): array {
+	static $accounts = null;
+	if ( null !== $accounts ) {
+		return $accounts;
+	}
+	$accounts = array();
+	$data     = wp_json_file_decode( dirname( __DIR__ ) . '/setup/qa-users.json', array( 'associative' => true ) );
+	foreach ( (array) ( $data['accounts'] ?? array() ) as $account ) {
+		if ( is_array( $account ) && ! empty( $account['key'] ) ) {
+			$accounts[ (string) $account['key'] ] = $account;
+		}
+	}
+	return $accounts;
+}
+
+/**
+ * The user login a ?dev_login= value names: 1 or admin is "admin", editor is
+ * "editor", and any login in qa-users.json is itself. Empty when unknown.
+ *
+ * @param string $which The sanitized ?dev_login= value.
+ */
+function spokares_dev_login_name( string $which ): string {
+	if ( '1' === $which || 'admin' === $which ) {
+		return 'admin';
+	}
+	if ( 'editor' === $which ) {
+		return 'editor';
+	}
+	foreach ( spokares_dev_accounts() as $account ) {
+		$login = (string) ( $account['login'] ?? '' );
+		$alias = (string) ( $account['dev_login'] ?? '' );
+		if ( '' !== $login && in_array( $which, array( $login, $alias ), true ) ) {
+			return $login;
+		}
+	}
+	return '';
+}
+
+/**
+ * ?dev_login=1 (admin), ?dev_login=editor or ?dev_login=<a qa-users.json
+ * login>: sign that user in and redirect to the same URL without the parameter.
  */
 function spokares_dev_login(): void {
 	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- dev-only, loopback-only sign-in switch.
@@ -38,7 +82,7 @@ function spokares_dev_login(): void {
 	}
 	$which = sanitize_key( wp_unslash( $_GET['dev_login'] ) );
 	// phpcs:enable WordPress.Security.NonceVerification.Recommended
-	$login = ( 'editor' === $which ) ? 'editor' : ( '1' === $which || 'admin' === $which ? 'admin' : '' );
+	$login = spokares_dev_login_name( $which );
 	if ( '' === $login ) {
 		return;
 	}

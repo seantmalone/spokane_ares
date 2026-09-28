@@ -2,7 +2,7 @@
 
 This page is for the volunteers who keep the website up to date. You don't need to know any code. Most jobs are a form: fill in the boxes, click the blue button, and the website updates itself.
 
-**You can't break the layout.** The site's design is locked. If something looks wrong, undo it or ask the webmaster; nothing you do in these five jobs can take the site down.
+**You can't break the layout.** The site's design is locked, and long words or pasted web addresses wrap to fit their column. If something looks wrong, undo it or ask the webmaster; nothing you do in these five jobs can take the site down.
 
 | Job | How often | Should take |
 |---|---|---|
@@ -61,6 +61,7 @@ After you sign in you land on the Dashboard. The **Site tasks** card has a butto
 
 <img src="shots/final/admin-event-set.png" width="600" alt="The event form filled in for the Simulated Emergency Test: kind Exercise, a date, the short line, tasks one per line, links and an extra form, with Update in the Save box.">
 
+- **Web addresses go in the link boxes.** An address pasted into the Short line or Where wraps onto the next line, so it can't break the page, but it's hard to read. Put it in **Main link** or **More links** instead.
 - **Where events appear:** in "Later this season" on Exercises & events straight away. When it becomes one of the next two exercises it gets a "Next up" card with its tasks and links, and it shows under "This week" on the members page. **Events never show on Home.**
 - **Change an event:** Events, then **All events**, click its name, change it, click **Update**.
 - **Same event next year:** in **All events**, point at last year's event and click **Duplicate**. Set the new date, check the words, **Publish**.
@@ -101,6 +102,8 @@ The document's link stays the same, so nobody's bookmarks break, and the old fil
 
 **The four "Most used" tiles** on the members page are set on Documents, then **Hub tiles**. Pick a document for each slot and click **Save tiles**. Picking one that's already in another slot swaps the two.
 
+**The library's "Most used" filter** is a separate list: tick **Show under "Most used"** on a document's form. Keep the four tiles' documents ticked, so the filter lists everything the tiles do.
+
 ## Job 5: Change words on a page (5 minutes)
 
 You can change the words on **Home**, **How it works** and **About ARES & ACS**. (The members pages are built from the forms above, so they have no words to edit.)
@@ -117,8 +120,10 @@ You can change the words on **Home**, **How it works** and **About ARES & ACS**.
 
 - **Undo before you save:** Ctrl+Z (Cmd+Z on a Mac), or the curved Undo arrow at the top left.
 - **"Layout changes need an administrator."** You changed something other than words, for example you moved or removed a section. Press Ctrl+Z (or click the Undo arrow) until it's back, then click **Save** again.
+- **"This page may contain something we never publish"** (a yellow message after you save): the page's words look like a phone number, a personal e-mail address or something on the "Please don't" list below. The page's **excerpt** is checked the same way: it's the short description in the right-hand **Page** panel that search engines show, and its message starts "This page's excerpt". The page is saved either way. Check it, change anything that shouldn't be public, and save again. Until then the Dashboard lists it under **Needs attention**.
 - **About only:** the **Page review** box on the right has **Mark reviewed today when I save**. Tick it when you've checked the whole page; the date then shows under the page title.
-- Getting back an older version of a page after you've saved is the webmaster's job. So is adding a section, a table row or a new page.
+- **The ⋮ menu by the page's name**, at the top of the right-hand **Page** panel, has two choices. **View** opens the page on the site. **Rename** changes the name the site's search results show, and the browser tab's name for How it works and About. The big heading is changed on the page itself. Moving, reordering or deleting a page isn't offered: the six pages are fixed.
+- Getting back an older version of a page after you've saved is the webmaster's job. So is adding a section, a table row or a new page (see "For the webmaster" at the end).
 
 ---
 
@@ -127,13 +132,40 @@ You can change the words on **Home**, **How it works** and **About ARES & ACS**.
 - **Publish anything on this list:** the roster or any member list; personal phone numbers, e-mails or home addresses; county, hospital, SHARES or 800 MHz channels or talkgroups; the Hospital Net or its channel; simplex frequencies or GMRS repeater details; a "current readiness level". The forms stop the most common ones and ask you to confirm a phone number or e-mail address.
 - **Use names.** Call signs only, everywhere.
 - **Type the same fact in two places.** The net time, the repeater and the meeting place come from one form and appear on every page automatically.
-- **Ask for access you don't need.** Net details (repeater, tone, net weeks) and Meeting rules are changed by the webmaster or someone the Emergency Coordinator names.
+- **Ask for access you don't need.** Net details (repeater, tone, net weeks) and Meeting rules are changed by the webmaster or someone the Emergency Coordinator names. The repeater's call sign, W7GBU, is the club's own and only the webmaster changes it: on Net details it shows greyed out for everyone else.
 
 **House style:** 12-hour times ("8:00 PM", never "2000"). Dates like "Sat, Oct 3". Short sentences.
 
 ## Stuck? Ask the webmaster
 
 E-mail **webmaster@spokares.org**. Say which job you were doing and what you clicked, and include a screenshot if you can. The same address is at the bottom of the Dashboard.
+
+---
+
+## For the webmaster: adding a section or a page
+
+*Editors can skip this part. It needs an administrator account.*
+
+The layout lock doesn't apply to administrators, so these changes are made in the block editor. A change to a page's layout is also copied into the page's pattern file in git in the next release, so a fresh install matches (PLAN §5.7). Templates, the header, the footer and the styles change only in git, never in Appearance > Editor. A copy saved there silently replaces the theme's file, and the weekly check reports it.
+
+**Add a section to Home, How it works or About**
+
+1. Open the page in the block editor and open **List View** (the icon with three lines, top left).
+2. Select the section most like the new one, then choose ⋮ > **Duplicate**. The copy keeps the section's background, spacing and inner column (a Group with the class `wrap`). Move it into place with the arrows or by dragging it in List View.
+3. Change the copy's words. If its heading has an **HTML anchor** (Block > Advanced), give the copy a new one: two headings with the same anchor break the jump links.
+4. Click **Save**. Editors can change the new section's words straight away. Their layout check compares against the page as you saved it.
+5. Copy the section into the page's pattern file in git (`theme/spokares/patterns/`: `home-*.php`, `how-*.php` or `about-*.php`) for the next release.
+
+A single paragraph, heading or list added at the page's top level sits in the site's column, with the side margins, by itself. A new Group or Columns block at the top level is different: it runs the full width of the window with no margins. Duplicate a section instead, or put the content in a Group with the class `wrap` (Block > Advanced > Additional CSS class(es)).
+
+**Add a new page** (for example the Privacy Policy)
+
+1. Pages > **Add New Page**. Only administrators have this.
+2. Type the title. It becomes the page's heading. Type the text below it, and leave **Template** on the default "Pages". The three "For members" templates belong to the members pages only.
+3. **Publish.** The page gets the site's header and footer, with its text in the reading column. Its address is `spokares.org/<its slug>/`.
+4. Links to it in the header or footer are in the theme's parts (`theme/spokares/parts/header.html` and `footer.html`). Add them in git and release, so they are never changed in the Site Editor. The footer's "Privacy (coming)" line is there too.
+
+For the Privacy Policy, Settings > Privacy > **Create** makes a draft page with this same plain layout. Edit the text, then publish it.
 
 ---
 

@@ -38,9 +38,15 @@ function spokares_trim_redirects(): void {
 		return;
 	}
 	global $pagenow;
-	$type = isset( $_GET['post_type'] ) ? sanitize_key( wp_unslash( $_GET['post_type'] ) ) : 'post'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- routing only.
-	$away = in_array( $pagenow, array( 'upload.php', 'media-new.php', 'edit-comments.php', 'tools.php' ), true )
-		|| ( in_array( $pagenow, array( 'edit.php', 'post-new.php' ), true ) && 'post' === $type );
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- routing only.
+	$type = isset( $_GET['post_type'] ) ? sanitize_key( wp_unslash( $_GET['post_type'] ) ) : 'post';
+	// The Edit Media screen of one file (post.php?post=<file>&action=edit) and
+	// the old media-upload.php library: Media is hidden, so these are too.
+	$media_item = 'post.php' === $pagenow && isset( $_GET['post'], $_GET['action'] ) && 'edit' === $_GET['action'] && 'attachment' === get_post_type( absint( $_GET['post'] ) );
+	// phpcs:enable
+	$away = in_array( $pagenow, array( 'upload.php', 'media-new.php', 'media-upload.php', 'edit-comments.php', 'tools.php' ), true )
+		|| ( in_array( $pagenow, array( 'edit.php', 'post-new.php' ), true ) && 'post' === $type )
+		|| $media_item;
 	if ( $away ) {
 		wp_safe_redirect( admin_url( 'index.php' ) );
 		exit;
@@ -63,7 +69,17 @@ function spokares_trim_dashboard(): void {
 	}
 }
 add_action( 'wp_dashboard_setup', 'spokares_trim_dashboard', 20 );
-remove_action( 'welcome_panel', 'wp_welcome_panel' );
+
+/**
+ * No "Welcome to WordPress!" panel (it pushes the Site Editor, §5.7). Core
+ * adds it in wp-admin/includes/admin-filters.php, after plugins load, so it
+ * is removed once the admin is set up.
+ */
+function spokares_no_welcome_panel(): void {
+	remove_action( 'welcome_panel', 'wp_welcome_panel' );
+}
+add_action( 'admin_init', 'spokares_no_welcome_panel' );
+add_action( 'load-index.php', 'spokares_no_welcome_panel' );
 
 /**
  * Profile for non-admins: no colour scheme picker, no extra contact fields.
@@ -76,6 +92,84 @@ function spokares_trim_profile(): void {
 }
 add_action( 'admin_init', 'spokares_trim_profile' );
 add_filter( 'user_contactmethods', static fn( $methods ) => spokares_is_site_admin() ? $methods : array() );
+
+/**
+ * Your own profile has one screen for non-admins: the trimmed profile.php.
+ * user-edit.php?user_id=<you> is the same form without the trim (Website,
+ * Biography, Profile Picture, a "View User" link that 404s).
+ */
+function spokares_own_profile_redirect(): void {
+	if ( spokares_is_site_admin() || ! is_user_logged_in() ) {
+		return;
+	}
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- routing only.
+	$user_id = isset( $_GET['user_id'] ) ? absint( $_GET['user_id'] ) : 0;
+	$method  = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) ) : 'GET';
+	if ( 'GET' === $method && get_current_user_id() === $user_id ) {
+		wp_safe_redirect( admin_url( 'profile.php' ) );
+		exit;
+	}
+}
+add_action( 'load-user-edit.php', 'spokares_own_profile_redirect' );
+
+/**
+ * The fields the trimmed profile hides (Website, Biography) are not taken
+ * from a non-admin's save either, whichever way it arrives (profile.php,
+ * user-edit.php, a crafted request): the stored values stay.
+ *
+ * @param array    $data    User row data about to be saved.
+ * @param bool     $update  An update of an existing user.
+ * @param int|null $user_id User.
+ */
+function spokares_keep_hidden_profile_url( $data, $update, $user_id = null ) {
+	if ( ! $update || ! $user_id || ! is_user_logged_in() || spokares_is_site_admin() || ! is_array( $data ) ) {
+		return $data;
+	}
+	$stored = get_userdata( (int) $user_id );
+	if ( $stored ) {
+		$data['user_url'] = (string) $stored->user_url;
+	}
+	return $data;
+}
+add_filter( 'wp_pre_insert_user_data', 'spokares_keep_hidden_profile_url', 10, 3 );
+
+/**
+ * The same for the Biography (user meta "description").
+ *
+ * @param array   $meta   User meta about to be saved.
+ * @param WP_User $user   User.
+ * @param bool    $update An update of an existing user.
+ */
+function spokares_keep_hidden_profile_bio( $meta, $user, $update ) {
+	if ( ! $update || ! $user instanceof WP_User || ! is_user_logged_in() || spokares_is_site_admin() || ! is_array( $meta ) ) {
+		return $meta;
+	}
+	$meta['description'] = (string) get_user_meta( $user->ID, 'description', true );
+	return $meta;
+}
+add_filter( 'insert_user_meta', 'spokares_keep_hidden_profile_bio', 10, 3 );
+
+/**
+ * The Dashboard's and the Profile's Help for non-admins describe what they
+ * see, not the widgets and options the trim removed.
+ */
+function spokares_trimmed_help(): void {
+	if ( spokares_is_site_admin() ) {
+		return;
+	}
+	$screen = get_current_screen();
+	if ( ! $screen || ! in_array( $screen->id, array( 'dashboard', 'profile' ), true ) ) {
+		return;
+	}
+	$screen->remove_help_tabs();
+	$screen->set_help_sidebar( '' );
+	if ( 'profile' === $screen->id ) {
+		spokares_screen_help( 'profile' );
+	} else {
+		spokares_screen_help( function_exists( 'spokares_has_site_tasks' ) && spokares_has_site_tasks() ? 'dashboard' : 'dashboard-none' );
+	}
+}
+add_action( 'admin_head', 'spokares_trimmed_help' );
 
 /**
  * Body class so admin.css can hide the profile rows editors don't need
@@ -285,3 +379,84 @@ function spokares_no_months_dropdown( $disable, $post_type ) {
 	return in_array( $post_type, array( 'spk_event', 'spk_document' ), true ) ? true : $disable;
 }
 add_filter( 'disable_months_dropdown', 'spokares_no_months_dropdown', 10, 2 );
+
+/**
+ * The Site Editor (administrators only): say, where the edits are made, that
+ * saving a template, a part or Styles here overrides the theme's files, so
+ * later theme updates stop showing (§5.7: never edit in the Site Editor).
+ *
+ * @param string $hook Screen hook.
+ */
+function spokares_site_editor_warning( $hook ): void {
+	if ( 'site-editor.php' !== $hook ) {
+		return;
+	}
+	$text = __( 'Changes saved here override the theme’s own files, so later theme updates stop showing on the site. Change the theme in its files instead, and leave this screen unsaved.', 'spokares-core' );
+	wp_add_inline_script(
+		'wp-edit-site',
+		'wp.domReady( function () { wp.data.dispatch( "core/notices" ).createWarningNotice( ' . wp_json_encode( $text ) . ', { id: "spokares-site-editor", isDismissible: true } ); } );',
+		'after'
+	);
+}
+add_action( 'admin_enqueue_scripts', 'spokares_site_editor_warning' );
+
+/*
+ * The site's menus are written into the header and footer parts. Opening
+ * Navigation in the Site Editor must not create (and publish) a stray
+ * "Navigation" menu that controls nothing.
+ */
+add_filter( 'wp_navigation_should_create_fallback', '__return_false' );
+
+/*
+ * No font library (PLAN §4.3 layer 5). The site's two fonts come with the
+ * theme (theme.json), and the upload allowlist in spokares-hardening takes no
+ * font files, so every upload or install from the Fonts screen failed ("not
+ * allowed to upload this file type"). WordPress 7.1.2 offers the library to
+ * everyone with edit_theme_options whatever the theme says (theme.json has no
+ * switch for it), so it is turned off here: no Appearance › Fonts, no Fonts
+ * screen, and no "Manage fonts" in the Site Editor's Styles › Typography.
+ */
+
+/**
+ * No Appearance › Fonts link (core adds it in wp-admin/menu.php).
+ */
+function spokares_no_fonts_menu(): void {
+	remove_submenu_page( 'themes.php', 'font-library.php' );
+}
+add_action( 'admin_menu', 'spokares_no_fonts_menu', 999 );
+
+/**
+ * The Fonts screen doesn't open: wp-admin/font-library.php and core's
+ * full-page version (any admin URL with ?page=font-library, which core draws
+ * on admin_init at priority 10) go to Appearance › Themes instead, or to the
+ * Dashboard for an account that can't open Themes.
+ */
+function spokares_no_fonts_screen(): void {
+	global $pagenow;
+	if ( wp_doing_ajax() ) {
+		return;
+	}
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- routing only.
+	$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+	if ( 'font-library.php' !== $pagenow && ! in_array( $page, array( 'font-library', 'font-library-wp-admin' ), true ) ) {
+		return;
+	}
+	wp_safe_redirect( admin_url( current_user_can( 'switch_themes' ) ? 'themes.php' : 'index.php' ) );
+	exit;
+}
+add_action( 'admin_init', 'spokares_no_fonts_screen', 1 );
+
+/**
+ * No font management in the editors (Styles › Typography's "Fonts" group and
+ * its "Manage fonts" button). The theme's fonts stay selectable where
+ * theme.json allows it.
+ *
+ * @param array $settings Block editor settings.
+ */
+function spokares_no_font_library_in_editor( $settings ) {
+	if ( is_array( $settings ) ) {
+		$settings['fontLibraryEnabled'] = false;
+	}
+	return $settings;
+}
+add_filter( 'block_editor_settings_all', 'spokares_no_font_library_in_editor', 20 );

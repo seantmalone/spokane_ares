@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Spokane ARES core
  * Description:       Events, the net rota, meetings, documents and the dynamic blocks for spokares.org. Deactivating it hides the lists; the data stays.
- * Version:           0.1.0
+ * Version:           0.1.1
  * Requires at least: 7.1
  * Requires PHP:      8.3
  * Tested up to:      7.1
@@ -16,7 +16,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SPOKARES_CORE_VERSION', '0.1.0' );
+define( 'SPOKARES_CORE_VERSION', '0.1.1' );
 define( 'SPOKARES_CORE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SPOKARES_CORE_URL', plugin_dir_url( __FILE__ ) );
 define( 'SPOKARES_CORE_FILE', __FILE__ );

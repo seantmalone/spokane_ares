@@ -29,14 +29,13 @@ function spokares_hard_security_headers(): array {
 }
 
 /**
- * Send them once per request.
+ * Send them. Sending again replaces the earlier copies (header() replaces a
+ * header of the same name), so a later hook can restore them.
  */
 function spokares_hard_send_headers(): void {
-	static $sent = false;
-	if ( $sent || headers_sent() ) {
+	if ( headers_sent() ) {
 		return;
 	}
-	$sent = true;
 	// PHP's own "X-Powered-By: PHP/8.3.x" (expose_php) names the version.
 	if ( function_exists( 'header_remove' ) ) {
 		header_remove( 'X-Powered-By' );
@@ -46,8 +45,23 @@ function spokares_hard_send_headers(): void {
 	}
 }
 add_action( 'send_headers', 'spokares_hard_send_headers' );
-add_action( 'login_init', 'spokares_hard_send_headers' );
-add_action( 'admin_init', 'spokares_hard_send_headers' );
+// Core's send_frame_options_header() (login_init and admin_init, priority
+// 10) replaced the Content-Security-Policy with its own "frame-ancestors
+// 'self';", so wp-admin, admin-ajax.php and admin-post.php lost base-uri,
+// form-action and object-src. Ours already sends both of its headers, so it
+// is unhooked (the admin_init one is added with the admin includes, after
+// this file loads), and the full set is sent again late on both hooks in
+// case anything else replaces them.
+remove_action( 'login_init', 'send_frame_options_header', 10 );
+add_action(
+	'admin_init',
+	static function () {
+		remove_action( 'admin_init', 'send_frame_options_header', 10 );
+	},
+	0
+);
+add_action( 'login_init', 'spokares_hard_send_headers', 99 );
+add_action( 'admin_init', 'spokares_hard_send_headers', 99 );
 // wp-admin sends visitors who aren't signed in away before admin_init runs.
 add_action(
 	'init',

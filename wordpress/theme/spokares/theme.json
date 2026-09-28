@@ -161,6 +161,13 @@
 			}
 		}
 	},
+	"customTemplates": [
+		{ "name": "page-members", "title": "For members: This week (hub)", "postTypes": [ "page" ] },
+		{ "name": "page-exercises", "title": "For members: Exercises & events", "postTypes": [ "page" ] },
+		{ "name": "page-documents", "title": "For members: Documents & forms", "postTypes": [ "page" ] },
+		{ "name": "page-how-it-works", "title": "How it works page", "postTypes": [] },
+		{ "name": "page-about", "title": "About ARES & ACS page", "postTypes": [] }
+	],
 	"templateParts": [
 		{ "name": "header", "title": "Header", "area": "header" },
 		{ "name": "footer", "title": "Footer", "area": "footer" },

@@ -396,3 +396,49 @@ function spokares_radio_line( string $variant ): string {
 			return spokares_nbsp( implode( ', ', $parts ) );
 	}
 }
+
+/**
+ * The punctuation mark a piece of plain text ends with, looking past closing
+ * quotes and brackets ("drill." → ".", "asks you to:" → ":", "(optional)" → ''),
+ * or '' for none.
+ *
+ * @param string $text Plain text.
+ */
+function spokares_end_mark( string $text ): string {
+	return preg_match( '/([.:;,!?…])["\'”’»)\]]*$/u', trim( $text ), $m ) ? $m[1] : '';
+}
+
+/**
+ * A short line as a sentence of its own: the first word capitalised when it
+ * is all lower case ("send a DYFI report" → "Send a DYFI report"; "eQSL" is
+ * left alone), and a full stop added when it ends without a mark.
+ *
+ * @param string $text Plain text.
+ */
+function spokares_sentence( string $text ): string {
+	$text = trim( $text );
+	if ( '' === $text ) {
+		return '';
+	}
+	if ( preg_match( '/^\p{Ll}+(?![\p{L}\p{N}])/u', $text ) ) {
+		$text = mb_strtoupper( mb_substr( $text, 0, 1, 'UTF-8' ), 'UTF-8' ) . mb_substr( $text, 1, null, 'UTF-8' );
+	}
+	return '' === spokares_end_mark( $text ) ? $text . '.' : $text;
+}
+
+/**
+ * Do two plain-text labels say the same words (case, entities, quotes and
+ * spacing aside)? "Great ShakeOut" and "great  shakeout" do.
+ *
+ * @param string $a Text.
+ * @param string $b Text.
+ */
+function spokares_same_words( string $a, string $b ): bool {
+	$norm = static function ( string $s ): string {
+		$s = html_entity_decode( wp_strip_all_tags( $s ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		$s = str_replace( array( '’', '‘', '“', '”', "\u{00A0}" ), array( "'", "'", '"', '"', ' ' ), $s );
+		return trim( (string) preg_replace( '/\s+/u', ' ', mb_strtolower( $s, 'UTF-8' ) ) );
+	};
+	$want = $norm( $a );
+	return '' !== $want && $norm( $b ) === $want;
+}

@@ -90,14 +90,25 @@ function spokares_block_open( string $view = '' ): string {
 }
 
 /**
+ * The words of the front-end edit link under the radio settings (the net bar,
+ * the settings box and the From-home line), which are settings, not a list.
+ */
+function spokares_settings_link_words(): string {
+	/* translators: %s: admin screen name, e.g. "Net details". */
+	return __( 'Edit these settings in %s', 'spokares-core' );
+}
+
+/**
  * What goes at the end of a block, inside the wrapper: the plain-text editor
  * hint in the preview, or (front end) the "Edit this list in …" link for a
  * logged-in user who can use that screen.
  *
  * @param string $screen    Screen key ('' for none).
  * @param bool   $with_link Print the front-end link.
+ * @param string $words     The link's words with %s for the screen name
+ *                          (default "Edit this list in %s").
  */
-function spokares_block_tail( string $screen, bool $with_link = true ): string {
+function spokares_block_tail( string $screen, bool $with_link = true, string $words = '' ): string {
 	$s = '' !== $screen ? spokares_edit_screen( $screen ) : null;
 	if ( ! $s ) {
 		return '';
@@ -109,10 +120,9 @@ function spokares_block_tail( string $screen, bool $with_link = true ): string {
 		) . '</p>';
 	}
 	if ( $with_link && '' !== $s[1] && is_user_logged_in() && current_user_can( $s[2] ) ) {
-		return '<p class="spk-edit-link"><a href="' . esc_url( $s[1] ) . '">' . esc_html(
-			/* translators: %s: admin screen name, e.g. "Net rota". */
-			sprintf( __( 'Edit this list in %s', 'spokares-core' ), $s[0] )
-		) . '</a></p>';
+		/* translators: %s: admin screen name, e.g. "Net rota". */
+		$words = '' !== $words ? $words : __( 'Edit this list in %s', 'spokares-core' );
+		return '<p class="spk-edit-link"><a href="' . esc_url( $s[1] ) . '">' . esc_html( sprintf( $words, $s[0] ) ) . '</a></p>';
 	}
 	return '';
 }

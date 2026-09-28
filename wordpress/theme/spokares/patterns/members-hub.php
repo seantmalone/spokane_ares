@@ -26,7 +26,17 @@ defined( 'ABSPATH' ) || exit;
 <!-- /wp:group -->
 
 <!-- wp:group {"className":"hub-grid"} -->
-<div class="wp-block-group hub-grid"><!-- wp:group {"tagName":"section","className":"hub-week"} -->
+<div class="wp-block-group hub-grid"><!-- wp:group {"tagName":"section","className":"hub-net"} -->
+<section class="wp-block-group hub-net"><!-- wp:heading {"className":"m-head","anchor":"rota"} -->
+<h2 id="rota" class="wp-block-heading m-head">Tuesday net</h2>
+<!-- /wp:heading -->
+
+<!-- wp:spokares/net {"view":"bar"} /-->
+
+<!-- wp:spokares/net {"view":"rota","weeks":5} /--></section>
+<!-- /wp:group -->
+
+<!-- wp:group {"tagName":"section","className":"hub-week"} -->
 <section class="wp-block-group hub-week"><!-- wp:heading {"className":"m-head","anchor":"this-week"} -->
 <h2 id="this-week" class="wp-block-heading m-head">This week</h2>
 <!-- /wp:heading -->
@@ -42,16 +52,6 @@ defined( 'ABSPATH' ) || exit;
 <!-- /wp:paragraph -->
 
 <!-- wp:spokares/meetings {"view":"next"} /--></section>
-<!-- /wp:group -->
-
-<!-- wp:group {"tagName":"section","className":"hub-net"} -->
-<section class="wp-block-group hub-net"><!-- wp:heading {"className":"m-head","anchor":"rota"} -->
-<h2 id="rota" class="wp-block-heading m-head">Tuesday net</h2>
-<!-- /wp:heading -->
-
-<!-- wp:spokares/net {"view":"bar"} /-->
-
-<!-- wp:spokares/net {"view":"rota","weeks":5} /--></section>
 <!-- /wp:group --></div>
 <!-- /wp:group -->
 
