@@ -86,7 +86,7 @@ wordpress/mu-plugins/spokares-hardening.php (+ spokares-hardening/)   THE FLOOR 
 |---|---|---|---|
 | 1 | `spokares-core` (ours) | Required | Content types, admin screens, dynamic blocks, role, editor governance, `/docs/` links. Header `Update URI: false` so WordPress.org can never "update" it |
 | 2 | **Two-Factor** (WordPress.org team, 0.16.0) | Required | TOTP, e-mailed codes and backup codes. Readme says "tested up to 6.9.9"; it ran cleanly on 7.1.2 in the security test. Our must-use plugin enforces it (the plugin can't) |
-| 3 | **UpdraftPlus** (free) | Required | Scheduled off-host copies to a role-owned Google Drive (convenience layer; the copy an intruder can't touch is the SSH pull in §5.9). Never connect UpdraftCentral or UpdraftVault |
+| 3 | **UpdraftPlus** (free) | Required | Scheduled off-host copies to a versioned S3 bucket (convenience layer; the copy an intruder can't touch is the SSH pull in §5.9). Never connect UpdraftCentral or UpdraftVault |
 | 4 | *empty* | — | No page cache at launch. If the site ever measures slow on a LiteSpeed server, our code sends `X-LiteSpeed-Cache-Control` / `X-LiteSpeed-Purge` itself before any cache plugin is considered |
 | — | `spokares-hardening` (ours, must-use) | Required | Not a slot: it is the security half of our own code, placed where wp-admin can't switch it off |
 
@@ -679,7 +679,7 @@ After the hack, old Joomla URLs and spam URLs injected during it (`/index.php?op
 ### 5.9 Backups
 
 1. **Enhance snapshots** (retention to ask Verpex).
-2. **UpdraftPlus:** database weekly (keep 8), uploads monthly (keep 3), to a role-owned Google Drive with 2FA. Convenience only: its Drive token lives in the database, so an intruder could read or delete those copies. Confirm `/wp-content/updraft/` returns 403 on the live server (OpenLiteSpeed ignores `.htaccess`); if it doesn't, move UpdraftPlus's backup directory outside the web root or ask Verpex.
+2. **UpdraftPlus:** database weekly (keep 8), uploads monthly (keep 3), to a versioned S3 bucket (`ops/aws/backups.yml`, deployed by `ops/aws-backups-deploy.sh`; changed from Google Drive 2026-10-12). Convenience only: its access key lives in the database, so an intruder could read or hide those copies, but the key cannot delete old versions, so they stay recoverable for 30 days. Confirm `/wp-content/updraft/` returns 403 on the live server (OpenLiteSpeed ignores `.htaccess`); if it doesn't, move UpdraftPlus's backup directory outside the web root or ask Verpex.
 3. **Monthly SSH pull** (`ops/backup-pull.sh`, run from the admin's machine): `ssh … 'wp db export - | gzip'` to a dated file and `rsync -a` of `uploads/`; kept encrypted at rest off the host. **The host holds no credential for this copy**, so a site takeover can't delete it. A git tag covers our code.
 - **Restore drill** twice a year on an **Enhance staging site** with the must-use plugin active (Playground runs SQLite, so a pass there proves little about a MySQL restore). Delete the staging site afterwards.
 - Options (rota, meetings, radio, tiles) live in the database, so the database copies cover them (a WXR export does not; a JSON export button is P2).

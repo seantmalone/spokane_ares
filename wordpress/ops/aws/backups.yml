@@ -1,0 +1,103 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >-
+  spokares.org off-host backups (PLAN.md §5.9): one private, versioned S3
+  bucket and an IAM user that UpdraftPlus signs in as. Deployed by hand with
+  wordpress/ops/aws-backups-deploy.sh. The access key is not made here, so it
+  never shows in stack outputs; the script creates it and pipes it to the site.
+
+Parameters:
+  NoncurrentDays:
+    Type: Number
+    Default: 30
+    MinValue: 7
+    Description: >-
+      Days a deleted or overwritten backup stays recoverable as an old version.
+      UpdraftPlus prunes current copies itself (keep 8 database, 3 uploads).
+
+Resources:
+  BackupBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub spokares-backups-${AWS::AccountId}-${AWS::Region}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+            BucketKeyEnabled: true
+      VersioningConfiguration:
+        Status: Enabled
+      LifecycleConfiguration:
+        Rules:
+          - Id: old-versions
+            Status: Enabled
+            NoncurrentVersionExpiration:
+              NoncurrentDays: !Ref NoncurrentDays
+            ExpiredObjectDeleteMarker: true
+          - Id: unfinished-uploads
+            Status: Enabled
+            AbortIncompleteMultipartUpload:
+              DaysAfterInitiation: 7
+
+  BackupBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref BackupBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: HttpsOnly
+            Effect: Deny
+            Principal: '*'
+            Action: 's3:*'
+            Resource:
+              - !GetAtt BackupBucket.Arn
+              - !Sub '${BackupBucket.Arn}/*'
+            Condition:
+              Bool:
+                'aws:SecureTransport': 'false'
+
+  # Full use of the objects in this one bucket, so UpdraftPlus can prune and
+  # restore. Not granted: deleting old versions or changing the bucket's
+  # versioning, lifecycle or policy, so a stolen key can hide a backup but
+  # not destroy it for NoncurrentDays.
+  UpdraftUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: !Sub spokares-updraftplus-${AWS::Region}
+      Policies:
+        - PolicyName: backup-bucket-objects
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: Bucket
+                Effect: Allow
+                Action:
+                  - s3:ListBucket
+                  - s3:GetBucketLocation
+                  - s3:ListBucketMultipartUploads
+                Resource: !GetAtt BackupBucket.Arn
+              - Sid: Objects
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:DeleteObject
+                  - s3:AbortMultipartUpload
+                  - s3:ListMultipartUploadParts
+                Resource: !Sub '${BackupBucket.Arn}/*'
+
+Outputs:
+  BucketName:
+    Value: !Ref BackupBucket
+  UserName:
+    Value: !Ref UpdraftUser

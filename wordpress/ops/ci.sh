@@ -16,7 +16,8 @@
 #      unserialize, eval(, extract(
 #   3. every shipped PHP file starts with the ABSPATH guard
 #   4. generated files are fresh (dev/seed/data.json, the redirect map)
-#   5. JSON files parse; JavaScript files parse
+#   5. JSON files parse; JavaScript files parse; the AWS backup template
+#      passes cfn-lint (required in CI, skipped locally without cfn-lint)
 #   6. PHP lint on 8.3 and 8.4 (local php if present, else Playground's php)
 #   7. PHPCS WordPress-Extra via ops/phpcs.xml (+ PHPCompatibilityWP 8.3- when a
 #      local phpcs has it; otherwise Plugin Check's bundled phpcs in Playground)
@@ -103,6 +104,21 @@ while IFS= read -r f; do
   node --check "$WORK/check.$ext" 2>/dev/null || bad="$bad ${f#$SRC/}"
 done < <(find "${SHIPPED[@]}" -name '*.js' -not -path '*/node_modules/*')
 [[ -z $bad ]] && spk_pass "every JavaScript file parses" || spk_fail "JavaScript does not parse:$bad"
+
+# 5b. The AWS backup stack (ops/aws/*.yml) passes cfn-lint. Required in CI;
+# skipped on a machine without cfn-lint (pipx install cfn-lint).
+CFN=("$W"/ops/aws/*.yml)
+if command -v cfn-lint >/dev/null; then
+  if cfn_out=$(cfn-lint "${CFN[@]}" 2>&1); then
+    spk_pass "cfn-lint: ${#CFN[@]} template(s) clean"
+  else
+    spk_fail "cfn-lint:"; echo "$cfn_out" | sed 's/^/      /'
+  fi
+elif [[ -n ${CI:-} ]]; then
+  spk_fail "cfn-lint is not installed (the CI workflow installs it)"
+else
+  spk_skip "cfn-lint not installed: AWS templates not checked (pipx install cfn-lint)"
+fi
 
 # 6. PHP lint on 8.3 and 8.4.
 PHP_FILES=()

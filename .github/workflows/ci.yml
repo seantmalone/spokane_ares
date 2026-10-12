@@ -66,6 +66,9 @@ jobs:
           restore-keys: |
             ci-${{ runner.os }}-pg3.1.57-wp7.1.3-
 
+      - name: Install cfn-lint
+        run: pipx install cfn-lint==1.57.1
+
       - name: Resolve the ref
         id: ref
         env:
