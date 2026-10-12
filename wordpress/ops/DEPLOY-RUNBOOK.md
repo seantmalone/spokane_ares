@@ -233,7 +233,7 @@ Both modes are safe to run again.
 
 ## Owner to-do now (before launch)
 
-- **Two-factor for the administrator, now.** Sign in through the `/etc/hosts` line or the preview domain; wp-admin sends you to your profile's Two-Factor section. Set up TOTP and print the backup codes. Until then the account (whose name the hardening now hides) is protected by its password only. Use TOTP rather than Email: the admin address `webmaster@spokares.org` is a placeholder.
+- **Two-factor for the administrator, now.** Sign in through the `/etc/hosts` line or the preview domain; wp-admin sends you to your profile's Two-Factor section. Set up TOTP and print the backup codes. Until then the account (whose name the hardening now hides) is protected by its password only. Use TOTP rather than Email: WordPress cannot send mail until SMTP is set up (PLAN §5.1).
 - ~~Decide on `first-run.sh ... --launch-cleanup`.~~ Done 2026-09-27 (sample content, Akismet, Hello Dolly and spare themes removed; .htaccess hardening block incl. readme.html/license.txt denied); deploy run 36340121133 green, check-live 31/0.
 
 ## Go-live checklist
@@ -244,7 +244,7 @@ The owner decides when. Work top to bottom.
 
 - [ ] The launch gate (PLAN §6.13) and the content review (§5.11). An administrator reviews and publishes each document, ticking its Privacy check, and clears or drafts every "Needs checking" item. The footer mock line is removed in the launch release.
 - [ ] Two-factor: the administrator sets up TOTP and prints backup codes (PLAN §5.4). Editors are created and enrolled in person. wp-admin sends any account without 2FA to its Two-Factor settings.
-- [ ] The administrator's e-mail is a real mailbox, not the placeholder `webmaster@spokares.org` (Users > Profile).
+- [x] The administrator's e-mail is a real mailbox, not the placeholder `webmaster@spokares.org` (Users > Profile). Done 2026-10-12: the owner's address, also set as the site admin e-mail.
 - [ ] Mail for WordPress (PLAN §5.1): create the `website@spokares.org` mailbox wherever spokares.org mail will live. Put `SPOKARES_SMTP_HOST/PORT/USER/PASS` in `wp-config.php` on the host, never in git. Send a test password reset.
 - [ ] UpdraftPlus: connect a role-owned Google Drive. Set the database backup weekly (keep 8) and uploads monthly (keep 3). Confirm `/wp-content/updraft/` returns 403.
 - [ ] The weekly integrity cron (PLAN §5.8). This is an Enhance cron job, not crontab: `SPOKARES_PING_URL=https://hc-ping.com/<uuid> ~/bin/weekly-check.sh`. Also set up the dead-man service. Run `~/bin/weekly-check.sh --no-ping` once over SSH: it must say "all clear". It fails if `wp-config.php` lacks `DISALLOW_UNFILTERED_HTML` or `DISALLOW_FILE_EDIT`, or if the Site Editor has stored a copy of a template or the styles.
