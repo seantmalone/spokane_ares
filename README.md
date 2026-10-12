@@ -14,7 +14,7 @@ This repository rebuilds [spokares.org](https://www.spokares.org/), the website 
 |---|---|
 | Preview | <https://spokares-org-us2s.staging.firelizardhost.com/> (noindex, pre-launch) |
 | Version | 0.2.0 (tags `v0.1.1`, `v0.2.0`) |
-| Stack | WordPress 7.1+ (tested 7.1.2), PHP 8.3+ (run on 8.4), no build step |
+| Stack | WordPress 7.1+ (tested 7.1.3), PHP 8.3+ (run on 8.4), no build step |
 | Hosting | Verpex Enhance, deployed over SSH from GitHub Actions |
 | Design | Round-3 Option B, "Carry the Message" (folder `design/round3/option-b-lines-down/`; B grew out of the round-1 "When the Lines Go Down" concept) |
 | Status | Deployed to the preview, not live on spokares.org. Go-live checklist still open. Many facts still need leadership confirmation |
@@ -57,7 +57,7 @@ The local site runs in WordPress Playground. You don't need PHP, MySQL or Docker
 Prerequisites: Node 22+, network access on every start, and Google Chrome for screenshots and browser tests.
 
 ```sh
-wordpress/dev/start.sh 9400            # WordPress 7.1.2, PHP 8.4, http://127.0.0.1:9400/
+wordpress/dev/start.sh 9400            # WordPress 7.1.3, PHP 8.4, http://127.0.0.1:9400/
 wordpress/dev/start.sh 9400 --wp=7.2-RC1 --php=8.3   # try a release candidate or another PHP
 wordpress/dev/stop.sh 9400             # always stop it when you're done
 ```

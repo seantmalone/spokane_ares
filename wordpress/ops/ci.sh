@@ -46,7 +46,7 @@ done
 # an empty result could read as a pass.
 WORK=$(mktemp -d "${TMPDIR:-/tmp}/spokares-ci.XXXXXX") && [[ -n $WORK && -d $WORK ]] || { echo "ci.sh: cannot create a work folder (mktemp failed; check TMPDIR)" >&2; exit 1; }
 trap 'rm -rf "$WORK"' EXIT
-PG="npx -y @wp-playground/cli@3.1.55"
+PG="npx -y @wp-playground/cli@3.1.57"
 CACHE=${SPOKARES_CACHE:-${TMPDIR:-/tmp}/spokares-cache}
 mkdir -p "$CACHE"
 
@@ -123,14 +123,14 @@ done
 BP=$WORK/plugin-check.json
 cat > "$BP" <<'EOF'
 {
- "preferredVersions": { "php": "8.4", "wp": "7.1.2" },
+ "preferredVersions": { "php": "8.4", "wp": "7.1.3" },
  "steps": [
   { "step": "installPlugin", "pluginData": { "resource": "wordpress.org/plugins", "slug": "plugin-check" }, "options": { "activate": true } },
   { "step": "activatePlugin", "pluginPath": "spokares-core/spokares-core.php" }
  ]
 }
 EOF
-PG_WP=(--php=8.4 --wp=7.1.2 --blueprint="$BP" --mount="$W/plugins/spokares-core:/wordpress/wp-content/plugins/spokares-core" --mount="$SRC:/src" --mount="$WORK:/work")
+PG_WP=(--php=8.4 --wp=7.1.3 --blueprint="$BP" --mount="$W/plugins/spokares-core:/wordpress/wp-content/plugins/spokares-core" --mount="$SRC:/src" --mount="$WORK:/work")
 phpcs_summary() { # phpcs_summary <summary report> <json report>
   # PASS only on proof that PHPCS ran: its JSON report (written even when
   # nothing is found) must exist and parse. A missing or empty report is a

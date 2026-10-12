@@ -77,7 +77,7 @@ read -r PHP_VER WP_VER < <(
 echo "start.sh: WordPress $WP_VER, PHP $PHP_VER, port $PORT (log $LOG)"
 # --workers=1: with several workers a write in one (a sign-in, a deleted file)
 # is not seen by the others at once (plugin build notes).
-nohup npx -y @wp-playground/cli@3.1.55 server \
+nohup npx -y @wp-playground/cli@3.1.57 server \
   --port="$PORT" \
   --php="$PHP_VER" \
   --wp="$WP_VER" \
