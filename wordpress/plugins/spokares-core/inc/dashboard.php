@@ -231,6 +231,17 @@ function spokares_dashboard_widget(): void {
 				__( 'Open the page', 'spokares-core' )
 			);
 		}
+		// About prints "Last reviewed"; like a document, it is due once a year.
+		if ( spokares_page_has_review_box( $item['page'] ) ) {
+			$reviewed = (string) get_post_meta( $item['page']->ID, '_spk_reviewed', true );
+			if ( ! spokares_is_ymd( $reviewed ) ) {
+				/* translators: %s: page title. */
+				$attention[] = spokares_dashboard_line( sprintf( __( '%s hasn’t been marked reviewed yet.', 'spokares-core' ), $title ), $edit, __( 'Review the page', 'spokares-core' ) );
+			} elseif ( $reviewed < spokares_add_days( spokares_today(), -365 ) ) {
+				/* translators: 1: page title, 2: date, e.g. "Oct 6, 2025". */
+				$attention[] = spokares_dashboard_line( sprintf( __( '%1$s was last reviewed %2$s, over 12 months ago.', 'spokares-core' ), $title, spokares_fmt_date( $reviewed, 'mdy' ) ), $edit, __( 'Review the page', 'spokares-core' ) );
+			}
+		}
 		// The search-engine description is the webmaster's (editors can't see it).
 		if ( $admin && $item['excerpt_hits'] ) {
 			$attention[] = spokares_dashboard_line(
