@@ -322,7 +322,7 @@ More rules:
 | Publish refused, several problems | "Not published yet. Fix the boxes outlined in red, then click Publish." |
 | Published event, a field not saved | "Saved, except Where: it has a phone number. If it’s a public agency number, tick the box under Where and click Save. Everything else is on the site now." (warning, amber like every other screen's partial save; changed by the verifier from error). It names fields by their labels. This is true to the code: `spokares_save_event()` skips only the problem fields' meta and saves the rest. The typed text stays in the form until the next save of that event. |
 | Name cut from Volunteer through | appended: "(saved NV2Z only; names aren’t posted)" |
-| Copied | "Copied. Set the new date, then Publish." (info) |
+| Copied | "Copied. Check the name, set the new date, then Publish." (info). The copy opens with the name outlined and "Check the name (copied from 2026)." under it (workflow review E8); the Needs checking flag is not copied |
 | Taken off the site (Trash) | "“Great ShakeOut” is off the site." + core's Undo |
 | Restored | "“Great ShakeOut” is back on the site." Restore brings back the previous status, as Undo does. |
 

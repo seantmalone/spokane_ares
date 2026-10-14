@@ -107,7 +107,8 @@
 		if ( title ) {
 			title.required = true;
 			var label = $( '.spk-title-label' );
-			var said = $( '.spk-event-form > .spk-error-text' );
+			// The sentence under the name, or a fresh copy's "Check the name".
+			var said = $( '.spk-event-form > .spk-error-text' ) || $( '#spk-copy-name' );
 			if ( label && label.classList.contains( 'spk-has-error' ) ) {
 				title.setAttribute( 'aria-invalid', 'true' );
 				if ( said ) {

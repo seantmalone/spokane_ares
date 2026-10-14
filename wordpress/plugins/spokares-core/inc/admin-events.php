@@ -585,6 +585,7 @@ function spokares_save_event( $post_id ): void {
 	}
 	// A copy's problems show from its first save on.
 	delete_post_meta( $post_id, '_spk_copied' );
+	delete_post_meta( $post_id, '_spk_copied_from' );
 
 	$contact = '' !== $result['call'] ? $result['call'] : $v['contact'];
 	$links   = array();
@@ -1095,6 +1096,8 @@ function spokares_event_form_top( $post ): void {
 	}
 	$v        = spokares_event_form_values( $post );
 	$problems = spokares_event_form_check( $post, $v )['problems'];
+	// A fresh copy: the name is outlined until its first save (Check the name).
+	$outline = isset( $problems['title'] ) || spokares_event_is_fresh_copy( $post );
 	wp_nonce_field( 'spokares_event_meta', 'spokares_event_nonce' );
 	?>
 	<fieldset class="spk-card spk-kind-box<?php echo isset( $problems['kind'] ) ? ' spk-field-error' : ''; ?>" id="spk-kind">
@@ -1106,7 +1109,7 @@ function spokares_event_form_top( $post ): void {
 		</div>
 		<?php spokares_err_text( $problems, 'kind' ); ?>
 	</fieldset>
-	<label for="title" class="spk-title-label<?php echo isset( $problems['title'] ) ? ' spk-has-error' : ''; ?>"><?php esc_html_e( 'Event name (required)', 'spokares-core' ); ?></label>
+	<label for="title" class="spk-title-label<?php echo $outline ? ' spk-has-error' : ''; ?>"><?php esc_html_e( 'Event name (required)', 'spokares-core' ); ?></label>
 	<?php
 }
 add_action( 'edit_form_top', 'spokares_event_form_top' );
@@ -1165,6 +1168,9 @@ function spokares_event_form_fields( $post ): void {
 	<div class="spk-event-form" data-spk-kind-form>
 		<?php if ( 'auto-draft' === $post->post_status ) : ?>
 			<p class="spk-name-match" id="spk-name-match" role="status"></p>
+		<?php elseif ( spokares_event_is_fresh_copy( $post ) ) : ?>
+			<?php /* translators: %s: the year of the event it was copied from, e.g. "2026". */ ?>
+			<p class="spk-name-match" id="spk-copy-name"><?php echo esc_html( sprintf( __( 'Check the name (copied from %s).', 'spokares-core' ), (string) get_post_meta( $post->ID, '_spk_copied_from', true ) ) ); ?></p>
 		<?php endif; ?>
 		<?php spokares_err_text( $p, 'title' ); ?>
 		<?php spokares_event_confirm( $c, 'title' ); ?>
@@ -1894,7 +1900,8 @@ function spokares_handle_duplicate_event(): void {
 	if ( is_wp_error( $new ) ) {
 		wp_die( esc_html( $new->get_error_message() ) );
 	}
-	$copy = array( 'spk_kind', 'spk_time_start', 'spk_time_end', 'spk_summary', 'spk_where', 'spk_tasks', 'spk_main_url', 'spk_main_label', 'spk_links', 'spk_extra_doc', 'spk_contact_call', 'spk_keep_past', 'spk_precision', 'spk_needs_check' );
+	// Not the webmaster's own Needs checking flag: it was about the original.
+	$copy = array( 'spk_kind', 'spk_time_start', 'spk_time_end', 'spk_summary', 'spk_where', 'spk_tasks', 'spk_main_url', 'spk_main_label', 'spk_links', 'spk_extra_doc', 'spk_contact_call', 'spk_keep_past', 'spk_precision' );
 	foreach ( $copy as $key ) {
 		$value = get_post_meta( $id, $key, true );
 		if ( '' !== $value && array() !== $value ) {
@@ -1902,10 +1909,13 @@ function spokares_handle_duplicate_event(): void {
 		}
 	}
 	update_post_meta( $new, 'spk_date_mode', 'date' );
-	// Opens with First day outlined and no sentences until its first save.
+	// Opens with First day and the name outlined, and no sentences until its
+	// first save; the name box says which year it was copied from.
+	$start = (string) get_post_meta( $id, 'spk_start', true );
 	update_post_meta( $new, '_spk_copied', '1' );
+	update_post_meta( $new, '_spk_copied_from', spokares_is_ymd( $start ) ? substr( $start, 0, 4 ) : get_the_date( 'Y', $src ) );
 	spokares_update_event_sort( (int) $new );
-	spokares_add_notice( 'info', __( 'Copied. Set the new date, then Publish.', 'spokares-core' ) );
+	spokares_add_notice( 'info', __( 'Copied. Check the name, set the new date, then Publish.', 'spokares-core' ) );
 	wp_safe_redirect( admin_url( 'post.php?post=' . (int) $new . '&action=edit' ) );
 	exit;
 }

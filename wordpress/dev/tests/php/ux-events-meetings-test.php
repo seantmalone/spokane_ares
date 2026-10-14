@@ -13,7 +13,8 @@
  * draft with no problems; and a past date is asked about before the save
  * (E2), so the saved notice of an event whose date has passed is plain
  * information ("Saved. It isn’t listed anywhere now: … has passed."), not
- * the old amber "… Check the year.".
+ * the old amber "… Check the year."; Make a copy's notice also says to check
+ * the name (E8).
  *
  * @package spokares-dev
  */
@@ -784,7 +785,7 @@ test(
 		assert_matches( '/post\.php\?post=(\d+)&action=edit/', (string) $res['redirect'], 'opens the copy' );
 		preg_match( '/post=(\d+)/', (string) $res['redirect'], $m );
 		$copy = (int) $m[1];
-		assert_same( array( 'Copied. Set the new date, then Publish.' ), wp_list_pluck( uxevt_notices(), 'text' ), 'the notice' );
+		assert_same( array( 'Copied. Check the name, set the new date, then Publish.' ), wp_list_pluck( uxevt_notices(), 'text' ), 'the notice (E8: and check the name)' );
 		$html = uxevt_form( $copy );
 		assert_not_contains( 'spk-error-text', $html, 'no sentences on a fresh copy' );
 		assert_matches( '#<input type="date" id="spk-start"[^>]*class="spk-field-error"#', $html, 'First day is outlined' );
