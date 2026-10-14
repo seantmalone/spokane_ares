@@ -114,6 +114,16 @@ function spokares_event_submitted(): array {
 }
 
 /**
+ * Does an event on a date run over more than one day (a good Last day after
+ * a good First day)?
+ *
+ * @param array $v Values (spokares_event_submitted() shape).
+ */
+function spokares_event_spans_days( array $v ): bool {
+	return spokares_is_ymd( $v['start'] ) && spokares_is_ymd( $v['end'] ) && $v['end'] > $v['start'];
+}
+
+/**
  * What's wrong with an event's values. Returns field => the sentence under
  * the field for blocking problems, plus 'confirm' => [field => hits] for
  * phone/e-mail shapes that need the "Publish it" tick, plus the call sign
@@ -148,7 +158,9 @@ function spokares_event_problems( array $v, array $confirmed ): array {
 		} elseif ( '' !== $v['t_end'] && '' === $v['t_start'] ) {
 			// An end time alone: say what is missing, beside the empty box.
 			$problems['t_start'] = __( 'The start time is missing: type it, or clear the end time (or tick All day).', 'spokares-core' );
-		} elseif ( '' !== $v['t_end'] && $v['t_end'] <= $v['t_start'] ) {
+		} elseif ( '' !== $v['t_end'] && $v['t_end'] <= $v['t_start'] && ! spokares_event_spans_days( $v ) ) {
+			// Start and end are a date plus a time: on a later last day any
+			// end time is after the start (Fri 6:00 PM to Sun noon).
 			$problems['t_end'] = __( 'The end time must be after the start time.', 'spokares-core' );
 		}
 	}
