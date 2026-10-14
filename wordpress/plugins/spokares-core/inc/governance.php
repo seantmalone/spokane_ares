@@ -745,6 +745,42 @@ function spokares_page_insert_guard( $data, $postarr ) {
 add_filter( 'wp_insert_post_data', 'spokares_page_insert_guard', 20, 2 );
 
 /**
+ * Would restoring this earlier version of a page be refused for a
+ * non-admin? The same rules as a save (spokares_page_content_problem()),
+ * against the page as it is now: the version's layout skeleton must match
+ * the page's, so a version from before the webmaster added, moved or
+ * restyled a part can't be restored by an editor. Only the words come back
+ * (the title and the search-engine description stay as they are), so only
+ * the content is compared.
+ *
+ * @param WP_Post $revision The revision (or autosave).
+ * @param WP_Post $page     The page it belongs to.
+ * @return string '' when it may be restored, else the reason.
+ */
+function spokares_revision_restore_problem( WP_Post $revision, WP_Post $page ): string {
+	return spokares_page_content_problem( (string) $page->post_content, spokares_strip_empty_list_items( (string) $revision->post_content ) );
+}
+
+/**
+ * The sentence for a refused restore of an earlier version.
+ *
+ * @param string       $why      spokares_revision_restore_problem() result.
+ * @param WP_Post|null $revision The revision (for the never-publish words).
+ * @param WP_Post|null $page     The page.
+ */
+function spokares_revision_restore_refusal( string $why, $revision = null, $page = null ): string {
+	if ( 'never-publish' === $why && $revision instanceof WP_Post && $page instanceof WP_Post ) {
+		$hits = spokares_new_never_publish( (string) $page->post_content, (string) $revision->post_content );
+		/* translators: %s: what the text mentions, e.g. "a hospital net". */
+		return sprintf( __( 'Not restored: that version mentions %s, which we never publish. Pick another version, or change the words by hand.', 'spokares-core' ), spokares_and_list( wp_list_pluck( $hits, 'what' ) ) );
+	}
+	if ( 'layout' === $why ) {
+		return __( 'Not restored: that version has a different layout from the page now (a part was added, moved or restyled since). Only the webmaster can restore it. Pick a later version, or ask webmaster@spokares.org.', 'spokares-core' );
+	}
+	return __( 'Not restored: that version has a button with no words or no link, or no Home photo. Pick another version, or ask webmaster@spokares.org.', 'spokares-core' );
+}
+
+/**
  * No non-administrator moves a page to the Trash or deletes it, whatever
  * path asks (§4.1: the six pages are fixed). The capability rules
  * (roles.php) already refuse the Pages list, REST and the block editor;

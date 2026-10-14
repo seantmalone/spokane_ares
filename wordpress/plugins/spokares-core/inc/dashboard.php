@@ -451,6 +451,20 @@ function spokares_dashboard_widget(): void {
 				echo wp_kses( implode( ' · ', $links ), $line_kses );
 				?>
 			</p>
+			<?php
+			// Core's Compare Revisions screen, opened on the newest earlier version;
+			// a version restores only when its layout matches the page now.
+			$earlier = array();
+			foreach ( $pages as $item ) {
+				$revision = spokares_page_latest_revision( (int) $item['page']->ID );
+				if ( $revision ) {
+					$earlier[] = '<a href="' . esc_url( add_query_arg( 'revision', $revision, admin_url( 'revision.php' ) ) ) . '">' . esc_html( get_the_title( $item['page'] ) ) . '</a>';
+				}
+			}
+			?>
+			<?php if ( $earlier ) : ?>
+				<p class="spk-page-earlier"><?php esc_html_e( 'Earlier versions:', 'spokares-core' ); ?> <?php echo wp_kses( implode( ' · ', $earlier ), $line_kses ); ?></p>
+			<?php endif; ?>
 		</section>
 	<?php endif; ?>
 		<p class="spk-stuck"><?php esc_html_e( 'Stuck?', 'spokares-core' ); ?> <a href="mailto:webmaster@spokares.org">webmaster@spokares.org</a></p>

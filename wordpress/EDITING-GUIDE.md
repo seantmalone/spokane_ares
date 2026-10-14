@@ -106,7 +106,8 @@ You can change the words on **Home**, **How it works** and **About ARES & ACS**.
 - **A yellow message starting "On the site now:"** means the words look like a phone number or a personal e-mail address. The page is saved; the Dashboard lists it under **Needs attention** until you change it. If it's a public agency number or address, leave it.
 - **About:** tick **Mark reviewed today when I save** once you've checked the whole page.
 - **A one-off notice** (“no nets over the holidays”): mark those Tuesdays **No net** and add a Note. Anything else, like “Field Day photos are up”, has no place on the site yet: ask the webmaster.
-- Getting back an older version of a page after you've saved is the webmaster's job. So is adding a section, a table row or a new page (see "For the webmaster" at the end).
+- **Get back an earlier version** after you've saved: on the Dashboard, under **Page Text**, click the page after **Earlier versions:**. Drag the slider to the version you want (the left side shows what it said, the right side the page now), then click **Restore This Revision**. Only the words come back. If the webmaster has added, moved or restyled a part since that version, you'll see "Not restored:"; pick a later version or ask the webmaster.
+- Adding a section, a table row or a new page is the webmaster's job (see "For the webmaster" at the end).
 
 ---
 
