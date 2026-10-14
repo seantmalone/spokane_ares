@@ -236,6 +236,33 @@ function spokares_net_form_state( array $nets, array $radio ): array {
 }
 
 /**
+ * The stored Winlink assignments a change of weeks takes off the site: a
+ * future Tuesday with an assignment that was a Winlink night and no longer
+ * is (the Exercises & events list shows a task only on a Winlink night).
+ * The rows stay in the schedule; the save names them (N4).
+ *
+ * @param array $was_weeks spokares_net_week_kinds() before the save.
+ * @param array $now_weeks The same after it.
+ * @return string[] Tuesdays (Y-m-d), in order.
+ */
+function spokares_net_dropped_winlink( array $was_weeks, array $now_weeks ): array {
+	$today = spokares_today();
+	$out   = array();
+	foreach ( spokares_opt( 'spk_rota' ) as $ymd => $row ) {
+		$ymd = (string) $ymd;
+		if ( $ymd < $today || ! spokares_is_ymd( $ymd ) || 2 !== spokares_weekday( $ymd ) || 'none' === ( $row['state'] ?? '' ) || '' === trim( (string) ( $row['wl_task'] ?? '' ) ) ) {
+			continue;
+		}
+		$n = spokares_nth( $ymd );
+		if ( 'winlink' === ( $was_weeks[ $n ] ?? '' ) && 'winlink' !== ( $now_weeks[ $n ] ?? '' ) ) {
+			$out[] = $ymd;
+		}
+	}
+	sort( $out );
+	return $out;
+}
+
+/**
  * The fields' names for the notices, in lower case ("Not saved: the
  * frequency (outlined in red).").
  */
@@ -713,12 +740,24 @@ function spokares_handle_save_net_details(): void {
 			$errors['p_freq'] = spokares_freq_problem( $typed['p_freq'], (string) $radio['primary']['freq'] );
 		}
 	}
-	if ( $apply( 'p_offset' ) && ( in_array( $typed['p_offset'], spokares_offsets(), true ) || $typed['p_offset'] === $radio['primary']['offset'] ) ) {
-		$radio['primary']['offset'] = $typed['p_offset'];
-	}
-	if ( $apply( 'p_tone' ) && ( '' === $typed['p_tone'] || in_array( $typed['p_tone'], spokares_tones(), true ) || $typed['p_tone'] === $radio['primary']['tone'] ) ) {
-		$radio['primary']['tone'] = $typed['p_tone'];
-	}
+	// The offset and tone come from lists. A value not in the list (only a
+	// hand-made request can send one) is refused with a sentence, like every
+	// other field; the stored value stays.
+	$pick = static function ( string $key, string $stored, array $choices, bool $none ) use ( $apply, $typed, &$errors ): string {
+		if ( ! $apply( $key ) ) {
+			return $stored;
+		}
+		$value = $typed[ $key ];
+		if ( ( $none && '' === $value ) || in_array( $value, $choices, true ) || $value === $stored ) {
+			return $value;
+		}
+		$errors[ $key ] = str_ends_with( $key, '_tone' )
+			? __( 'Pick a tone from the list.', 'spokares-core' )
+			: __( 'Pick an offset from the list.', 'spokares-core' );
+		return $stored;
+	};
+	$radio['primary']['offset'] = $pick( 'p_offset', (string) $radio['primary']['offset'], spokares_offsets(), false );
+	$radio['primary']['tone']   = $pick( 'p_tone', (string) $radio['primary']['tone'], spokares_tones(), true );
 
 	// Alternate repeater.
 	if ( $apply( 'a_show' ) ) {
@@ -735,12 +774,8 @@ function spokares_handle_save_net_details(): void {
 			$errors['a_freq'] = spokares_freq_problem( $typed['a_freq'], (string) $radio['alternate']['freq'] );
 		}
 	}
-	if ( $apply( 'a_offset' ) && ( '' === $typed['a_offset'] || in_array( $typed['a_offset'], spokares_offsets(), true ) || $typed['a_offset'] === $radio['alternate']['offset'] ) ) {
-		$radio['alternate']['offset'] = $typed['a_offset'];
-	}
-	if ( $apply( 'a_tone' ) && ( '' === $typed['a_tone'] || in_array( $typed['a_tone'], spokares_tones(), true ) || $typed['a_tone'] === $radio['alternate']['tone'] ) ) {
-		$radio['alternate']['tone'] = $typed['a_tone'];
-	}
+	$radio['alternate']['offset'] = $pick( 'a_offset', (string) $radio['alternate']['offset'], spokares_offsets(), true );
+	$radio['alternate']['tone']   = $pick( 'a_tone', (string) $radio['alternate']['tone'], spokares_tones(), true );
 
 	// Which Tuesdays, and the GMRS net time (a bad time is held back, never dropped).
 	foreach ( array( 'winlink_nth', 'simplex_nth', 'gmrs_nth' ) as $k ) {
@@ -769,7 +804,9 @@ function spokares_handle_save_net_details(): void {
 		}
 	}
 
-	$changes = spokares_net_changes( $was, spokares_net_form_state( $nets, $radio ), $was_week, spokares_net_week_kinds( $nets ) );
+	$now_week = spokares_net_week_kinds( $nets );
+	$changes  = spokares_net_changes( $was, spokares_net_form_state( $nets, $radio ), $was_week, $now_week );
+	$dropped  = $changes ? spokares_net_dropped_winlink( $was_week, $now_week ) : array();
 	if ( $changes ) {
 		update_option( 'spk_radio', $radio );
 		update_option( 'spk_nets', $nets );
@@ -789,12 +826,22 @@ function spokares_handle_save_net_details(): void {
 		}
 	}
 	$bad = spokares_and_list( array_values( array_unique( $bad ) ) );
+	// Winlink assignments that drop off the Exercises & events page with the new weeks.
+	$off = '';
+	if ( $dropped ) {
+		$days = spokares_and_list( array_map( static fn( $d ) => spokares_fmt_date( $d, 'day' ), $dropped ) );
+		$off  = 1 === count( $dropped )
+			/* translators: %s: a Tuesday, e.g. "Oct 13". */
+			? sprintf( __( '%s is no longer a Winlink night, so its Winlink assignment is off the Exercises & events page. It is still on the Net Control Schedule: clear it or move it there.', 'spokares-core' ), $days )
+			/* translators: %s: Tuesdays, e.g. "Oct 13 and Nov 10". */
+			: sprintf( __( '%s are no longer Winlink nights, so their Winlink assignments are off the Exercises & events page. They are still on the Net Control Schedule: clear them or move them there.', 'spokares-core' ), $days );
+	}
 	if ( $changes && '' === $bad ) {
 		/* translators: %s: what changed, e.g. "tone 103.5 Hz (was 100 Hz); net time 7:30 PM (was 8:00 PM)". */
-		spokares_add_notice( 'success', sprintf( __( 'Saved: %s.', 'spokares-core' ), implode( '; ', $changes ) ), $link, $see );
+		spokares_add_notice( $dropped ? 'warning' : 'success', trim( sprintf( __( 'Saved: %s.', 'spokares-core' ), implode( '; ', $changes ) ) . ' ' . $off ), $link, $see );
 	} elseif ( $changes ) {
 		/* translators: %s: the fields not saved, e.g. "the frequency". */
-		spokares_add_notice( 'warning', sprintf( __( 'Saved, except %s (outlined in red).', 'spokares-core' ), $bad ), $link, $see );
+		spokares_add_notice( 'warning', trim( sprintf( __( 'Saved, except %s (outlined in red).', 'spokares-core' ), $bad ) . ' ' . $off ), $link, $see );
 	} elseif ( '' !== $bad ) {
 		/* translators: %s: the fields not saved, e.g. "the frequency". */
 		spokares_add_notice( 'error', sprintf( __( 'Not saved: %s (outlined in red).', 'spokares-core' ), $bad ) );
