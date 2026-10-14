@@ -80,13 +80,12 @@ function spokares_event_kind_uses( string $field, string $kind ): bool {
 }
 
 /**
- * The form's data-kinds attribute for a field (escaped, with its leading
- * space).
+ * The form's data-kinds value for a field: its types, comma-separated.
  *
  * @param string $field Field key (spokares_event_kind_fields()).
  */
-function spokares_event_kinds_attr( string $field ): string {
-	return ' data-kinds="' . esc_attr( implode( ',', spokares_event_kind_fields()[ $field ] ?? array() ) ) . '"';
+function spokares_event_kinds_list( string $field ): string {
+	return implode( ',', spokares_event_kind_fields()[ $field ] ?? array() );
 }
 
 /**
@@ -683,6 +682,7 @@ function spokares_event_clear_unused( int $post_id, array &$v, array &$confirmed
 		}
 		$stored = get_post_meta( $post_id, $key, true );
 		$had    = ! empty( $v[ $field ] ) || ! empty( $stored );
+
 		$v[ $field ] = $empty[ $field ] ?? '';
 		unset( $confirmed[ $field ] );
 		if ( $had && 'keep_past' !== $field ) {
@@ -1260,7 +1260,7 @@ function spokares_event_form_fields( $post ): void {
 				<label class="spk-choice"><input type="radio" name="spk_date_mode" value="date" <?php checked( 'date', $v['mode'] ); ?>> <?php esc_html_e( 'On a date', 'spokares-core' ); ?></label>
 				<label class="spk-choice"><input type="radio" name="spk_date_mode" value="postponed" <?php checked( 'postponed', $v['mode'] ); ?>> <?php esc_html_e( 'Postponed', 'spokares-core' ); ?></label>
 				<label class="spk-choice"><input type="radio" name="spk_date_mode" value="not-posted" <?php checked( 'not-posted', $v['mode'] ); ?>> <?php esc_html_e( 'Date not posted yet', 'spokares-core' ); ?></label>
-				<label class="spk-choice"<?php echo spokares_event_kinds_attr( 'as_requested' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the helper. ?>><input type="radio" name="spk_date_mode" value="as-requested" <?php checked( 'as-requested', $v['mode'] ); ?>> <?php esc_html_e( 'As requested', 'spokares-core' ); ?></label>
+				<label class="spk-choice" data-kinds="<?php echo esc_attr( spokares_event_kinds_list( 'as_requested' ) ); ?>"><input type="radio" name="spk_date_mode" value="as-requested" <?php checked( 'as-requested', $v['mode'] ); ?>> <?php esc_html_e( 'As requested', 'spokares-core' ); ?></label>
 			</p>
 			<div class="spk-dates" data-mode="date">
 				<p class="spk-days">
@@ -1311,21 +1311,21 @@ function spokares_event_form_fields( $post ): void {
 			<?php spokares_event_confirm( $c, 'where' ); ?>
 		</div>
 
-		<div class="spk-field"<?php echo spokares_event_kinds_attr( 'summary' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the helper. ?>>
+		<div class="spk-field" data-kinds="<?php echo esc_attr( spokares_event_kinds_list( 'summary' ) ); ?>">
 			<label for="spk-summary"><?php esc_html_e( 'Short description', 'spokares-core' ); ?></label>
 			<input type="text" id="spk-summary" name="spk_summary" maxlength="90" class="large-text<?php echo esc_attr( spokares_err_class( $p + $c, 'summary' ) ); ?>" value="<?php echo esc_attr( $v['summary'] ); ?>">
 			<?php spokares_err_text( $p, 'summary' ); ?>
 			<?php spokares_event_confirm( $c, 'summary' ); ?>
 		</div>
 
-		<div class="spk-field"<?php echo spokares_event_kinds_attr( 'tasks' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the helper. ?>>
+		<div class="spk-field" data-kinds="<?php echo esc_attr( spokares_event_kinds_list( 'tasks' ) ); ?>">
 			<label for="spk-tasks"><?php esc_html_e( 'What members do (one task per line)', 'spokares-core' ); ?></label>
 			<textarea id="spk-tasks" name="spk_tasks" rows="5" class="large-text<?php echo esc_attr( spokares_err_class( $p + $c, 'tasks' ) ); ?>"><?php echo esc_textarea( $v['tasks'] ); ?></textarea>
 			<?php spokares_err_text( $p, 'tasks' ); ?>
 			<?php spokares_event_confirm( $c, 'tasks' ); ?>
 		</div>
 
-		<fieldset class="spk-card spk-button"<?php echo spokares_event_kinds_attr( 'main_url' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the helper. ?>>
+		<fieldset class="spk-card spk-button" data-kinds="<?php echo esc_attr( spokares_event_kinds_list( 'main_url' ) ); ?>">
 			<legend><?php esc_html_e( 'Button', 'spokares-core' ); ?></legend>
 			<p>
 				<label for="spk-main-url"><?php echo esc_html( $address ); ?></label><br>
@@ -1341,7 +1341,7 @@ function spokares_event_form_fields( $post ): void {
 			</p>
 		</fieldset>
 
-		<fieldset class="spk-card spk-links"<?php echo spokares_event_kinds_attr( 'links' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the helper. ?>>
+		<fieldset class="spk-card spk-links" data-kinds="<?php echo esc_attr( spokares_event_kinds_list( 'links' ) ); ?>">
 			<legend><?php esc_html_e( 'More links (up to 3)', 'spokares-core' ); ?></legend>
 			<?php foreach ( $links as $i => $link ) : ?>
 				<p class="spk-link-row<?php echo isset( $p[ 'links' . $i ] ) ? ' spk-field-error' : ''; ?>" <?php echo ( $i > 0 && '' === $link['url'] && '' === $link['label'] ) ? 'data-spk-spare hidden' : ''; ?>>
@@ -1355,7 +1355,7 @@ function spokares_event_form_fields( $post ): void {
 			<?php spokares_event_confirm( $c, 'links' ); ?>
 		</fieldset>
 
-		<div class="spk-field"<?php echo spokares_event_kinds_attr( 'extra_doc' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the helper. ?>>
+		<div class="spk-field" data-kinds="<?php echo esc_attr( spokares_event_kinds_list( 'extra_doc' ) ); ?>">
 			<label for="spk-extra-doc"><?php esc_html_e( 'Document members need', 'spokares-core' ); ?></label>
 			<select id="spk-extra-doc" name="spk_extra_doc">
 				<option value="0"><?php esc_html_e( '— none —', 'spokares-core' ); ?></option>
@@ -1368,7 +1368,7 @@ function spokares_event_form_fields( $post ): void {
 			</select>
 		</div>
 
-		<div class="spk-field"<?php echo spokares_event_kinds_attr( 'contact' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the helper. ?>>
+		<div class="spk-field" data-kinds="<?php echo esc_attr( spokares_event_kinds_list( 'contact' ) ); ?>">
 			<label for="spk-contact"><?php esc_html_e( 'Volunteer through (call sign)', 'spokares-core' ); ?></label>
 			<input type="text" id="spk-contact" name="spk_contact_call" class="regular-text<?php echo esc_attr( spokares_err_class( $p, 'contact' ) ); ?>" value="<?php echo esc_attr( $v['contact'] ); ?>" maxlength="40" list="spk-calls" spellcheck="false">
 			<?php spokares_err_text( $p, 'contact' ); ?>
@@ -1379,7 +1379,7 @@ function spokares_event_form_fields( $post ): void {
 			</datalist>
 		</div>
 
-		<div class="spk-field"<?php echo spokares_event_kinds_attr( 'keep_past' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the helper. ?>>
+		<div class="spk-field" data-kinds="<?php echo esc_attr( spokares_event_kinds_list( 'keep_past' ) ); ?>">
 			<label class="spk-choice"><input type="checkbox" name="spk_keep_past" value="1" <?php checked( $v['keep_past'] ); ?>> <?php esc_html_e( 'List under Past exercises after it ends', 'spokares-core' ); ?></label>
 		</div>
 
