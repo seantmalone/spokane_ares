@@ -799,11 +799,15 @@ function spokares_event_save_notice( int $post_id, array $result, string $before
 /* ---------------------------------------------------------- where it shows */
 
 /**
- * The lists of the site an event can be in, by place key, with the
- * arguments the members pages give them (theme patterns members-exercises
- * and members-hub).
+ * The lists of the site an event can be in, by place key: the block view
+ * and the arguments the members pages give it. The theme's patterns are the
+ * one definition (members-exercises: next-up, later, public-service, past;
+ * members-hub: the upcoming list, "hub"): their spokares/events blocks are
+ * read, so the Where it shows column and the saved notice follow what the
+ * site really shows. These defaults, the same numbers, are used only when a
+ * pattern isn't registered (wf-e9 checks they still match).
  */
-function spokares_event_list_views(): array {
+function spokares_event_list_defaults(): array {
 	return array(
 		'next-up'        => array(
 			'next-up',
@@ -832,6 +836,81 @@ function spokares_event_list_views(): array {
 			),
 		),
 	);
+}
+
+/**
+ * The spokares/events blocks of a registered pattern, by view (its
+ * attributes as written in the pattern), or [] when it isn't registered.
+ *
+ * @param string $slug Pattern slug.
+ */
+function spokares_event_pattern_lists( string $slug ): array {
+	$pattern = class_exists( 'WP_Block_Patterns_Registry' ) ? WP_Block_Patterns_Registry::get_instance()->get_registered( $slug ) : null;
+	if ( ! is_array( $pattern ) || empty( $pattern['content'] ) ) {
+		return array();
+	}
+	$out  = array();
+	$walk = static function ( array $blocks ) use ( &$walk, &$out ): void {
+		foreach ( $blocks as $block ) {
+			if ( 'spokares/events' === ( $block['blockName'] ?? '' ) ) {
+				$attrs = (array) ( $block['attrs'] ?? array() );
+
+				$out[ (string) ( $attrs['view'] ?? 'upcoming' ) ] = $attrs;
+			}
+			$walk( (array) ( $block['innerBlocks'] ?? array() ) );
+		}
+	};
+	$walk( parse_blocks( (string) $pattern['content'] ) );
+	return $out;
+}
+
+/**
+ * The lists of the site an event can be in (place key => [view, args]),
+ * read from the theme's patterns over spokares_event_list_defaults()
+ * (spokares_event_places_map() keeps the lists it reads for the request).
+ */
+function spokares_event_list_views(): array {
+	$views = spokares_event_list_defaults();
+	$found = array(
+		'spokares/members-exercises' => array( 'next-up', 'later', 'public-service', 'past' ),
+		'spokares/members-hub'       => array( 'hub' ),
+	);
+	// The attributes each view's render passes on (render.php
+	// spokares_render_events()); one left out of the pattern takes the
+	// block's default, as it does on the page.
+	$passed   = array(
+		'next-up'        => array( 'types', 'limit' ),
+		'later'          => array( 'types', 'limit', 'cardTypes', 'cardLimit' ),
+		'public-service' => array(),
+		'past'           => array( 'limit' ),
+		'upcoming'       => array( 'types', 'limit', 'days' ),
+	);
+	$type     = class_exists( 'WP_Block_Type_Registry' ) ? WP_Block_Type_Registry::get_instance()->get_registered( 'spokares/events' ) : null;
+	$defaults = array();
+	foreach ( (array) ( $type->attributes ?? array() ) as $name => $attr ) {
+		if ( is_array( $attr ) && array_key_exists( 'default', $attr ) ) {
+			$defaults[ $name ] = $attr['default'];
+		}
+	}
+	foreach ( $found as $slug => $places ) {
+		$lists = spokares_event_pattern_lists( $slug );
+		foreach ( $places as $place ) {
+			$view = $views[ $place ][0];
+			if ( ! isset( $lists[ $view ] ) ) {
+				continue;
+			}
+			$args = array();
+			foreach ( $passed[ $view ] as $name ) {
+				if ( array_key_exists( $name, $lists[ $view ] ) ) {
+					$args[ $name ] = $lists[ $view ][ $name ];
+				} elseif ( array_key_exists( $name, $defaults ) ) {
+					$args[ $name ] = $defaults[ $name ];
+				}
+			}
+			$views[ $place ] = array( $view, $args );
+		}
+	}
+	return $views;
 }
 
 /**
