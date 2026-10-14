@@ -38,7 +38,7 @@ ORDER = {
 }
 VERDICT_CLASS = {"Sound": "v-ok", "Needs work": "v-warn", "Risky": "v-bad"}
 SEV_CLASS = {"High": "s-high", "Medium": "s-med", "Low": "s-low", "Good": "s-good"}
-ST_CLASS = {"Fixed in 0.3.0": "st-fixed", "Partly": "st-part", "Owner": "st-owner", "Open": "st-open", "Not changed": "st-open", "By design": "st-fixed", "Good": "st-fixed"}
+ST_CLASS = {"Fixed in 0.3.0": "st-fixed", "Fixed in 0.3.1": "st-fixed", "Partly": "st-part", "Owner": "st-owner", "Open": "st-open", "Not changed": "st-open", "By design": "st-fixed", "Good": "st-fixed"}
 PRI_ORDER = {"Now": 0, "Next": 1, "Later": 2}
 
 e = html.escape
@@ -211,10 +211,10 @@ def render_body(link_badges: bool = True) -> tuple[str, dict]:
              '</header>')
     stat = getattr(content, "STATUS", {})
     if stat:
-        nfix = sum(1 for v in stat.values() if v[0] == "Fixed in 0.3.0")
+        nfix = sum(1 for v in stat.values() if v[0].startswith("Fixed in"))
         nown = sum(1 for v in stat.values() if v[0] == "Owner")
         npart = sum(1 for v in stat.values() if v[0] == "Partly")
-        o.append(f'<p class="prose" style="margin-top:14px;padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:var(--card)"><strong>Status, 2026-10-13:</strong> v0.3.0 fixes {nfix} findings; {npart} are partly done and {nown} wait on the owner (mail, the weekly cron, a second key holder). Each finding shows its status. The diagrams and verdicts below still describe v0.2.0, the state the review read.</p>')
+        o.append(f'<p class="prose" style="margin-top:14px;padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:var(--card)"><strong>Status, 2026-10-14:</strong> v0.3.0 and v0.3.1 fix {nfix} findings; {npart} are partly done and {nown} wait on the owner (mail, the weekly cron, a second key holder). Each finding shows its status. The diagrams and verdicts below still describe v0.2.0, the state the review read.</p>')
     o.append('<div class="tally" aria-label="Verdicts">'
              f'<span class="v-ok"><b>{counts["Sound"]}</b> sound</span>'
              f'<span class="v-warn"><b>{counts["Needs work"]}</b> need work</span>'

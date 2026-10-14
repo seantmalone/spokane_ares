@@ -388,7 +388,7 @@ KEEP = [
     "There are only two offered roles, and the Net grant is removed automatically on demotion.",
 ]
 
-# What v0.3.0 (2026-10-13) did about each finding. The diagrams and the
+# What v0.3.0 (2026-10-13) and v0.3.1 (2026-10-14) did about each finding. The diagrams and the
 # findings above still describe v0.2.0, the state the review read.
 FIXED = "Fixed in 0.3.0"
 STATUS = {
@@ -412,14 +412,14 @@ STATUS = {
     "E7": (FIXED, "The Dashboard lists the next five events, each linked to its form."),
     "E8": (FIXED, "The copy asks to check the name and drops Needs checking."),
     "E9": (FIXED, "The limits are read from the theme's patterns."),
-    "D1": ("Open", "Pages and documents still use different review controls."),
+    "D1": ("Fixed in 0.3.1", "One control on both: 'Last reviewed … by …' and a 'Mark reviewed today when I save' tick."),
     "D2": (FIXED, "An accepted new file with the tick sets Last reviewed to today."),
     "D3": (FIXED, "A Needs review view; the Dashboard counts and links to the same set."),
     "D4": (FIXED, "Bulk review is for administrators and records who reviewed."),
     "D5": (FIXED, "The tick reads 'Show under the Most used filter'."),
     "D6": (FIXED, "The file is set aside outside the web root; Undo brings the document back whole."),
     "D7": ("Not changed", "Needs exec on the host and a two-tool rewrite; the privacy tick stays the control."),
-    "D8": ("Open", "A refusal still means choosing the file again."),
+    "D8": ("Fixed in 0.3.1", "A file that passed its own checks waits through a refused save (off the web), so it isn't chosen again."),
     "D9": (FIXED, "The file box is enabled in the HTML."),
     "D10": (FIXED, "A line explains that the red boxes show unsaved typing."),
     "D11": (FIXED, "Pull names the links it breaks; the banner clears with a new file."),
@@ -433,7 +433,7 @@ STATUS = {
     "G3": ("Owner", "SMTP isn't configured on the host yet (checked 2026-10-13): create the mailbox and add the constants."),
     "G4": ("Not changed", "The repository is public; an administrator login in git would undo the enumeration hardening."),
     "G5": (FIXED, "The audit uses the enforcement's own rule."),
-    "O1": ("Partly", "Owner: give AG7QP and the EC their accounts. Built after 0.3.0: wp spokares rota, meeting and event run the screens' checks and saves, and the runbook says to use them over SSH."),
+    "O1": ("Partly", "Owner: give AG7QP and the EC their accounts. In 0.3.1: wp spokares rota, meeting and event run the screens' checks and saves, and the runbook says to use them over SSH."),
     "O2": ("Partly", "host-backup.sh prunes after 14 days. One older dump on the host still needs chmod 600 or deleting."),
     "O3": (FIXED, "bump-version.sh, and the Deploy workflow creates the GitHub release."),
     "O4": (FIXED, "The runbook matches GitHub: a required reviewer is set."),
