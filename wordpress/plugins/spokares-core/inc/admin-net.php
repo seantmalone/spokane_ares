@@ -1,8 +1,10 @@
 <?php
 /**
  * Net Settings (ux/SPEC.md §3.3): the Tuesday net's time and repeater, the
- * alternate repeater, which Tuesdays are Winlink, simplex or GMRS nights,
- * and two lines of wording. Each section ends in what members see.
+ * alternate repeater, and which Tuesdays are Winlink, simplex or GMRS
+ * nights. Each section ends in what members see. The two sentences under
+ * the schedule and the Winlink list are on the Net Control Schedule screen
+ * (admin-rota.php), where the editors who own those lists can change them.
  *
  * @package spokares-core
  */
@@ -230,8 +232,6 @@ function spokares_net_form_state( array $nets, array $radio ): array {
 		'gmrs_nth'       => $weeks( 'gmrs' ),
 		'gmrs_time'      => (string) $nets['gmrs_time'],
 		'needs_check'    => $nets['needs_check'] ? '1' : '',
-		'winlink_howto'  => trim( (string) preg_replace( '/\s+/', ' ', (string) $nets['winlink_howto'] ) ),
-		'open_slot_line' => (string) $nets['open_slot_line'],
 	);
 }
 
@@ -256,15 +256,13 @@ function spokares_net_field_names(): array {
 		'gmrs_nth'       => __( 'which Tuesdays', 'spokares-core' ),
 		'gmrs_time'      => __( 'the GMRS net time', 'spokares-core' ),
 		'needs_check'    => __( 'the nets’ “Needs checking”', 'spokares-core' ),
-		'winlink_howto'  => __( 'the Winlink how-to wording', 'spokares-core' ),
-		'open_slot_line' => __( 'the asking-for-volunteers line', 'spokares-core' ),
 	);
 }
 
 /**
  * What a save changed, in the screen's order and its own words: "tone
  * 103.5 Hz (was 100 Hz)", "2nd Tuesday Winlink night (was regular net)",
- * "Winlink how-to wording changed".
+ * "“Needs checking” changed".
  *
  * @param array $was       spokares_net_form_state() before the save.
  * @param array $now       The same after it.
@@ -305,12 +303,6 @@ function spokares_net_changes( array $was, array $now, array $was_weeks, array $
 		}
 	}
 	$pair( 'gmrs_time', __( 'GMRS net time', 'spokares-core' ), $time );
-	if ( $was['winlink_howto'] !== $now['winlink_howto'] ) {
-		$out[] = __( 'Winlink how-to wording changed', 'spokares-core' );
-	}
-	if ( $was['open_slot_line'] !== $now['open_slot_line'] ) {
-		$out[] = __( 'asking-for-volunteers line changed', 'spokares-core' );
-	}
 	if ( $was['a_needs_check'] !== $now['a_needs_check'] || $was['needs_check'] !== $now['needs_check'] ) {
 		$out[] = __( '“Needs checking” changed', 'spokares-core' );
 	}
@@ -505,22 +497,10 @@ function spokares_net_details_page(): void {
 			</table>
 
 			<h2><?php esc_html_e( 'Wording on the site', 'spokares-core' ); ?></h2>
-			<table class="form-table" role="presentation">
-				<tr>
-					<th scope="row"><label for="spk-howto"><?php esc_html_e( 'How to answer a Winlink assignment', 'spokares-core' ); ?></label></th>
-					<td><textarea id="spk-howto" name="nets[winlink_howto]" rows="3" class="large-text<?php echo esc_attr( spokares_err_class( $errors, 'winlink_howto' ) ); ?>" maxlength="300" aria-describedby="spk-howto-hint"><?php echo esc_textarea( (string) $v( 'winlink_howto', $nets['winlink_howto'] ) ); ?></textarea>
-					<p class="description" id="spk-howto-hint"><?php esc_html_e( 'Shown above the Winlink assignments on the Exercises & events page.', 'spokares-core' ); ?></p>
-					<?php spokares_err_text( $errors, 'winlink_howto' ); ?>
-					<?php spokares_confirm_box( $errors, 'winlink_howto' ); ?></td>
-				</tr>
-				<tr>
-					<th scope="row"><label for="spk-open"><?php esc_html_e( 'Asking for volunteers', 'spokares-core' ); ?></label></th>
-					<td><input type="text" id="spk-open" name="nets[open_slot_line]" class="large-text<?php echo esc_attr( spokares_err_class( $errors, 'open_slot_line' ) ); ?>" maxlength="160" value="<?php echo esc_attr( (string) $v( 'open_slot_line', $nets['open_slot_line'] ) ); ?>" aria-describedby="spk-open-hint">
-					<p class="description" id="spk-open-hint"><?php esc_html_e( 'Shown under the Net Control Schedule on the For members page; the “Volunteer needed” tags link to it.', 'spokares-core' ); ?></p>
-					<?php spokares_err_text( $errors, 'open_slot_line' ); ?>
-					<?php spokares_confirm_box( $errors, 'open_slot_line' ); ?></td>
-				</tr>
-			</table>
+			<p class="spk-words-moved">
+				<?php esc_html_e( 'How to answer a Winlink assignment, and Asking for volunteers, are on the Net Control Schedule screen, under the schedule.', 'spokares-core' ); ?>
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=spokares-rota' ) . '#spk-open' ); ?>"><?php esc_html_e( 'Change them there', 'spokares-core' ); ?></a>
+			</p>
 
 			<p class="submit spk-submit"><button type="submit" class="button button-primary button-large"><?php esc_html_e( 'Save', 'spokares-core' ); ?></button></p>
 		</form>
@@ -554,23 +534,6 @@ function spokares_net_script_words( $hook ): void {
 	);
 }
 add_action( 'admin_enqueue_scripts', 'spokares_net_script_words', 20 );
-
-/**
- * A "Publish it" tick for a settings field (shown after a phone/e-mail hit).
- *
- * @param array  $errors Errors.
- * @param string $field  Field key.
- */
-function spokares_confirm_box( array $errors, string $field ): void {
-	if ( empty( $errors[ $field . '-confirm' ] ) ) {
-		return;
-	}
-	printf(
-		'<label class="spk-confirm"><input type="checkbox" name="confirm[%1$s]" value="1"> %2$s</label>',
-		esc_attr( $field ),
-		esc_html( $errors[ $field . '-confirm' ] )
-	);
-}
 
 /**
  * Check one settings sentence; on a problem hold it back (keep the stored
@@ -638,7 +601,6 @@ function spokares_handle_save_net_details(): void {
 	spokares_verify_form( 'spokares_save_net_details', 'spokares_edit_net_details' );
 	$in_radio = isset( $_POST['radio'] ) && is_array( $_POST['radio'] ) ? wp_unslash( $_POST['radio'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitised field by field below.
 	$in_nets  = isset( $_POST['nets'] ) && is_array( $_POST['nets'] ) ? wp_unslash( $_POST['nets'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitised field by field below.
-	$ticks    = isset( $_POST['confirm'] ) && is_array( $_POST['confirm'] ) ? array_map( 'sanitize_text_field', array_filter( wp_unslash( $_POST['confirm'] ), 'is_scalar' ) ) : array();
 	$orig     = spokares_posted_orig( isset( $_POST['orig'] ) ? wp_unslash( $_POST['orig'] ) : '' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- decoded and sanitised in spokares_posted_orig().
 	$admin    = current_user_can( 'manage_options' );
 	$nets     = spokares_opt( 'spk_nets' );
@@ -696,10 +658,6 @@ function spokares_handle_save_net_details(): void {
 		'gmrs_nth'       => $lists['gmrs'],
 		'gmrs_time'      => sanitize_text_field( spokares_post_str( $in_nets, 'gmrs_time' ) ),
 		'needs_check'    => ! empty( $in_nets['needs_check'] ) ? '1' : '',
-		// Plain one-line text on the site: the line breaks go before it is
-		// checked, so a confirmed sentence matches the text the screen shows.
-		'winlink_howto'  => trim( (string) preg_replace( '/\s+/', ' ', sanitize_textarea_field( spokares_post_str( $in_nets, 'winlink_howto' ) ) ) ),
-		'open_slot_line' => sanitize_text_field( spokares_post_str( $in_nets, 'open_slot_line' ) ),
 	);
 	$shown = array_map( static fn( $x ) => is_array( $x ) ? implode( ',', $x ) : (string) $x, $typed );
 
@@ -802,18 +760,8 @@ function spokares_handle_save_net_details(): void {
 		$nets['needs_check'] = '1' === $typed['needs_check'];
 	}
 
-	// Wording on the site.
-	$confirmed = is_array( $nets['confirmed'] ?? null ) ? $nets['confirmed'] : array();
-	$was_ok    = $confirmed;
-	if ( $apply( 'winlink_howto' ) ) {
-		$nets['winlink_howto'] = spokares_settings_text( 'winlink_howto', $typed['winlink_howto'], $nets['winlink_howto'], $confirmed, $ticks, $held, $errors, 300 );
-	}
-	if ( $apply( 'open_slot_line' ) ) {
-		$nets['open_slot_line'] = spokares_settings_text( 'open_slot_line', $typed['open_slot_line'], $nets['open_slot_line'], $confirmed, $ticks, $held, $errors, 160 );
-	}
-	if ( $confirmed ) {
-		$nets['confirmed'] = $confirmed;
-	}
+	// The wording under the lists is saved from the Net Control Schedule
+	// screen (spokares_save_rota_words()); a form that still posts it is ignored.
 	foreach ( $conflicts as $key ) {
 		$errors[ $key ] = __( 'Someone else changed this while you were editing. Check it and save again.', 'spokares-core' );
 		if ( ! is_array( $typed[ $key ] ) ) {
@@ -822,7 +770,7 @@ function spokares_handle_save_net_details(): void {
 	}
 
 	$changes = spokares_net_changes( $was, spokares_net_form_state( $nets, $radio ), $was_week, spokares_net_week_kinds( $nets ) );
-	if ( $changes || $confirmed !== $was_ok ) {
+	if ( $changes ) {
 		update_option( 'spk_radio', $radio );
 		update_option( 'spk_nets', $nets );
 		spokares_purge_cache();

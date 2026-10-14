@@ -113,6 +113,8 @@ function qa059_open( string $screen ): array {
 	ob_start();
 	if ( 'rules' === $screen ) {
 		\spokares_meeting_rules_page();
+	} elseif ( 'rota' === $screen ) {
+		\spokares_rota_page();
 	} else {
 		\spokares_net_details_page();
 	}
@@ -173,14 +175,15 @@ function qa059_notices(): array {
  * @param array  $fields Form fields (with the editor's typing).
  */
 function qa059_save( string $screen, array $fields ): array {
-	$action = 'rules' === $screen ? 'spokares_save_meeting_rules' : 'spokares_save_net_details';
-	$page   = 'rules' === $screen ? 'spokares-meeting-rules' : 'spokares-net-details';
+	$action = 'rules' === $screen ? 'spokares_save_meeting_rules' : ( 'rota' === $screen ? 'spokares_save_rota' : 'spokares_save_net_details' );
+	$page   = 'rules' === $screen ? 'spokares-meeting-rules' : ( 'rota' === $screen ? 'spokares-rota' : 'spokares-net-details' );
 	qa059_notices();
 	unset( $fields['_wpnonce'], $fields['_wp_http_referer'] );
 	$res = post_form( $action, $fields );
 	assert_same( null, $res['die'], $action . ' did not wp_die()' );
 	assert_contains( 'page=' . $page, (string) $res['redirect'], $action . ' redirects back to its screen' );
 	\spokares_unlock_option( 'spk_meetings' );
+	\spokares_unlock_option( 'spk_rota' );
 	\spokares_opt_flush();
 	return qa059_notices();
 }
@@ -292,36 +295,37 @@ test(
 		assert_contains( 'success', wp_list_pluck( $said_a, 'type' ), 'A\'s save succeeds (control): ' . qa059_said( $said_a ) );
 		assert_same( '103.5 Hz', \spokares_opt( 'spk_radio' )['primary']['tone'], 'A\'s Tone is stored (control)' );
 
-		// B, still on the screen opened earlier, changes the open-slot line and saves.
+		// B, still on the screen opened earlier, changes the net time and saves.
 		as_role( 'admin' );
-		$b['nets']['open_slot_line'] = 'Open slot? Say so on the Tuesday net.';
-		$said_b                      = qa059_save( 'net', $b );
+		$b['nets']['net_time'] = '19:30';
+		$said_b                = qa059_save( 'net', $b );
 
 		assert_same(
 			'103.5 Hz',
 			\spokares_opt( 'spk_radio' )['primary']['tone'],
 			'B\'s save from the older screen silently put A\'s Tone back (B was told: ' . qa059_said( $said_b ) . ')'
 		);
-		if ( 'Open slot? Say so on the Tuesday net.' !== \spokares_opt( 'spk_nets' )['open_slot_line'] ) {
-			qa059_assert_told( $said_b, 'B\'s open-slot line was not stored' );
+		if ( '19:30' !== \spokares_opt( 'spk_nets' )['net_time'] ) {
+			qa059_assert_told( $said_b, 'B\'s net time was not stored' );
 		}
 	}
 );
 
 test(
-	'Net details: the same sentence changed on an older screen does not overwrite the newer save, and the editor is told',
+	'Net Control Schedule: the same sentence changed on an older screen does not overwrite the newer save, and the editor is told',
 	function () {
-		as_role( 'ares-net' );
-		$b = qa059_open( 'net' );
+		// The open-slot line moved from Net Settings to the schedule (workflow finding N7).
+		as_role( 'ares-editor' );
+		$b = qa059_open( 'rota' );
 
 		as_role( 'admin' );
-		$a                           = qa059_open( 'net' );
-		$a['nets']['open_slot_line'] = 'Open slot? Tell the Net Manager on the net.';
-		qa059_save( 'net', $a );
+		$a                            = qa059_open( 'rota' );
+		$a['words']['open_slot_line'] = 'Open slot? Tell the Net Manager on the net.';
+		qa059_save( 'rota', $a );
 
-		as_role( 'ares-net' );
-		$b['nets']['open_slot_line'] = 'Open slot? Say so on the Tuesday net.';
-		$said_b                      = qa059_save( 'net', $b );
+		as_role( 'ares-editor' );
+		$b['words']['open_slot_line'] = 'Open slot? Say so on the Tuesday net.';
+		$said_b                       = qa059_save( 'rota', $b );
 
 		assert_same(
 			'Open slot? Tell the Net Manager on the net.',
@@ -354,11 +358,17 @@ test(
 		assert_same( 'early evenings', qa059_meeting( 'third-thursday' )['time_text'], 'Meeting Schedule: B\'s time words are stored' );
 		assert_same( '10:00', qa059_meeting( 'workshop' )['start'], 'Meeting Schedule: A\'s Workshop start is kept' );
 
-		$m                           = qa059_open( 'net' );
-		$m['nets']['open_slot_line'] = 'Open slot? Say so on the Tuesday net.';
-		$said                        = qa059_save( 'net', $m );
+		$m                     = qa059_open( 'net' );
+		$m['nets']['net_time'] = '19:30';
+		$said                  = qa059_save( 'net', $m );
 		assert_contains( 'success', wp_list_pluck( $said, 'type' ), 'Net details: "Saved." (' . qa059_said( $said ) . ')' );
-		assert_same( 'Open slot? Say so on the Tuesday net.', \spokares_opt( 'spk_nets' )['open_slot_line'], 'Net details: B\'s open-slot line is stored' );
+		assert_same( '19:30', \spokares_opt( 'spk_nets' )['net_time'], 'Net details: B\'s net time is stored' );
 		assert_same( '103.5 Hz', \spokares_opt( 'spk_radio' )['primary']['tone'], 'Net details: A\'s Tone is kept' );
+
+		$r                            = qa059_open( 'rota' );
+		$r['words']['open_slot_line'] = 'Open slot? Say so on the Tuesday net.';
+		$said                         = qa059_save( 'rota', $r );
+		assert_contains( 'success', wp_list_pluck( $said, 'type' ), 'Net Control Schedule: "Saved." (' . qa059_said( $said ) . ')' );
+		assert_same( 'Open slot? Say so on the Tuesday net.', \spokares_opt( 'spk_nets' )['open_slot_line'], 'Net Control Schedule: the open-slot line is stored' );
 	}
 );

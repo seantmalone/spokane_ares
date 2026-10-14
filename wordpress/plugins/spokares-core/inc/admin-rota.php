@@ -150,6 +150,43 @@ function spokares_rota_undo_question( array $prev ): string {
 }
 
 /**
+ * The two sentences printed with the editors' own lists, edited on this
+ * screen (N7): field => characters allowed, name in a notice, label, hint.
+ * They are stored in spk_nets.
+ */
+function spokares_rota_words(): array {
+	return array(
+		'open_slot_line' => array(
+			'max'   => 160,
+			'name'  => __( 'the asking-for-volunteers line', 'spokares-core' ),
+			'label' => __( 'Asking for volunteers', 'spokares-core' ),
+			'hint'  => __( 'Shown under the schedule on the For members page; the “Volunteer needed” tags link to it.', 'spokares-core' ),
+		),
+		'winlink_howto'  => array(
+			'max'   => 300,
+			'name'  => __( 'the Winlink how-to wording', 'spokares-core' ),
+			'label' => __( 'How to answer a Winlink assignment', 'spokares-core' ),
+			'hint'  => __( 'Shown above the Winlink assignments on the Exercises & events page.', 'spokares-core' ),
+		),
+	);
+}
+
+/**
+ * One of the two sentences as the site keeps it: plain one-line text (the
+ * line breaks go before it is checked, so a confirmed sentence matches the
+ * text the screen shows).
+ *
+ * @param string $field spokares_rota_words() key.
+ * @param string $text  Text (unslashed).
+ */
+function spokares_rota_word_text( string $field, string $text ): string {
+	if ( 'winlink_howto' === $field ) {
+		return trim( (string) preg_replace( '/\s+/', ' ', sanitize_textarea_field( $text ) ) );
+	}
+	return sanitize_text_field( $text );
+}
+
+/**
  * The Net Control Schedule screen.
  */
 function spokares_rota_page(): void {
@@ -335,6 +372,34 @@ function spokares_rota_page(): void {
 					<?php esc_html_e( 'That’s as far ahead as you can post.', 'spokares-core' ); ?>
 				<?php endif; ?>
 			</p>
+			<h2 class="spk-words-title"><?php esc_html_e( 'Wording on the site', 'spokares-core' ); ?></h2>
+			<table class="form-table spk-words" role="presentation">
+				<?php
+				foreach ( spokares_rota_words() as $field => $w ) :
+					$id     = 'winlink_howto' === $field ? 'spk-howto' : 'spk-open';
+					$stored = spokares_rota_word_text( $field, (string) $nets[ $field ] );
+					$text   = isset( $held['words'][ $field ] ) ? (string) $held['words'][ $field ] : (string) $nets[ $field ];
+					$ekey   = 'words-' . $field;
+					?>
+					<tr>
+						<th scope="row"><label for="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $w['label'] ); ?></label></th>
+						<td>
+							<?php if ( 'winlink_howto' === $field ) : ?>
+								<textarea id="<?php echo esc_attr( $id ); ?>" name="words[<?php echo esc_attr( $field ); ?>]" rows="3" class="large-text<?php echo esc_attr( spokares_err_class( $errors, $ekey ) ); ?>" maxlength="<?php echo (int) $w['max']; ?>" aria-describedby="<?php echo esc_attr( $id . '-hint' ); ?>"><?php echo esc_textarea( $text ); ?></textarea>
+							<?php else : ?>
+								<input type="text" id="<?php echo esc_attr( $id ); ?>" name="words[<?php echo esc_attr( $field ); ?>]" class="large-text<?php echo esc_attr( spokares_err_class( $errors, $ekey ) ); ?>" maxlength="<?php echo (int) $w['max']; ?>" value="<?php echo esc_attr( $text ); ?>" aria-describedby="<?php echo esc_attr( $id . '-hint' ); ?>">
+							<?php endif; ?>
+							<?php // What the box showed, so a save never puts back someone else's newer sentence. ?>
+							<input type="hidden" name="words_h[<?php echo esc_attr( $field ); ?>]" value="<?php echo esc_attr( md5( $stored ) ); ?>">
+							<p class="description" id="<?php echo esc_attr( $id . '-hint' ); ?>"><?php echo esc_html( $w['hint'] ); ?></p>
+							<?php spokares_err_text( $errors, $ekey ); ?>
+							<?php if ( ! empty( $errors[ $ekey . '-confirm' ] ) ) : ?>
+								<label class="spk-confirm"><input type="checkbox" name="words_confirm[<?php echo esc_attr( $field ); ?>]" value="1"> <?php echo esc_html( $errors[ $ekey . '-confirm' ] ); ?></label>
+							<?php endif; ?>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+			</table>
 			<p class="submit spk-submit spk-savebar">
 				<button type="submit" class="button button-primary button-large"><?php esc_html_e( 'Save', 'spokares-core' ); ?></button>
 			</p>
@@ -403,7 +468,7 @@ function spokares_rota_confirm( array $errors, string $d, string $field, string 
 function spokares_rota_error_dates( array $errors ): array {
 	$dates = array();
 	foreach ( array_keys( $errors ) as $key ) {
-		if ( ! str_ends_with( (string) $key, '-confirm' ) ) {
+		if ( ! str_ends_with( (string) $key, '-confirm' ) && spokares_is_ymd( substr( (string) $key, 0, 10 ) ) ) {
 			$dates[] = substr( (string) $key, 0, 10 );
 		}
 	}
@@ -417,7 +482,7 @@ function spokares_handle_save_rota(): void {
 	spokares_verify_form( 'spokares_save_rota', 'spokares_edit_rota' );
 	// Two editors saving at the same moment: the second waits for the first,
 	// then reads the rows fresh, so the per-row conflict check sees both.
-	spokares_lock_option( 'spk_rota', array( 'spk_rota_saved', 'spk_rota_prev' ) );
+	spokares_lock_option( 'spk_rota', array( 'spk_rota_saved', 'spk_rota_prev', 'spk_nets' ) );
 
 	$weeks  = isset( $_POST['weeks'] ) ? max( 13, min( 52, absint( $_POST['weeks'] ) ) ) : 13;
 	$posted = isset( $_POST['rota'] ) && is_array( $_POST['rota'] ) ? wp_unslash( $_POST['rota'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- each field is sanitised below.
@@ -549,6 +614,10 @@ function spokares_handle_save_rota(): void {
 		}
 	}
 
+	// The two sentences under the lists (spk_nets): saved when this editor
+	// changed them, checked like every sentence members read.
+	$words = spokares_save_rota_words( $held, $errors );
+
 	$saved = array_keys( $prev );
 	if ( $prev ) {
 		// Prune rows more than a year old.
@@ -584,35 +653,34 @@ function spokares_handle_save_rota(): void {
 
 	// One notice for the whole save.
 	$bad  = spokares_rota_error_dates( $errors );
+	$not  = spokares_and_list( array_merge( array( spokares_rota_dates_phrase( $bad ) ), $words['failed'] ) );
 	$link = spokares_site_url( '/members/', 'rota' );
 	$see  = __( 'See it on the For members page', 'spokares-core' );
-	if ( $saved && ! $bad ) {
-		$rows  = spokares_rota_rows( 5 );
-		$fifth = (string) end( $rows )['date'];
-		$text  = sprintf(
+	$text = '';
+	if ( $saved ) {
+		$text = sprintf(
 			/* translators: %s: the Tuesdays saved, e.g. "Oct 13 and Oct 20". */
 			__( 'Saved %s.', 'spokares-core' ),
 			spokares_rota_dates_phrase( $saved, $cut )
 		);
-		if ( max( $saved ) > $fifth ) {
+		$rows  = spokares_rota_rows( 5 );
+		$fifth = (string) end( $rows )['date'];
+		if ( '' === $not && max( $saved ) > $fifth ) {
 			$text .= ' ' . __( 'The For members page lists the next five Tuesdays.', 'spokares-core' );
 		}
+	}
+	foreach ( $words['saved'] as $name ) {
+		/* translators: %s: a sentence's name, e.g. "the asking-for-volunteers line". */
+		$text = trim( $text . ' ' . sprintf( __( 'Saved %s.', 'spokares-core' ), $name ) );
+	}
+	if ( '' !== $text && '' === $not ) {
 		spokares_add_notice( 'success', $text, $link, $see );
-	} elseif ( $saved ) {
-		spokares_add_notice(
-			'warning',
-			sprintf(
-				/* translators: 1: the Tuesdays saved, 2: the Tuesdays not saved. */
-				__( 'Saved %1$s. Not saved: %2$s (outlined in red).', 'spokares-core' ),
-				spokares_rota_dates_phrase( $saved, $cut ),
-				spokares_rota_dates_phrase( $bad )
-			),
-			$link,
-			$see
-		);
-	} elseif ( $bad ) {
-		/* translators: %s: the Tuesdays not saved. */
-		spokares_add_notice( 'error', sprintf( __( 'Not saved: %s (outlined in red).', 'spokares-core' ), spokares_rota_dates_phrase( $bad ) ) );
+	} elseif ( '' !== $text ) {
+		/* translators: %s: what wasn't saved, e.g. "Oct 20". */
+		spokares_add_notice( 'warning', $text . ' ' . sprintf( __( 'Not saved: %s (outlined in red).', 'spokares-core' ), $not ), $link, $see );
+	} elseif ( '' !== $not ) {
+		/* translators: %s: what wasn't saved, e.g. "Oct 20". */
+		spokares_add_notice( 'error', sprintf( __( 'Not saved: %s (outlined in red).', 'spokares-core' ), $not ) );
 	} else {
 		spokares_add_notice( 'info', __( 'Nothing changed, so nothing was saved.', 'spokares-core' ) );
 	}
@@ -620,6 +688,72 @@ function spokares_handle_save_rota(): void {
 	spokares_redirect_to( 'spokares-rota', $weeks > 13 ? array( 'weeks' => $weeks ) : array() );
 }
 add_action( 'admin_post_spokares_save_rota', 'spokares_handle_save_rota' );
+
+/**
+ * Save the two sentences under the lists from the schedule's form (N7):
+ * only a sentence this editor changed; one someone else changed since the
+ * screen was opened is kept and the editor told; a phone number, e-mail
+ * address or never-publish word holds it back (spokares_settings_text()).
+ *
+ * @param array $held   Held typing (updated: ['words'][field]).
+ * @param array $errors Errors (updated: 'words-{field}', 'words-{field}-confirm').
+ * @return array{saved:string[],failed:string[]} The sentences' names.
+ */
+function spokares_save_rota_words( array &$held, array &$errors ): array {
+	// phpcs:disable WordPress.Security.NonceVerification.Missing -- the caller checked the nonce (spokares_verify_form()).
+	$in    = isset( $_POST['words'] ) && is_array( $_POST['words'] ) ? wp_unslash( $_POST['words'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitised in spokares_rota_word_text().
+	$shown = isset( $_POST['words_h'] ) && is_array( $_POST['words_h'] ) ? wp_unslash( $_POST['words_h'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- compared as hashes only.
+	$ticks = isset( $_POST['words_confirm'] ) && is_array( $_POST['words_confirm'] ) ? array_map( 'sanitize_text_field', array_filter( wp_unslash( $_POST['words_confirm'] ), 'is_scalar' ) ) : array();
+	// phpcs:enable WordPress.Security.NonceVerification.Missing
+	$out = array(
+		'saved'  => array(),
+		'failed' => array(),
+	);
+	if ( ! $in ) {
+		return $out;
+	}
+	$nets      = spokares_opt( 'spk_nets' );
+	$confirmed = is_array( $nets['confirmed'] ?? null ) ? $nets['confirmed'] : array();
+	$was_ok    = $confirmed;
+	foreach ( spokares_rota_words() as $field => $w ) {
+		if ( ! isset( $in[ $field ] ) || ! is_scalar( $in[ $field ] ) ) {
+			continue;
+		}
+		$typed  = spokares_rota_word_text( $field, (string) $in[ $field ] );
+		$stored = spokares_rota_word_text( $field, (string) $nets[ $field ] );
+		$orig   = sanitize_text_field( spokares_post_str( $shown, $field ) );
+		if ( $typed === $stored || ( '' !== $orig && hash_equals( $orig, md5( $typed ) ) ) ) {
+			continue; // Unchanged here: keep what is stored now.
+		}
+		if ( '' !== $orig && ! hash_equals( $orig, md5( $stored ) ) ) {
+			$errors[ 'words-' . $field ] = __( 'Someone else changed this while you were editing. Check it and save again.', 'spokares-core' );
+			$held['words'][ $field ]     = $typed;
+			$out['failed'][]             = $w['name'];
+			continue;
+		}
+		$h     = array();
+		$e     = array();
+		$value = spokares_settings_text( $field, $typed, (string) $nets[ $field ], $confirmed, $ticks, $h, $e, (int) $w['max'] );
+		foreach ( $e as $key => $sentence ) {
+			$errors[ 'words-' . $key ] = $sentence;
+		}
+		if ( $e ) {
+			$held['words'][ $field ] = $h[ $field ] ?? $typed;
+			$out['failed'][]         = $w['name'];
+			continue;
+		}
+		$nets[ $field ] = $value;
+		$out['saved'][] = $w['name'];
+	}
+	if ( $out['saved'] || $confirmed !== $was_ok ) {
+		if ( $confirmed ) {
+			$nets['confirmed'] = $confirmed;
+		}
+		update_option( 'spk_nets', $nets );
+		spokares_purge_cache();
+	}
+	return $out;
+}
 
 /**
  * Undo the last save: put back the rows it changed. Undo again after an
