@@ -338,13 +338,60 @@ add_filter( 'user_has_cap', 'spokares_net_grant_needs_role', 10, 4 );
  */
 function spokares_net_grant_role_changed( $user_id ): void {
 	$user = get_userdata( (int) $user_id );
-	if ( ! $user || spokares_is_ares_editor( $user ) || empty( $user->caps['spokares_edit_net_details'] ) ) {
+	if ( ! $user || spokares_is_ares_editor( $user ) ) {
 		return;
 	}
-	$user->remove_cap( 'spokares_edit_net_details' );
+	if ( ! empty( $user->caps['spokares_edit_net_details'] ) ) {
+		$user->remove_cap( 'spokares_edit_net_details' );
+	}
+	spokares_net_grant_forget( $user->ID );
 }
 add_action( 'set_user_role', 'spokares_net_grant_role_changed' );
 add_action( 'remove_user_role', 'spokares_net_grant_role_changed' );
+
+/**
+ * Record who gave an account the Net details grant, and when (the
+ * Emergency Coordinator's decision is made outside the site; this is the
+ * site's note of it).
+ *
+ * @param int $user_id    The account given the grant.
+ * @param int $granted_by The administrator who gave it.
+ */
+function spokares_net_grant_record( int $user_id, int $granted_by ): void {
+	update_user_meta( $user_id, 'spk_net_granted_by', $granted_by );
+	update_user_meta( $user_id, 'spk_net_granted_at', time() );
+}
+
+/**
+ * Forget the grant's record (the grant was taken away, or the role changed).
+ *
+ * @param int $user_id Account.
+ */
+function spokares_net_grant_forget( int $user_id ): void {
+	delete_user_meta( $user_id, 'spk_net_granted_by' );
+	delete_user_meta( $user_id, 'spk_net_granted_at' );
+}
+
+/**
+ * Who gave the grant and when, in words: "by admin on Oct 13, 2026", or ''
+ * when the site has no record (a grant given before the record was kept).
+ *
+ * @param int $user_id Account.
+ */
+function spokares_net_grant_note( int $user_id ): string {
+	$at = (int) get_user_meta( $user_id, 'spk_net_granted_at', true );
+	if ( ! $at ) {
+		return '';
+	}
+	$date = wp_date( (string) get_option( 'date_format' ), $at );
+	$by   = get_userdata( (int) get_user_meta( $user_id, 'spk_net_granted_by', true ) );
+	if ( ! $by ) {
+		/* translators: %s: date, e.g. "Oct 13, 2026". */
+		return sprintf( __( 'on %s', 'spokares-core' ), $date );
+	}
+	/* translators: 1: the administrator's name, 2: date, e.g. "Oct 13, 2026". */
+	return sprintf( __( 'by %1$s on %2$s', 'spokares-core' ), $by->display_name, $date );
+}
 
 /**
  * The Net details grant, shown only on ANOTHER user's profile, only to
@@ -371,6 +418,11 @@ function spokares_profile_grant_field( $user ): void {
 					<?php esc_html_e( 'May change the repeaters’ frequency, offset and tone (not the club’s call sign), the net times and weeks, and the Meeting Schedule.', 'spokares-core' ); ?>
 				</label>
 				<p class="description"><?php esc_html_e( 'Only for someone the Emergency Coordinator has named. Everyone with the ARES Editor role can already change the Net Control Schedule, events, meetings and documents.', 'spokares-core' ); ?></p>
+				<?php $note = ! empty( $user->allcaps['spokares_edit_net_details'] ) ? spokares_net_grant_note( $user->ID ) : ''; ?>
+				<?php if ( '' !== $note ) : ?>
+					<?php /* translators: %s: who gave the grant and when, e.g. "by admin on Oct 13, 2026". */ ?>
+					<p class="description spk-net-granted"><?php echo esc_html( sprintf( __( 'Given %s.', 'spokares-core' ), $note ) ); ?></p>
+				<?php endif; ?>
 			</td>
 		</tr>
 	</table>
@@ -396,9 +448,13 @@ function spokares_profile_grant_save( $user_id ): void {
 		return;
 	}
 	if ( ! empty( $_POST['spokares_net_details'] ) && spokares_is_ares_editor( $user ) ) {
-		$user->add_cap( 'spokares_edit_net_details' );
-	} elseif ( ! empty( $user->caps['spokares_edit_net_details'] ) ) {
-		$user->remove_cap( 'spokares_edit_net_details' );
+		if ( empty( $user->caps['spokares_edit_net_details'] ) ) {
+			$user->add_cap( 'spokares_edit_net_details' );
+			spokares_net_grant_record( $user_id, get_current_user_id() );
+		}
+	} else {
+		$user->remove_cap( 'spokares_edit_net_details' ); // Does nothing when it isn't there.
+		spokares_net_grant_forget( $user_id );
 	}
 }
 add_action( 'edit_user_profile_update', 'spokares_profile_grant_save' );
@@ -434,7 +490,9 @@ function spokares_users_grant_cell( $output, $column, $user_id ) {
 		return esc_html__( 'Yes (administrator)', 'spokares-core' );
 	}
 	if ( user_can( (int) $user_id, 'spokares_edit_net_details' ) ) {
-		return esc_html__( 'Yes', 'spokares-core' );
+		$note = spokares_net_grant_note( (int) $user_id );
+		/* translators: %s: who gave the grant and when, e.g. "by admin on Oct 13, 2026". */
+		return '' === $note ? esc_html__( 'Yes', 'spokares-core' ) : esc_html( sprintf( __( 'Yes, %s', 'spokares-core' ), $note ) );
 	}
 	return '<span aria-hidden="true">—</span><span class="screen-reader-text">' . esc_html__( 'No', 'spokares-core' ) . '</span>';
 }
