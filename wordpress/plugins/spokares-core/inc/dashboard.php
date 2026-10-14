@@ -247,6 +247,22 @@ function spokares_dashboard_widget(): void {
 		}
 	}
 
+	// A Most Used button whose document isn't on the site is missing from the
+	// For members page (D12).
+	$tiles_off = current_user_can( 'edit_spk_documents' ) && function_exists( 'spokares_tiles_off_site' ) ? spokares_tiles_off_site() : array();
+	foreach ( $tiles_off as $button => $doc ) {
+		$attention[] = spokares_dashboard_line(
+			sprintf(
+				/* translators: 1: button number (1-4), 2: document name. */
+				__( 'Most Used button %1$d is empty on the site: “%2$s” isn’t on the site now.', 'spokares-core' ),
+				$button,
+				html_entity_decode( get_the_title( $doc ), ENT_QUOTES, 'UTF-8' )
+			),
+			admin_url( 'admin.php?page=spokares-tiles' ),
+			__( 'Pick another document or publish it', 'spokares-core' )
+		);
+	}
+
 	$checks = $admin ? spokares_needs_check_places() : array();
 	if ( $checks ) {
 		$n     = array_sum( wp_list_pluck( $checks, 'n' ) );

@@ -839,16 +839,20 @@ function spokares_document_notice( int $post_id, array $v, array $result, string
 	$status = get_post_status( $post_id );
 	$see    = array( spokares_site_url( '/members/documents/', (string) get_post_field( 'post_name', $post_id ) ), __( 'See it on the Documents & forms page', 'spokares-core' ) );
 	$after  = '' !== $kept ? ' ' . $kept : '';
+	// A Most Used button whose document the site no longer shows (D12).
+	$tile   = spokares_tile_gone_sentence( $post_id );
+	$after .= '' !== $tile ? ' ' . $tile : '';
 
 	if ( $result['demoted'] ) {
 		$keys = array_keys( $result['problems'] );
 		if ( array( 'privacy' ) === $keys && '' === $refused ) {
 			$tick = 'link' === $v['source'] ? __( 'I checked the page it links to', 'spokares-core' ) : __( 'I checked this file', 'spokares-core' );
 			/* translators: %s: the words of the privacy tick, e.g. "I checked this file". */
-			spokares_add_notice( 'error', sprintf( __( 'Not published yet: tick “%s”, then click Publish.', 'spokares-core' ), $tick ) );
+			$text = sprintf( __( 'Not published yet: tick “%s”, then click Publish.', 'spokares-core' ), $tick );
 		} else {
-			spokares_add_notice( 'error', __( 'Not published yet. Fix the boxes outlined in red, then click Publish.', 'spokares-core' ) );
+			$text = __( 'Not published yet. Fix the boxes outlined in red, then click Publish.', 'spokares-core' );
 		}
+		spokares_add_notice( 'error', $text . ( '' !== $tile ? ' ' . $tile : '' ) );
 		return;
 	}
 
@@ -865,7 +869,7 @@ function spokares_document_notice( int $post_id, array $v, array $result, string
 		}
 		if ( $not ) {
 			/* translators: %s: the fields that weren't saved, e.g. "the new file". */
-			spokares_add_notice( 'warning', sprintf( __( 'Saved, except %s (outlined in red).', 'spokares-core' ), spokares_and_list( $not ) ) );
+			spokares_add_notice( 'warning', sprintf( __( 'Saved, except %s (outlined in red).', 'spokares-core' ), spokares_and_list( $not ) ) . ( '' !== $tile ? ' ' . $tile : '' ) );
 		} elseif ( $replaced ) {
 			$text = '' === $kept
 				? __( 'Saved. The new file is on the site and the old one is off the web.', 'spokares-core' )
@@ -1018,6 +1022,10 @@ function spokares_document_bulk_messages( $messages, $bulk_counts ) {
 				'publish' === $was ? __( '“%s” is off the site.', 'spokares-core' ) : __( '“%s” is in the Trash.', 'spokares-core' ),
 				$quote( $id )
 			);
+			$tile = 'publish' === $was ? spokares_tile_gone_sentence( $id ) : '';
+			if ( '' !== $tile ) {
+				$m['trashed'] .= ' ' . esc_html( $tile ); // D12.
+			}
 		} else {
 			/* translators: %s: how many. */
 			$m['trashed'] = _n( '%s document is off the site.', '%s documents are off the site.', (int) $bulk_counts['trashed'], 'spokares-core' );
@@ -1262,12 +1270,12 @@ function spokares_document_form_fields( $post ): void {
 	$file         = $stored['file'];
 	$file_url     = $file ? (string) wp_get_attachment_url( $file ) : '';
 	$pulled       = get_post_meta( $post->ID, 'spk_pulled', true );
-	$button       = 0;
-	foreach ( array_slice( spokares_opt( 'spk_tiles' ), 0, 4 ) as $i => $tile ) {
-		if ( (int) $tile['doc'] === $post->ID ) {
-			$button = $i + 1;
-		}
-	}
+	$button       = spokares_document_button( (int) $post->ID );
+	// Typing held back on a published document (or a new source that wasn't
+	// taken): the boxes show it, the site doesn't (D10).
+	$shows_held  = ! $new && 'publish' === $post->post_status && array() !== $retained['values'];
+	$reviewed_by = absint( get_post_meta( $post->ID, 'spk_reviewed_by', true ) );
+
 	list( $places, $place ) = spokares_document_place_choices( $post->ID, $v['section'], $new );
 	$tick_file              = $file && $stored['privacy'] ? 'new-file' : 'file';
 	$err                    = static fn( string $key ): string => isset( $p[ $key ] ) ? ' spk-field-error' : '';
@@ -1276,6 +1284,9 @@ function spokares_document_form_fields( $post ): void {
 	<div class="spk-doc-form">
 		<?php if ( $new ) : ?>
 			<p class="spk-name-match" id="spk-name-match" role="status"></p>
+		<?php endif; ?>
+		<?php if ( $shows_held ) : ?>
+			<p class="spk-banner spk-banner--amber spk-held-line"><?php esc_html_e( 'The boxes outlined in red show what you typed. The site still shows the saved version.', 'spokares-core' ); ?></p>
 		<?php endif; ?>
 		<?php if ( isset( $p['title'] ) ) : ?>
 			<span class="spk-error-text" id="spk-title-problem"><?php echo esc_html( $p['title'] ); ?></span>
@@ -1340,7 +1351,7 @@ function spokares_document_form_fields( $post ): void {
 				<?php endif; ?>
 				<p class="spk-file">
 					<label for="spk-upload"><?php echo esc_html( $file ? __( 'Replace with', 'spokares-core' ) : __( 'File', 'spokares-core' ) ); ?></label>
-					<input type="file" id="spk-upload" name="spk_upload" accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png" disabled class="<?php echo esc_attr( trim( $err( 'upload' ) ) ); ?>">
+					<input type="file" id="spk-upload" name="spk_upload" accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png" class="<?php echo esc_attr( trim( $err( 'upload' ) ) ); ?>">
 				</p>
 				<?php if ( ! $file ) : ?>
 					<p class="description"><?php esc_html_e( 'PDF, Word (.docx), Excel (.xlsx), JPEG or PNG.', 'spokares-core' ); ?></p>
@@ -1439,7 +1450,7 @@ function spokares_document_form_fields( $post ): void {
 						?>
 					</p>
 				<?php else : ?>
-					<label><input type="checkbox" name="spk_most_used" value="1" <?php checked( $v['most_used'] ); ?>> <?php esc_html_e( 'Also list under Most used', 'spokares-core' ); ?></label>
+					<label><input type="checkbox" name="spk_most_used" value="1" <?php checked( $v['most_used'] ); ?>> <?php esc_html_e( 'Show under the Most used filter', 'spokares-core' ); ?></label>
 				<?php endif; ?>
 			</div>
 			<div class="spk-field">

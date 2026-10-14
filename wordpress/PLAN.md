@@ -412,7 +412,7 @@ Version or date [v3 or Sept 2026]
 Short note (60 characters) [Print it; keep sign-offs in a binder.]
 ▸ More options (closed)
     "How to" link: Words [How to write one]   Web address [https://…]
-    [ ] Also list under Most used        (a Most Used document instead: "It's button 2 on the Most Used screen.")
+    [ ] Show under the Most used filter        (a Most Used document instead: "It's button 2 on the Most Used screen.")
     Place in section [At the top / After "…" / At the end ▾]
     Owner [Net Manager]    Last reviewed [2026-09-26]  [Mark reviewed today]
 ▸ Admin only (closed; administrators only)
@@ -439,7 +439,7 @@ The four buttons under Most used on the For members page, left to right.
  2       [ICS 213 General Message ▾]                         [ICS-213      ]       [Form ▾]
  …                                                                                  [ Save ]
 ```
-The lists offer published documents with a file or a link that aren't "Soon". A document already on another button shows "(now button 2)", and choosing it swaps the two, so a button can't silently disappear. Choosing a different document empties "Words on the button" (the site then prints the document's name). **Replace or change it** opens the selected document's form (the door for "here's the new net script"). The Documents & forms page's **Most used** filter always lists the four buttons' documents, plus any document ticked "Also list under Most used".
+The lists offer published documents with a file or a link that aren't "Soon". A document already on another button shows "(now button 2)", and choosing it swaps the two, so a button can't silently disappear. Choosing a different document empties "Words on the button" (the site then prints the document's name). **Replace or change it** opens the selected document's form (the door for "here's the new net script"). The Documents & forms page's **Most used** filter always lists the four buttons' documents, plus any document ticked "Show under the Most used filter".
 
 **Page Text** (the Pages list, for non-admins): Home, How it works and About ARES & ACS only (the members pages have no words to edit), Title column only. The page type's labels for non-admins read "Page Text", "Edit Page Text" (the admin bar) and "Saved. It's on the site now." (after a save).
 
@@ -464,7 +464,7 @@ The lists offer published documents with a file or a link that aren't "Soon". A 
 | `net` › `other-nets` | — | Winlink, simplex and GMRS weeks and GMRS time, in B's three sentences | How it works |
 | `meetings` › `home` | — | "In person at {place}:" + meetings shown on the site (`active` and `show_home`, one tick on the Meeting Schedule screen): the Home line + "Next: <date>" (+ change note, or a note-only change such as "(Starts at 10:00 AM this time)"), using the pattern in effect on that date (Takes effect on) | Home |
 | `meetings` › `next` | `meeting` "" (= soonest Home meeting) | Cancelled, moved and note-only Home-meeting dates in the next 14 days, then the next real date | Hub |
-| `docs` › `library` | — | All published, privacy-checked docs by section (`spk_order`), then `menu_order`, title; server filters `?q=` (all words must match title, note, keywords, format, version, slug, sub-link labels) and `?section=`; its Most used filter lists the four Most Used buttons' documents plus any ticked "Also list under Most used" | Documents |
+| `docs` › `library` | — | All published, privacy-checked docs by section (`spk_order`), then `menu_order`, title; server filters `?q=` (all words must match title, note, keywords, format, version, slug, sub-link labels) and `?section=`; its Most used filter lists the four Most Used buttons' documents plus any ticked "Show under the Most used filter" | Documents |
 | `docs` › `search` | — | GET form to `/members/documents/` with `q` | Hub |
 | `docs` › `tiles` | — | The four Most Used buttons (`spk_tiles`); a button whose document isn't published, privacy-checked and a file or link is skipped | Hub |
 | `toc` | `title` "On this page", `labels` "legal-basis=Legal basis;leadership=Leadership;history=History" | H2 blocks with anchors in this page's content, in order; `labels` overrides the link text | About |
