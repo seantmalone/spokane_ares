@@ -20,6 +20,8 @@ This page is for the volunteers who keep the website up to date. You don't need 
 2. Type your own username and password.
 3. Type the code from the app on your phone. No phone? Click **E-mail me a code**. Neither works? Click **Use a printed backup code**, then tell the webmaster.
 
+If your codes come only by e-mail, the Dashboard asks you to set up the phone app or print backup codes (your name, top right, then **Edit Profile**, under Two-Factor Options), so a slow e-mail never locks you out. After two weeks the reminder moves up under **Needs attention**. Nothing is switched off; the webmaster can also help you set it up in person.
+
 Never share your sign-in. Sign out on a shared computer (your name, top right, then **Log Out**).
 
 ## Your Dashboard: "Site tasks"
