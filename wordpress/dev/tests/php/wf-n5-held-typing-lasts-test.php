@@ -99,8 +99,8 @@ test(
 	'Net Settings and Cancel or Move: refused typing stays until the next save of that screen',
 	function () {
 		as_role( 'ares-net' );
-		$nets = \spokares_opt( 'spk_nets' );
-		$form = static function (): array {
+		$nets                       = \spokares_opt( 'spk_nets' );
+		$form                       = static function (): array {
 			ob_start();
 			\spokares_net_details_page();
 			preg_match( '/<form\b.*?<\/form>/is', (string) ob_get_clean(), $m );

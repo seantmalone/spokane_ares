@@ -141,7 +141,9 @@ test(
 		foreach ( array( 'ares-editor', 'ares-net' ) as $role ) {
 			as_role( $role );
 			$html = qa055_rota_html( '52' );
-			$same = array_values( array_filter( qa055_rota_links( $html ), static fn( $l ) => null !== $l['weeks'] && $l['weeks'] >= 52 ) );
+			// Undo of someone else's (or an old) save links to its question on
+			// the same rows (undo=ask, workflow finding N3): a different view.
+			$same = array_values( array_filter( qa055_rota_links( $html ), static fn( $l ) => null !== $l['weeks'] && $l['weeks'] >= 52 && ! str_contains( $l['href'], 'undo=ask' ) ) );
 			assert_count(
 				0,
 				$same,

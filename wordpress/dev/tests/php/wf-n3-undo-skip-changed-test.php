@@ -120,7 +120,7 @@ test(
 		assert_same( \spokares_rota_hash( \spokares_opt( 'spk_rota' )[ $a ] ), $prev['after'][ $a ] ?? '', 'the hash of the row as the save left it' );
 
 		// Changed since, outside the screen (an SSH edit writes no snapshot).
-		$rota              = \spokares_opt( 'spk_rota' );
+		$rota               = \spokares_opt( 'spk_rota' );
 		$rota[ $b ]['call'] = 'AG7QP';
 		update_option( 'spk_rota', $rota );
 		\spokares_opt_flush();
@@ -150,7 +150,7 @@ test(
 		as_role( 'ares-editor' );
 		list( $a ) = wfn3_dates();
 		wfn3_save( array( $a => 'K7ABC' ) );
-		$rota              = \spokares_opt( 'spk_rota' );
+		$rota               = \spokares_opt( 'spk_rota' );
 		$rota[ $a ]['note'] = 'Typed over SSH';
 		update_option( 'spk_rota', $rota );
 		\spokares_opt_flush();

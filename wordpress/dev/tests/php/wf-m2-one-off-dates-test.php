@@ -196,10 +196,10 @@ test(
 	function () {
 		as_role( 'ares-editor' );
 		wfm2_meetings();
-		$m    = \spokares_opt( 'spk_meetings' )['meetings'][0];
-		$rule = \spokares_meeting_rule_dates( $m, \spokares_today(), \spokares_add_days( \spokares_today(), 60 ) )[0];
-		$day  = wfm2_day();
-		$base = array(
+		$m     = \spokares_opt( 'spk_meetings' )['meetings'][0];
+		$rule  = \spokares_meeting_rule_dates( $m, \spokares_today(), \spokares_add_days( \spokares_today(), 60 ) )[0];
+		$day   = wfm2_day();
+		$base  = array(
 			'meeting' => 'workshop',
 			'date'    => $day,
 		);

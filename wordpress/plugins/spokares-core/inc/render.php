@@ -634,7 +634,7 @@ function spokares_render_meetings( array $a ): string {
 			// of its own (an annual meeting).
 			$one = $item['extras'][0] ?? null;
 			if ( $one ) {
-				$words = implode( ', ', array_filter( array( spokares_fmt_date( $one['date'], 'short' ), spokares_meeting_extra_words( $one ) ) ) );
+				$words  = implode( ', ', array_filter( array( spokares_fmt_date( $one['date'], 'short' ), spokares_meeting_extra_words( $one ) ) ) );
 				$items .= '<span class="meetings__next meetings__extra">' . spokares_text(
 					empty( $item['one_off'] )
 						/* translators: %s: date, time and note, e.g. "Sat, Dec 12, 6:00 PM, Holiday potluck". */
@@ -689,7 +689,8 @@ function spokares_render_meetings( array $a ): string {
 				if ( '' !== trim( $c['note'] ) ) {
 					$text .= ' ' . $c['note'];
 				}
-				$lines[ $c['date'] . $item['meeting']['id'] ] = $text;
+				// Two one-off dates on one day (another meeting and a hidden one) both show.
+				$lines[ $c['date'] . $item['meeting']['id'] . ( 'extra' === $c['kind'] ? '|' . $name : '' ) ] = $text;
 			}
 		}
 		ksort( $lines );

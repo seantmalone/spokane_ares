@@ -81,8 +81,8 @@ function qa056_fields( string $howto, string $note = '', bool $tick = false ): a
 		),
 	);
 	if ( '' !== $note ) {
-		$row    = \spokares_rota_rows( 1 )[0];
-		$stored = array(
+		$row            = \spokares_rota_rows( 1 )[0];
+		$stored         = array(
 			'state'   => $row['state'],
 			'call'    => $row['call'],
 			'note'    => $row['row_note'],

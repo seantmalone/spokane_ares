@@ -162,10 +162,10 @@ function spokares_rota_undo_question( array $prev ): string {
  * @return array{rows:array<string,array{state:string,call:string,line:string}>,bad:array<int,array{line:string,why:string}>}
  */
 function spokares_rota_parse_paste( string $text, ?string $today = null ): array {
-	$today  = $today ?? spokares_today();
-	$months = array( 'jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec' );
-	$names  = array( 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december' );
-	$month  = static function ( string $word ) use ( $months, $names ): int {
+	$today    = $today ?? spokares_today();
+	$months   = array( 'jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec' );
+	$names    = array( 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december' );
+	$month    = static function ( string $word ) use ( $months, $names ): int {
 		$word = strtolower( rtrim( $word, '.' ) );
 		$i    = array_search( substr( $word, 0, 3 ), $months, true );
 		if ( false === $i || strlen( $word ) < 3 || ( 'sept' !== $word && ! str_starts_with( $names[ $i ], $word ) ) ) {
@@ -455,9 +455,9 @@ function spokares_rota_page(): void {
 	// (?undo=ask draws the question; no browser dialog).
 	$ask_why = $undo ? spokares_rota_undo_reason( $prev ) : '';
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- which panel to draw; read-only.
-	$asking  = $undo && isset( $_GET['undo'] ) && 'ask' === sanitize_key( wp_unslash( $_GET['undo'] ) );
-	$here    = add_query_arg( $weeks > 13 ? array( 'weeks' => $weeks ) : array(), admin_url( 'admin.php?page=spokares-rota' ) );
-	$verb    = empty( $prev['undo'] ) ? __( 'Undo', 'spokares-core' ) : __( 'Redo', 'spokares-core' );
+	$asking = $undo && isset( $_GET['undo'] ) && 'ask' === sanitize_key( wp_unslash( $_GET['undo'] ) );
+	$here   = add_query_arg( $weeks > 13 ? array( 'weeks' => $weeks ) : array(), admin_url( 'admin.php?page=spokares-rota' ) );
+	$verb   = empty( $prev['undo'] ) ? __( 'Undo', 'spokares-core' ) : __( 'Redo', 'spokares-core' );
 	// A pasted schedule waiting for its preview (spokares_handle_paste_rota()).
 	$pasted = get_transient( 'spokares_rota_paste_' . $user );
 	$pasted = is_array( $pasted ) ? $pasted : null;

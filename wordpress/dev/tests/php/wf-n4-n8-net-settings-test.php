@@ -96,7 +96,7 @@ test(
 		assert_contains( 'Send a welfare message', \spokares_render_net( array( 'view' => 'winlink' ) ), 'set-up: the assignments are listed' );
 
 		// Make the 3rd Tuesday the Winlink night instead.
-		$out = wfn4_save(
+		$out  = wfn4_save(
 			static function ( array $f ): array {
 				$f['nets']['week'][2] = 'regular';
 				$f['nets']['week'][3] = 'winlink';
@@ -137,7 +137,7 @@ test(
 				return $f;
 			}
 		);
-		$now = \spokares_opt( 'spk_radio' );
+		$now   = \spokares_opt( 'spk_radio' );
 		assert_same( $radio['primary']['offset'], $now['primary']['offset'], 'the stored offset stays' );
 		assert_same( $radio['alternate']['tone'], $now['alternate']['tone'], 'the stored alternate tone stays' );
 		assert_same( '+600 kHz', $now['alternate']['offset'], 'a listed value is saved' );

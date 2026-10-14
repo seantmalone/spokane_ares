@@ -63,10 +63,10 @@ test(
 	'the paste reader: dates in five shapes, call signs, open, no net and tbd; other lines listed with the reason',
 	function () {
 		list( $a, $b, $c, $d, $e ) = wfn1_free( 5 );
-		$wed  = \spokares_add_days( $a, 1 );
-		$far  = \spokares_add_days( \spokares_today(), 7 * 60 );
-		$far  = \spokares_next_weekday( $far, 2 );
-		$text = implode(
+		$wed                       = \spokares_add_days( $a, 1 );
+		$far                       = \spokares_add_days( \spokares_today(), 7 * 60 );
+		$far                       = \spokares_next_weekday( $far, 2 );
+		$text                      = implode(
 			"\n",
 			array(
 				'Net control for the coming weeks',
@@ -82,7 +82,7 @@ test(
 				'Feb 30 NZ2S',
 			)
 		);
-		$out  = \spokares_rota_parse_paste( $text );
+		$out                       = \spokares_rota_parse_paste( $text );
 		assert_same(
 			array(
 				$a => array( 'call', 'NZ2S' ),
@@ -115,9 +115,9 @@ test(
 	function () {
 		as_role( 'ares-editor' );
 		list( $a, $b, $c ) = wfn1_free( 3 );
-		$before = \spokares_opt( 'spk_rota' );
-		$text   = wfn1_fmt( 'D M j', $a ) . " NZ2S\n" . wfn1_fmt( 'n/j', $b ) . " open\n" . wfn1_fmt( 'n/j', $c ) . " tbd\nhello";
-		$res    = post_form(
+		$before            = \spokares_opt( 'spk_rota' );
+		$text              = wfn1_fmt( 'D M j', $a ) . " NZ2S\n" . wfn1_fmt( 'n/j', $b ) . " open\n" . wfn1_fmt( 'n/j', $c ) . " tbd\nhello";
+		$res               = post_form(
 			'spokares_paste_rota',
 			array(
 				'weeks' => '13',

@@ -141,7 +141,7 @@ function spokares_meetings_page(): void {
 						$bad   = isset( $errors[ $key ] );
 						// The first few dates show; a later one shows when it has a
 						// change, typing that wasn't saved, or a problem.
-						$hide = ! $all && $i >= spokares_meeting_admin_first() && ! $c && ! isset( $held[ $key ] ) && ! $bad && ! isset( $errors[ $key . '-note' ] );
+						$hide  = ! $all && $i >= spokares_meeting_admin_first() && ! $c && ! isset( $held[ $key ] ) && ! $bad && ! isset( $errors[ $key . '-note' ] );
 						$more += $hide ? 1 : 0;
 						?>
 						<tr class="spk-meeting-row<?php echo $bad ? ' spk-row-error' : ''; ?>"<?php echo $hide ? ' hidden' : ''; ?>>
@@ -580,7 +580,7 @@ function spokares_save_meeting_extras( array $rules, array &$changes, array &$co
 		$failed[ $date . '|x|' ] = __( 'the one-off date', 'spokares-core' );
 		return;
 	}
-	$c = array(
+	$c               = array(
 		'date'     => $date,
 		'meeting'  => $mid,
 		'kind'     => 'extra',
@@ -1137,7 +1137,8 @@ function spokares_handle_save_meeting_rules(): void {
 		// A one-off date is never on a regular date: it goes only when the
 		// new pattern makes its day a regular meeting date.
 		$extra = 'extra' === $c['kind'];
-		if ( $rule && $c['date'] >= $today && $extra === spokares_meeting_on( $rule, $c['date'] ) ) {
+		$on    = $rule && spokares_meeting_on( $rule, $c['date'] );
+		if ( $rule && $c['date'] >= $today && ( $extra ? $on : ! $on ) ) {
 			$orphans[] = spokares_meeting_orphan_words( $c );
 			continue;
 		}

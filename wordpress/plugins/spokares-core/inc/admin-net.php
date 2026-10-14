@@ -217,21 +217,21 @@ function spokares_net_form_state( array $nets, array $radio ): array {
 	$kinds = spokares_net_week_kinds( $nets );
 	$weeks = static fn( string $kind ): string => implode( ',', array_keys( $kinds, $kind, true ) );
 	return array(
-		'p_call'         => strtoupper( trim( (string) $p['call'] ) ),
-		'p_freq'         => (string) $p['freq'],
-		'p_offset'       => (string) $p['offset'],
-		'p_tone'         => (string) $p['tone'],
-		'net_time'       => (string) $nets['net_time'],
-		'a_freq'         => (string) $a['freq'],
-		'a_offset'       => (string) $a['offset'],
-		'a_tone'         => (string) $a['tone'],
-		'a_show'         => $a['show'] ? '1' : '',
-		'a_needs_check'  => $a['needs_check'] ? '1' : '',
-		'winlink_nth'    => $weeks( 'winlink' ),
-		'simplex_nth'    => $weeks( 'simplex' ),
-		'gmrs_nth'       => $weeks( 'gmrs' ),
-		'gmrs_time'      => (string) $nets['gmrs_time'],
-		'needs_check'    => $nets['needs_check'] ? '1' : '',
+		'p_call'        => strtoupper( trim( (string) $p['call'] ) ),
+		'p_freq'        => (string) $p['freq'],
+		'p_offset'      => (string) $p['offset'],
+		'p_tone'        => (string) $p['tone'],
+		'net_time'      => (string) $nets['net_time'],
+		'a_freq'        => (string) $a['freq'],
+		'a_offset'      => (string) $a['offset'],
+		'a_tone'        => (string) $a['tone'],
+		'a_show'        => $a['show'] ? '1' : '',
+		'a_needs_check' => $a['needs_check'] ? '1' : '',
+		'winlink_nth'   => $weeks( 'winlink' ),
+		'simplex_nth'   => $weeks( 'simplex' ),
+		'gmrs_nth'      => $weeks( 'gmrs' ),
+		'gmrs_time'     => (string) $nets['gmrs_time'],
+		'needs_check'   => $nets['needs_check'] ? '1' : '',
 	);
 }
 
@@ -268,21 +268,21 @@ function spokares_net_dropped_winlink( array $was_weeks, array $now_weeks ): arr
  */
 function spokares_net_field_names(): array {
 	return array(
-		'p_call'         => __( 'the repeater call sign', 'spokares-core' ),
-		'p_freq'         => __( 'the frequency', 'spokares-core' ),
-		'p_offset'       => __( 'the offset', 'spokares-core' ),
-		'p_tone'         => __( 'the tone', 'spokares-core' ),
-		'net_time'       => __( 'the net time', 'spokares-core' ),
-		'a_freq'         => __( 'the alternate frequency', 'spokares-core' ),
-		'a_offset'       => __( 'the alternate offset', 'spokares-core' ),
-		'a_tone'         => __( 'the alternate tone', 'spokares-core' ),
-		'a_show'         => __( '“Show on How it works”', 'spokares-core' ),
-		'a_needs_check'  => __( 'the alternate repeater’s “Needs checking”', 'spokares-core' ),
-		'winlink_nth'    => __( 'which Tuesdays', 'spokares-core' ),
-		'simplex_nth'    => __( 'which Tuesdays', 'spokares-core' ),
-		'gmrs_nth'       => __( 'which Tuesdays', 'spokares-core' ),
-		'gmrs_time'      => __( 'the GMRS net time', 'spokares-core' ),
-		'needs_check'    => __( 'the nets’ “Needs checking”', 'spokares-core' ),
+		'p_call'        => __( 'the repeater call sign', 'spokares-core' ),
+		'p_freq'        => __( 'the frequency', 'spokares-core' ),
+		'p_offset'      => __( 'the offset', 'spokares-core' ),
+		'p_tone'        => __( 'the tone', 'spokares-core' ),
+		'net_time'      => __( 'the net time', 'spokares-core' ),
+		'a_freq'        => __( 'the alternate frequency', 'spokares-core' ),
+		'a_offset'      => __( 'the alternate offset', 'spokares-core' ),
+		'a_tone'        => __( 'the alternate tone', 'spokares-core' ),
+		'a_show'        => __( '“Show on How it works”', 'spokares-core' ),
+		'a_needs_check' => __( 'the alternate repeater’s “Needs checking”', 'spokares-core' ),
+		'winlink_nth'   => __( 'which Tuesdays', 'spokares-core' ),
+		'simplex_nth'   => __( 'which Tuesdays', 'spokares-core' ),
+		'gmrs_nth'      => __( 'which Tuesdays', 'spokares-core' ),
+		'gmrs_time'     => __( 'the GMRS net time', 'spokares-core' ),
+		'needs_check'   => __( 'the nets’ “Needs checking”', 'spokares-core' ),
 	);
 }
 
@@ -670,21 +670,21 @@ function spokares_handle_save_net_details(): void {
 
 	// What was typed, field by field, in the form's shape.
 	$typed = array(
-		'p_call'         => sanitize_text_field( spokares_post_str( $pin, 'call' ) ),
-		'p_freq'         => sanitize_text_field( spokares_post_str( $pin, 'freq' ) ),
-		'p_offset'       => sanitize_text_field( spokares_post_str( $pin, 'offset' ) ),
-		'p_tone'         => sanitize_text_field( spokares_post_str( $pin, 'tone' ) ),
-		'net_time'       => sanitize_text_field( spokares_post_str( $in_nets, 'net_time' ) ),
-		'a_freq'         => sanitize_text_field( spokares_post_str( $ain, 'freq' ) ),
-		'a_offset'       => sanitize_text_field( spokares_post_str( $ain, 'offset' ) ),
-		'a_tone'         => sanitize_text_field( spokares_post_str( $ain, 'tone' ) ),
-		'a_show'         => ! empty( $ain['show'] ) ? '1' : '',
-		'a_needs_check'  => ! empty( $ain['needs_check'] ) ? '1' : '',
-		'winlink_nth'    => $lists['winlink'],
-		'simplex_nth'    => $lists['simplex'],
-		'gmrs_nth'       => $lists['gmrs'],
-		'gmrs_time'      => sanitize_text_field( spokares_post_str( $in_nets, 'gmrs_time' ) ),
-		'needs_check'    => ! empty( $in_nets['needs_check'] ) ? '1' : '',
+		'p_call'        => sanitize_text_field( spokares_post_str( $pin, 'call' ) ),
+		'p_freq'        => sanitize_text_field( spokares_post_str( $pin, 'freq' ) ),
+		'p_offset'      => sanitize_text_field( spokares_post_str( $pin, 'offset' ) ),
+		'p_tone'        => sanitize_text_field( spokares_post_str( $pin, 'tone' ) ),
+		'net_time'      => sanitize_text_field( spokares_post_str( $in_nets, 'net_time' ) ),
+		'a_freq'        => sanitize_text_field( spokares_post_str( $ain, 'freq' ) ),
+		'a_offset'      => sanitize_text_field( spokares_post_str( $ain, 'offset' ) ),
+		'a_tone'        => sanitize_text_field( spokares_post_str( $ain, 'tone' ) ),
+		'a_show'        => ! empty( $ain['show'] ) ? '1' : '',
+		'a_needs_check' => ! empty( $ain['needs_check'] ) ? '1' : '',
+		'winlink_nth'   => $lists['winlink'],
+		'simplex_nth'   => $lists['simplex'],
+		'gmrs_nth'      => $lists['gmrs'],
+		'gmrs_time'     => sanitize_text_field( spokares_post_str( $in_nets, 'gmrs_time' ) ),
+		'needs_check'   => ! empty( $in_nets['needs_check'] ) ? '1' : '',
 	);
 	$shown = array_map( static fn( $x ) => is_array( $x ) ? implode( ',', $x ) : (string) $x, $typed );
 
@@ -743,7 +743,7 @@ function spokares_handle_save_net_details(): void {
 	// The offset and tone come from lists. A value not in the list (only a
 	// hand-made request can send one) is refused with a sentence, like every
 	// other field; the stored value stays.
-	$pick = static function ( string $key, string $stored, array $choices, bool $none ) use ( $apply, $typed, &$errors ): string {
+	$pick                       = static function ( string $key, string $stored, array $choices, bool $none ) use ( $apply, $typed, &$errors ): string {
 		if ( ! $apply( $key ) ) {
 			return $stored;
 		}

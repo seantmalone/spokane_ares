@@ -354,9 +354,9 @@ function spokares_next_meetings( int $per_meeting = 1, ?string $from = null ): a
 		unset( $rule['next'] );
 		$own = $m['show_home'] ? array_values( array_filter( $extras, static fn( $c ) => $c['meeting'] === $m['id'] ) ) : array();
 		foreach ( $own as $c ) {
-			$changes[] = $c;
 			$attached[ $c['meeting'] . '|' . $c['date'] ] = true;
 		}
+		$changes = array_merge( $changes, $own );
 		usort( $changes, static fn( $a, $b ) => strcmp( $a['date'], $b['date'] ) );
 		$out[] = array(
 			'meeting'   => $rule,
