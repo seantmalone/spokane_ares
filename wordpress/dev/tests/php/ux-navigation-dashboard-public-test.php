@@ -143,10 +143,13 @@ test(
 		preg_match_all( '#<section class="spk-task">\s*<h3>(.*?)</h3>#s', $html, $m );
 		assert_same( array( 'Net Control Schedule', 'Exercises &amp; Events', 'Meetings', 'Documents', 'Page Text' ), $m[1], 'section headings' );
 		assert_not_contains( 'spk-task__n', $html, 'number badges' );
-		foreach ( array( 'Update the schedule', 'Add an event', 'Change or cancel an event', 'Cancel or move a meeting', 'Meeting Schedule', 'Add a document', 'Replace or change a document', 'Most Used', 'Net Settings' ) as $words ) {
+		foreach ( array( 'Update the schedule', 'Add an event', 'All events', 'Cancel or move a meeting', 'Meeting Schedule', 'Add a document', 'Replace or change a document', 'Most Used', 'Net Settings' ) as $words ) {
 			assert_contains( '>' . $words . '</a>', $html, 'grant holder: "' . $words . '"' );
 		}
-		assert_matches( '#Next: <a href="[^"]*post\.php\?post=\d+&(amp;|\#038;)?action=edit">[^<]+</a>, #', $html, 'the next event\'s name links to its form' );
+		// Workflow review E7: the next events are listed, each linking to its
+		// form, in place of "Next: …" and the "Change or cancel an event" list
+		// button (see wf-e7-dashboard-next-events-test.php).
+		assert_matches( '#<ul class="spk-event-list">\s*<li>\s*<a href="[^"]*post\.php\?post=\d+&(amp;|\#038;)?action=edit">[^<]+</a>, #', $html, 'the next event\'s name links to its form' );
 		assert_matches( '#\d+ documents?#', uxnav_plain( $html ), '"{n} documents"' );
 		assert_not_contains( 'in the library', $html, 'the retired "in the library"' );
 

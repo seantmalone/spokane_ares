@@ -122,8 +122,9 @@ Net Control Schedule
   Repeater and net times: ask the webmaster.        (plain editor, instead of the link)
 Exercises & Events
   Happening now: ARES-ACS / WSDOT exercise
-  Next: <Simulated Emergency Test>, Sat, Oct 3 · 10 more        (the name links to its form)
-  [Add an event]  [Change or cancel an event]
+  Coming up:                                     (the next five; each name links to its form)
+  • <Simulated Emergency Test>, Sat, Oct 3
+  [Add an event]  All events
 Meetings
   Next: Second Saturday Workshop, Sat, Oct 10, 9:00 AM
   [Cancel or move a meeting]   Meeting Schedule*
@@ -145,7 +146,7 @@ Stuck? webmaster@spokares.org
   - "Posted through {last posted Tuesday, 'short'}". If there is a Volunteer needed Tuesday on or before that date, add " · Volunteer needed: {dates, 'day'}". If there is a Not posted yet Tuesday before that date, add " · Not posted yet: {dates}".
   - With nothing posted: "Nothing posted for the coming Tuesdays."
   - The button says **Update the schedule**: the heading already names it.
-- **Events:** "Happening now" and "Next" skip cancelled events. The "Next:" event's name links to its form. The secondary button **Change or cancel an event** opens the list.
+- **Events:** "Happening now" skips cancelled events. "Coming up:" lists the next five events after those happening now (cancelled ones too, tagged " · Cancelled"), name and date, each name linking to its form; "All events" opens the list (workflow review E7, replacing "Next: … · {n} more" and the **Change or cancel an event** button). Needs attention adds "{n} events have had no date for over 30 days: {name} (Postponed) · …" for published Postponed or Date not posted yet events not saved in 30 days (E3).
 - **Meetings:** "Next:" counts only meetings shown on the site (`active && show_home`), after cancellations and moves.
 - **Documents:** "{n} documents". "{n} marked Soon" links to `edit.php?post_type=spk_document&spk_source=soon` and appears only when n > 0. "{n} not reviewed in 12 months" links to `edit.php?post_type=spk_document&orderby=spk_reviewed&order=asc` (oldest first) and appears only when n > 0. The secondary button is **Replace or change a document** (opens the list): "replace" is the monthly net-script job.
 - **Page Text** links: Home · How it works · About ARES & ACS. The link words stay the page titles.
