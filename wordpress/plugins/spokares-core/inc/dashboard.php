@@ -160,6 +160,61 @@ function spokares_needs_check_places(): array {
 }
 
 /**
+ * Published events that have had no date for more than 30 days: Postponed
+ * or Date not posted yet, and not saved since. They stay "upcoming" for
+ * ever, so the Dashboard reminds the editors (As requested is a public
+ * service's standing state, not a missing date).
+ *
+ * @return array[] Event data (spokares_event_data()), oldest change first.
+ */
+function spokares_dashboard_undated_events(): array {
+	$q   = new WP_Query(
+		array(
+			'post_type'      => 'spk_event',
+			'post_status'    => 'publish',
+			'posts_per_page' => 50,
+			'orderby'        => 'modified',
+			'order'          => 'ASC',
+			'no_found_rows'  => true,
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- dashboard list, small table.
+			'meta_query'     => array(
+				array(
+					'key'     => 'spk_date_mode',
+					'value'   => array( 'postponed', 'not-posted' ),
+					'compare' => 'IN',
+				),
+			),
+			'date_query'     => array(
+				array(
+					'column' => 'post_modified_gmt',
+					'before' => gmdate( 'Y-m-d H:i:s', time() - 30 * DAY_IN_SECONDS ),
+				),
+			),
+		)
+	);
+	$out = array();
+	foreach ( $q->posts as $post ) {
+		$ev = spokares_event_data( $post );
+		if ( $ev && '' !== $ev['kind'] && in_array( $ev['mode'], array( 'postponed', 'not-posted' ), true ) ) {
+			$out[] = $ev;
+		}
+	}
+	return $out;
+}
+
+/**
+ * An event's name as a link to its form (escaped HTML; the name alone when
+ * the user can't edit it).
+ *
+ * @param array $ev Event data.
+ */
+function spokares_dashboard_event_link( array $ev ): string {
+	$name = esc_html( html_entity_decode( (string) $ev['title'], ENT_QUOTES, 'UTF-8' ) );
+	$edit = (string) get_edit_post_link( (int) $ev['id'], 'raw' );
+	return '' !== $edit ? '<a href="' . esc_url( $edit ) . '">' . $name . '</a>' : $name;
+}
+
+/**
  * The three text pages and whether their text ('hits') or their excerpt
  * ('excerpt_hits': the page's search-engine description, public too) trips
  * the never-publish, phone or e-mail checks.
@@ -247,6 +302,17 @@ function spokares_dashboard_widget(): void {
 		}
 	}
 
+	$undated = current_user_can( 'edit_spk_events' ) ? spokares_dashboard_undated_events() : array();
+	if ( $undated ) {
+		$links = array();
+		foreach ( $undated as $ev ) {
+			$links[] = spokares_dashboard_event_link( $ev ) . ' (' . esc_html( spokares_fmt_when( $ev, 'row' ) ) . ')';
+		}
+		$n = count( $undated );
+		/* translators: %d: number of events. */
+		$attention[] = esc_html( sprintf( _n( '%d event has had no date for over 30 days:', '%d events have had no date for over 30 days:', $n, 'spokares-core' ), $n ) ) . ' ' . implode( ' · ', $links );
+	}
+
 	$checks = $admin ? spokares_needs_check_places() : array();
 	if ( $checks ) {
 		$n     = array_sum( wp_list_pluck( $checks, 'n' ) );
@@ -307,48 +373,45 @@ function spokares_dashboard_widget(): void {
 
 	<?php if ( current_user_can( 'edit_spk_events' ) ) : ?>
 		<?php
-		// A cancelled event is not happening, and not next.
-		$events = array_values( array_filter( spokares_events( 'all-upcoming' ), static fn( $e ) => empty( $e['cancelled'] ) ) );
-		$now    = array_values( array_filter( $events, 'spokares_event_is_now' ) );
-		$next   = array_values( array_filter( $events, static fn( $e ) => ! spokares_event_is_now( $e ) && 'date' === $e['mode'] ) );
+		// A cancelled event is not happening. The next five after the ones
+		// happening now (cancelled ones too, tagged: they may need taking
+		// back), each linked straight to its form.
+		$events = spokares_events( 'all-upcoming' );
+		$now    = array_values( array_filter( $events, static fn( $e ) => empty( $e['cancelled'] ) && spokares_event_is_now( $e ) ) );
+		$now_id = wp_list_pluck( $now, 'id' );
+		$coming = array_slice( array_values( array_filter( $events, static fn( $e ) => ! in_array( $e['id'], $now_id, true ) ) ), 0, 5 );
 		?>
 		<section class="spk-task">
 			<h3><?php echo esc_html( spokares_edit_screen( 'events' )[0] ); ?></h3>
 			<?php if ( $now ) : ?>
 				<p>
 					<?php
-					/* translators: %s: event names. */
-					echo esc_html( sprintf( __( 'Happening now: %s', 'spokares-core' ), implode( ', ', array_map( static fn( $e ) => html_entity_decode( $e['title'], ENT_QUOTES, 'UTF-8' ), $now ) ) ) );
+					/* translators: %s: event names (links to their forms). */
+					echo wp_kses( sprintf( esc_html__( 'Happening now: %s', 'spokares-core' ), implode( ', ', array_map( 'spokares_dashboard_event_link', $now ) ) ), $line_kses );
 					?>
 				</p>
 			<?php endif; ?>
-			<p>
-				<?php
-				if ( $next ) {
-					$more = count( $events ) - count( $now ) - 1;
-					$name = esc_html( html_entity_decode( $next[0]['title'], ENT_QUOTES, 'UTF-8' ) );
-					$edit = (string) get_edit_post_link( $next[0]['id'], 'raw' );
-					echo wp_kses(
-						sprintf(
-							/* translators: 1: event name (a link to its form), 2: when. */
-							esc_html__( 'Next: %1$s, %2$s', 'spokares-core' ),
-							'' !== $edit ? '<a href="' . esc_url( $edit ) . '">' . $name . '</a>' : $name,
-							esc_html( str_replace( "\u{00A0}", ' ', spokares_fmt_when( $next[0], 'card' ) ) )
-						),
-						$line_kses
-					);
-					if ( $more > 0 ) {
-						/* translators: %d: number of events. */
-						echo ' · ' . esc_html( sprintf( __( '%d more', 'spokares-core' ), $more ) );
-					}
-				} else {
-					esc_html_e( 'No dated events coming up.', 'spokares-core' );
-				}
-				?>
-			</p>
+			<?php if ( $coming ) : ?>
+				<p class="spk-event-list-head"><?php esc_html_e( 'Coming up:', 'spokares-core' ); ?></p>
+				<ul class="spk-event-list">
+					<?php foreach ( $coming as $ev ) : ?>
+						<li>
+							<?php
+							$when = str_replace( "\u{00A0}", ' ', spokares_fmt_when( $ev, 'row' ) );
+							echo wp_kses( spokares_dashboard_event_link( $ev ), $line_kses ) . ', ' . esc_html( $when );
+							if ( ! empty( $ev['cancelled'] ) ) {
+								echo ' · ' . esc_html__( 'Cancelled', 'spokares-core' );
+							}
+							?>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+			<?php elseif ( ! $now ) : ?>
+				<p><?php esc_html_e( 'No events coming up.', 'spokares-core' ); ?></p>
+			<?php endif; ?>
 			<p class="spk-task__actions">
 				<a class="button button-primary" href="<?php echo esc_url( admin_url( 'post-new.php?post_type=spk_event' ) ); ?>"><?php esc_html_e( 'Add an event', 'spokares-core' ); ?></a>
-				<a class="button" href="<?php echo esc_url( admin_url( 'edit.php?post_type=spk_event' ) ); ?>"><?php esc_html_e( 'Change or cancel an event', 'spokares-core' ); ?></a>
+				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=spk_event' ) ); ?>"><?php esc_html_e( 'All events', 'spokares-core' ); ?></a>
 			</p>
 		</section>
 	<?php endif; ?>

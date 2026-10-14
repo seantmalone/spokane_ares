@@ -223,6 +223,9 @@ function spokares_event_is_now( array $ev ): bool {
  *  'row'   as card, but undated prints "Postponed", "Date not posted yet" or
  *          "As requested"
  *  'meta'  hub line: "All day", "All weekend", "10:15 AM", "9:00 AM–noon"
+ *  Over several days with an end time no later than the start time, each
+ *  time goes with its day: card "Fri, Oct 16, 6:00 PM–Sun, Oct 18, noon",
+ *  meta "Fri 6:00 PM–Sun noon".
  *  'past'  "Oct 2022" (day or month precision), "2025" (year precision)
  *
  * @param WP_Post|int|array $event Event, or spokares_event_data() output.
@@ -246,8 +249,20 @@ function spokares_fmt_when( $event, string $style ): string {
 		}
 		return '';
 	}
+	// Fri 6:00 PM to Sun noon: the times belong to the first and the last
+	// day, not to every day, so each is printed with its day. (An end time
+	// after the start time, Sat-Sun 9:00 AM-5:00 PM, reads as each day's.)
+	$overnight = '' !== $ev['end'] && '' !== $ev['t_start'] && '' !== $ev['t_end'] && $ev['t_end'] <= $ev['t_start'];
+	$s_day     = spokares_date_obj( $ev['start'] );
+	$e_day     = '' !== $ev['end'] ? spokares_date_obj( $ev['end'] ) : null;
+	if ( ! $s_day || ! $e_day ) {
+		$overnight = false;
+	}
 	switch ( $style ) {
 		case 'meta':
+			if ( $overnight ) {
+				return $s_day->format( 'D' ) . "\u{00A0}" . spokares_fmt_time( $ev['t_start'] ) . '–' . $e_day->format( 'D' ) . "\u{00A0}" . spokares_fmt_time( $ev['t_end'] );
+			}
 			if ( '' !== $ev['t_start'] ) {
 				return spokares_fmt_time_range( $ev['t_start'], $ev['t_end'] );
 			}
@@ -263,6 +278,9 @@ function spokares_fmt_when( $event, string $style ): string {
 		case 'row':
 		case 'card':
 		default:
+			if ( $overnight ) {
+				return spokares_fmt_date( $ev['start'], 'short' ) . ', ' . spokares_fmt_time( $ev['t_start'] ) . '–' . spokares_fmt_date( $ev['end'], 'short' ) . ', ' . spokares_fmt_time( $ev['t_end'] );
+			}
 			$when = spokares_fmt_date_range( $ev['start'], $ev['end'] );
 			if ( '' !== $ev['t_start'] ) {
 				$when .= ', ' . spokares_fmt_time_range( $ev['t_start'], $ev['t_end'] );

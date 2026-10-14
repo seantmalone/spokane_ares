@@ -122,6 +122,10 @@ tr.spk-row-error > * { background: #fcf0f1 !important; }
 .spk-tasks .spk-task h3 { font-size: 14px; margin: 0 0 6px; }
 .spk-tasks .spk-task p { margin: 4px 0 8px; }
 .spk-tasks .spk-task__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+/* Exercises & Events: the next five, each linked to its form. */
+.spk-tasks .spk-event-list-head { margin-bottom: 0; }
+.spk-tasks .spk-event-list { margin: 2px 0 8px 18px; list-style: disc; }
+.spk-tasks .spk-event-list li { margin: 2px 0; }
 .spk-attention { margin: 12px 0 4px; padding: 8px 12px; background: #fff4d6; border-left: 4px solid #dba617; }
 .spk-attention h3 { margin: 4px 0; font-size: 13px; }
 .spk-attention ul { margin: 4px 0 4px 18px; list-style: disc; }

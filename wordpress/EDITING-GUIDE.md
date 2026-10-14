@@ -24,7 +24,7 @@ Never share your sign-in. Sign out on a shared computer (your name, top right, t
 
 ## Your Dashboard: "Site tasks"
 
-After you sign in you land on the Dashboard. The **Site tasks** card has a section for each job, and it tells you what's coming up: how far ahead the Net Control Schedule is posted, the next event, the next meeting. Anything that needs you comes first, under **Needs attention**, with a link to fix it.
+After you sign in you land on the Dashboard. The **Site tasks** card has a section for each job, and it tells you what's coming up: how far ahead the Net Control Schedule is posted, the next five events, the next meeting. Anything that needs you comes first, under **Needs attention**, with a link to fix it.
 
 <img src="shots/final/admin-dashboard.png" width="600" alt="The Dashboard's Site tasks card: Net Control Schedule with Update the schedule, Exercises & Events, Meetings, Documents with Replace or change a document, and Page Text.">
 
@@ -50,13 +50,13 @@ After you sign in you land on the Dashboard. The **Site tasks** card has a secti
 1. On the Dashboard, click **Add an event**. If a line under the name says it's already there, click **Open it** instead.
 2. Pick the **Type of event**. The form then shows only the boxes that type needs.
 3. Type the **Event name** as members will see it.
-4. **When:** pick the **First day** (and a **Last day** if it runs longer). "All day" is ticked; untick it to add a start and end time. No date yet? Choose **Date not posted yet**.
+4. **When:** pick the **First day** (and a **Last day** if it runs longer). "All day" is ticked; untick it to add a start and end time (for a weekend, the start time on the first day and the end time on the last). No date yet? Choose **Date not posted yet**. If the date has already passed, the form asks you to check the year; tick the box if it's right.
 5. Click **Publish**. The message says where it shows.
 
 <img src="shots/final/admin-event-set.png" width="600" alt="The event form for the Simulated Emergency Test: Type of event Exercise, the date, a short description, tasks one per line, the Button and a Document members need, with Save in the Save box.">
 
-- **Change one:** on the Dashboard, click **Change or cancel an event**.
-- **Next year:** open last year's, then click **Make a copy**.
+- **Change one:** on the Dashboard, click its name under **Coming up** (or click **All events**).
+- **Next year:** open last year's, then click **Make a copy**. Check the name and set the new date.
 - **Called off:** tick **Cancelled** under When.
 - **Postponed:** choose **Postponed** under When.
 - **Added by mistake:** click **Take it off the site** (Undo brings it back).

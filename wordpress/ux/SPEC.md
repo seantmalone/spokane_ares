@@ -122,8 +122,9 @@ Net Control Schedule
   Repeater and net times: ask the webmaster.        (plain editor, instead of the link)
 Exercises & Events
   Happening now: ARES-ACS / WSDOT exercise
-  Next: <Simulated Emergency Test>, Sat, Oct 3 · 10 more        (the name links to its form)
-  [Add an event]  [Change or cancel an event]
+  Coming up:                                     (the next five; each name links to its form)
+  • <Simulated Emergency Test>, Sat, Oct 3
+  [Add an event]  All events
 Meetings
   Next: Second Saturday Workshop, Sat, Oct 10, 9:00 AM
   [Cancel or move a meeting]   Meeting Schedule*
@@ -145,7 +146,7 @@ Stuck? webmaster@spokares.org
   - "Posted through {last posted Tuesday, 'short'}". If there is a Volunteer needed Tuesday on or before that date, add " · Volunteer needed: {dates, 'day'}". If there is a Not posted yet Tuesday before that date, add " · Not posted yet: {dates}".
   - With nothing posted: "Nothing posted for the coming Tuesdays."
   - The button says **Update the schedule**: the heading already names it.
-- **Events:** "Happening now" and "Next" skip cancelled events. The "Next:" event's name links to its form. The secondary button **Change or cancel an event** opens the list.
+- **Events:** "Happening now" skips cancelled events. "Coming up:" lists the next five events after those happening now (cancelled ones too, tagged " · Cancelled"), name and date, each name linking to its form; "All events" opens the list (workflow review E7, replacing "Next: … · {n} more" and the **Change or cancel an event** button). Needs attention adds "{n} events have had no date for over 30 days: {name} (Postponed) · …" for published Postponed or Date not posted yet events not saved in 30 days (E3).
 - **Meetings:** "Next:" counts only meetings shown on the site (`active && show_home`), after cancellations and moves.
 - **Documents:** "{n} documents". "{n} marked Soon" links to `edit.php?post_type=spk_document&spk_source=soon` and appears only when n > 0. "{n} not reviewed in 12 months" links to `edit.php?post_type=spk_document&orderby=spk_reviewed&order=asc` (oldest first) and appears only when n > 0. The secondary button is **Replace or change a document** (opens the list): "replace" is the monthly net-script job.
 - **Page Text** links: Home · How it works · About ARES & ACS. The link words stay the page titles.
@@ -313,14 +314,16 @@ More rules:
 | Saved, shown | "Saved. It shows under Next up on the Exercises & events page and in This week on the For members page. See it" |
 | Saved, cancelled | "Saved. Members see “Cancelled” until Sat, Oct 17. See it" |
 | Saved, postponed | "Saved. It shows as Postponed on the Exercises & events page. See it" |
-| Saved, past date | "Saved, but Fri, May 15, 2026 has passed, so no list shows it. Check the year." (warning) |
+| Saved, past date | "Saved. It isn’t listed anywhere now: Fri, May 15, 2026 has passed." (info). A new or changed past date is asked about before the save (workflow review E2): "Fri, May 15, 2026 has passed. Check the year, or tick the box to publish it anyway." under the date, with the tick "The date is right. Publish it."; Publish refused: "Not published yet: Fri, May 15, 2026 has passed. Check the year, or tick the box under When, then click Publish." An old event saved with its dates as they were is not asked about. |
 | Saved, ended and not kept | "Saved. It isn’t listed anywhere now: it has ended and isn’t kept under Past exercises." (info) |
-| Draft saved | "Draft saved. It isn’t on the site until you Publish." (info) |
+| Draft saved | "Draft saved. It isn’t on the site until you Publish." (info). With problems: "Draft saved. 2 boxes need fixing before you can Publish." (warning; workflow review E6) |
+| Boxes the type doesn't use | appended: "Cleared What members do and More links: this type of event doesn’t use them." The save clears them (E5); List under Past exercises is cleared without a word |
+| Cancelled, When changed from On a date | appended: "Cancelled is cleared: only an event on a date can be cancelled." (E4) |
 | Publish refused, one problem | "Not published yet: pick the type of event, then click Publish." (error; no green notice) |
 | Publish refused, several problems | "Not published yet. Fix the boxes outlined in red, then click Publish." |
 | Published event, a field not saved | "Saved, except Where: it has a phone number. If it’s a public agency number, tick the box under Where and click Save. Everything else is on the site now." (warning, amber like every other screen's partial save; changed by the verifier from error). It names fields by their labels. This is true to the code: `spokares_save_event()` skips only the problem fields' meta and saves the rest. The typed text stays in the form until the next save of that event. |
 | Name cut from Volunteer through | appended: "(saved NV2Z only; names aren’t posted)" |
-| Copied | "Copied. Set the new date, then Publish." (info) |
+| Copied | "Copied. Check the name, set the new date, then Publish." (info). The copy opens with the name outlined and "Check the name (copied from 2026)." under it (workflow review E8); the Needs checking flag is not copied |
 | Taken off the site (Trash) | "“Great ShakeOut” is off the site." + core's Undo |
 | Restored | "“Great ShakeOut” is back on the site." Restore brings back the previous status, as Undo does. |
 
