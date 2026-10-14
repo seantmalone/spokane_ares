@@ -249,8 +249,31 @@ function spokares_hard_2fa_hide_primary(): void {
 add_action( 'admin_head', 'spokares_hard_2fa_hide_primary' );
 
 /**
- * The Two-Factor plugin's words, in plain English (its own text domain only;
- * the source strings are Two-Factor 0.16's).
+ * The Two-Factor plugin's words this site rewords: source text => plain
+ * English. The source strings are Two-Factor 0.17's (the same as 0.16's;
+ * 0.17 only added strings). The live site auto-updates the plugin, so a
+ * dev test checks that every source string is still in the installed copy.
+ *
+ * @return array<string,string>
+ */
+function spokares_hard_2fa_word_map(): array {
+	$code  = __( 'Code:', 'spokares-hardening' );
+	$retry = __( 'That code didn’t work. Wait for the next code in the app, then type it.', 'spokares-hardening' );
+	return array(
+		'Use your authenticator app for time-based one-time passwords (TOTP)' => __( 'Use the code from my phone app', 'spokares-hardening' ),
+		'Send a code to your email'         => __( 'E-mail me a code', 'spokares-hardening' ),
+		'Use a recovery code'               => __( 'Use a printed backup code', 'spokares-hardening' ),
+		'Authentication Code:'              => $code,
+		'Verification Code:'                => $code,
+		'Recovery Code:'                    => $code,
+		// One wrong code: the plugin's refusal, and its short wait before the next try.
+		'ERROR: Invalid verification code.' => $retry,
+		'ERROR: Too many invalid verification codes, you can try again in %s. This limit protects your account against automated attacks.' => $retry,
+	);
+}
+
+/**
+ * The Two-Factor plugin's words, in plain English (its own text domain only).
  *
  * @param string $translation Translated text.
  * @param string $text        Source text.
@@ -258,19 +281,7 @@ add_action( 'admin_head', 'spokares_hard_2fa_hide_primary' );
 function spokares_hard_2fa_words( $translation, $text ) {
 	static $words = null;
 	if ( null === $words ) {
-		$code  = __( 'Code:', 'spokares-hardening' );
-		$retry = __( 'That code didn’t work. Wait for the next code in the app, then type it.', 'spokares-hardening' );
-		$words = array(
-			'Use your authenticator app for time-based one-time passwords (TOTP)' => __( 'Use the code from my phone app', 'spokares-hardening' ),
-			'Send a code to your email'         => __( 'E-mail me a code', 'spokares-hardening' ),
-			'Use a recovery code'               => __( 'Use a printed backup code', 'spokares-hardening' ),
-			'Authentication Code:'              => $code,
-			'Verification Code:'                => $code,
-			'Recovery Code:'                    => $code,
-			// One wrong code: the plugin's refusal, and its short wait before the next try.
-			'ERROR: Invalid verification code.' => $retry,
-			'ERROR: Too many invalid verification codes, you can try again in %s. This limit protects your account against automated attacks.' => $retry,
-		);
+		$words = spokares_hard_2fa_word_map();
 	}
 	return $words[ $text ] ?? $translation;
 }
