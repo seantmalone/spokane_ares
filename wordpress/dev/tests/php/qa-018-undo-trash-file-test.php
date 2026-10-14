@@ -22,6 +22,14 @@
  * Publish."). A document trashed without removing its file (not through the
  * form's link) still comes back Published.
  *
+ * Changed by the workflow review's finding D6 (2026-10): "Take it off the
+ * site" now sets the file aside in a held folder outside the web root
+ * instead of deleting it, and Restore or Undo puts it back, so the document
+ * returns whole, Published as it was (wf-d6-held-file-test.php has the
+ * details). The Draft-and-"upload the file again" path is kept for a file
+ * that really was deleted: when the held folder can't be used, the trash
+ * deletes the file as before.
+ *
  * The two requests are run as core runs them: the trash as post.php's
  * action=trash (its nonce and spk_remove_file in $_GET, then
  * wp_trash_post()), and Undo as edit.php's case 'untrash' with
@@ -151,44 +159,59 @@ function qa_018_undo( int $doc ): void {
 }
 
 test(
-	'Undo after "Take it off the site" (file removed) brings the document back as a Draft, not Published',
+	'Undo after "Take it off the site" brings the document back as it was, Published with its file (UX finding D6)',
 	function () {
+		// Changed by D6: the trash used to delete the file, so Undo could only
+		// bring the document back as a Draft. Now the file is set aside outside
+		// the web root and Undo puts it back, so the document returns whole.
+		// The Draft fallback for a file that really is gone is tested below.
 		foreach ( array( 'ares-editor', 'ares-net', 'admin' ) as $role ) {
 			list( $doc, $att, $file ) = qa_018_published_upload( $role, 'QA-018 upload doc ' . $role );
+			$url                      = (string) wp_get_attachment_url( $att );
 			qa_018_trash( $doc, true );
 
-			// The trash really removed the file (the premise of the bug).
+			// The trash took the file off the web: not at its address any more.
 			clean_post_cache( $att );
-			assert_same( null, get_post( $att ), $role . ': setup: the trash removed the attachment' );
-			assert_false( file_exists( $file ), $role . ': setup: the trash removed the file from disk' );
-			assert_same( '', (string) get_post_meta( $doc, 'spk_file', true ), $role . ': setup: spk_file is cleared' );
+			assert_false( file_exists( $file ), $role . ': the file is no longer in the uploads folder' );
+			assert_true( \spokares_attachment_is_held( $att ), $role . ': the file is set aside' );
+			assert_same( $att, absint( get_post_meta( $doc, 'spk_file', true ) ), $role . ': the document still names its file' );
 
 			qa_018_undo( $doc );
-			assert_same( 'upload', (string) get_post_meta( $doc, 'spk_source', true ), $role . ': the document still says its source is an upload' );
-			assert_same( '', (string) get_post_meta( $doc, 'spk_file', true ), $role . ': and it has no file' );
-			assert_same( 'draft', get_post_status( $doc ), $role . ': Undo restored a document with no file as' );
-			$live = get_posts(
-				array(
-					'post_type'   => 'spk_document',
-					'post_status' => 'publish',
-					'include'     => array( $doc ),
-					'fields'      => 'ids',
-				)
-			);
-			assert_count( 0, $live, $role . ': the file-less document must not be in the published library' );
+			assert_same( 'publish', get_post_status( $doc ), $role . ': Undo restored the document as' );
+			assert_true( file_exists( $file ), $role . ': the file is back at its old address' );
+			assert_false( \spokares_attachment_is_held( $att ), $role . ': nothing is held any more' );
+			assert_same( $url, (string) wp_get_attachment_url( $att ), $role . ': the file\'s web address is unchanged' );
+			assert_same( $att, absint( get_post_meta( $doc, 'spk_file', true ) ), $role . ': the document still has its file' );
 		}
 	}
 );
 
 test(
-	'Undo of a document whose file was removed tells the user, in one notice, to upload the file again',
+	'Undo of a document whose file was deleted (it couldn\'t be set aside) brings it back as a Draft, and the notice says to upload the file again',
 	function () {
-		list( $doc ) = qa_018_published_upload( 'ares-editor', 'QA-018 notice doc' );
-		qa_018_trash( $doc, true );
-		$key = 'spokares_notices_' . get_current_user_id();
+		list( $doc, $att, $file ) = qa_018_published_upload( 'ares-editor', 'QA-018 notice doc' );
+		// A held folder inside the uploads folder would be served by the web
+		// server, so it is refused and the trash falls back to deleting.
+		$inside = static fn() => wp_upload_dir()['basedir'] . '/qa-018-held';
+		add_filter( 'spokares_held_dir', $inside );
+		try {
+			qa_018_trash( $doc, true );
+		} finally {
+			remove_filter( 'spokares_held_dir', $inside );
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- the test's own empty folder.
+			@rmdir( wp_upload_dir()['basedir'] . '/qa-018-held' );
+		}
+		clean_post_cache( $att );
+		assert_same( null, get_post( $att ), 'the fallback deleted the attachment' );
+		assert_false( file_exists( $file ), 'the fallback deleted the file' );
+		assert_same( '', (string) get_post_meta( $doc, 'spk_file', true ), 'spk_file is cleared' );
+		$key    = 'spokares_notices_' . get_current_user_id();
+		$queued = get_transient( $key );
+		assert_contains( 'couldn’t be set aside, so it was deleted', implode( ' ', wp_list_pluck( is_array( $queued ) ? $queued : array(), 'text' ) ), 'the trash says the file was deleted' );
 		delete_transient( $key );
 
 		qa_018_undo( $doc );
+		assert_same( 'draft', get_post_status( $doc ), 'Undo restored a document with no file as' );
 		$queued = get_transient( $key );
 		assert_count( 0, is_array( $queued ) ? $queued : array(), 'Undo queued a notice of its own besides the list\'s' );
 		// The list's notice after the redirect (edit.php?post_type=spk_document&untrashed=1).

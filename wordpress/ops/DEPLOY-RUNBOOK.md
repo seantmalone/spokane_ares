@@ -30,7 +30,7 @@ Secrets exist in exactly two places. Never put them in the repository, a commit 
 | `ssh_config` | `Host spokares-live`, included from `~/.ssh/config`. The ops scripts use this alias through `wordpress/ops/ops.env` (git-ignored) |
 | `verpex-site.md` | The provisioning record: ids, servers, what was configured. It holds no secret values |
 
-**GitHub:** the repository's environment **`production`** (Settings > Environments). Only workflow runs started from `main` or from a `v*` tag may use it, so a branch or a fork can't reach the secrets. Pull requests never get them. No required reviewer is set, because releases deploy automatically on a tag. If you want every deploy to wait for your click, add yourself under Required reviewers; `research/security-hosting.md` §8.2 suggests this.
+**GitHub:** the repository's environment **`production`** (Settings > Environments). Only workflow runs started from `main` or from a `v*` tag may use it, so a branch or a fork can't reach the secrets. Pull requests never get them. **seantmalone** is set as a required reviewer (checked 2026-10-13), so every deploy, including one started by a pushed tag, waits at the deploy job until approved under Actions › the run › Review deployments (`research/security-hosting.md` §8.2).
 
 | Secret | Value comes from |
 |---|---|
@@ -49,15 +49,15 @@ gh secret set DEPLOY_SSH_KEY --env production --repo seantmalone/spokane_ares < 
 
 ## Release (the normal way)
 
-1. Bump `Version` in all eight places that `ops/ci.sh` checks: the theme's `style.css`, `SPOKARES_THEME_VERSION` and `readme.txt`; the plugin's header, constant and `readme.txt`; the must-use plugin's header and constant.
+1. Set the version in all eight places that `ops/ci.sh` checks: `wordpress/ops/bump-version.sh 0.3.0`. It edits the theme's `style.css`, `SPOKARES_THEME_VERSION` and `readme.txt`; the plugin's header, constant and `readme.txt`; the must-use plugin's header and constant; then re-reads all eight. Add a Changelog entry to `plugins/spokares-core/readme.txt`.
 2. Commit, push `main`, and wait for CI to pass (`gh run watch`).
 3. Tag and push the tag:
    ```bash
    git tag -a v0.2.0 -m "v0.2.0: <what changed>"
    git push origin v0.2.0
    ```
-4. The **Deploy** workflow starts by itself. It runs `ci.sh --tag=v0.2.0` (the eight versions must equal `0.2.0`), deploys, and checks the site. Watch it with `gh run watch`, or under Actions > Deploy.
-5. The release zips are kept on the run as the artifact `release-v0.2.0` for 90 days. To keep them longer, attach them to a GitHub release:
+4. The **Deploy** workflow starts by itself. It runs `ci.sh --tag=v0.2.0` (the eight versions must equal `0.2.0`), waits for your approval (Review deployments), deploys, and checks the site. Watch it with `gh run watch`, or under Actions > Deploy.
+5. Its last job creates the GitHub release `v0.2.0` with the zips and `SHA256SUMS` attached, so they outlive the run's 90-day artifact. If that job failed, re-run it, or by hand:
    ```bash
    gh run download <run id> -n release-v0.2.0 -D /tmp/release-v0.2.0
    gh release create v0.2.0 /tmp/release-v0.2.0/*
@@ -67,7 +67,7 @@ If routes, post types or the `/docs/` rule changed, also flush the rewrite rules
 
 ### One-off steps for a release
 
-A deploy changes code, never stored content, so a release that renames words stored in the database lists them here. Run them once, after that release is live, on the host in `public_html` (`ssh spokares-live`, then `cd public_html`). Each is safe to repeat.
+A deploy changes code, never stored content, so a release that renames words stored in the database lists them here. Run them once, after that release is live, on the host in `public_html` (`ssh spokares-live`, then `cd public_html`). Take a copy first with `wordpress/ops/host-backup.sh <label>` (it prunes host copies older than 14 days). Each step is safe to repeat.
 
 **The release that ships the volunteer-editor review (after v0.1.1; UX spec §7: "rota" becomes "Net Control Schedule", "Open slot" becomes "Volunteer needed"):**
 
@@ -118,7 +118,7 @@ Deploys never overlap: the workflow's concurrency group `deploy-production` queu
 
 ### What the check does
 
-`ops/check-live.sh` does three things:
+`ops/check-live.sh` does four things:
 
 - It compares the host's code with the deployed commit (`rsync -rcn`).
 - It runs the file checks from `weekly-check.sh --find-only`: no PHP under uploads, and nothing unexpected in plugins, themes or mu-plugins. The expected lists are in `~/.spokares-weekly.env` on the host, or the script's defaults until that file exists.
@@ -155,7 +155,35 @@ gh workflow run deploy.yml --repo seantmalone/spokane_ares -f ref=v0.1.0
 
 **Never** use Enhance "push live" or restore a staging site over production. It copies the database and would overwrite the editors' rota, events and documents.
 
-If the site is broken and GitHub is unavailable, run `wordpress/ops/deploy.sh v0.1.0 production` from the owner's machine. For a data problem, restore from the backups in PLAN §5.9: Enhance snapshots, UpdraftPlus, or the monthly `ops/backup-pull.sh` copy.
+If the site is broken and GitHub is unavailable, run `wordpress/ops/deploy.sh v0.1.0 production` from the owner's machine. For a data problem, see **Restore** below.
+
+## Restore
+
+For a data problem: lost or wrong content, a bad hand edit, a compromised database. Code problems are a rollback (above), not a restore.
+
+**1. Pick the copy.** Newest first, unless the problem is older than it:
+
+| Copy | Where | Use it when |
+|---|---|---|
+| A `host-backup.sh` copy | `~/backups/db-*.sql.gz` on the host (kept 14 days) | Undoing your own hand edit from today: `gunzip -c ~/backups/db-<time>.sql.gz \| wp db import -` in `public_html` |
+| Enhance snapshot | Panel › Website › Backups | The whole site (files and database) from a recent day, and the host is fine |
+| UpdraftPlus | S3 bucket, database weekly (8 kept), uploads monthly (3 kept); old versions recoverable for 30 days | The site's database can't be trusted, or the problem is weeks old |
+| `backup-pull.sh` copy | `SPOKARES_BACKUP_DIR` on the owner's machine | The host or its backups can't be trusted (a takeover): this copy never touched a credential on the host |
+
+**2. Restore it.** For an UpdraftPlus or `backup-pull.sh` copy, from the owner's machine:
+
+```bash
+wordpress/ops/restore.sh ~/spokares-backups/db/spokares-db-production-2026-10-01.sql.gz production --dry-run
+wordpress/ops/restore.sh ~/spokares-backups/db/spokares-db-production-2026-10-01.sql.gz production --uploads=$HOME/spokares-backups/uploads
+```
+
+It checks the dump and saves the current database on the host first (`~/backups/pre-restore-<time>.sql.gz`). Then it imports the dump, copies uploads if you asked, flushes caches and rewrite rules, and prints what the site now holds. Without `--delete-uploads` it never removes files. An UpdraftPlus database file (`*-db.gz`) works the same way once downloaded from S3.
+
+**3. Check.** Run `wordpress/ops/check-live.sh <deployed tag>`, then sign in and open the five jobs' screens. A restore brings back the editors' content as of that copy, so tell them what date the site went back to. If the database came from before a release with one-off steps (above), run those steps again.
+
+**4. If it was a takeover:** restore from the `backup-pull.sh` copy, not from the host's own backups. Then rotate every secret (WordPress passwords and two-factor, the deploy key, the UpdraftPlus key with `aws-backups-deploy.sh --rotate-key`, the Enhance token), and run `weekly-check.sh --no-ping`.
+
+**Drill:** twice a year (PLAN §5.9), and once before the DNS cutover. Clone production to an Enhance staging site, and restore the latest `backup-pull.sh` copy onto it with `restore.sh <dump> staging --uploads=…`. The script rewrites the live URL to the staging URL. Run `check-live.sh <tag> --staging`, then delete the staging site. Record the date here: *not yet run.*
 
 ## Rotating the deploy key
 

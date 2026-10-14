@@ -221,7 +221,7 @@ function postActions(I) {
   const ev = I.events || {};
   const doc = I.documents || {};
   return [
-    ['spokares_save_rota'], ['spokares_undo_rota'], ['spokares_save_net_details'], ['spokares_save_meetings'],
+    ['spokares_save_rota'], ['spokares_undo_rota'], ['spokares_paste_rota'], ['spokares_save_net_details'], ['spokares_save_meetings'],
     ['spokares_save_meeting_rules'], ['spokares_save_tiles'], ['spokares_save_site'],
     ['spokares_pull_file', doc['ics-213'] ? `&post=${doc['ics-213']}` : ''],
     ['spokares_duplicate_event', ev['set-2026'] ? `&post=${ev['set-2026']}` : ''],

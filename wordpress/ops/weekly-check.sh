@@ -92,12 +92,16 @@ if (( ! FIND_ONLY )); then
   elif [[ $admins == "$want" ]]; then ok "administrators: $admins"
   else note "administrators are '$admins', expected '$want'"; fi
 
+  # The accounts the enforcement covers, asked of the must-use plugin itself
+  # (edit_posts, or the rota or Net details capabilities), with the same rule
+  # spelled out if it isn't loaded.
   no2fa=$(wp eval '
     if ( ! class_exists( "Two_Factor_Core" ) ) { echo "TWO-FACTOR-MISSING"; return; }
-    foreach ( get_users( array( "capability" => "edit_posts", "fields" => "all" ) ) as $u ) {
-      if ( ! Two_Factor_Core::get_enabled_providers_for_user( $u ) ) { echo $u->user_login, " "; }
+    $covered = function_exists( "spokares_hard_2fa_user_can_change_site" ) ? "spokares_hard_2fa_user_can_change_site" : static fn( $id ) => user_can( $id, "edit_posts" ) || user_can( $id, "spokares_edit_rota" ) || user_can( $id, "spokares_edit_net_details" );
+    foreach ( get_users( array( "fields" => "all" ) ) as $u ) {
+      if ( $covered( (int) $u->ID ) && ! Two_Factor_Core::get_enabled_providers_for_user( $u ) ) { echo $u->user_login, " "; }
     }' 2>&1)
-  if [[ -z $no2fa ]]; then ok "every user who can edit has a Two-Factor method"; else note "users who can edit without Two-Factor: $no2fa"; fi
+  if [[ -z $no2fa ]]; then ok "every user who can change the site has a Two-Factor method"; else note "users who can change the site without Two-Factor: $no2fa"; fi
 
   devconst=$(wp eval 'foreach ( array( "SPOKARES_DEV", "SPOKARES_TODAY", "WP_DEVELOPMENT_MODE" ) as $c ) { if ( defined( $c ) && constant( $c ) ) { echo $c, " "; } }' 2>&1)
   if [[ -z $devconst ]]; then ok "no dev constants"; else note "dev constants defined: $devconst"; fi

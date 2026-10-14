@@ -424,7 +424,9 @@ test(
 			assert_same( 5, substr_count( $html, '>' . $kind . '</option>' ), 'each week offers "' . $kind . '"' );
 		}
 		assert_not_contains( 'A week ticked twice', $html, 'the ticked-twice rule' );
-		assert_contains( 'Shown under the Net Control Schedule on the For members page; the “Volunteer needed” tags link to it.', $html, 'the Asking for volunteers hint' );
+		// The two sentences moved to the Net Control Schedule (workflow finding N7): a pointer stays.
+		assert_not_contains( 'name="nets[open_slot_line]"', $html, 'no Asking for volunteers box' );
+		assert_contains( 'are on the Net Control Schedule screen, under the schedule.', $html, 'the pointer to the schedule' );
 		assert_same( 1, preg_match_all( '#<button type="submit" class="button button-primary[^"]*">Save</button>#', $html ), 'one Save button' );
 	}
 );

@@ -7,7 +7,8 @@
  * checked this file" tick, only in the allowed types, with a random suffix on
  * its name. Replace, a switch away from "Upload a file" and "Take it off the
  * site" remove the old file from the web (an administrator may keep it on
- * Replace, and can pull a file at once). Nothing deletes a file a document or
+ * Replace, and can pull a file at once; "Take it off the site" sets the file
+ * aside outside the web root, so Restore brings the document back whole). Nothing deletes a file a document or
  * page still uses, except those paths.
  *
  * @package spokares-core
@@ -240,7 +241,7 @@ function spokares_document_stored( int $post_id ): array {
 		'url'     => (string) get_post_meta( $post_id, 'spk_url', true ),
 		'privacy' => '1' === (string) get_post_meta( $post_id, 'spk_privacy_ok', true ),
 		'file_id' => $att,
-		'file'    => $att && '' !== (string) wp_get_attachment_url( $att ) ? $att : 0,
+		'file'    => $att && '' !== (string) wp_get_attachment_url( $att ) && ! spokares_attachment_is_held( $att ) ? $att : 0,
 	);
 }
 
@@ -632,6 +633,7 @@ function spokares_save_document( $post_id ): void {
 	$keep      = $result['keep_source'];
 	$source    = $keep ? $stored['source'] : $v['source'];
 	$file      = 'upload' === $source && ! $keep ? spokares_document_upload() : null;
+	$reviewed  = (string) get_post_meta( $post_id, 'spk_reviewed', true );
 
 	// The section (one term).
 	$tax = get_taxonomy( 'spk_doc_cat' );
@@ -766,6 +768,16 @@ function spokares_save_document( $post_id ): void {
 			update_post_meta( $post_id, 'spk_privacy_ok', '1' );
 			$ext = strtolower( pathinfo( (string) get_attached_file( (int) $att ), PATHINFO_EXTENSION ) );
 			update_post_meta( $post_id, 'spk_format', spokares_format_for_ext( $ext ) );
+			// A new file with a fresh "I checked" tick is a review (UX finding
+			// D2): Last reviewed becomes today, unless a date was typed in this
+			// save.
+			if ( ! spokares_is_ymd( $v['reviewed'] ) || $v['reviewed'] === $reviewed ) {
+				update_post_meta( $post_id, 'spk_reviewed', spokares_today() );
+			}
+			// A new file on the site ends "The file was pulled …" (D11).
+			if ( 'publish' === get_post_status( $post_id ) ) {
+				delete_post_meta( $post_id, 'spk_pulled' );
+			}
 			if ( $old && $old !== (int) $att ) {
 				$replaced = true;
 				$kept     = $remove_old
@@ -775,6 +787,14 @@ function spokares_save_document( $post_id ): void {
 		}
 	} elseif ( '' !== $result['upload'] && 'ok' !== $result['upload'] ) {
 		$refused = $result['upload'];
+	}
+
+	// Who last changed Last reviewed (D4).
+	$now_reviewed = (string) get_post_meta( $post_id, 'spk_reviewed', true );
+	if ( '' === $now_reviewed ) {
+		delete_post_meta( $post_id, 'spk_reviewed_by' );
+	} elseif ( $now_reviewed !== $reviewed ) {
+		update_post_meta( $post_id, 'spk_reviewed_by', get_current_user_id() );
 	}
 
 	// Typing that wasn't saved, and the reason, for the form after the redirect.
@@ -792,9 +812,7 @@ function spokares_save_document( $post_id ): void {
 		$values += array_intersect_key( $v, array_flip( array( 'source', 'url', 'label', 'format' ) ) );
 	}
 	spokares_document_retained( $post_id, true );
-	if ( $values || '' !== $refused || $result['demoted'] ) {
-		spokares_retain( 'spk_document_' . $post_id, $values, $errors );
-	}
+	spokares_retain( 'spk_document_' . $post_id, $values, $errors );
 
 	spokares_document_notice( $post_id, $v, $result, $refused, $replaced, $kept );
 	unset( $GLOBALS['spokares_document_check'] );
@@ -827,16 +845,20 @@ function spokares_document_notice( int $post_id, array $v, array $result, string
 	$status = get_post_status( $post_id );
 	$see    = array( spokares_site_url( '/members/documents/', (string) get_post_field( 'post_name', $post_id ) ), __( 'See it on the Documents & forms page', 'spokares-core' ) );
 	$after  = '' !== $kept ? ' ' . $kept : '';
+	// A Most Used button whose document the site no longer shows (D12).
+	$tile   = spokares_tile_gone_sentence( $post_id );
+	$after .= '' !== $tile ? ' ' . $tile : '';
 
 	if ( $result['demoted'] ) {
 		$keys = array_keys( $result['problems'] );
 		if ( array( 'privacy' ) === $keys && '' === $refused ) {
 			$tick = 'link' === $v['source'] ? __( 'I checked the page it links to', 'spokares-core' ) : __( 'I checked this file', 'spokares-core' );
 			/* translators: %s: the words of the privacy tick, e.g. "I checked this file". */
-			spokares_add_notice( 'error', sprintf( __( 'Not published yet: tick “%s”, then click Publish.', 'spokares-core' ), $tick ) );
+			$text = sprintf( __( 'Not published yet: tick “%s”, then click Publish.', 'spokares-core' ), $tick );
 		} else {
-			spokares_add_notice( 'error', __( 'Not published yet. Fix the boxes outlined in red, then click Publish.', 'spokares-core' ) );
+			$text = __( 'Not published yet. Fix the boxes outlined in red, then click Publish.', 'spokares-core' );
 		}
+		spokares_add_notice( 'error', $text . ( '' !== $tile ? ' ' . $tile : '' ) );
 		return;
 	}
 
@@ -853,7 +875,7 @@ function spokares_document_notice( int $post_id, array $v, array $result, string
 		}
 		if ( $not ) {
 			/* translators: %s: the fields that weren't saved, e.g. "the new file". */
-			spokares_add_notice( 'warning', sprintf( __( 'Saved, except %s (outlined in red).', 'spokares-core' ), spokares_and_list( $not ) ) );
+			spokares_add_notice( 'warning', sprintf( __( 'Saved, except %s (outlined in red).', 'spokares-core' ), spokares_and_list( $not ) ) . ( '' !== $tile ? ' ' . $tile : '' ) );
 		} elseif ( $replaced ) {
 			$text = '' === $kept
 				? __( 'Saved. The new file is on the site and the old one is off the web.', 'spokares-core' )
@@ -886,9 +908,13 @@ add_action( 'post_edit_form_tag', 'spokares_document_form_tag' );
 
 /**
  * "Take it off the site" (the Save box's trash link, which carries
- * spk_remove_file=1) takes the file off the web too (§3.9). WordPress has
- * already checked the trash nonce and the capability. A document trashed any
- * other way keeps its file, so it can be restored with it.
+ * spk_remove_file=1) takes the file off the web too (§3.9): it is set aside
+ * in the held folder, outside the web root, so Restore or Undo can bring the
+ * document back whole (UX finding D6). If the held folder can't be used the
+ * file is deleted, as before, and the notice says so. A file another
+ * document or a page uses stays on the web. WordPress has already checked
+ * the trash nonce and the capability. A document trashed any other way keeps
+ * its file on the web, so it can be restored with it.
  *
  * @param int $post_id Post.
  */
@@ -906,14 +932,19 @@ function spokares_document_trashed( $post_id ): void {
 	}
 	// phpcs:enable
 	$att = absint( get_post_meta( $post_id, 'spk_file', true ) );
-	if ( $att ) {
-		$note = spokares_remove_document_file( $att, $post_id );
-		if ( '' !== $note ) {
-			spokares_add_notice( 'warning', $note );
-		} else {
-			delete_post_meta( $post_id, 'spk_file_name' );
-		}
+	if ( ! $att || 'attachment' !== get_post_type( $att ) ) {
+		return;
 	}
+	if ( ! spokares_attachment_uses( $att, $post_id ) && spokares_hold_attachment( $att ) ) {
+		return; // Set aside: spk_file and its name stay, for Restore.
+	}
+	$note = spokares_remove_document_file( $att, $post_id );
+	if ( '' !== $note ) {
+		spokares_add_notice( 'warning', $note );
+		return;
+	}
+	delete_post_meta( $post_id, 'spk_file_name' );
+	spokares_add_notice( 'warning', __( 'The file couldn’t be set aside, so it was deleted from the web. If you bring the document back, upload the file again.', 'spokares-core' ) );
 }
 add_action( 'trashed_post', 'spokares_document_trashed' );
 
@@ -934,7 +965,7 @@ add_filter( 'get_delete_post_link', 'spokares_document_trash_link', 10, 2 );
 
 /**
  * Does this document say "Upload a file" but have no file on the web (its
- * file was removed when it went to the Trash)?
+ * file was deleted, or is still set aside, when it went to the Trash)?
  *
  * @param int $post_id Document.
  */
@@ -943,14 +974,16 @@ function spokares_document_lost_file( int $post_id ): bool {
 		return false;
 	}
 	$att = absint( get_post_meta( $post_id, 'spk_file', true ) );
-	return ! $att || ! wp_get_attachment_url( $att );
+	return ! $att || ! wp_get_attachment_url( $att ) || spokares_attachment_is_held( $att );
 }
 
 /**
  * Restore and Undo bring a document back as it was (Published or Draft),
- * except one whose file was removed from the web when it went to the Trash:
- * it comes back as a Draft, never Published without a file. Runs after
- * WordPress's own wp_untrash_post_set_previous_status (10).
+ * with its file: files.php spokares_document_untrash_file() has already put
+ * a held file back. A document whose file is gone (deleted because it
+ * couldn't be set aside, or it couldn't be put back) comes back as a Draft,
+ * never Published without a file. Runs after WordPress's own
+ * wp_untrash_post_set_previous_status (10).
  *
  * @param string $status   Status to restore to.
  * @param int    $post_id  Post.
@@ -995,6 +1028,10 @@ function spokares_document_bulk_messages( $messages, $bulk_counts ) {
 				'publish' === $was ? __( '“%s” is off the site.', 'spokares-core' ) : __( '“%s” is in the Trash.', 'spokares-core' ),
 				$quote( $id )
 			);
+			$tile = 'publish' === $was ? spokares_tile_gone_sentence( $id ) : '';
+			if ( '' !== $tile ) {
+				$m['trashed'] .= ' ' . esc_html( $tile ); // D12.
+			}
 		} else {
 			/* translators: %s: how many. */
 			$m['trashed'] = _n( '%s document is off the site.', '%s documents are off the site.', (int) $bulk_counts['trashed'], 'spokares-core' );
@@ -1018,12 +1055,19 @@ function spokares_document_bulk_messages( $messages, $bulk_counts ) {
 			}
 			$m['untrashed'] = sprintf( $text, $quote( $id ) );
 		} else {
-			$drafts         = array_filter( $ids, static fn( $id ) => 'draft' === get_post_status( $id ) );
-			$m['untrashed'] = $drafts
+			$n      = (int) $bulk_counts['untrashed'];
+			$lost   = array_filter( $ids, static fn( $id ) => spokares_document_lost_file( (int) $id ) );
+			$drafts = array_filter( $ids, static fn( $id ) => 'publish' !== get_post_status( $id ) );
+			if ( $lost ) {
 				/* translators: %s: how many. */
-				? _n( '%s document is back; drafts need their file uploaded again, then Publish.', '%s documents are back; drafts need their file uploaded again, then Publish.', (int) $bulk_counts['untrashed'], 'spokares-core' )
+				$m['untrashed'] = _n( '%s document is back; drafts need their file uploaded again, then Publish.', '%s documents are back; drafts need their file uploaded again, then Publish.', $n, 'spokares-core' );
+			} elseif ( $drafts ) {
 				/* translators: %s: how many. */
-				: _n( '%s document is back on the site.', '%s documents are back on the site.', (int) $bulk_counts['untrashed'], 'spokares-core' );
+				$m['untrashed'] = _n( '%s document is back as it was.', '%s documents are back as they were.', $n, 'spokares-core' );
+			} else {
+				/* translators: %s: how many. */
+				$m['untrashed'] = _n( '%s document is back on the site.', '%s documents are back on the site.', $n, 'spokares-core' );
+			}
 		}
 	}
 	$messages['spk_document'] = $m;
@@ -1032,8 +1076,22 @@ function spokares_document_bulk_messages( $messages, $bulk_counts ) {
 add_filter( 'bulk_post_updated_messages', 'spokares_document_bulk_messages', 20, 2 );
 
 /**
- * Pull this file now (administrators): delete the file at once, set the
- * document to "Soon" and Draft, and record who and when.
+ * The other documents and pages that use a document's file, as one phrase
+ * ("Net scripts and About"), or '' when none do.
+ *
+ * @param int $att_id Attachment.
+ * @param int $doc_id The document itself (not counted).
+ */
+function spokares_document_file_used_by( int $att_id, int $doc_id ): string {
+	$uses = $att_id ? spokares_attachment_uses( $att_id, $doc_id ) : array();
+	return $uses ? spokares_and_list( array_map( static fn( $t ) => html_entity_decode( (string) $t, ENT_QUOTES, 'UTF-8' ), $uses ) ) : '';
+}
+
+/**
+ * Pull this file now (administrators): delete the file at once, even when
+ * other documents or pages use it (it is the emergency tool; its question
+ * names them first), set the document to "Soon" and Draft, and record who
+ * and when.
  */
 function spokares_handle_pull_file(): void {
 	$id = isset( $_GET['post'] ) ? absint( $_GET['post'] ) : 0;
@@ -1041,7 +1099,8 @@ function spokares_handle_pull_file(): void {
 	if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'edit_post', $id ) || 'spk_document' !== get_post_type( $id ) ) {
 		wp_die( esc_html__( 'Sorry, you are not allowed to pull this file.', 'spokares-core' ), '', array( 'response' => 403 ) );
 	}
-	$att = absint( get_post_meta( $id, 'spk_file', true ) );
+	$att  = absint( get_post_meta( $id, 'spk_file', true ) );
+	$used = spokares_document_file_used_by( $att, $id );
 	delete_post_meta( $id, 'spk_file' );
 	delete_post_meta( $id, 'spk_file_name' );
 	update_post_meta( $id, 'spk_source', 'soon' );
@@ -1057,7 +1116,12 @@ function spokares_handle_pull_file(): void {
 		wp_delete_attachment( $att, true );
 	}
 	spokares_purge_cache();
-	spokares_add_notice( 'success', __( 'The file is off the web and the document is a draft marked “Soon”.', 'spokares-core' ) );
+	$text = __( 'The file is off the web and the document is a draft marked “Soon”.', 'spokares-core' );
+	if ( '' !== $used ) {
+		/* translators: %s: documents and pages, e.g. "Net scripts and About". */
+		$text .= ' ' . sprintf( __( 'Its links on %s no longer work: fix them there.', 'spokares-core' ), $used );
+	}
+	spokares_add_notice( '' !== $used ? 'warning' : 'success', $text );
 	wp_safe_redirect( admin_url( 'edit.php?post_type=spk_document' ) );
 	exit;
 }
@@ -1212,12 +1276,12 @@ function spokares_document_form_fields( $post ): void {
 	$file         = $stored['file'];
 	$file_url     = $file ? (string) wp_get_attachment_url( $file ) : '';
 	$pulled       = get_post_meta( $post->ID, 'spk_pulled', true );
-	$button       = 0;
-	foreach ( array_slice( spokares_opt( 'spk_tiles' ), 0, 4 ) as $i => $tile ) {
-		if ( (int) $tile['doc'] === $post->ID ) {
-			$button = $i + 1;
-		}
-	}
+	$button       = spokares_document_button( (int) $post->ID );
+	// Typing held back on a published document (or a new source that wasn't
+	// taken): the boxes show it, the site doesn't (D10).
+	$shows_held  = ! $new && 'publish' === $post->post_status && array() !== $retained['values'];
+	$reviewed_by = absint( get_post_meta( $post->ID, 'spk_reviewed_by', true ) );
+
 	list( $places, $place ) = spokares_document_place_choices( $post->ID, $v['section'], $new );
 	$tick_file              = $file && $stored['privacy'] ? 'new-file' : 'file';
 	$err                    = static fn( string $key ): string => isset( $p[ $key ] ) ? ' spk-field-error' : '';
@@ -1226,6 +1290,9 @@ function spokares_document_form_fields( $post ): void {
 	<div class="spk-doc-form">
 		<?php if ( $new ) : ?>
 			<p class="spk-name-match" id="spk-name-match" role="status"></p>
+		<?php endif; ?>
+		<?php if ( $shows_held ) : ?>
+			<p class="spk-banner spk-banner--amber spk-held-line"><?php esc_html_e( 'The boxes outlined in red show what you typed. The site still shows the saved version.', 'spokares-core' ); ?></p>
 		<?php endif; ?>
 		<?php if ( isset( $p['title'] ) ) : ?>
 			<span class="spk-error-text" id="spk-title-problem"><?php echo esc_html( $p['title'] ); ?></span>
@@ -1290,7 +1357,7 @@ function spokares_document_form_fields( $post ): void {
 				<?php endif; ?>
 				<p class="spk-file">
 					<label for="spk-upload"><?php echo esc_html( $file ? __( 'Replace with', 'spokares-core' ) : __( 'File', 'spokares-core' ) ); ?></label>
-					<input type="file" id="spk-upload" name="spk_upload" accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png" disabled class="<?php echo esc_attr( trim( $err( 'upload' ) ) ); ?>">
+					<input type="file" id="spk-upload" name="spk_upload" accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png" class="<?php echo esc_attr( trim( $err( 'upload' ) ) ); ?>">
 				</p>
 				<?php if ( ! $file ) : ?>
 					<p class="description"><?php esc_html_e( 'PDF, Word (.docx), Excel (.xlsx), JPEG or PNG.', 'spokares-core' ); ?></p>
@@ -1389,7 +1456,7 @@ function spokares_document_form_fields( $post ): void {
 						?>
 					</p>
 				<?php else : ?>
-					<label><input type="checkbox" name="spk_most_used" value="1" <?php checked( $v['most_used'] ); ?>> <?php esc_html_e( 'Also list under Most used', 'spokares-core' ); ?></label>
+					<label><input type="checkbox" name="spk_most_used" value="1" <?php checked( $v['most_used'] ); ?>> <?php esc_html_e( 'Show under the Most used filter', 'spokares-core' ); ?></label>
 				<?php endif; ?>
 			</div>
 			<div class="spk-field">
@@ -1409,6 +1476,12 @@ function spokares_document_form_fields( $post ): void {
 				<label for="spk-reviewed"><?php esc_html_e( 'Last reviewed', 'spokares-core' ); ?></label>
 				<input type="date" id="spk-reviewed" name="spk_reviewed" value="<?php echo esc_attr( $v['reviewed'] ); ?>">
 				<button type="button" class="button spk-reviewed-today" data-target="spk-reviewed"><?php esc_html_e( 'Mark reviewed today', 'spokares-core' ); ?></button>
+				<?php
+				if ( $reviewed_by && spokares_is_ymd( $v['reviewed'] ) ) {
+					/* translators: %s: a person's name. */
+					echo '<p class="description">' . esc_html( sprintf( __( 'Marked by %s.', 'spokares-core' ), spokares_user_name( $reviewed_by ) ) ) . '</p>';
+				}
+				?>
 			</div>
 		</details>
 
@@ -1533,10 +1606,20 @@ function spokares_document_columns( $cols ): array {
 	);
 	if ( current_user_can( 'manage_options' ) ) {
 		$out['spk_check'] = __( 'Needs checking', 'spokares-core' );
+	} elseif ( ! spokares_document_list_trash() ) {
+		unset( $out['cb'] ); // No bulk actions for editors outside the Trash (below), so no row ticks.
 	}
 	return $out;
 }
 add_filter( 'manage_spk_document_posts_columns', 'spokares_document_columns' );
+
+/**
+ * Is the list showing the Trash?
+ */
+function spokares_document_list_trash(): bool {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- which list view; read-only.
+	return isset( $_GET['post_status'] ) && 'trash' === $_GET['post_status'];
+}
 
 /**
  * Column values.
@@ -1569,8 +1652,10 @@ function spokares_document_column( $col, $post_id ): void {
 			echo esc_html( $get( 'spk_version' ) );
 			break;
 		case 'spk_reviewed':
-			$d   = $get( 'spk_reviewed' );
-			$old = ! spokares_is_ymd( $d ) || $d < spokares_add_days( spokares_today(), -365 );
+			$d = $get( 'spk_reviewed' );
+			// Red for what the Dashboard counts and Needs review lists: on the
+			// site, privacy-checked, and not reviewed in 12 months (D3).
+			$old = spokares_document_review_due( $d ) && 'publish' === get_post_status( $post_id ) && '1' === $get( 'spk_privacy_ok' );
 			echo '<span class="' . ( $old ? 'spk-flag' : '' ) . '">' . esc_html( spokares_is_ymd( $d ) ? spokares_fmt_date( $d, 'mdy' ) : __( 'Not yet', 'spokares-core' ) ) . '</span>';
 			break;
 		case 'spk_check':
@@ -1579,6 +1664,50 @@ function spokares_document_column( $col, $post_id ): void {
 	}
 }
 add_action( 'manage_spk_document_posts_custom_column', 'spokares_document_column', 10, 2 );
+
+/**
+ * How often a document is reviewed, in days: the Dashboard's "not reviewed
+ * in 12 months", the Needs review view and the list's red dates all use it.
+ */
+function spokares_document_review_days(): int {
+	return 365;
+}
+
+/**
+ * Is a review due for this "Last reviewed" date (Y-m-d, or '' for never)?
+ *
+ * @param string $reviewed Last reviewed.
+ */
+function spokares_document_review_due( string $reviewed ): bool {
+	return ! spokares_is_ymd( $reviewed ) || $reviewed < spokares_add_days( spokares_today(), -spokares_document_review_days() );
+}
+
+/**
+ * The documents the Dashboard counts as "not reviewed in 12 months": those on
+ * the Documents & forms page (published, privacy-checked, in a section)
+ * whose review is due.
+ *
+ * @return int[]
+ */
+function spokares_documents_needing_review(): array {
+	$ids = array();
+	foreach ( spokares_library_documents() as $docs ) {
+		foreach ( $docs as $doc ) {
+			if ( spokares_document_review_due( (string) get_post_meta( (int) $doc['id'], 'spk_reviewed', true ) ) ) {
+				$ids[] = (int) $doc['id'];
+			}
+		}
+	}
+	return $ids;
+}
+
+/**
+ * Is the list showing the Needs review view (edit.php?…&spk_review=1)?
+ */
+function spokares_document_list_review(): bool {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- list filtering only.
+	return isset( $_GET['spk_review'] ) && '1' === $_GET['spk_review'];
+}
 
 /**
  * Sortable: Document and Reviewed (the Dashboard links to Reviewed, oldest first).
@@ -1668,6 +1797,16 @@ function spokares_document_list_query( $q ): void {
 		// What members see as "Soon" (the Dashboard's "{n} marked Soon").
 		$meta[] = spokares_document_soon_meta_query();
 		$q->set( 'post_status', 'publish' );
+	}
+	if ( spokares_document_list_review() ) {
+		// Exactly the documents the Dashboard counts (D3), oldest review first.
+		$due = spokares_documents_needing_review();
+		$q->set( 'post__in', $due ? $due : array( 0 ) );
+		$q->set( 'post_status', 'publish' );
+		if ( ! $chosen ) {
+			$q->set( 'orderby', 'spk_reviewed' );
+			$q->set( 'order', 'ASC' );
+		}
 	}
 	if ( $meta ) {
 		$q->set( 'meta_query', array_merge( array( 'relation' => 'AND' ), $meta ) );
@@ -1769,9 +1908,11 @@ function spokares_document_views( $views ): array {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		unset( $views['mine'] );
 	}
-	$on = spokares_document_list_soon();
-	$n  = spokares_document_soon_count();
-	if ( $on && isset( $views['all'] ) ) {
+	$on     = spokares_document_list_soon();
+	$n      = spokares_document_soon_count();
+	$review = spokares_document_list_review();
+	$due    = count( spokares_documents_needing_review() );
+	if ( ( $on || $review ) && isset( $views['all'] ) ) {
 		$views['all'] = str_replace( array( ' class="current"', ' aria-current="page"' ), '', $views['all'] );
 	}
 	$trash = $views['trash'] ?? null;
@@ -1785,6 +1926,15 @@ function spokares_document_views( $views ): array {
 			$n
 		);
 	}
+	if ( $due || $review ) {
+		$views['spk_review'] = sprintf(
+			'<a href="%1$s"%2$s>%3$s <span class="count">(%4$d)</span></a>',
+			esc_url( spokares_document_review_url() ),
+			$review ? ' class="current" aria-current="page"' : '',
+			esc_html__( 'Needs review', 'spokares-core' ),
+			$due
+		);
+	}
 	if ( null !== $trash ) {
 		$views['trash'] = $trash;
 	}
@@ -1796,6 +1946,13 @@ function spokares_document_views( $views ): array {
 	return $views;
 }
 add_filter( 'views_edit-spk_document', 'spokares_document_views' );
+
+/**
+ * The Needs review view's address (the Dashboard links to it).
+ */
+function spokares_document_review_url(): string {
+	return admin_url( 'edit.php?post_type=spk_document&spk_review=1' );
+}
 
 /**
  * The section dropdown above the list.
@@ -1815,6 +1972,9 @@ function spokares_document_filter_ui( $post_type ): void {
 	if ( spokares_document_list_soon() ) {
 		echo '<input type="hidden" name="spk_source" value="soon">';
 	}
+	if ( spokares_document_list_review() ) {
+		echo '<input type="hidden" name="spk_review" value="1">';
+	}
 	// phpcs:enable
 	echo '<label class="screen-reader-text" for="spk-section-filter">' . esc_html__( 'Filter by section', 'spokares-core' ) . '</label>';
 	echo '<select name="spk_section" id="spk-section-filter"><option value="">' . esc_html__( 'All sections', 'spokares-core' ) . '</option>';
@@ -1826,15 +1986,16 @@ function spokares_document_filter_ui( $post_type ): void {
 add_action( 'restrict_manage_posts', 'spokares_document_filter_ui' );
 
 /**
- * Bulk actions: Mark reviewed today (no bulk Edit, no bulk Trash).
+ * Bulk actions: Mark reviewed today, for administrators only (no bulk Edit,
+ * no bulk Trash). An editor reviews a document by opening it (UX finding D4:
+ * a bulk tick marks documents reviewed that nobody opened).
  *
  * @param array $actions Actions.
  */
 function spokares_document_bulk_actions( $actions ): array {
+	$actions = is_array( $actions ) ? $actions : array();
 	unset( $actions['edit'], $actions['trash'] );
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- which list view; read-only.
-	$in_trash = isset( $_GET['post_status'] ) && 'trash' === $_GET['post_status'];
-	if ( ! $in_trash ) {
+	if ( ! spokares_document_list_trash() && current_user_can( 'manage_options' ) ) {
 		// The Trash view keeps only Restore and Delete permanently.
 		$actions['spk_mark_reviewed'] = __( 'Mark reviewed today', 'spokares-core' );
 	}
@@ -1854,16 +2015,32 @@ function spokares_document_bulk_handle( $redirect, $action, $ids ) {
 		return $redirect;
 	}
 	check_admin_referer( 'bulk-posts' );
-	$n = 0;
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( esc_html__( 'Only the webmaster can mark several documents reviewed at once. Open a document to mark it reviewed.', 'spokares-core' ), '', array( 'response' => 403 ) );
+	}
+	$n       = 0;
+	$skipped = array();
 	foreach ( (array) $ids as $id ) {
 		$id = (int) $id;
-		if ( 'spk_document' === get_post_type( $id ) && current_user_can( 'edit_post', $id ) ) {
-			update_post_meta( $id, 'spk_reviewed', spokares_today() );
-			++$n;
+		if ( 'spk_document' !== get_post_type( $id ) || ! current_user_can( 'edit_post', $id ) ) {
+			continue;
 		}
+		if ( 'publish' !== get_post_status( $id ) ) {
+			// Not on the site: there is nothing public to review.
+			$skipped[] = html_entity_decode( get_the_title( $id ), ENT_QUOTES, 'UTF-8' );
+			continue;
+		}
+		update_post_meta( $id, 'spk_reviewed', spokares_today() );
+		update_post_meta( $id, 'spk_reviewed_by', get_current_user_id() );
+		++$n;
 	}
 	/* translators: %d: number of documents. */
-	spokares_add_notice( 'success', sprintf( _n( 'Marked %d document reviewed today.', 'Marked %d documents reviewed today.', $n, 'spokares-core' ), $n ) );
+	$text = sprintf( _n( 'Marked %d document reviewed today.', 'Marked %d documents reviewed today.', $n, 'spokares-core' ), $n );
+	if ( $skipped ) {
+		/* translators: %s: document names. */
+		$text .= ' ' . sprintf( _n( 'Not marked, because it isn’t on the site: %s.', 'Not marked, because they aren’t on the site: %s.', count( $skipped ), 'spokares-core' ), spokares_and_list( $skipped ) );
+	}
+	spokares_add_notice( $skipped ? 'warning' : 'success', $text );
 	return $redirect;
 }
 add_filter( 'handle_bulk_actions-edit-spk_document', 'spokares_document_bulk_handle', 10, 3 );
@@ -1886,13 +2063,19 @@ function spokares_document_row_actions( $actions, $post ) {
 	if ( 'publish' === $post->post_status ) {
 		$out['view-site'] = '<a href="' . esc_url( spokares_site_url( '/members/documents/', $post->post_name ) ) . '">' . esc_html__( 'View on site', 'spokares-core' ) . '</a>';
 	}
-	if ( current_user_can( 'manage_options' ) && absint( get_post_meta( $post->ID, 'spk_file', true ) ) ) {
+	$att = absint( get_post_meta( $post->ID, 'spk_file', true ) );
+	if ( current_user_can( 'manage_options' ) && $att ) {
 		$url = wp_nonce_url( admin_url( 'admin-post.php?action=spokares_pull_file&post=' . $post->ID ), 'spokares_pull_file_' . $post->ID );
 		$ask = sprintf(
 			/* translators: %s: document name. */
 			__( 'Delete the file of “%s” from the web now? This can’t be undone: the document becomes a “Soon” draft until a file is uploaded again.', 'spokares-core' ),
 			html_entity_decode( get_the_title( $post ), ENT_QUOTES, 'UTF-8' )
 		);
+		$used = spokares_document_file_used_by( $att, (int) $post->ID );
+		if ( '' !== $used ) {
+			/* translators: %s: documents and pages, e.g. "Net scripts and About". */
+			$ask .= ' ' . sprintf( __( 'It is also used by %s: their links to it will stop working.', 'spokares-core' ), $used );
+		}
 		$out['pull'] = '<a class="spk-danger" data-spk-ask="' . esc_attr( $ask ) . '" href="' . esc_url( $url ) . '">' . esc_html__( 'Pull this file now', 'spokares-core' ) . '</a>';
 	}
 	return $out;

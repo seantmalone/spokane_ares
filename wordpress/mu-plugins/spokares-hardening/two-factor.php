@@ -8,6 +8,9 @@
  *    profile, which says why, and refused REST (except two-factor/1.0 and
  *    reading their own account), admin-ajax (except the profile screen's
  *    own requests) and async-upload;
+ *  - a Dashboard reminder (no lock-out) for covered accounts whose only
+ *    method is e-mailed codes: set up the phone app or print backup codes;
+ *    amber after 14 days from the first sign-in;
  *  - fail closed: without the plugin, non-administrators are refused wp-admin
  *    and administrators see a red notice that says how to fix it.
  *  - plain words (UX spec §3.9): once the phone app is set up it is the
@@ -84,7 +87,87 @@ function spokares_hard_2fa_missing(): bool {
  * Net details and Meeting rules), whatever their role says.
  */
 function spokares_hard_2fa_can_change_site(): bool {
-	return current_user_can( 'edit_posts' ) || current_user_can( 'spokares_edit_rota' ) || current_user_can( 'spokares_edit_net_details' );
+	return spokares_hard_2fa_user_can_change_site( get_current_user_id() );
+}
+
+/**
+ * The same question for any account (the weekly check's audit asks it too).
+ *
+ * @param int $user_id User.
+ */
+function spokares_hard_2fa_user_can_change_site( int $user_id ): bool {
+	return $user_id > 0 && ( user_can( $user_id, 'edit_posts' ) || user_can( $user_id, 'spokares_edit_rota' ) || user_can( $user_id, 'spokares_edit_net_details' ) );
+}
+
+/* ------------------------------------------- the phone-app reminder (G2) */
+
+/**
+ * When the site first saw the account sign in (a Unix time), recorded at its
+ * first sign-in, or the first time it is asked for. The phone-app reminder
+ * counts its 14 days from here. 0 for no account.
+ *
+ * @param int $user_id User.
+ */
+function spokares_hard_2fa_first_seen( int $user_id ): int {
+	if ( $user_id <= 0 ) {
+		return 0;
+	}
+	$at = (int) get_user_meta( $user_id, 'spk_first_sign_in', true );
+	if ( ! $at ) {
+		$at = time();
+		update_user_meta( $user_id, 'spk_first_sign_in', $at );
+	}
+	return $at;
+}
+
+/**
+ * Record an account's first sign-in.
+ *
+ * @param string  $login User login.
+ * @param WP_User $user  User.
+ */
+function spokares_hard_2fa_note_sign_in( $login, $user ): void {
+	unset( $login );
+	if ( $user instanceof WP_User ) {
+		spokares_hard_2fa_first_seen( $user->ID );
+	}
+}
+add_action( 'wp_login', 'spokares_hard_2fa_note_sign_in', 10, 2 );
+
+/**
+ * Should this account be reminded to set up the phone app or print backup
+ * codes? Only an account the enforcement covers whose one second step is
+ * e-mailed codes (every new account starts there): if mail fails, it can't
+ * sign in. Nobody is locked out for this; the reminder only gets louder.
+ *
+ * @param int $user_id User.
+ * @return string '' (no reminder), 'soon' (its first 14 days) or 'due' (after them).
+ */
+function spokares_hard_2fa_reminder( int $user_id ): string {
+	if ( ! spokares_hard_2fa_active() || ! spokares_hard_2fa_user_can_change_site( $user_id ) ) {
+		return '';
+	}
+	$available = Two_Factor_Core::get_available_providers_for_user( $user_id );
+	if ( ! is_array( $available ) || ! isset( $available['Two_Factor_Email'] ) ) {
+		return ''; // No method at all is the enforcement's job.
+	}
+	if ( isset( $available['Two_Factor_Totp'] ) || isset( $available['Two_Factor_Backup_Codes'] ) ) {
+		return '';
+	}
+	return time() - spokares_hard_2fa_first_seen( $user_id ) >= 14 * DAY_IN_SECONDS ? 'due' : 'soon';
+}
+
+/**
+ * The reminder's sentence, and the words of its link to the profile.
+ *
+ * @return array{text:string,link:string,url:string}
+ */
+function spokares_hard_2fa_reminder_words(): array {
+	return array(
+		'text' => __( 'Your sign-in codes come only by e-mail, so if e-mail is slow or down you can’t sign in. Set up the phone app, or print backup codes, on your profile.', 'spokares-hardening' ),
+		'link' => __( 'Set it up on your profile', 'spokares-hardening' ),
+		'url'  => admin_url( 'profile.php#two-factor-options' ),
+	);
 }
 
 /**
@@ -249,8 +332,31 @@ function spokares_hard_2fa_hide_primary(): void {
 add_action( 'admin_head', 'spokares_hard_2fa_hide_primary' );
 
 /**
- * The Two-Factor plugin's words, in plain English (its own text domain only;
- * the source strings are Two-Factor 0.16's).
+ * The Two-Factor plugin's words this site rewords: source text => plain
+ * English. The source strings are Two-Factor 0.17's (the same as 0.16's;
+ * 0.17 only added strings). The live site auto-updates the plugin, so a
+ * dev test checks that every source string is still in the installed copy.
+ *
+ * @return array<string,string>
+ */
+function spokares_hard_2fa_word_map(): array {
+	$code  = __( 'Code:', 'spokares-hardening' );
+	$retry = __( 'That code didn’t work. Wait for the next code in the app, then type it.', 'spokares-hardening' );
+	return array(
+		'Use your authenticator app for time-based one-time passwords (TOTP)' => __( 'Use the code from my phone app', 'spokares-hardening' ),
+		'Send a code to your email'         => __( 'E-mail me a code', 'spokares-hardening' ),
+		'Use a recovery code'               => __( 'Use a printed backup code', 'spokares-hardening' ),
+		'Authentication Code:'              => $code,
+		'Verification Code:'                => $code,
+		'Recovery Code:'                    => $code,
+		// One wrong code: the plugin's refusal, and its short wait before the next try.
+		'ERROR: Invalid verification code.' => $retry,
+		'ERROR: Too many invalid verification codes, you can try again in %s. This limit protects your account against automated attacks.' => $retry,
+	);
+}
+
+/**
+ * The Two-Factor plugin's words, in plain English (its own text domain only).
  *
  * @param string $translation Translated text.
  * @param string $text        Source text.
@@ -258,19 +364,7 @@ add_action( 'admin_head', 'spokares_hard_2fa_hide_primary' );
 function spokares_hard_2fa_words( $translation, $text ) {
 	static $words = null;
 	if ( null === $words ) {
-		$code  = __( 'Code:', 'spokares-hardening' );
-		$retry = __( 'That code didn’t work. Wait for the next code in the app, then type it.', 'spokares-hardening' );
-		$words = array(
-			'Use your authenticator app for time-based one-time passwords (TOTP)' => __( 'Use the code from my phone app', 'spokares-hardening' ),
-			'Send a code to your email'         => __( 'E-mail me a code', 'spokares-hardening' ),
-			'Use a recovery code'               => __( 'Use a printed backup code', 'spokares-hardening' ),
-			'Authentication Code:'              => $code,
-			'Verification Code:'                => $code,
-			'Recovery Code:'                    => $code,
-			// One wrong code: the plugin's refusal, and its short wait before the next try.
-			'ERROR: Invalid verification code.' => $retry,
-			'ERROR: Too many invalid verification codes, you can try again in %s. This limit protects your account against automated attacks.' => $retry,
-		);
+		$words = spokares_hard_2fa_word_map();
 	}
 	return $words[ $text ] ?? $translation;
 }

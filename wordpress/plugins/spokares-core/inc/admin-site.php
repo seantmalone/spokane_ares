@@ -82,9 +82,7 @@ function spokares_handle_save_site(): void {
 		spokares_add_notice( 'error', $message );
 	}
 	spokares_add_notice( $errors ? 'warning' : 'success', $errors ? __( 'Saved, except the fields outlined in red.', 'spokares-core' ) : __( 'Saved.', 'spokares-core' ), spokares_site_url( '/', 'visit' ), __( 'See it on Home', 'spokares-core' ) );
-	if ( $errors ) {
-		spokares_retain( 'spokares-site', $held, $errors );
-	}
+	spokares_retain( 'spokares-site', $held, $errors );
 	wp_safe_redirect( admin_url( 'options-general.php?page=spokares-site' ) );
 	exit;
 }

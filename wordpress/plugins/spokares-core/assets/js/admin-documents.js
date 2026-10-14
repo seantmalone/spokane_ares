@@ -4,12 +4,14 @@
  * spokares-admin-forms. The forms still save without it.
  *
  *  - Document form: "Where the file is" shows its own box. The privacy tick
- *    unlocks the file chooser, and unticks when the source changes (the
- *    chooser locks again), when a different file is chosen, or when the web
- *    address changes. On Add, a name that is already a document says so.
- *    "{n} left" in the Short note's last 10 characters. Place in section
- *    follows the section. A new file puts the cursor in Version. A web
- *    address typed without https:// gets it.
+ *    unlocks the file chooser (printed enabled, so the form still uploads
+ *    without this script; the save refuses a file without the tick), and
+ *    unticks when the source changes (the chooser locks again), when a
+ *    different file is chosen, or when the web address changes. On Add, a
+ *    name that is already a document says so. "{n} left" in the Short
+ *    note's last 10 characters. Place in section follows the section. A new
+ *    file puts the cursor in Version. A web address typed without https://
+ *    gets it.
  *  - Most Used: a document that is already another button swaps the two; a
  *    different one empties its words (the site then shows the document's
  *    name); the "Replace or change it" link follows the choice.

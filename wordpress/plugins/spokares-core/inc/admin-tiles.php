@@ -30,6 +30,65 @@ function spokares_tile_candidates(): array {
 }
 
 /**
+ * Which Most Used button a document is (1-4), or 0.
+ *
+ * @param int $doc_id Document.
+ */
+function spokares_document_button( int $doc_id ): int {
+	foreach ( array_slice( spokares_opt( 'spk_tiles' ), 0, 4 ) as $i => $tile ) {
+		if ( $doc_id && (int) $tile['doc'] === $doc_id ) {
+			return $i + 1;
+		}
+	}
+	return 0;
+}
+
+/**
+ * Does the site show this document's button? The same test as the Most
+ * Used block (render.php, the tiles view): published, privacy-checked, with
+ * a file or a link.
+ *
+ * @param int $doc_id Document.
+ */
+function spokares_tile_shows( int $doc_id ): bool {
+	$doc  = $doc_id ? spokares_public_document( $doc_id ) : null;
+	$data = $doc ? spokares_document_data( $doc ) : null;
+	return $data && 'soon' !== $data['source'];
+}
+
+/**
+ * The buttons whose document the site doesn't show now (a draft, in the
+ * Trash, "Soon", or not privacy-checked), so the button is missing.
+ *
+ * @return array<int,int> Button number (1-4) => document ID.
+ */
+function spokares_tiles_off_site(): array {
+	$out = array();
+	foreach ( array_slice( spokares_opt( 'spk_tiles' ), 0, 4 ) as $i => $tile ) {
+		$doc = (int) $tile['doc'];
+		if ( $doc && ! spokares_tile_shows( $doc ) ) {
+			$out[ $i + 1 ] = $doc;
+		}
+	}
+	return $out;
+}
+
+/**
+ * "It was button 2 on Most Used; that button is now empty on the site." for
+ * a document whose button the site no longer shows, else '' (UX finding D12).
+ *
+ * @param int $doc_id Document.
+ */
+function spokares_tile_gone_sentence( int $doc_id ): string {
+	$button = spokares_document_button( $doc_id );
+	if ( ! $button || spokares_tile_shows( $doc_id ) ) {
+		return '';
+	}
+	/* translators: %d: button number (1-4). */
+	return sprintf( __( 'It was button %d on Most Used; that button is now empty on the site.', 'spokares-core' ), $button );
+}
+
+/**
  * The Most Used screen.
  */
 function spokares_tiles_page(): void {
@@ -220,10 +279,10 @@ function spokares_handle_save_tiles(): void {
 			/* translators: %s: button numbers, e.g. "1 and 3". */
 			: sprintf( __( 'Saved, except the words on buttons %s (outlined in red).', 'spokares-core' ), spokares_and_list( array_map( 'strval', $rows ) ) );
 		spokares_add_notice( 'warning', $text );
-		spokares_retain( 'spokares-tiles', $held, $errors );
 	} else {
 		spokares_add_notice( 'success', __( 'Saved.', 'spokares-core' ), spokares_site_url( '/members/', 'quick-links' ), __( 'See it on the For members page', 'spokares-core' ) );
 	}
+	spokares_retain( 'spokares-tiles', $held, $errors );
 	spokares_redirect_to( 'spokares-tiles' );
 }
 add_action( 'admin_post_spokares_save_tiles', 'spokares_handle_save_tiles' );

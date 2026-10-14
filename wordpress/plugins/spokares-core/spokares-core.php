@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Spokane ARES core
  * Description:       Events, the Net Control Schedule, meetings, documents and the dynamic blocks for spokares.org. Deactivating it hides the lists; the data stays.
- * Version:           0.2.0
+ * Version:           0.3.0
  * Requires at least: 7.1
  * Requires PHP:      8.3
  * Tested up to:      7.1
@@ -16,7 +16,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SPOKARES_CORE_VERSION', '0.2.0' );
+define( 'SPOKARES_CORE_VERSION', '0.3.0' );
 define( 'SPOKARES_CORE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SPOKARES_CORE_URL', plugin_dir_url( __FILE__ ) );
 define( 'SPOKARES_CORE_FILE', __FILE__ );
@@ -33,6 +33,7 @@ require SPOKARES_CORE_DIR . 'inc/render.php';
 require SPOKARES_CORE_DIR . 'inc/routes.php';
 require SPOKARES_CORE_DIR . 'inc/files.php';
 require SPOKARES_CORE_DIR . 'inc/governance.php';
+require SPOKARES_CORE_DIR . 'inc/page-export.php';
 
 if ( is_admin() ) {
 	require SPOKARES_CORE_DIR . 'inc/admin-common.php';

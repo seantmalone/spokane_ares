@@ -259,3 +259,86 @@ function spokares_save_page_review( $post_id ): void {
 	spokares_purge_cache();
 }
 add_action( 'save_post_page', 'spokares_save_page_review' );
+
+/* ------------------------------------------------------ earlier versions */
+
+/**
+ * An editor restores an earlier version of Home, How it works or About
+ * (Dashboard › Page Text › Earlier versions, then core's Compare Revisions
+ * screen and its Restore This Revision button). Core's restore would copy
+ * the version's title, words and search-engine description over the page,
+ * and the save floor (spokares_page_insert_guard()) would quietly keep the
+ * page when the layout differs while core still said "restored". So for
+ * non-admins this answers the restore first: a version whose layout matches
+ * the page now (spokares_revision_restore_problem()) gets its words back,
+ * and nothing else; any other gets one sentence saying why not. Core's own
+ * checks (the revision exists, edit_post, the edit lock) still decide first.
+ */
+function spokares_revision_restore_for_editors(): void {
+	if ( ! spokares_layout_locked_for_user() ) {
+		return;
+	}
+	// Restore This Revision is a link (GET).
+	// phpcs:disable WordPress.Security.NonceVerification -- routing only; the restore's nonce is checked below, as core checks it.
+	$action      = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : '';
+	$revision_id = isset( $_GET['revision'] ) ? absint( $_GET['revision'] ) : 0;
+	// phpcs:enable WordPress.Security.NonceVerification
+	if ( 'restore' !== $action || ! $revision_id ) {
+		return;
+	}
+	$revision = wp_get_post_revision( $revision_id );
+	$page     = $revision ? get_post( $revision->post_parent ) : null;
+	if ( ! $revision || ! $page || 'page' !== $page->post_type ) {
+		return;
+	}
+	if ( ! current_user_can( 'edit_post', $page->ID ) || wp_check_post_lock( $page->ID ) ) {
+		return; // Core refuses these itself.
+	}
+	check_admin_referer( 'restore-post_' . $revision->ID );
+	$problem = spokares_revision_restore_problem( $revision, $page );
+	if ( '' !== $problem ) {
+		wp_die(
+			esc_html( spokares_revision_restore_refusal( $problem, $revision, $page ) ),
+			esc_html__( 'Not restored', 'spokares-core' ),
+			array(
+				'response'  => 403,
+				'link_url'  => esc_url_raw( add_query_arg( 'revision', $revision->ID, admin_url( 'revision.php' ) ) ),
+				'link_text' => esc_html__( 'Back to the earlier versions', 'spokares-core' ),
+			)
+		);
+	}
+	wp_restore_post_revision( $revision->ID, array( 'post_content' ) );
+	spokares_purge_cache();
+	wp_safe_redirect(
+		add_query_arg(
+			array(
+				'message'  => 5,
+				'revision' => $revision->ID,
+			),
+			get_edit_post_link( $page->ID, 'url' )
+		)
+	);
+	exit;
+}
+add_action( 'load-revision.php', 'spokares_revision_restore_for_editors' );
+
+/**
+ * The newest earlier version of a page, for the "Earlier versions" link
+ * (core's Compare Revisions screen opens on it). 0 when there is none.
+ *
+ * @param int $page_id Page.
+ */
+function spokares_page_latest_revision( int $page_id ): int {
+	if ( ! wp_revisions_enabled( get_post( $page_id ) ) ) {
+		return 0;
+	}
+	$ids = wp_get_post_revisions(
+		$page_id,
+		array(
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+			'check_enabled'  => false,
+		)
+	);
+	return $ids ? (int) reset( $ids ) : 0;
+}

@@ -20,11 +20,13 @@ This page is for the volunteers who keep the website up to date. You don't need 
 2. Type your own username and password.
 3. Type the code from the app on your phone. No phone? Click **E-mail me a code**. Neither works? Click **Use a printed backup code**, then tell the webmaster.
 
+If your codes come only by e-mail, the Dashboard asks you to set up the phone app or print backup codes (your name, top right, then **Edit Profile**, under Two-Factor Options), so a slow e-mail never locks you out. After two weeks the reminder moves up under **Needs attention**. Nothing is switched off; the webmaster can also help you set it up in person.
+
 Never share your sign-in. Sign out on a shared computer (your name, top right, then **Log Out**).
 
 ## Your Dashboard: "Site tasks"
 
-After you sign in you land on the Dashboard. The **Site tasks** card has a section for each job, and it tells you what's coming up: how far ahead the Net Control Schedule is posted, the next event, the next meeting. Anything that needs you comes first, under **Needs attention**, with a link to fix it.
+After you sign in you land on the Dashboard. The **Site tasks** card has a section for each job, and it tells you what's coming up: how far ahead the Net Control Schedule is posted, the next five events, the next meeting. Anything that needs you comes first, under **Needs attention**, with a link to fix it.
 
 <img src="shots/final/admin-dashboard.png" width="600" alt="The Dashboard's Site tasks card: Net Control Schedule with Update the schedule, Exercises & Events, Meetings, Documents with Replace or change a document, and Page Text.">
 
@@ -42,21 +44,23 @@ After you sign in you land on the Dashboard. The **Site tasks** card has a secti
 <img src="shots/final/admin-net-rota.png" width="600" alt="The Net Control Schedule screen: one row per Tuesday with a call-sign box and Volunteer needed, No net and Not posted yet, then Winlink assignment, Form and Note.">
 
 - **Call signs only.**
+- **Paste the schedule** (above the table) saves typing: copy the list from ag7qp.com or the e-mail, paste it, click **Preview**, check what would change, then click **Save these Tuesdays**. Lines it can't read are listed, not guessed; type those by hand.
 - **Show 13 more Tuesdays** keeps your typing.
-- **Undo** is next to "Last saved" at the top; **Redo** takes the undo back.
+- **Wording on the site**, under the schedule: the line asking for volunteers, and how to answer a Winlink assignment. Change them here and click **Save**.
+- **Undo** is next to "Last saved" at the top; **Redo** takes the undo back. If someone else made that save, or it is more than a day old, it asks first: click **Undo it** or **Keep it**. A Tuesday changed since that save is left as it is, and the message says so.
 
 ## Job 2: Add or change an exercise or event (3 minutes)
 
 1. On the Dashboard, click **Add an event**. If a line under the name says it's already there, click **Open it** instead.
 2. Pick the **Type of event**. The form then shows only the boxes that type needs.
 3. Type the **Event name** as members will see it.
-4. **When:** pick the **First day** (and a **Last day** if it runs longer). "All day" is ticked; untick it to add a start and end time. No date yet? Choose **Date not posted yet**.
+4. **When:** pick the **First day** (and a **Last day** if it runs longer). "All day" is ticked; untick it to add a start and end time (for a weekend, the start time on the first day and the end time on the last). No date yet? Choose **Date not posted yet**. If the date has already passed, the form asks you to check the year; tick the box if it's right.
 5. Click **Publish**. The message says where it shows.
 
 <img src="shots/final/admin-event-set.png" width="600" alt="The event form for the Simulated Emergency Test: Type of event Exercise, the date, a short description, tasks one per line, the Button and a Document members need, with Save in the Save box.">
 
-- **Change one:** on the Dashboard, click **Change or cancel an event**.
-- **Next year:** open last year's, then click **Make a copy**.
+- **Change one:** on the Dashboard, click its name under **Coming up** (or click **All events**).
+- **Next year:** open last year's, then click **Make a copy**. Check the name and set the new date.
 - **Called off:** tick **Cancelled** under When.
 - **Postponed:** choose **Postponed** under When.
 - **Added by mistake:** click **Take it off the site** (Undo brings it back).
@@ -64,8 +68,10 @@ After you sign in you land on the Dashboard. The **Site tasks** card has a secti
 ## Job 3: Cancel or move a meeting (1 minute)
 
 1. On the Dashboard, click **Cancel or move a meeting**.
-2. Find the date. Tick **Cancelled**, or pick the new date under **Moved to**. A different time or room that day: type it in the **Note**, like "Starts at 10:00 AM this time". To take back a cancellation, untick **Cancelled**.
+2. Find the date. Tick **Cancelled**, or pick the new date under **Moved to**. A different time or room that day: type it in the **Note**, like "Starts at 10:00 AM this time". To take back a cancellation, untick **Cancelled**. Further ahead? Click **Show more dates** under the meeting (about six months).
 3. Click **Save**.
+
+**An extra date** (a holiday potluck on another day, an annual meeting): under **Add a one-off date**, pick the meeting (or **Another meeting** and type its name), the date, the times if you know them and a short note, then click **Save**. Home and the For members page list it. To take one off, tick **Remove** beside it and click **Save**.
 
 <img src="shots/final/admin-meetings.png" width="600" alt="The Cancel or Move a Meeting screen: each upcoming date with a Cancelled tick box, a Moved to date and a Note.">
 
@@ -84,7 +90,8 @@ If your menu has Meeting Schedule: change a meeting's regular day or time there,
 <img src="shots/final/admin-document-ics-213.png" width="600" alt="The form of the ICS 213 General Message document, a link to another site: Document name, Section, Where the file is with the web address and its tick, Version or date and Short note, with Save in the Save box.">
 
 - **Replace or change one:** on the Dashboard, click **Replace or change a document**, then the document's name. Choose the new file (under **Replace with**, or **Upload a file instead** for a link), tick the “I checked” box, change the version and click **Save**. For a Most Used document (the net script), the Most Used screen's **Replace or change it** link goes straight to it.
-- **Take one down:** click **Take it off the site**.
+- **Take one down:** click **Take it off the site**. The file leaves the web at once. Changed your mind? Click **Undo** (or **Restore** in the Trash): the document comes back as it was, file and all.
+- **Yearly check:** on the Dashboard, click **… not reviewed in 12 months**. Open each document, check it's still right, click **Mark reviewed today** and **Save**. Giving it a new file with the “I checked” tick counts as a review too.
 - **Most Used:** Documents › **Most Used**. Pick a document for each button and click **Save**.
 
 ## Job 5: Change words on a page (5 minutes)
@@ -102,17 +109,18 @@ You can change the words on **Home**, **How it works** and **About ARES & ACS**.
 <img src="shots/final/admin-editor-home.png" width="600" alt="The Home page in the editor with the photo selected: Replace in the toolbar and the blue Save button top right.">
 
 - **Undo before you save:** Ctrl+Z (Cmd+Z on a Mac), or the curved Undo arrow at the top left.
-- **A red message starting "Not saved:"** says what to click to put it right. Nothing on the site changed.
-- **A yellow message starting "On the site now:"** means the words look like a phone number, a personal e-mail address or something on the "Please don't" list below. The page is saved; the Dashboard lists it under **Needs attention** until you change it.
-- **About:** tick **Mark reviewed today when I save** once you've checked the whole page.
+- **A red message starting "Not saved:"** says what to click to put it right. Nothing on the site changed. Words from the "Please don't" list below (a hospital net, a channel number, SHARES channels, 800 MHz, a talkgroup) get one too: it names what it found, so take that out and Save again.
+- **A yellow message starting "On the site now:"** means the words look like a phone number or a personal e-mail address. The page is saved; the Dashboard lists it under **Needs attention** until you change it. If it's a public agency number or address, leave it.
+- **About:** tick **Mark reviewed today when I save** once you've checked the whole page. If it hasn't been marked reviewed in 12 months, the Dashboard lists it under **Needs attention**.
 - **A one-off notice** (“no nets over the holidays”): mark those Tuesdays **No net** and add a Note. Anything else, like “Field Day photos are up”, has no place on the site yet: ask the webmaster.
-- Getting back an older version of a page after you've saved is the webmaster's job. So is adding a section, a table row or a new page (see "For the webmaster" at the end).
+- **Get back an earlier version** after you've saved: on the Dashboard, under **Page Text**, click the page after **Earlier versions:**. Drag the slider to the version you want (the left side shows what it said, the right side the page now), then click **Restore This Revision**. Only the words come back. If the webmaster has added, moved or restyled a part since that version, you'll see "Not restored:"; pick a later version or ask the webmaster.
+- Adding a section, a table row or a new page is the webmaster's job (see "For the webmaster" at the end).
 
 ---
 
 ## Please don't
 
-- **Publish anything on this list:** the roster or any member list; personal phone numbers, e-mails or home addresses; county, hospital, SHARES or 800 MHz channels or talkgroups; the Hospital Net or its channel; simplex frequencies or GMRS repeater details; a "current readiness level". The forms stop the most common ones and ask you to confirm a phone number or e-mail address.
+- **Publish anything on this list:** the roster or any member list; personal phone numbers, e-mails or home addresses; county, hospital, SHARES or 800 MHz channels or talkgroups; the Hospital Net or its channel; simplex frequencies or GMRS repeater details; a "current readiness level". The forms and the page editor stop the most common ones; the forms ask you to confirm a phone number or e-mail address, and the page editor warns about them.
 - **Use names.** Call signs only, everywhere.
 - **Type the same fact in two places.** The net time, the repeater and the meeting place come from one form and appear on every page automatically.
 - **Ask for access you don't need.** **Net Settings** (repeater, tone, net weeks) and the **Meeting Schedule** are changed by the webmaster or someone the Emergency Coordinator names.
@@ -137,7 +145,10 @@ The layout lock doesn't apply to administrators, so these changes are made in th
 2. Select the section most like the new one, then copy it from its ⋮ menu (the first item; Shift+Cmd+D, or Ctrl+Shift+D on Windows). The copy keeps the section's background, spacing and inner column (a Group with the class `wrap`). Move it into place with the arrows or by dragging it in List View.
 3. Change the copy's words. If its heading has an **HTML anchor** (Block > Advanced), give the copy a new one: two headings with the same anchor break the jump links.
 4. Click **Save**. Editors can change the new section's words straight away. Their layout check compares against the page as you saved it.
-5. Copy the section into the page's pattern file in git (`theme/spokares/patterns/`: `home-*.php`, `how-*.php` or `about-*.php`) for the next release.
+5. Copy the section into the page's pattern file in git (`theme/spokares/patterns/`: `home-*.php`, `how-*.php` or `about-*.php`) for the next release. WP-CLI on the host helps:
+   - `wp spokares page export about --sections` lists the page's sections and whether each matches the theme's pattern (`same`, `words`, `layout`, `added` or `removed`); the classes column names the section's file (`about-head` is `about-head.php`).
+   - `wp spokares page export about > page-about.php` prints the whole page as a pattern file (the theme file's header, then the page's markup); `--file=<path>` writes it instead. Copy the changed sections from it into their files, or replace `page-about.php` with it, then diff and commit. Use `home`, `how` or `about`.
+   - It warns when the markup links a photo in the Media Library: a fresh install doesn't have it, so point it at a theme image before committing.
 
 A single paragraph, heading or list added at the page's top level sits in the site's column, with the side margins, by itself. A new Group or Columns block at the top level is different: it runs the full width of the window with no margins. Copy a section instead, or put the content in a Group with the class `wrap` (Block > Advanced > Additional CSS class(es)).
 

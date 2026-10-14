@@ -38,7 +38,7 @@ One term per concept. "Retired" words must not appear in editor-facing text, pub
 | The repeater, net times, which Tuesdays, the two wording lines | **Net Settings** | Net details |
 | The /members/ page | **the For members page** | members hub, hub, the members page |
 | The four document buttons on the For members page | **Most Used** (screen); each row is a **button**, numbered 1–4 left to right | Hub tiles, tiles, slot, Tile slot, Slot 1, Members page shortcuts |
-| Library filter item on the Documents & forms page | **Also list under Most used** (per-document tick; the four buttons' documents are always listed) | Show under "Most used" |
+| Library filter item on the Documents & forms page | **Show under the Most used filter** (per-document tick, renamed 2026-10-13 from "Also list under Most used"; the four buttons' documents are always listed) | Show under "Most used" |
 | The Events screens (public page "Exercises & events") | **Exercises & Events** (menu, list title); an item is an **event** | Events (as the menu name) |
 | Event category | **Type of event** (form, list column, errors): Exercise · Training or meeting · On the air (from home stations) · Public service | Kind, "(pick one first)", "(no kind)" |
 | The events list column of places | **Where it shows** | Shows, Status |
@@ -122,8 +122,9 @@ Net Control Schedule
   Repeater and net times: ask the webmaster.        (plain editor, instead of the link)
 Exercises & Events
   Happening now: ARES-ACS / WSDOT exercise
-  Next: <Simulated Emergency Test>, Sat, Oct 3 · 10 more        (the name links to its form)
-  [Add an event]  [Change or cancel an event]
+  Coming up:                                     (the next five; each name links to its form)
+  • <Simulated Emergency Test>, Sat, Oct 3
+  [Add an event]  All events
 Meetings
   Next: Second Saturday Workshop, Sat, Oct 10, 9:00 AM
   [Cancel or move a meeting]   Meeting Schedule*
@@ -145,7 +146,7 @@ Stuck? webmaster@spokares.org
   - "Posted through {last posted Tuesday, 'short'}". If there is a Volunteer needed Tuesday on or before that date, add " · Volunteer needed: {dates, 'day'}". If there is a Not posted yet Tuesday before that date, add " · Not posted yet: {dates}".
   - With nothing posted: "Nothing posted for the coming Tuesdays."
   - The button says **Update the schedule**: the heading already names it.
-- **Events:** "Happening now" and "Next" skip cancelled events. The "Next:" event's name links to its form. The secondary button **Change or cancel an event** opens the list.
+- **Events:** "Happening now" skips cancelled events. "Coming up:" lists the next five events after those happening now (cancelled ones too, tagged " · Cancelled"), name and date, each name linking to its form; "All events" opens the list (workflow review E7, replacing "Next: … · {n} more" and the **Change or cancel an event** button). Needs attention adds "{n} events have had no date for over 30 days: {name} (Postponed) · …" for published Postponed or Date not posted yet events not saved in 30 days (E3).
 - **Meetings:** "Next:" counts only meetings shown on the site (`active && show_home`), after cancellations and moves.
 - **Documents:** "{n} documents". "{n} marked Soon" links to `edit.php?post_type=spk_document&spk_source=soon` and appears only when n > 0. "{n} not reviewed in 12 months" links to `edit.php?post_type=spk_document&orderby=spk_reviewed&order=asc` (oldest first) and appears only when n > 0. The secondary button is **Replace or change a document** (opens the list): "replace" is the monthly net-script job.
 - **Page Text** links: Home · How it works · About ARES & ACS. The link words stay the page titles.
@@ -313,14 +314,16 @@ More rules:
 | Saved, shown | "Saved. It shows under Next up on the Exercises & events page and in This week on the For members page. See it" |
 | Saved, cancelled | "Saved. Members see “Cancelled” until Sat, Oct 17. See it" |
 | Saved, postponed | "Saved. It shows as Postponed on the Exercises & events page. See it" |
-| Saved, past date | "Saved, but Fri, May 15, 2026 has passed, so no list shows it. Check the year." (warning) |
+| Saved, past date | "Saved. It isn’t listed anywhere now: Fri, May 15, 2026 has passed." (info). A new or changed past date is asked about before the save (workflow review E2): "Fri, May 15, 2026 has passed. Check the year, or tick the box to publish it anyway." under the date, with the tick "The date is right. Publish it."; Publish refused: "Not published yet: Fri, May 15, 2026 has passed. Check the year, or tick the box under When, then click Publish." An old event saved with its dates as they were is not asked about. |
 | Saved, ended and not kept | "Saved. It isn’t listed anywhere now: it has ended and isn’t kept under Past exercises." (info) |
-| Draft saved | "Draft saved. It isn’t on the site until you Publish." (info) |
+| Draft saved | "Draft saved. It isn’t on the site until you Publish." (info). With problems: "Draft saved. 2 boxes need fixing before you can Publish." (warning; workflow review E6) |
+| Boxes the type doesn't use | appended: "Cleared What members do and More links: this type of event doesn’t use them." The save clears them (E5); List under Past exercises is cleared without a word |
+| Cancelled, When changed from On a date | appended: "Cancelled is cleared: only an event on a date can be cancelled." (E4) |
 | Publish refused, one problem | "Not published yet: pick the type of event, then click Publish." (error; no green notice) |
 | Publish refused, several problems | "Not published yet. Fix the boxes outlined in red, then click Publish." |
 | Published event, a field not saved | "Saved, except Where: it has a phone number. If it’s a public agency number, tick the box under Where and click Save. Everything else is on the site now." (warning, amber like every other screen's partial save; changed by the verifier from error). It names fields by their labels. This is true to the code: `spokares_save_event()` skips only the problem fields' meta and saves the rest. The typed text stays in the form until the next save of that event. |
 | Name cut from Volunteer through | appended: "(saved NV2Z only; names aren’t posted)" |
-| Copied | "Copied. Set the new date, then Publish." (info) |
+| Copied | "Copied. Check the name, set the new date, then Publish." (info). The copy opens with the name outlined and "Check the name (copied from 2026)." under it (workflow review E8); the Needs checking flag is not copied |
 | Taken off the site (Trash) | "“Great ShakeOut” is off the site." + core's Undo |
 | Restored | "“Great ShakeOut” is back on the site." Restore brings back the previous status, as Undo does. |
 
@@ -392,7 +395,7 @@ Help: none beyond "Stuck?" (R3: every former line restated a label or hint on th
 | 4 | **Version or date** | text 30, placeholder "v3 or Sept 2026" | | | Sits right under the file/link box. Choosing a new file focuses and selects it. |
 | 5 | **Short note (60 characters)** | text 60 | | | A live "{n} left" appears in the last 10 characters. No word warning. |
 | — | Course links (editors, a document with course links) | read-only line: "Course links: IS-100.c, IS-200.c, IS-700.b, IS-800.d (the webmaster changes these)." | | | |
-| 6 | ▸ **More options** | “How to” link (Words · Web address) · **Also list under Most used** · **Place in section** [At the top / After “…” / At the end] · **Owner** · **Last reviewed** [Mark reviewed today] | | Place: "At the end" for a new document | For a document that is one of the four buttons, the tick is replaced by one line: "It’s button 2 on the Most Used screen." ("the Most Used screen" links there); such a document is always listed. Place resets to "At the end" when the section changes. |
+| 6 | ▸ **More options** | “How to” link (Words · Web address) · **Show under the Most used filter** · **Place in section** [At the top / After “…” / At the end] · **Owner** · **Last reviewed** [Mark reviewed today] | | Place: "At the end" for a new document | For a document that is one of the four buttons, the tick is replaced by one line: "It’s button 2 on the Most Used screen." ("the Most Used screen" links there); such a document is always listed. Place resets to "At the end" when the section changes. |
 | — | ▸ Admin only | unchanged | | | |
 
 - **Privacy rule (one rule, create = edit):** a fresh tick is needed whenever something new goes public: a new document, a new file, a new or changed web address, or a switch from Soon or Link to a file. Name, note or version edits need no tick. The script unticks and relocks when the source, file or address changes. The server refuses the new file or address without the tick. The stored `spk_privacy_ok` stays for what is already live.
@@ -440,7 +443,7 @@ The four buttons under Most used on the For members page, left to right.
 - The foot sentence is removed. Save button **Save**. The form has the leave guard.
 - Notice: "Saved." + "See it on the For members page" / "Saved, except button 2’s words (outlined in red)."
 - Help (1 line): "Only published documents with a file or a link are offered."
-- The Documents & forms page's **Most used** filter always includes the four buttons' documents, plus any document ticked "Also list under Most used".
+- The Documents & forms page's **Most used** filter always includes the four buttons' documents, plus any document ticked "Show under the Most used filter".
 
 ### 3.8 Page Text and the block editor
 

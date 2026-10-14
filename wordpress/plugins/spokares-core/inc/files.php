@@ -1,9 +1,11 @@
 <?php
 /**
  * Document files (§5.5): where an attachment is used, removing a document's
- * old file from the web, and the deletion guard. Loaded everywhere (REST and
- * WP-CLI too), so nothing deletes a file a document or page still uses except
- * Replace, Trash and Pull, which clear the reference first. A refused delete
+ * old file from the web, setting the file of a document taken off the site
+ * aside outside the web root (and back on Restore), and the deletion guard.
+ * Loaded everywhere (REST and WP-CLI too), so nothing deletes a file a
+ * document or page still uses except Replace, Trash and Pull, which clear
+ * the reference first. A refused delete
  * says where the file is used. The files of documents a user can't edit
  * (drafts, above all) are left out of the media window's routes for them.
  *
@@ -72,6 +74,9 @@ function spokares_remove_document_file( int $att_id, int $doc_id ): string {
 	}
 	$uses = spokares_attachment_uses( $att_id, $doc_id );
 	if ( $uses ) {
+		// Set aside when its document was taken off the site, but something
+		// uses it now: it belongs on the web.
+		spokares_release_attachment( $att_id );
 		return sprintf(
 			/* translators: %s: where the file is used. */
 			__( 'The old file is still used by %s, so it stays on the web.', 'spokares-core' ),
@@ -228,6 +233,255 @@ function spokares_media_delete_error_text( $strings ) {
 	return $strings;
 }
 add_filter( 'media_view_strings', 'spokares_media_delete_error_text' );
+
+/* ------------------------------------------------- held files (§5.5, D6) */
+
+/**
+ * The folder where "Take it off the site" sets a document's file aside:
+ * SPOKARES_HELD_DIR, or spokares-held next to the WordPress folder (on the
+ * live host ~/spokares-held, beside public_html). It must be outside the web
+ * root: the host runs OpenLiteSpeed, which ignores .htaccess (PLAN §8), so a
+ * deny rule inside public_html would not keep the file private.
+ */
+function spokares_held_dir(): string {
+	$dir = defined( 'SPOKARES_HELD_DIR' ) ? (string) SPOKARES_HELD_DIR : trailingslashit( dirname( untrailingslashit( wp_normalize_path( ABSPATH ) ) ) ) . 'spokares-held';
+	/**
+	 * Filters the held folder (the dev tests point it somewhere unusable).
+	 *
+	 * @param string $dir Folder.
+	 */
+	$dir = (string) apply_filters( 'spokares_held_dir', $dir );
+	return '' === $dir ? '' : untrailingslashit( wp_normalize_path( $dir ) );
+}
+
+/**
+ * The held folder, made if need be (for the site's user only), or '' when it
+ * can't be used: it can't be made or written to, or it is inside the
+ * WordPress folder, the uploads folder or the web server's document root,
+ * where the web server could serve it.
+ */
+function spokares_held_dir_ready(): string {
+	$dir = spokares_held_dir();
+	if ( '' === $dir ) {
+		return '';
+	}
+	// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions -- a private folder outside the web root; WP_Filesystem would ask for FTP details.
+	if ( ! is_dir( $dir ) && ! @mkdir( $dir, 0700, true ) ) {
+		return '';
+	}
+	// phpcs:enable
+	$real = realpath( $dir );
+	if ( false === $real || ! wp_is_writable( $real ) ) {
+		return '';
+	}
+	$real = trailingslashit( wp_normalize_path( $real ) );
+	$web  = array( ABSPATH, wp_upload_dir( null, false )['basedir'] );
+	if ( ! empty( $_SERVER['DOCUMENT_ROOT'] ) ) {
+		$web[] = sanitize_text_field( wp_unslash( $_SERVER['DOCUMENT_ROOT'] ) );
+	}
+	foreach ( $web as $root ) {
+		$root = '' !== (string) $root ? realpath( (string) $root ) : false;
+		if ( false !== $root && str_starts_with( $real, trailingslashit( wp_normalize_path( $root ) ) ) ) {
+			return ''; // The web server could serve it.
+		}
+	}
+	return untrailingslashit( $real );
+}
+
+/**
+ * Has this attachment's file been set aside (its document is in the Trash)?
+ * The attachment keeps its own path; the file isn't there.
+ *
+ * @param int $att_id Attachment.
+ */
+function spokares_attachment_is_held( int $att_id ): bool {
+	return $att_id && is_array( get_post_meta( $att_id, '_spk_held', true ) );
+}
+
+/**
+ * An attachment's folder and its files' names: the file, its image sizes
+ * (a PDF's preview too), the original of a scaled image and any copies from
+ * image editing.
+ *
+ * @param int $att_id Attachment.
+ * @return array{0:string,1:string[]} Folder ('' when it has no file) and names.
+ */
+function spokares_attachment_files( int $att_id ): array {
+	$file = (string) get_attached_file( $att_id, true );
+	if ( '' === $file ) {
+		return array( '', array() );
+	}
+	$names = array( wp_basename( $file ) );
+	$meta  = wp_get_attachment_metadata( $att_id, true );
+	if ( is_array( $meta ) ) {
+		foreach ( (array) ( $meta['sizes'] ?? array() ) as $size ) {
+			if ( is_array( $size ) && ! empty( $size['file'] ) ) {
+				$names[] = wp_basename( (string) $size['file'] );
+			}
+		}
+		if ( ! empty( $meta['original_image'] ) ) {
+			$names[] = wp_basename( (string) $meta['original_image'] );
+		}
+	}
+	$backup = get_post_meta( $att_id, '_wp_attachment_backup_sizes', true );
+	foreach ( is_array( $backup ) ? $backup : array() as $size ) {
+		if ( is_array( $size ) && ! empty( $size['file'] ) ) {
+			$names[] = wp_basename( (string) $size['file'] );
+		}
+	}
+	return array( dirname( $file ), array_values( array_unique( $names ) ) );
+}
+
+/**
+ * Move a file: rename, or copy and delete (the two folders can be on
+ * different disks).
+ *
+ * @param string $from From.
+ * @param string $to   To.
+ */
+function spokares_move_file( string $from, string $to ): bool {
+	// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions -- moving an upload to or from the private held folder.
+	if ( @rename( $from, $to ) ) {
+		return true;
+	}
+	if ( @copy( $from, $to ) ) {
+		if ( @unlink( $from ) ) {
+			return true;
+		}
+		@unlink( $to );
+	}
+	// phpcs:enable
+	return false;
+}
+
+/**
+ * Set an attachment's files aside in the held folder, where the web server
+ * can't serve them. False (and nothing moved) when the folder can't be used
+ * or the file isn't there.
+ *
+ * @param int $att_id Attachment.
+ */
+function spokares_hold_attachment( int $att_id ): bool {
+	if ( spokares_attachment_is_held( $att_id ) ) {
+		return true;
+	}
+	list( $dir, $names ) = spokares_attachment_files( $att_id );
+	$base                = spokares_held_dir_ready();
+	if ( '' === $dir || '' === $base || ! is_file( $dir . '/' . $names[0] ) ) {
+		return false;
+	}
+	$to = $base . '/' . $att_id . '-' . bin2hex( random_bytes( 4 ) );
+	// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_mkdir -- private folder outside the web root.
+	if ( ! @mkdir( $to, 0700 ) ) {
+		return false;
+	}
+	$moved = array();
+	foreach ( $names as $name ) {
+		if ( ! is_file( $dir . '/' . $name ) ) {
+			continue; // A size that was never made.
+		}
+		if ( ! spokares_move_file( $dir . '/' . $name, $to . '/' . $name ) ) {
+			foreach ( $moved as $back ) {
+				spokares_move_file( $to . '/' . $back, $dir . '/' . $back );
+			}
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- the empty folder just made.
+			@rmdir( $to );
+			return false;
+		}
+		$moved[] = $name;
+	}
+	update_post_meta(
+		$att_id,
+		'_spk_held',
+		array(
+			'dir'   => $to,
+			'files' => $moved,
+		)
+	);
+	return true;
+}
+
+/**
+ * Put a held attachment's files back where they were. True when nothing is
+ * held any more; false when a file couldn't go back (it stays held, and its
+ * document has no file on the web).
+ *
+ * @param int $att_id Attachment.
+ */
+function spokares_release_attachment( int $att_id ): bool {
+	$held = get_post_meta( $att_id, '_spk_held', true );
+	if ( ! is_array( $held ) ) {
+		return true;
+	}
+	list( $dir ) = spokares_attachment_files( $att_id );
+	$from        = (string) ( $held['dir'] ?? '' );
+	$names       = array_map( 'wp_basename', array_map( 'strval', (array) ( $held['files'] ?? array() ) ) );
+	if ( '' === $dir || '' === $from || ! wp_mkdir_p( $dir ) ) {
+		return false;
+	}
+	foreach ( $names as $name ) {
+		if ( file_exists( $dir . '/' . $name ) ) {
+			return false; // Something else is at its old address now.
+		}
+	}
+	$left = array();
+	foreach ( $names as $name ) {
+		if ( is_file( $from . '/' . $name ) && ! spokares_move_file( $from . '/' . $name, $dir . '/' . $name ) ) {
+			$left[] = $name;
+		}
+	}
+	if ( $left ) {
+		$held['files'] = $left;
+		update_post_meta( $att_id, '_spk_held', $held );
+		return false;
+	}
+	delete_post_meta( $att_id, '_spk_held' );
+	// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- the attachment's own, now empty, held folder.
+	@rmdir( $from );
+	return true;
+}
+
+/**
+ * An attachment deleted for good takes its held files with it (WordPress
+ * deletes only the files at the attachment's own address).
+ *
+ * @param int $att_id Attachment.
+ */
+function spokares_delete_held_files( $att_id ): void {
+	$held = get_post_meta( (int) $att_id, '_spk_held', true );
+	if ( ! is_array( $held ) || empty( $held['dir'] ) ) {
+		return;
+	}
+	$dir = (string) $held['dir'];
+	// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions -- the attachment's own held folder.
+	foreach ( (array) ( $held['files'] ?? array() ) as $name ) {
+		$path = $dir . '/' . wp_basename( (string) $name );
+		if ( is_file( $path ) ) {
+			@unlink( $path );
+		}
+	}
+	@rmdir( $dir );
+	// phpcs:enable
+}
+add_action( 'delete_attachment', 'spokares_delete_held_files' );
+
+/**
+ * Restore and Undo of a document put its held file back first, so it comes
+ * back whole, as it was (spokares_document_untrash_status() then sees the
+ * file). Runs before the status is chosen, wherever the restore comes from.
+ *
+ * @param int $post_id Post.
+ */
+function spokares_document_untrash_file( $post_id ): void {
+	if ( 'spk_document' !== get_post_type( (int) $post_id ) ) {
+		return;
+	}
+	$att = absint( get_post_meta( (int) $post_id, 'spk_file', true ) );
+	if ( $att && spokares_attachment_is_held( $att ) ) {
+		spokares_release_attachment( $att );
+	}
+}
+add_action( 'untrash_post', 'spokares_document_untrash_file' );
 
 /* ------------------------------------------- draft documents' files (§5.5) */
 

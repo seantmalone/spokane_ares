@@ -7,6 +7,15 @@
  * a note on its own as a one-date meeting change, "Takes effect on", the one
  * "Show on the site" tick, and the new states and labels in the data layer.
  *
+ * Changed by the workflow review (ux/workflows/content.py): a draft saved
+ * with problems now gets our own notice ("Draft saved. 2 boxes need fixing
+ * before you can Publish.", E6), so the "Draft saved" control below saves a
+ * draft with no problems; and a past date is asked about before the save
+ * (E2), so the saved notice of an event whose date has passed is plain
+ * information ("Saved. It isn’t listed anywhere now: … has passed."), not
+ * the old amber "… Check the year."; Make a copy's notice also says to check
+ * the name (E8).
+ *
  * @package spokares-dev
  */
 
@@ -387,9 +396,18 @@ test(
 		assert_false( isset( uxevt_query( $res )['message'] ), 'Save: WordPress\'s message is dropped' );
 		assert_same( array( 'Saved. It shows under Later this season on the Exercises & events page.' ), wp_list_pluck( $res['notices'], 'text' ), 'Save: one notice' );
 
-		// Save draft: no notice of ours, so WordPress's message 10 is the one notice.
+		// Save draft with nothing to fix: no notice of ours, so WordPress's
+		// message 10 is the one notice. (With problems, see wf-e6.)
 		$draft = get_default_post_to_edit( 'spk_event', true )->ID;
-		$res   = uxevt_click( $draft, array( 'post_title' => 'UX half-filled draft' ), 'saveasdraft' );
+		$res   = uxevt_click(
+			$draft,
+			array(
+				'post_title'    => 'UX draft with nothing to fix',
+				'spk_kind'      => 'training',
+				'spk_date_mode' => 'not-posted',
+			),
+			'saveasdraft'
+		);
 		assert_same( 'draft', get_post_status( $draft ), 'a draft' );
 		assert_same( '10', (string) ( uxevt_query( $res )['message'] ?? '' ), 'message 10' );
 		assert_same( array(), $res['notices'], 'no notice of ours' );
@@ -723,7 +741,7 @@ test(
 			)
 		);
 		assert_same( 'Not listed', uxevt_where( $ended ), 'ended' );
-		assert_same( 'Saved, but ' . \spokares_fmt_date( uxevt_day( -10 ), 'long' ) . ' has passed, so no list shows it. Check the year.', \spokares_event_places_sentence( $ended ), 'past date notice' );
+		assert_same( 'Saved. It isn’t listed anywhere now: ' . \spokares_fmt_date( uxevt_day( -10 ), 'long' ) . ' has passed.', \spokares_event_places_sentence( $ended ), 'past date notice' );
 		$exercise = uxevt_event(
 			'UX ended exercise not kept',
 			array(
@@ -767,7 +785,7 @@ test(
 		assert_matches( '/post\.php\?post=(\d+)&action=edit/', (string) $res['redirect'], 'opens the copy' );
 		preg_match( '/post=(\d+)/', (string) $res['redirect'], $m );
 		$copy = (int) $m[1];
-		assert_same( array( 'Copied. Set the new date, then Publish.' ), wp_list_pluck( uxevt_notices(), 'text' ), 'the notice' );
+		assert_same( array( 'Copied. Check the name, set the new date, then Publish.' ), wp_list_pluck( uxevt_notices(), 'text' ), 'the notice (E8: and check the name)' );
 		$html = uxevt_form( $copy );
 		assert_not_contains( 'spk-error-text', $html, 'no sentences on a fresh copy' );
 		assert_matches( '#<input type="date" id="spk-start"[^>]*class="spk-field-error"#', $html, 'First day is outlined' );
