@@ -633,6 +633,7 @@ function spokares_save_document( $post_id ): void {
 	$keep      = $result['keep_source'];
 	$source    = $keep ? $stored['source'] : $v['source'];
 	$file      = 'upload' === $source && ! $keep ? spokares_document_upload() : null;
+	$reviewed  = (string) get_post_meta( $post_id, 'spk_reviewed', true );
 
 	// The section (one term).
 	$tax = get_taxonomy( 'spk_doc_cat' );
@@ -767,6 +768,16 @@ function spokares_save_document( $post_id ): void {
 			update_post_meta( $post_id, 'spk_privacy_ok', '1' );
 			$ext = strtolower( pathinfo( (string) get_attached_file( (int) $att ), PATHINFO_EXTENSION ) );
 			update_post_meta( $post_id, 'spk_format', spokares_format_for_ext( $ext ) );
+			// A new file with a fresh "I checked" tick is a review (UX finding
+			// D2): Last reviewed becomes today, unless a date was typed in this
+			// save.
+			if ( ! spokares_is_ymd( $v['reviewed'] ) || $v['reviewed'] === $reviewed ) {
+				update_post_meta( $post_id, 'spk_reviewed', spokares_today() );
+			}
+			// A new file on the site ends "The file was pulled …" (D11).
+			if ( 'publish' === get_post_status( $post_id ) ) {
+				delete_post_meta( $post_id, 'spk_pulled' );
+			}
 			if ( $old && $old !== (int) $att ) {
 				$replaced = true;
 				$kept     = $remove_old
@@ -1051,8 +1062,22 @@ function spokares_document_bulk_messages( $messages, $bulk_counts ) {
 add_filter( 'bulk_post_updated_messages', 'spokares_document_bulk_messages', 20, 2 );
 
 /**
- * Pull this file now (administrators): delete the file at once, set the
- * document to "Soon" and Draft, and record who and when.
+ * The other documents and pages that use a document's file, as one phrase
+ * ("Net scripts and About"), or '' when none do.
+ *
+ * @param int $att_id Attachment.
+ * @param int $doc_id The document itself (not counted).
+ */
+function spokares_document_file_used_by( int $att_id, int $doc_id ): string {
+	$uses = $att_id ? spokares_attachment_uses( $att_id, $doc_id ) : array();
+	return $uses ? spokares_and_list( array_map( static fn( $t ) => html_entity_decode( (string) $t, ENT_QUOTES, 'UTF-8' ), $uses ) ) : '';
+}
+
+/**
+ * Pull this file now (administrators): delete the file at once, even when
+ * other documents or pages use it (it is the emergency tool; its question
+ * names them first), set the document to "Soon" and Draft, and record who
+ * and when.
  */
 function spokares_handle_pull_file(): void {
 	$id = isset( $_GET['post'] ) ? absint( $_GET['post'] ) : 0;
@@ -1060,7 +1085,8 @@ function spokares_handle_pull_file(): void {
 	if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'edit_post', $id ) || 'spk_document' !== get_post_type( $id ) ) {
 		wp_die( esc_html__( 'Sorry, you are not allowed to pull this file.', 'spokares-core' ), '', array( 'response' => 403 ) );
 	}
-	$att = absint( get_post_meta( $id, 'spk_file', true ) );
+	$att  = absint( get_post_meta( $id, 'spk_file', true ) );
+	$used = spokares_document_file_used_by( $att, $id );
 	delete_post_meta( $id, 'spk_file' );
 	delete_post_meta( $id, 'spk_file_name' );
 	update_post_meta( $id, 'spk_source', 'soon' );
@@ -1076,7 +1102,12 @@ function spokares_handle_pull_file(): void {
 		wp_delete_attachment( $att, true );
 	}
 	spokares_purge_cache();
-	spokares_add_notice( 'success', __( 'The file is off the web and the document is a draft marked “Soon”.', 'spokares-core' ) );
+	$text = __( 'The file is off the web and the document is a draft marked “Soon”.', 'spokares-core' );
+	if ( '' !== $used ) {
+		/* translators: %s: documents and pages, e.g. "Net scripts and About". */
+		$text .= ' ' . sprintf( __( 'Its links on %s no longer work: fix them there.', 'spokares-core' ), $used );
+	}
+	spokares_add_notice( '' !== $used ? 'warning' : 'success', $text );
 	wp_safe_redirect( admin_url( 'edit.php?post_type=spk_document' ) );
 	exit;
 }
@@ -1905,13 +1936,19 @@ function spokares_document_row_actions( $actions, $post ) {
 	if ( 'publish' === $post->post_status ) {
 		$out['view-site'] = '<a href="' . esc_url( spokares_site_url( '/members/documents/', $post->post_name ) ) . '">' . esc_html__( 'View on site', 'spokares-core' ) . '</a>';
 	}
-	if ( current_user_can( 'manage_options' ) && absint( get_post_meta( $post->ID, 'spk_file', true ) ) ) {
+	$att = absint( get_post_meta( $post->ID, 'spk_file', true ) );
+	if ( current_user_can( 'manage_options' ) && $att ) {
 		$url = wp_nonce_url( admin_url( 'admin-post.php?action=spokares_pull_file&post=' . $post->ID ), 'spokares_pull_file_' . $post->ID );
 		$ask = sprintf(
 			/* translators: %s: document name. */
 			__( 'Delete the file of “%s” from the web now? This can’t be undone: the document becomes a “Soon” draft until a file is uploaded again.', 'spokares-core' ),
 			html_entity_decode( get_the_title( $post ), ENT_QUOTES, 'UTF-8' )
 		);
+		$used = spokares_document_file_used_by( $att, (int) $post->ID );
+		if ( '' !== $used ) {
+			/* translators: %s: documents and pages, e.g. "Net scripts and About". */
+			$ask .= ' ' . sprintf( __( 'It is also used by %s: their links to it will stop working.', 'spokares-core' ), $used );
+		}
 		$out['pull'] = '<a class="spk-danger" data-spk-ask="' . esc_attr( $ask ) . '" href="' . esc_url( $url ) . '">' . esc_html__( 'Pull this file now', 'spokares-core' ) . '</a>';
 	}
 	return $out;
