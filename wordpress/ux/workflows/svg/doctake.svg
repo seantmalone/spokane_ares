@@ -1,0 +1,71 @@
+<svg class="wf" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1098 1430" width="1098" height="1430" role="img" aria-label="UML activity diagram: Take a document down, restore it, or pull a file. Swimlanes: ARES Editor (or Admin), Administrator (webmaster), WordPress · spokares-core, Public site.">
+<style>.wf-bg{fill:#fbfaf7}.wf-lane{stroke:#c9ccd1;stroke-width:1}.wf-lane-human{fill:#ffffff}.wf-lane-system{fill:#f3f1ec}.wf-lane-external{fill:#f7f2f6}.wf-lanehead{stroke:#c9ccd1}.wf-lanehead-human{fill:#e7edf6}.wf-lanehead-system{fill:#e9e4d8}.wf-lanehead-external{fill:#ece0ea}.wf-lanelabel{fill:#1e2328;font:600 12.5px system-ui,-apple-system,sans-serif;letter-spacing:.02em}.wf-act{stroke:#1e2328;stroke-width:1.2}.wf-act-human{fill:#ffffff}.wf-act-system{fill:#fffdf8}.wf-act-external{fill:#fffafe}.wf-dec{fill:#ffffff;stroke:#1e2328;stroke-width:1.2}.wf-solid{fill:#1e2328}.wf-ring{fill:none;stroke:#1e2328;stroke-width:1.4}.wf-ringfill{fill:#fbfaf7}.wf-x{stroke:#1e2328;stroke-width:1.4}.wf-text{fill:#1e2328;font:12px system-ui,-apple-system,sans-serif}.wf-cap{fill:#5d6670;font:italic 11.5px system-ui,-apple-system,sans-serif}.wf-edge{fill:none;stroke:#1e2328;stroke-width:1.2}.wf-edge-back{stroke-dasharray:5 3}.wf-arrowhead{fill:#1e2328}.wf-guardbg{fill:#fbfaf7;opacity:.92}.wf-guard{fill:#5d6670;font:11px ui-monospace,SFMono-Regular,Menlo,monospace}.wf-pain{fill:#c2410c}.wf-paintext{fill:#ffffff;font:700 10.5px system-ui,-apple-system,sans-serif}@media (prefers-color-scheme: dark){.wf-bg{fill:#15181c}.wf-lane{stroke:#3a4048;stroke-width:1}.wf-lane-human{fill:#1b1f24}.wf-lane-system{fill:#1d1c19}.wf-lane-external{fill:#1f1a1f}.wf-lanehead{stroke:#3a4048}.wf-lanehead-human{fill:#243246}.wf-lanehead-system{fill:#33302a}.wf-lanehead-external{fill:#3a2c38}.wf-lanelabel{fill:#e6e8eb;font:600 12.5px system-ui,-apple-system,sans-serif;letter-spacing:.02em}.wf-act{stroke:#e6e8eb;stroke-width:1.2}.wf-act-human{fill:#20252b}.wf-act-system{fill:#25231f}.wf-act-external{fill:#271f27}.wf-dec{fill:#20252b;stroke:#e6e8eb;stroke-width:1.2}.wf-solid{fill:#e6e8eb}.wf-ring{fill:none;stroke:#e6e8eb;stroke-width:1.4}.wf-ringfill{fill:#15181c}.wf-x{stroke:#e6e8eb;stroke-width:1.4}.wf-text{fill:#e6e8eb;font:12px system-ui,-apple-system,sans-serif}.wf-cap{fill:#9aa3ad;font:italic 11.5px system-ui,-apple-system,sans-serif}.wf-edge{fill:none;stroke:#e6e8eb;stroke-width:1.2}.wf-edge-back{stroke-dasharray:5 3}.wf-arrowhead{fill:#e6e8eb}.wf-guardbg{fill:#15181c;opacity:.92}.wf-guard{fill:#9aa3ad;font:11px ui-monospace,SFMono-Regular,Menlo,monospace}.wf-pain{fill:#fb923c}.wf-paintext{fill:#1a1208;font:700 10.5px system-ui,-apple-system,sans-serif}}</style>
+<rect class="wf-bg" x="0" y="0" width="1098" height="1430"/>
+<defs><marker id="arr-doctake" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="wf-arrowhead" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<rect class="wf-lane wf-lane-human" x="14" y="7.0" width="214" height="1416"/>
+<rect class="wf-lanehead wf-lanehead-human" x="14" y="7.0" width="214" height="37.0"/>
+<text class="wf-lanelabel" x="121.0" y="30.0" text-anchor="middle">ARES Editor (or Admin)</text>
+<rect class="wf-lane wf-lane-human" x="228" y="7.0" width="214" height="1416"/>
+<rect class="wf-lanehead wf-lanehead-human" x="228" y="7.0" width="214" height="37.0"/>
+<text class="wf-lanelabel" x="335.0" y="30.0" text-anchor="middle">Administrator (webmaster)</text>
+<rect class="wf-lane wf-lane-system" x="442" y="7.0" width="428" height="1416"/>
+<rect class="wf-lanehead wf-lanehead-system" x="442" y="7.0" width="428" height="37.0"/>
+<text class="wf-lanelabel" x="656.0" y="30.0" text-anchor="middle">WordPress · spokares-core</text>
+<rect class="wf-lane wf-lane-external" x="870" y="7.0" width="214" height="1416"/>
+<rect class="wf-lanehead wf-lanehead-external" x="870" y="7.0" width="214" height="37.0"/>
+<text class="wf-lanelabel" x="977.0" y="30.0" text-anchor="middle">Public site</text>
+<path class="wf-edge" d="M121.0,88.0 L121.0,122.0" marker-end="url(#arr-doctake)"/>
+<path class="wf-edge" d="M121.0,181.0 L121.0,198.0 L549.0,198.0 L549.0,215.0" marker-end="url(#arr-doctake)"/>
+<path class="wf-edge" d="M549.0,249.0 L549.0,283.0" marker-end="url(#arr-doctake)"/>
+<path class="wf-edge" d="M645.0,305.0 L763.0,305.0 L763.0,361.0" marker-end="url(#arr-doctake)"/>
+<path class="wf-edge" d="M549.0,327.0 L549.0,361.0" marker-end="url(#arr-doctake)"/>
+<path class="wf-edge" d="M763.0,395.0 L763.0,412.0 L549.0,412.0 L549.0,429.0" marker-end="url(#arr-doctake)"/>
+<path class="wf-edge" d="M549.0,395.0 L549.0,429.0" marker-end="url(#arr-doctake)"/>
+<path class="wf-edge" d="M549.0,451.0 L549.0,468.0 L977.0,468.0 L977.0,485.0" marker-end="url(#arr-doctake)"/>
+<path class="wf-edge" d="M977.0,529.0 L977.0,546.0 L121.0,546.0 L121.0,563.0" marker-end="url(#arr-doctake)"/>
+<path class="wf-edge" d="M121.0,607.0 L121.0,650.0" marker-end="url(#arr-doctake)"/>
+<path class="wf-edge" d="M217.0,585.0 L549.0,585.0 L549.0,641.0" marker-end="url(#arr-doctake)"/>
+<path class="wf-edge" d="M549.0,685.0 L549.0,719.0" marker-end="url(#arr-doctake)"/>
+<path class="wf-edge" d="M645.0,741.0 L763.0,741.0 L763.0,797.0" marker-end="url(#arr-doctake)"/>
+<path class="wf-edge" d="M549.0,763.0 L549.0,797.0" marker-end="url(#arr-doctake)"/>
+<path class="wf-edge" d="M763.0,831.0 L763.0,951.0 L121.0,951.0 L121.0,968.0" marker-end="url(#arr-doctake)"/>
+<path class="wf-edge" d="M549.0,856.0 L549.0,873.0 L121.0,873.0 L121.0,890.0" marker-end="url(#arr-doctake)"/>
+<path class="wf-edge" d="M121.0,934.0 L121.0,968.0" marker-end="url(#arr-doctake)"/>
+<path class="wf-edge" d="M335.0,1050.0 L335.0,1084.0" marker-end="url(#arr-doctake)"/>
+<path class="wf-edge" d="M335.0,1143.0 L335.0,1160.0 L549.0,1160.0 L549.0,1177.0" marker-end="url(#arr-doctake)"/>
+<path class="wf-edge" d="M549.0,1251.0 L549.0,1285.0" marker-end="url(#arr-doctake)"/>
+<path class="wf-edge" d="M549.0,1344.0 L549.0,1378.0" marker-end="url(#arr-doctake)"/>
+<g class="wf-node wf-start" data-node="s"><circle class="wf-solid" cx="121.0" cy="77.0" r="11.0"/></g>
+<g class="wf-node wf-action" data-node="take"><rect class="wf-act wf-act-human" x="31.0" y="122" width="180" height="59" rx="9"/><text class="wf-text" x="121.0" y="140.5" text-anchor="middle">Open the document; Save</text><text class="wf-text" x="121.0" y="155.5" text-anchor="middle">box › Take it off the</text><text class="wf-text" x="121.0" y="170.5" text-anchor="middle">site (no list action)</text><circle class="wf-pain" cx="207.0" cy="124" r="10.5"/><text class="wf-paintext" x="207.0" y="127.8" text-anchor="middle">D6</text></g>
+<g class="wf-node wf-action" data-node="trash"><rect class="wf-act wf-act-system" x="459.0" y="215" width="180" height="34" rx="9"/><text class="wf-text" x="549.0" y="236.0" text-anchor="middle">Move to Trash</text></g>
+<g class="wf-node wf-decision" data-node="used"><path class="wf-dec" d="M549.0,283 L645.0,305.0 L549.0,327 L453.0,305.0 z"/><text class="wf-text" x="549.0" y="309.0" text-anchor="middle">File used elsewhere?</text></g>
+<g class="wf-node wf-action" data-node="keep"><rect class="wf-act wf-act-system" x="673.0" y="361" width="180" height="34" rx="9"/><text class="wf-text" x="763.0" y="382.0" text-anchor="middle">Keep the file; warn</text></g>
+<g class="wf-node wf-action" data-node="del"><rect class="wf-act wf-act-system" x="459.0" y="361" width="180" height="34" rx="9"/><text class="wf-text" x="549.0" y="382.0" text-anchor="middle">Delete the file now</text></g>
+<g class="wf-node wf-merge" data-node="m1"><path class="wf-dec" d="M549.0,429.0 L560.0,440.0 L549.0,451.0 L538.0,440.0 z"/></g>
+<g class="wf-node wf-action" data-node="gone"><rect class="wf-act wf-act-external" x="887.0" y="485" width="180" height="44" rx="9"/><text class="wf-text" x="977.0" y="503.5" text-anchor="middle">Gone from the library;</text><text class="wf-text" x="977.0" y="518.5" text-anchor="middle">/docs/&lt;slug&gt;/ returns 404</text></g>
+<g class="wf-node wf-decision" data-node="undo"><path class="wf-dec" d="M121.0,563 L217.0,585.0 L121.0,607 L25.0,585.0 z"/><text class="wf-text" x="121.0" y="589.0" text-anchor="middle">Undo or Restore?</text></g>
+<g class="wf-node wf-end" data-node="x1"><circle class="wf-ring" cx="121.0" cy="663.0" r="13.0"/><circle class="wf-solid" cx="121.0" cy="663.0" r="8.0"/></g>
+<g class="wf-node wf-action" data-node="rest"><rect class="wf-act wf-act-system" x="459.0" y="641" width="180" height="44" rx="9"/><text class="wf-text" x="549.0" y="659.5" text-anchor="middle">Restore to the previous</text><text class="wf-text" x="549.0" y="674.5" text-anchor="middle">status</text></g>
+<g class="wf-node wf-decision" data-node="file"><path class="wf-dec" d="M549.0,719 L645.0,741.0 L549.0,763 L453.0,741.0 z"/><text class="wf-text" x="549.0" y="745.0" text-anchor="middle">File still there?</text></g>
+<g class="wf-node wf-action" data-node="back"><rect class="wf-act wf-act-system" x="673.0" y="797" width="180" height="34" rx="9"/><text class="wf-text" x="763.0" y="818.0" text-anchor="middle">Back on the site</text></g>
+<g class="wf-node wf-action" data-node="dr"><rect class="wf-act wf-act-system" x="459.0" y="797" width="180" height="59" rx="9"/><text class="wf-text" x="549.0" y="815.5" text-anchor="middle">Back as a draft: &#x27;upload</text><text class="wf-text" x="549.0" y="830.5" text-anchor="middle">the file again, then</text><text class="wf-text" x="549.0" y="845.5" text-anchor="middle">Publish&#x27;</text><circle class="wf-pain" cx="635.0" cy="799" r="10.5"/><text class="wf-paintext" x="635.0" y="802.8" text-anchor="middle">D6</text></g>
+<g class="wf-node wf-action" data-node="again"><rect class="wf-act wf-act-human" x="31.0" y="890" width="180" height="44" rx="9"/><text class="wf-text" x="121.0" y="908.5" text-anchor="middle">Find the file, tick,</text><text class="wf-text" x="121.0" y="923.5" text-anchor="middle">choose it again, Publish</text></g>
+<g class="wf-node wf-end" data-node="x2"><circle class="wf-ring" cx="121.0" cy="981.0" r="13.0"/><circle class="wf-solid" cx="121.0" cy="981.0" r="8.0"/></g>
+<g class="wf-node wf-start" data-node="p0"><circle class="wf-solid" cx="335.0" cy="1039.0" r="11.0"/></g>
+<g class="wf-node wf-action" data-node="p1"><rect class="wf-act wf-act-human" x="245.0" y="1084" width="180" height="59" rx="9"/><text class="wf-text" x="335.0" y="1102.5" text-anchor="middle">Emergency: row action</text><text class="wf-text" x="335.0" y="1117.5" text-anchor="middle">&#x27;Pull this file now&#x27;;</text><text class="wf-text" x="335.0" y="1132.5" text-anchor="middle">confirm</text></g>
+<g class="wf-node wf-action" data-node="p2"><rect class="wf-act wf-act-system" x="459.0" y="1177" width="180" height="74" rx="9"/><text class="wf-text" x="549.0" y="1195.5" text-anchor="middle">Delete the file even if</text><text class="wf-text" x="549.0" y="1210.5" text-anchor="middle">pages link to it; source</text><text class="wf-text" x="549.0" y="1225.5" text-anchor="middle">Soon; draft; record who</text><text class="wf-text" x="549.0" y="1240.5" text-anchor="middle">and when</text><circle class="wf-pain" cx="635.0" cy="1179" r="10.5"/><text class="wf-paintext" x="635.0" y="1182.8" text-anchor="middle">D11</text></g>
+<g class="wf-node wf-action" data-node="p3"><rect class="wf-act wf-act-system" x="459.0" y="1285" width="180" height="59" rx="9"/><text class="wf-text" x="549.0" y="1303.5" text-anchor="middle">Banner &#x27;pulled by X&#x27;</text><text class="wf-text" x="549.0" y="1318.5" text-anchor="middle">stays even after a new</text><text class="wf-text" x="549.0" y="1333.5" text-anchor="middle">file is published</text><circle class="wf-pain" cx="635.0" cy="1287" r="10.5"/><text class="wf-paintext" x="635.0" y="1290.8" text-anchor="middle">D11</text></g>
+<g class="wf-node wf-end" data-node="px"><circle class="wf-ring" cx="549.0" cy="1391.0" r="13.0"/><circle class="wf-solid" cx="549.0" cy="1391.0" r="8.0"/></g>
+<rect class="wf-guardbg" x="649.0" y="290.0" width="34.0" height="13" rx="2"/>
+<text class="wf-guard" x="651.0" y="300.0" text-anchor="start">[yes]</text>
+<rect class="wf-guardbg" x="552.0" y="330.0" width="28.0" height="13" rx="2"/>
+<text class="wf-guard" x="554.0" y="340.0" text-anchor="start">[no]</text>
+<rect class="wf-guardbg" x="124.0" y="610.0" width="28.0" height="13" rx="2"/>
+<text class="wf-guard" x="126.0" y="620.0" text-anchor="start">[no]</text>
+<rect class="wf-guardbg" x="221.0" y="570.0" width="34.0" height="13" rx="2"/>
+<text class="wf-guard" x="223.0" y="580.0" text-anchor="start">[yes]</text>
+<rect class="wf-guardbg" x="649.0" y="726.0" width="34.0" height="13" rx="2"/>
+<text class="wf-guard" x="651.0" y="736.0" text-anchor="start">[yes]</text>
+<rect class="wf-guardbg" x="552.0" y="766.0" width="28.0" height="13" rx="2"/>
+<text class="wf-guard" x="554.0" y="776.0" text-anchor="start">[no]</text>
+</svg>
