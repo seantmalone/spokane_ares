@@ -87,7 +87,7 @@ test(
 		as_role( 'ares-editor' );
 		$res = uxevt_click( $id, array( 'spk_kind' => 'public-service' ), 'save' );
 		foreach ( array( 'spk_summary', 'spk_tasks', 'spk_main_url', 'spk_main_label', 'spk_links', 'spk_extra_doc', 'spk_keep_past' ) as $key ) {
-			assert_same( array(), get_post_meta( $id, $key ), $key . ' is cleared' );
+			assert_false( metadata_exists( 'post', $id, $key ), $key . ' is cleared' );
 		}
 		assert_count( 1, $res['notices'], 'one notice' );
 		assert_same( 'Saved. It shows under Public-service events on the Exercises & events page. Cleared Short description, What members do, Button, More links and Document members need: this type of event doesn’t use them.', $res['notices'][0]['text'], 'the notice names them' );

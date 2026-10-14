@@ -73,8 +73,9 @@ test(
 	function () {
 		foreach ( array( 'ares-editor', 'ares-net' ) as $role ) {
 			as_role( $role );
-			$fri       = wfe1_next( '5', 20 );
-			$sun       = \spokares_add_days( $fri, 2 );
+			$fri = wfe1_next( '5', 20 );
+			$sun = \spokares_add_days( $fri, 2 );
+
 			[ $id, $res ] = wfe1_add( $fri, $sun, '18:00', '12:00' );
 			assert_same( 'publish', get_post_status( $id ), $role . ': refused with ' . export( wp_list_pluck( $res['notices'], 'text' ) ) );
 			assert_same( '18:00', (string) get_post_meta( $id, 'spk_time_start', true ), $role . ': start time' );

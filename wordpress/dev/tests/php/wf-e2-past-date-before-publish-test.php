@@ -96,10 +96,10 @@ test(
 	'a past multi-day event names its last day, under Last day',
 	function () {
 		as_role( 'ares-editor' );
-		$first     = uxevt_day( -12 );
-		$last      = uxevt_day( -10 );
-		[ $id ]    = wfe2_add( $first, $last );
-		$html      = uxevt_form( $id );
+		$first  = uxevt_day( -12 );
+		$last   = uxevt_day( -10 );
+		[ $id ] = wfe2_add( $first, $last );
+		$html   = uxevt_form( $id );
 		assert_same( 'draft', get_post_status( $id ), 'not published' );
 		assert_contains( esc_html( wfe2_sentence( $last ) ), $html, 'the sentence names the last day' );
 		assert_matches( '#<input type="date" id="spk-end"[^>]*class="spk-field-error"#', $html, 'Last day is outlined' );

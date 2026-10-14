@@ -658,7 +658,7 @@ function spokares_event_clear_unused( int $post_id, array &$v, array &$confirmed
 	if ( '' === $v['kind'] ) {
 		return array();
 	}
-	$meta    = array(
+	$meta = array(
 		'summary'    => 'spk_summary',
 		'tasks'      => 'spk_tasks',
 		'main_url'   => 'spk_main_url',
