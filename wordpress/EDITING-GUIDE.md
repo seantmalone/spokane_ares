@@ -42,6 +42,7 @@ After you sign in you land on the Dashboard. The **Site tasks** card has a secti
 <img src="shots/final/admin-net-rota.png" width="600" alt="The Net Control Schedule screen: one row per Tuesday with a call-sign box and Volunteer needed, No net and Not posted yet, then Winlink assignment, Form and Note.">
 
 - **Call signs only.**
+- **Paste the schedule** (above the table) saves typing: copy the list from ag7qp.com or the e-mail, paste it, click **Preview**, check what would change, then click **Save these Tuesdays**. Lines it can't read are listed, not guessed; type those by hand.
 - **Show 13 more Tuesdays** keeps your typing.
 - **Wording on the site**, under the schedule: the line asking for volunteers, and how to answer a Winlink assignment. Change them here and click **Save**.
 - **Undo** is next to "Last saved" at the top; **Redo** takes the undo back. If someone else made that save, or it is more than a day old, it asks first: click **Undo it** or **Keep it**. A Tuesday changed since that save is left as it is, and the message says so.

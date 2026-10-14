@@ -150,6 +150,238 @@ function spokares_rota_undo_question( array $prev ): string {
 }
 
 /**
+ * A pasted schedule read line by line (N1): "Tue Oct 13 NZ2S", "10/13 NZ2S",
+ * "October 13, 2026 – NZ2S", "Oct 20 - open", "Oct 27 no net". Each line
+ * needs a date and then a call sign, or open / volunteer needed, no net, or
+ * not posted yet (tbd). A line that doesn't read that way is listed with
+ * the reason, never guessed. A date without a year is the next one from a
+ * week ago; it must be a Tuesday the screen lists (the next 52).
+ *
+ * @param string      $text  Pasted text.
+ * @param string|null $today Today (default spokares_today()).
+ * @return array{rows:array<string,array{state:string,call:string,line:string}>,bad:array<int,array{line:string,why:string}>}
+ */
+function spokares_rota_parse_paste( string $text, ?string $today = null ): array {
+	$today  = $today ?? spokares_today();
+	$months = array( 'jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec' );
+	$names  = array( 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december' );
+	$month  = static function ( string $word ) use ( $months, $names ): int {
+		$word = strtolower( rtrim( $word, '.' ) );
+		$i    = array_search( substr( $word, 0, 3 ), $months, true );
+		if ( false === $i || strlen( $word ) < 3 || ( 'sept' !== $word && ! str_starts_with( $names[ $i ], $word ) ) ) {
+			return 0;
+		}
+		return $i + 1;
+	};
+	$tuesdays = wp_list_pluck( spokares_rota_rows( 52, $today ), 'date' );
+	$out      = array(
+		'rows' => array(),
+		'bad'  => array(),
+	);
+	$weekday  = '(?:mon|tue|wed|thu|fri|sat|sun)[a-z]*\.?,?';
+	foreach ( preg_split( '/\r\n|\r|\n/', $text ) as $raw ) {
+		$line = trim( (string) preg_replace( '/\s+/u', ' ', sanitize_text_field( (string) $raw ) ) );
+		if ( '' === $line ) {
+			continue;
+		}
+		$rest = (string) preg_replace( '/^' . $weekday . '\s+/i', '', $line );
+		$y    = 0;
+		$m    = 0;
+		$d    = 0;
+		if ( preg_match( '/^(\d{4})-(\d{1,2})-(\d{1,2})\b/', $rest, $hit ) ) {
+			list( , $y, $m, $d ) = array_map( 'intval', $hit );
+		} elseif ( preg_match( '/^(\d{1,2})\/(\d{1,2})(?:\/(\d{2}|\d{4}))?\b/', $rest, $hit ) ) {
+			$m = (int) $hit[1];
+			$d = (int) $hit[2];
+			$y = isset( $hit[3] ) ? (int) $hit[3] : 0;
+		} elseif ( preg_match( '/^([a-z]{3,9}\.?)\s+(\d{1,2})(?:st|nd|rd|th)?\b,?(?:\s+(\d{4})\b)?/i', $rest, $hit ) && $month( $hit[1] ) ) {
+			$m = $month( $hit[1] );
+			$d = (int) $hit[2];
+			$y = isset( $hit[3] ) ? (int) $hit[3] : 0;
+		} elseif ( preg_match( '/^(\d{1,2})(?:st|nd|rd|th)?\s+([a-z]{3,9}\.?)(?:,?\s+(\d{4})\b)?/i', $rest, $hit ) && $month( $hit[2] ) ) {
+			$m = $month( $hit[2] );
+			$d = (int) $hit[1];
+			$y = isset( $hit[3] ) ? (int) $hit[3] : 0;
+		} else {
+			$out['bad'][] = array(
+				'line' => $line,
+				'why'  => __( 'no date at the start', 'spokares-core' ),
+			);
+			continue;
+		}
+		$rest = trim( (string) preg_replace( '/^\s*(?:' . $weekday . ')?[\s\-–—:|,.]*/iu', '', substr( $rest, strlen( $hit[0] ) ) ) );
+		if ( $y && $y < 100 ) {
+			$y += 2000;
+		}
+		if ( ! $y ) {
+			$y = (int) substr( $today, 0, 4 );
+			if ( checkdate( $m, $d, $y ) && sprintf( '%04d-%02d-%02d', $y, $m, $d ) < spokares_add_days( $today, -7 ) ) {
+				++$y;
+			}
+		}
+		if ( ! checkdate( $m, $d, $y ) ) {
+			$out['bad'][] = array(
+				'line' => $line,
+				'why'  => __( 'not a real date', 'spokares-core' ),
+			);
+			continue;
+		}
+		$ymd = sprintf( '%04d-%02d-%02d', $y, $m, $d );
+		if ( 2 !== spokares_weekday( $ymd ) ) {
+			$out['bad'][] = array(
+				'line' => $line,
+				/* translators: %s: a date, e.g. "Oct 14". */
+				'why'  => sprintf( __( '%s isn’t a Tuesday', 'spokares-core' ), spokares_fmt_date( $ymd, 'day' ) ),
+			);
+			continue;
+		}
+		if ( ! in_array( $ymd, $tuesdays, true ) ) {
+			$out['bad'][] = array(
+				'line' => $line,
+				/* translators: %s: a date, e.g. "Oct 14, 2025". */
+				'why'  => sprintf( __( '%s isn’t one of the Tuesdays on this screen', 'spokares-core' ), spokares_fmt_date( $ymd, 'long' ) ),
+			);
+			continue;
+		}
+		$lower = strtolower( $rest );
+		$state = '';
+		$call  = '';
+		if ( preg_match( '/^(open|volunteer needed|volunteer|needed|need)\b/', $lower ) ) {
+			$state = 'open';
+		} elseif ( preg_match( '/^(no net|none|cancel+ed|cancel)\b/', $lower ) ) {
+			$state = 'none';
+		} elseif ( preg_match( '/^(tbd|tba|not posted yet|not posted|\?+)(?:\s|$)/', $lower ) ) {
+			$state = 'tbd';
+		} else {
+			$call = spokares_call_sign( $rest )['call'];
+			if ( '' !== $call ) {
+				$state = 'call';
+			}
+		}
+		if ( '' === $state ) {
+			$out['bad'][] = array(
+				'line' => $line,
+				'why'  => '' === $rest ? __( 'nothing after the date', 'spokares-core' ) : __( 'no call sign, “open”, “no net” or “tbd” after the date', 'spokares-core' ),
+			);
+			continue;
+		}
+		// A later line for the same Tuesday wins, as it would if typed in order.
+		$out['rows'][ $ymd ] = array(
+			'state' => $state,
+			'call'  => $call,
+			'line'  => $line,
+		);
+	}
+	ksort( $out['rows'] );
+	return $out;
+}
+
+/**
+ * A schedule row's Net control in words: the call sign, Volunteer needed,
+ * No net or Not posted yet.
+ *
+ * @param string $state call | open | none | tbd.
+ * @param string $call  Call sign.
+ */
+function spokares_rota_state_words( string $state, string $call ): string {
+	switch ( $state ) {
+		case 'call':
+			return '' !== $call ? $call : __( 'Not posted yet', 'spokares-core' );
+		case 'open':
+			return __( 'Volunteer needed', 'spokares-core' );
+		case 'none':
+			return __( 'No net', 'spokares-core' );
+	}
+	return __( 'Not posted yet', 'spokares-core' );
+}
+
+/**
+ * The preview of a pasted schedule (N1): which Tuesdays would change, the
+ * lines not understood, and Save these, which posts those rows to the
+ * schedule's own save (every per-row check and the clash check run there).
+ *
+ * @param array  $paste spokares_rota_parse_paste() result.
+ * @param int    $weeks Rows shown.
+ * @param string $here  The screen's address.
+ */
+function spokares_rota_paste_preview( array $paste, int $weeks, string $here ): void {
+	$stored  = spokares_opt( 'spk_rota' );
+	$changes = array();
+	$same    = 0;
+	foreach ( $paste['rows'] as $ymd => $p ) {
+		$row = spokares_net_on( (string) $ymd );
+		if ( $row['state'] === $p['state'] && ( 'call' !== $p['state'] || $row['call'] === $p['call'] ) ) {
+			++$same;
+			continue;
+		}
+		$changes[ $ymd ] = array( $row, $p, spokares_rota_state_words( $row['state'], $row['call'] ), spokares_rota_state_words( $p['state'], $p['call'] ) );
+	}
+	?>
+	<div class="notice notice-info inline spk-paste-preview" role="region" aria-label="<?php esc_attr_e( 'What the paste would change', 'spokares-core' ); ?>">
+		<?php if ( $changes ) : ?>
+			<p><strong><?php echo esc_html( _n( 'This Tuesday would change:', 'These Tuesdays would change:', count( $changes ), 'spokares-core' ) ); ?></strong></p>
+			<ul class="spk-paste-list">
+				<?php foreach ( $changes as $ymd => $c ) : ?>
+					<li><?php echo esc_html( sprintf( /* translators: 1: date, 2: new net control, 3: old one. */ __( '%1$s: %2$s (was %3$s)', 'spokares-core' ), spokares_fmt_date( (string) $ymd, 'short' ), $c[3], $c[2] ) ); ?></li>
+				<?php endforeach; ?>
+			</ul>
+		<?php else : ?>
+			<p><strong><?php esc_html_e( 'Nothing to change: the schedule already says that.', 'spokares-core' ); ?></strong></p>
+		<?php endif; ?>
+		<?php if ( $same && $changes ) : ?>
+			<p><?php echo esc_html( sprintf( /* translators: %d: number of Tuesdays. */ _n( '%d Tuesday already matches.', '%d Tuesdays already match.', $same, 'spokares-core' ), $same ) ); ?></p>
+		<?php endif; ?>
+		<?php if ( $paste['bad'] ) : ?>
+			<p><strong><?php esc_html_e( 'Not understood, so left out:', 'spokares-core' ); ?></strong></p>
+			<ul class="spk-paste-bad">
+				<?php foreach ( $paste['bad'] as $b ) : ?>
+					<li><?php echo esc_html( sprintf( /* translators: 1: a pasted line, 2: why it wasn't read. */ __( '“%1$s”: %2$s', 'spokares-core' ), $b['line'], $b['why'] ) ); ?></li>
+				<?php endforeach; ?>
+			</ul>
+		<?php endif; ?>
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="spk-paste-save">
+			<input type="hidden" name="action" value="spokares_save_rota">
+			<input type="hidden" name="weeks" value="<?php echo esc_attr( (string) $weeks ); ?>">
+			<?php wp_nonce_field( 'spokares_save_rota' ); ?>
+			<?php
+			foreach ( $changes as $ymd => $c ) :
+				$row  = $c[0];
+				$keep = array(
+					'state'   => $row['state'],
+					'call'    => $row['call'],
+					'note'    => $row['row_note'],
+					'wl_task' => $row['wl_task'],
+					'wl_form' => $row['wl_form'],
+				);
+				$name = 'rota[' . $ymd . ']';
+				// The row as it is now (the clash check), with only Net control changed.
+				$send = array_merge(
+					$keep,
+					array(
+						'h'     => spokares_rota_hash( $stored[ $ymd ] ?? null ),
+						'state' => $c[1]['state'],
+						'call'  => $c[1]['call'],
+					)
+				);
+				foreach ( $send as $key => $value ) :
+					?>
+					<input type="hidden" name="<?php echo esc_attr( $name . '[' . $key . ']' ); ?>" value="<?php echo esc_attr( (string) $value ); ?>">
+					<?php
+				endforeach;
+			endforeach;
+			?>
+			<p>
+				<?php if ( $changes ) : ?>
+					<button type="submit" class="button button-primary"><?php echo esc_html( _n( 'Save this Tuesday', 'Save these Tuesdays', count( $changes ), 'spokares-core' ) ); ?></button>
+				<?php endif; ?>
+				<a class="button" href="<?php echo esc_url( $here ); ?>"><?php esc_html_e( 'Cancel', 'spokares-core' ); ?></a>
+			</p>
+		</form>
+	</div>
+	<?php
+}
+
+/**
  * The two sentences printed with the editors' own lists, edited on this
  * screen (N7): field => characters allowed, name in a notice, label, hint.
  * They are stored in spk_nets.
@@ -226,6 +458,11 @@ function spokares_rota_page(): void {
 	$asking  = $undo && isset( $_GET['undo'] ) && 'ask' === sanitize_key( wp_unslash( $_GET['undo'] ) );
 	$here    = add_query_arg( $weeks > 13 ? array( 'weeks' => $weeks ) : array(), admin_url( 'admin.php?page=spokares-rota' ) );
 	$verb    = empty( $prev['undo'] ) ? __( 'Undo', 'spokares-core' ) : __( 'Redo', 'spokares-core' );
+	// A pasted schedule waiting for its preview (spokares_handle_paste_rota()).
+	$pasted = get_transient( 'spokares_rota_paste_' . $user );
+	$pasted = is_array( $pasted ) ? $pasted : null;
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- which panel to draw; read-only.
+	$preview = $pasted && isset( $_GET['paste'] );
 	?>
 	<div class="wrap spk-screen spk-rota">
 		<h1 class="wp-heading-inline"><?php echo esc_html( spokares_screen_title( 'rota' ) ); ?></h1>
@@ -270,6 +507,23 @@ function spokares_rota_page(): void {
 		<?php if ( ! current_user_can( 'spokares_edit_net_details' ) ) : ?>
 			<p class="description spk-ask"><?php esc_html_e( 'Repeater and net times: ask the webmaster.', 'spokares-core' ); ?></p>
 		<?php endif; ?>
+
+		<?php
+		if ( $preview ) {
+			spokares_rota_paste_preview( spokares_rota_parse_paste( (string) $pasted['text'] ), $weeks, $here );
+		}
+		?>
+		<details class="spk-more spk-paste"<?php echo $preview ? ' open' : ''; ?>>
+			<summary><?php esc_html_e( 'Paste the schedule', 'spokares-core' ); ?></summary>
+			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="spk-paste-form">
+				<input type="hidden" name="action" value="spokares_paste_rota">
+				<input type="hidden" name="weeks" value="<?php echo esc_attr( (string) $weeks ); ?>">
+				<?php wp_nonce_field( 'spokares_paste_rota' ); ?>
+				<p><label for="spk-paste-text"><?php esc_html_e( 'Copy the net control list from ag7qp.com or the e-mail and paste it here, one Tuesday a line, like “Tue Oct 13 NZ2S”, “10/20 open” or “Oct 27 no net”. You’ll see what would change before anything is saved.', 'spokares-core' ); ?></label></p>
+				<textarea id="spk-paste-text" name="paste" rows="6" class="large-text code" spellcheck="false"><?php echo esc_textarea( $pasted ? (string) $pasted['text'] : '' ); ?></textarea>
+				<p><button type="submit" class="button"><?php esc_html_e( 'Preview', 'spokares-core' ); ?></button></p>
+			</form>
+		</details>
 
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="spk-rota-form" data-spk-guard<?php echo $held ? ' data-spk-dirty' : ''; ?>>
 			<input type="hidden" name="action" value="spokares_save_rota">
@@ -648,6 +902,8 @@ function spokares_handle_save_rota(): void {
 		);
 		update_option( 'spk_rota_saved', array_merge( $stamp, array( 'dates' => $saved ) ), false );
 		set_transient( 'spokares_rota_changed_' . get_current_user_id(), $saved, 5 * MINUTE_IN_SECONDS );
+		// A pasted schedule is done with once the schedule saves.
+		delete_transient( 'spokares_rota_paste_' . get_current_user_id() );
 		spokares_purge_cache();
 	}
 
@@ -688,6 +944,28 @@ function spokares_handle_save_rota(): void {
 	spokares_redirect_to( 'spokares-rota', $weeks > 13 ? array( 'weeks' => $weeks ) : array() );
 }
 add_action( 'admin_post_spokares_save_rota', 'spokares_handle_save_rota' );
+
+/**
+ * "Paste the schedule" › Preview: keep the pasted text for this user (an
+ * hour) and show the screen with what it would change. Nothing is saved
+ * here; Save these posts to spokares_handle_save_rota().
+ */
+function spokares_handle_paste_rota(): void {
+	spokares_verify_form( 'spokares_paste_rota', 'spokares_edit_rota' );
+	$weeks = isset( $_POST['weeks'] ) ? max( 13, min( 52, absint( $_POST['weeks'] ) ) ) : 13;
+	$args  = $weeks > 13 ? array( 'weeks' => $weeks ) : array();
+	$text  = isset( $_POST['paste'] ) ? sanitize_textarea_field( wp_unslash( $_POST['paste'] ) ) : '';
+	$text  = mb_substr( $text, 0, 10000, 'UTF-8' );
+	$key   = 'spokares_rota_paste_' . get_current_user_id();
+	if ( '' === trim( $text ) ) {
+		delete_transient( $key );
+		spokares_add_notice( 'info', __( 'Paste the schedule into the box first, then click Preview.', 'spokares-core' ) );
+		spokares_redirect_to( 'spokares-rota', $args );
+	}
+	set_transient( $key, array( 'text' => $text ), HOUR_IN_SECONDS );
+	spokares_redirect_to( 'spokares-rota', array_merge( $args, array( 'paste' => 1 ) ) );
+}
+add_action( 'admin_post_spokares_paste_rota', 'spokares_handle_paste_rota' );
 
 /**
  * Save the two sentences under the lists from the schedule's form (N7):

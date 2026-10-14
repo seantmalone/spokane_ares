@@ -119,7 +119,9 @@ function qa059_open( string $screen ): array {
 		\spokares_net_details_page();
 	}
 	$html = (string) ob_get_clean();
-	if ( ! preg_match( '/<form\b.*?<\/form>/is', $html, $form ) ) {
+	// The schedule's screen has other forms (Paste the schedule, Undo): take its own.
+	$pick = 'rota' === $screen ? '/<form\b[^>]*id="spk-rota-form".*?<\/form>/is' : '/<form\b.*?<\/form>/is';
+	if ( ! preg_match( $pick, $html, $form ) ) {
 		fail( $screen . ': the screen has no form for ' . wp_get_current_user()->user_login );
 	}
 	return qa059_browser_fields( $form[0] );
