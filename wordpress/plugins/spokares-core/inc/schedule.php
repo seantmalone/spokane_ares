@@ -206,18 +206,69 @@ function spokares_meeting_pattern_dates( array $p, string $from, string $to ): a
 }
 
 /**
- * The change recorded for a meeting's rule date, if any.
+ * The change recorded for a meeting's rule date, if any (a cancellation, a
+ * move or a note; never a one-off date).
  *
  * @param string $meeting_id Meeting id.
  * @param string $ymd        Rule date.
  */
 function spokares_meeting_change( string $meeting_id, string $ymd ): ?array {
 	foreach ( spokares_opt( 'spk_meetings' )['changes'] as $c ) {
-		if ( $c['meeting'] === $meeting_id && $c['date'] === $ymd ) {
+		if ( $c['meeting'] === $meeting_id && $c['date'] === $ymd && 'extra' !== $c['kind'] ) {
 			return $c;
 		}
 	}
 	return null;
+}
+
+/**
+ * The meeting id of a one-off date that belongs to no regular meeting (an
+ * annual meeting, say): it carries its own name.
+ */
+function spokares_meeting_other_id(): string {
+	return '_other';
+}
+
+/**
+ * The one-off dates (kind 'extra' in spk_meetings['changes']) from a date
+ * on, in date order. Each: date, meeting (an id, or spokares_meeting_other_id()),
+ * start, end, name (for another meeting), note.
+ *
+ * @param string|null $from First date (default today).
+ * @return array[]
+ */
+function spokares_meeting_extras( ?string $from = null ): array {
+	$from = $from ?? spokares_today();
+	$out  = array();
+	foreach ( spokares_opt( 'spk_meetings' )['changes'] as $c ) {
+		if ( 'extra' === $c['kind'] && $c['date'] >= $from ) {
+			$out[] = array_merge(
+				array(
+					'start' => '',
+					'end'   => '',
+					'name'  => '',
+					'note'  => '',
+				),
+				$c
+			);
+		}
+	}
+	usort( $out, static fn( $a, $b ) => strcmp( $a['date'] . $a['start'], $b['date'] . $b['start'] ) );
+	return $out;
+}
+
+/**
+ * A one-off date's words after its date: the time, then the note ("6:00 PM,
+ * Holiday potluck"). The name is the caller's.
+ *
+ * @param array $c One-off date (spokares_meeting_extras()).
+ */
+function spokares_meeting_extra_words( array $c ): string {
+	$parts = array_filter(
+		array( spokares_fmt_time_range( (string) ( $c['start'] ?? '' ), (string) ( $c['end'] ?? '' ) ), rtrim( trim( (string) ( $c['note'] ?? '' ) ), '.' ) ),
+		static fn( $p ) => '' !== trim( (string) $p )
+	);
+	return implode( ', ', $parts );
 }
 
 /**
@@ -228,15 +279,24 @@ function spokares_meeting_change( string $meeting_id, string $ymd ): ?array {
  * with the stored rule's id, show_home and active) · dates (list of [date,
  * orig, kind '' | 'moved' | 'note', note]) · cancelled (rule dates from today
  * to the first real date that were cancelled) · changes (every cancelled,
- * moved or noted rule date from today on, for the For members page).
+ * moved or noted rule date from today on, and every one-off date, for the
+ * For members page) · extras (the meeting's one-off dates from today on).
+ *
+ * A one-off date of a meeting the site doesn't show, or of another meeting
+ * (spokares_meeting_other_id()), comes as an item of its own after the
+ * others, with `one_off` set: its meeting has that name and the site's
+ * switches on, no regular dates, and the date in changes and extras.
  *
  * @param int         $per_meeting How many real dates per meeting.
  * @param string|null $from        Start date (default today).
  */
 function spokares_next_meetings( int $per_meeting = 1, ?string $from = null ): array {
-	$today = $from ?? spokares_today();
-	$out   = array();
-	foreach ( spokares_opt( 'spk_meetings' )['meetings'] as $m ) {
+	$today    = $from ?? spokares_today();
+	$out      = array();
+	$data     = spokares_opt( 'spk_meetings' );
+	$extras   = spokares_meeting_extras( $today );
+	$attached = array();
+	foreach ( $data['meetings'] as $m ) {
 		if ( ! $m['active'] ) {
 			continue;
 		}
@@ -292,11 +352,47 @@ function spokares_next_meetings( int $per_meeting = 1, ?string $from = null ): a
 		// effect later describes that later date), with the stored switches.
 		$rule = spokares_meeting_in_effect( $m, $first );
 		unset( $rule['next'] );
+		$own = $m['show_home'] ? array_values( array_filter( $extras, static fn( $c ) => $c['meeting'] === $m['id'] ) ) : array();
+		foreach ( $own as $c ) {
+			$changes[] = $c;
+			$attached[ $c['meeting'] . '|' . $c['date'] ] = true;
+		}
+		usort( $changes, static fn( $a, $b ) => strcmp( $a['date'], $b['date'] ) );
 		$out[] = array(
 			'meeting'   => $rule,
 			'dates'     => $dates,
 			'cancelled' => $cancelled,
 			'changes'   => $changes,
+			'extras'    => $own,
+		);
+	}
+	// One-off dates with no shown meeting to go under: an item each.
+	$names = wp_list_pluck( $data['meetings'], 'name', 'id' );
+	foreach ( $extras as $c ) {
+		if ( isset( $attached[ $c['meeting'] . '|' . $c['date'] ] ) ) {
+			continue;
+		}
+		$name = spokares_meeting_other_id() === $c['meeting'] || '' !== $c['name'] ? $c['name'] : (string) ( $names[ $c['meeting'] ] ?? '' );
+		if ( '' === trim( $name ) ) {
+			continue;
+		}
+		$out[] = array(
+			'meeting'   => spokares_normalize_meeting(
+				array(
+					'id'          => spokares_meeting_other_id() === $c['meeting'] ? '' : $c['meeting'],
+					'name'        => $name,
+					'nth'         => array(),
+					'weekday'     => spokares_weekday( $c['date'] ),
+					'show_home'   => true,
+					'active'      => true,
+					'needs_check' => false,
+				)
+			),
+			'dates'     => array(),
+			'cancelled' => array(),
+			'changes'   => array( $c ),
+			'extras'    => array( $c ),
+			'one_off'   => true,
 		);
 	}
 	return $out;

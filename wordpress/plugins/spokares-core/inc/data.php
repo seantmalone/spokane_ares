@@ -534,15 +534,22 @@ function spokares_sanitize_opt_meetings( $v ): array {
 		if ( ! is_array( $c ) || ! spokares_is_ymd( $c['date'] ?? '' ) || empty( $c['meeting'] ) ) {
 			continue;
 		}
-		// A note on its own is a one-date change too ("Starts at 10:00 AM this time").
-		$kind      = in_array( $c['kind'] ?? '', array( 'cancelled', 'moved', 'note' ), true ) ? $c['kind'] : 'cancelled';
-		$changes[] = array(
+		// A note on its own is a one-date change too ("Starts at 10:00 AM this
+		// time"); 'extra' is a one-off date, with its own times and maybe a name.
+		$kind   = in_array( $c['kind'] ?? '', array( 'cancelled', 'moved', 'note', 'extra' ), true ) ? $c['kind'] : 'cancelled';
+		$change = array(
 			'date'     => $c['date'],
 			'meeting'  => sanitize_key( $c['meeting'] ),
 			'kind'     => $kind,
 			'new_date' => 'moved' === $kind && spokares_is_ymd( $c['new_date'] ?? '' ) ? $c['new_date'] : '',
 			'note'     => spokares_clean_str( $c['note'] ?? '' ),
 		);
+		if ( 'extra' === $kind ) {
+			$change['start'] = spokares_is_hhmm( $c['start'] ?? '' ) ? $c['start'] : '';
+			$change['end']   = spokares_is_hhmm( $c['end'] ?? '' ) ? $c['end'] : '';
+			$change['name']  = spokares_clean_str( $c['name'] ?? '' );
+		}
+		$changes[] = $change;
 	}
 	$out = array(
 		'meetings' => $meetings,

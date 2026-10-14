@@ -65,8 +65,10 @@ After you sign in you land on the Dashboard. The **Site tasks** card has a secti
 ## Job 3: Cancel or move a meeting (1 minute)
 
 1. On the Dashboard, click **Cancel or move a meeting**.
-2. Find the date. Tick **Cancelled**, or pick the new date under **Moved to**. A different time or room that day: type it in the **Note**, like "Starts at 10:00 AM this time". To take back a cancellation, untick **Cancelled**.
+2. Find the date. Tick **Cancelled**, or pick the new date under **Moved to**. A different time or room that day: type it in the **Note**, like "Starts at 10:00 AM this time". To take back a cancellation, untick **Cancelled**. Further ahead? Click **Show more dates** under the meeting (about six months).
 3. Click **Save**.
+
+**An extra date** (a holiday potluck on another day, an annual meeting): under **Add a one-off date**, pick the meeting (or **Another meeting** and type its name), the date, the times if you know them and a short note, then click **Save**. Home and the For members page list it. To take one off, tick **Remove** beside it and click **Save**.
 
 <img src="shots/final/admin-meetings.png" width="600" alt="The Cancel or Move a Meeting screen: each upcoming date with a Cancelled tick box, a Moved to date and a Note.">
 
