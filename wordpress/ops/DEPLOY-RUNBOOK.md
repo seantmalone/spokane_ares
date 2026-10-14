@@ -143,6 +143,34 @@ Before the cutover, the workflow pins the curl checks to `DEPLOY_HOST` (`--resol
 
 If PHP changes don't seem to take effect after a deploy, OPcache may be stale. The CLI reports `validate_timestamps=On`, but LSAPI could differ. Restart PHP for this website only: `POST /api/v2/websites/2810b31a-7b60-4369-8450-bfe75befb3fd/restart_php` with the token from `enhance.ini`, or use the panel.
 
+## Content edits over SSH
+
+The schedule, meetings and events belong to the editors' screens. When you have to change them from a shell (a bulk update, a schedule pasted from e-mail), use `wp spokares …`, never `wp eval-file` or a raw `update_option` / `update_post_meta`. The commands run the screens' own checks and saves: the call-sign check, never-publish words, the phone/e-mail "Publish it" tick (`--confirm`), the check against a change someone made meanwhile, the "Last saved" line and Undo on the Net Control Schedule, and the cache purge. A refused line gets the screen's sentence and a non-zero exit; nothing is guessed.
+
+1. Take a copy first, from your machine: `wordpress/ops/host-backup.sh <label>`.
+2. `ssh spokares-live`, then `cd public_html`. Every write needs `--user=<login>`: the account the "Last saved" line names, with its permissions checked as on the screens. Try it with `--dry-run` first.
+
+```bash
+wp spokares rota show --weeks=26
+wp spokares rota set 2026-10-20 NZ2S --user=frank
+wp spokares rota set 2026-10-27 volunteer --note="Bring a pencil" --user=frank
+wp spokares rota paste schedule.txt --dry-run          # lines like "Tue Oct 20 NZ2S", "11/3 open", "Nov 10 no net"
+wp spokares rota paste schedule.txt --user=frank
+
+wp spokares meeting show
+wp spokares meeting cancel workshop 2026-11-14 --note="Thanksgiving week" --user=frank
+wp spokares meeting move workshop 2026-12-12 2026-12-05 --user=frank
+wp spokares meeting note workshop 2027-01-09 "Starts at 10:00 AM this time" --user=frank
+wp spokares meeting extra other 2026-12-19 --name="Holiday potluck" --start=6pm --end=8pm --user=frank
+wp spokares meeting clear workshop 2026-11-14 --user=frank   # back on; or removes a one-off date
+
+wp spokares event list
+wp spokares event set-date 412 2026-11-07 2026-11-08 --user=frank
+wp spokares event cancel 412 --user=frank                     # --undo puts it back on
+```
+
+`wp help spokares <rota|meeting|event> <command>` lists every option. An undo of a schedule change is the screen's **Undo** link (it names your save). The event commands change only an event's dates and its Cancelled tick, after the event form's date checks (a past date needs `--confirm`); edit an event's words in its form. The two sentences under the schedule, Net Settings and the Meeting Schedule have no command: use their screens.
+
 ## Rollback
 
 Deploy the previous tag:

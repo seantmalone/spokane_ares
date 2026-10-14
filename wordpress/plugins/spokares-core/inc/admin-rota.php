@@ -296,16 +296,14 @@ function spokares_rota_state_words( string $state, string $call ): string {
 }
 
 /**
- * The preview of a pasted schedule (N1): which Tuesdays would change, the
- * lines not understood, and Save these, which posts those rows to the
- * schedule's own save (every per-row check and the clash check run there).
+ * What a pasted schedule would change (N1): date => [the row now
+ * (spokares_net_on()), the pasted row, its Net control now in words, the
+ * pasted one in words], and how many pasted Tuesdays already match.
  *
- * @param array  $paste spokares_rota_parse_paste() result.
- * @param int    $weeks Rows shown.
- * @param string $here  The screen's address.
+ * @param array $paste spokares_rota_parse_paste() result.
+ * @return array{0:array,1:int}
  */
-function spokares_rota_paste_preview( array $paste, int $weeks, string $here ): void {
-	$stored  = spokares_opt( 'spk_rota' );
+function spokares_rota_paste_changes( array $paste ): array {
 	$changes = array();
 	$same    = 0;
 	foreach ( $paste['rows'] as $ymd => $p ) {
@@ -316,6 +314,45 @@ function spokares_rota_paste_preview( array $paste, int $weeks, string $here ): 
 		}
 		$changes[ $ymd ] = array( $row, $p, spokares_rota_state_words( $row['state'], $row['call'] ), spokares_rota_state_words( $p['state'], $p['call'] ) );
 	}
+	return array( $changes, $same );
+}
+
+/**
+ * The rows "Save these" posts for a paste's changes: each row as it is now
+ * (with its hash, for the clash check), with only Net control changed.
+ * spokares_rota_check_rows() takes them as they are.
+ *
+ * @param array $changes spokares_rota_paste_changes()[0].
+ * @return array<string,array<string,string>> Date => posted row.
+ */
+function spokares_rota_paste_rows( array $changes ): array {
+	$stored = spokares_opt( 'spk_rota' );
+	$out    = array();
+	foreach ( $changes as $ymd => $c ) {
+		$row         = $c[0];
+		$out[ $ymd ] = array(
+			'state'   => $c[1]['state'],
+			'call'    => $c[1]['call'],
+			'note'    => $row['row_note'],
+			'wl_task' => $row['wl_task'],
+			'wl_form' => $row['wl_form'],
+			'h'       => spokares_rota_hash( $stored[ $ymd ] ?? null ),
+		);
+	}
+	return $out;
+}
+
+/**
+ * The preview of a pasted schedule (N1): which Tuesdays would change, the
+ * lines not understood, and Save these, which posts those rows to the
+ * schedule's own save (every per-row check and the clash check run there).
+ *
+ * @param array  $paste spokares_rota_parse_paste() result.
+ * @param int    $weeks Rows shown.
+ * @param string $here  The screen's address.
+ */
+function spokares_rota_paste_preview( array $paste, int $weeks, string $here ): void {
+	list( $changes, $same ) = spokares_rota_paste_changes( $paste );
 	?>
 	<div class="notice notice-info inline spk-paste-preview" role="region" aria-label="<?php esc_attr_e( 'What the paste would change', 'spokares-core' ); ?>">
 		<?php if ( $changes ) : ?>
@@ -344,25 +381,8 @@ function spokares_rota_paste_preview( array $paste, int $weeks, string $here ): 
 			<input type="hidden" name="weeks" value="<?php echo esc_attr( (string) $weeks ); ?>">
 			<?php wp_nonce_field( 'spokares_save_rota' ); ?>
 			<?php
-			foreach ( $changes as $ymd => $c ) :
-				$row  = $c[0];
-				$keep = array(
-					'state'   => $row['state'],
-					'call'    => $row['call'],
-					'note'    => $row['row_note'],
-					'wl_task' => $row['wl_task'],
-					'wl_form' => $row['wl_form'],
-				);
+			foreach ( spokares_rota_paste_rows( $changes ) as $ymd => $send ) :
 				$name = 'rota[' . $ymd . ']';
-				// The row as it is now (the clash check), with only Net control changed.
-				$send = array_merge(
-					$keep,
-					array(
-						'h'     => spokares_rota_hash( $stored[ $ymd ] ?? null ),
-						'state' => $c[1]['state'],
-						'call'  => $c[1]['call'],
-					)
-				);
 				foreach ( $send as $key => $value ) :
 					?>
 					<input type="hidden" name="<?php echo esc_attr( $name . '[' . $key . ']' ); ?>" value="<?php echo esc_attr( (string) $value ); ?>">
@@ -730,16 +750,24 @@ function spokares_rota_error_dates( array $errors ): array {
 }
 
 /**
- * Save the schedule: changed rows only, then one notice.
+ * Check schedule rows as the Net Control Schedule form posts them, without
+ * saving anything: the call-sign check, the clash check (a row someone else
+ * changed since it was shown), the length limits, never-publish words and
+ * the phone/e-mail "Publish it" tick. The form and `wp spokares rota` both
+ * use it, then spokares_rota_write_rows().
+ *
+ * @param array $posted Date => row as posted (unslashed): h (the row's
+ *                      spokares_rota_hash() when it was shown), state, call,
+ *                      note, wl_task, wl_form, wl_form_other, confirm_note,
+ *                      confirm_wl_task.
+ * @return array{stored:array,prev:array,held:array,errors:array,cut:array}
+ *   stored: spk_rota as it would be; prev: date => the row before, for each
+ *   date that would change; held: what was typed in a row (or field) not
+ *   saved; errors: field key ("{date}-call", "{date}-row", "{date}-note",
+ *   "{date}-note-confirm" …) => sentence; cut: date => "NZ2S (names aren't
+ *   posted)".
  */
-function spokares_handle_save_rota(): void {
-	spokares_verify_form( 'spokares_save_rota', 'spokares_edit_rota' );
-	// Two editors saving at the same moment: the second waits for the first,
-	// then reads the rows fresh, so the per-row conflict check sees both.
-	spokares_lock_option( 'spk_rota', array( 'spk_rota_saved', 'spk_rota_prev', 'spk_nets' ) );
-
-	$weeks  = isset( $_POST['weeks'] ) ? max( 13, min( 52, absint( $_POST['weeks'] ) ) ) : 13;
-	$posted = isset( $_POST['rota'] ) && is_array( $_POST['rota'] ) ? wp_unslash( $_POST['rota'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- each field is sanitised below.
+function spokares_rota_check_rows( array $posted ): array {
 	$stored = spokares_opt( 'spk_rota' );
 	$saver  = get_option( 'spk_rota_saved', array() );
 	$prev   = array();
@@ -868,44 +896,86 @@ function spokares_handle_save_rota(): void {
 		}
 	}
 
+	return array(
+		'stored' => $stored,
+		'prev'   => $prev,
+		'held'   => $held,
+		'errors' => $errors,
+		'cut'    => $cut,
+	);
+}
+
+/**
+ * Save what spokares_rota_check_rows() left to save: the rows, the undo
+ * snapshot (spk_rota_prev) and the "Last saved" stamp (spk_rota_saved), both
+ * by the current user, then purge the cache. Nothing is written when no row
+ * changed.
+ *
+ * @param array $check spokares_rota_check_rows() result.
+ * @return string[] The Tuesdays saved.
+ */
+function spokares_rota_write_rows( array $check ): array {
+	$stored = $check['stored'];
+	$prev   = $check['prev'];
+	$saved  = array_keys( $prev );
+	if ( ! $prev ) {
+		return $saved;
+	}
+	// Prune rows more than a year old.
+	$cutoff = spokares_add_days( spokares_today(), -365 );
+	foreach ( array_keys( $stored ) as $ymd ) {
+		if ( $ymd < $cutoff ) {
+			unset( $stored[ $ymd ] );
+		}
+	}
+	$stamp = spokares_stamp();
+	// Each row as this save left it, so Undo can tell a row nobody has
+	// touched since from one changed another way (N3).
+	$after = array();
+	foreach ( $saved as $ymd ) {
+		$after[ $ymd ] = spokares_rota_hash( $stored[ $ymd ] ?? null );
+	}
+	update_option( 'spk_rota', $stored );
+	update_option(
+		'spk_rota_prev',
+		array_merge(
+			$stamp,
+			array(
+				'rows'  => $prev,
+				'after' => $after,
+			)
+		),
+		false
+	);
+	update_option( 'spk_rota_saved', array_merge( $stamp, array( 'dates' => $saved ) ), false );
+	set_transient( 'spokares_rota_changed_' . get_current_user_id(), $saved, 5 * MINUTE_IN_SECONDS );
+	// A pasted schedule is done with once the schedule saves.
+	delete_transient( 'spokares_rota_paste_' . get_current_user_id() );
+	spokares_purge_cache();
+	return $saved;
+}
+
+/**
+ * Save the schedule: changed rows only, then one notice.
+ */
+function spokares_handle_save_rota(): void {
+	spokares_verify_form( 'spokares_save_rota', 'spokares_edit_rota' );
+	// Two editors saving at the same moment: the second waits for the first,
+	// then reads the rows fresh, so the per-row conflict check sees both.
+	spokares_lock_option( 'spk_rota', array( 'spk_rota_saved', 'spk_rota_prev', 'spk_nets' ) );
+
+	$weeks  = isset( $_POST['weeks'] ) ? max( 13, min( 52, absint( $_POST['weeks'] ) ) ) : 13;
+	$posted = isset( $_POST['rota'] ) && is_array( $_POST['rota'] ) ? wp_unslash( $_POST['rota'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- each field is sanitised below.
+	$check  = spokares_rota_check_rows( $posted );
+	$held   = $check['held'];
+	$errors = $check['errors'];
+	$cut    = $check['cut'];
+
 	// The two sentences under the lists (spk_nets): saved when this editor
 	// changed them, checked like every sentence members read.
 	$words = spokares_save_rota_words( $held, $errors );
 
-	$saved = array_keys( $prev );
-	if ( $prev ) {
-		// Prune rows more than a year old.
-		$cutoff = spokares_add_days( spokares_today(), -365 );
-		foreach ( array_keys( $stored ) as $ymd ) {
-			if ( $ymd < $cutoff ) {
-				unset( $stored[ $ymd ] );
-			}
-		}
-		$stamp = spokares_stamp();
-		// Each row as this save left it, so Undo can tell a row nobody has
-		// touched since from one changed another way (N3).
-		$after = array();
-		foreach ( $saved as $ymd ) {
-			$after[ $ymd ] = spokares_rota_hash( $stored[ $ymd ] ?? null );
-		}
-		update_option( 'spk_rota', $stored );
-		update_option(
-			'spk_rota_prev',
-			array_merge(
-				$stamp,
-				array(
-					'rows'  => $prev,
-					'after' => $after,
-				)
-			),
-			false
-		);
-		update_option( 'spk_rota_saved', array_merge( $stamp, array( 'dates' => $saved ) ), false );
-		set_transient( 'spokares_rota_changed_' . get_current_user_id(), $saved, 5 * MINUTE_IN_SECONDS );
-		// A pasted schedule is done with once the schedule saves.
-		delete_transient( 'spokares_rota_paste_' . get_current_user_id() );
-		spokares_purge_cache();
-	}
+	$saved = spokares_rota_write_rows( $check );
 
 	// One notice for the whole save.
 	$bad  = spokares_rota_error_dates( $errors );

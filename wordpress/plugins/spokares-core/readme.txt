@@ -3,7 +3,7 @@ Contributors: spokane-county-ares-acs
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.3.0
+Stable tag: 0.3.1
 License: GPL-2.0-or-later
 Update URI: false
 
@@ -49,6 +49,11 @@ The full contract is `wordpress/PLAN.md` §6; build notes are in
 `wordpress/build-notes/plugin.md`.
 
 == Changelog ==
+
+= 0.3.1 =
+* WP-CLI for the webmaster: `wp spokares rota show|set|paste`, `wp spokares meeting show|cancel|move|note|extra|clear`, `wp spokares event list|set-date|cancel`. Each write needs `--user`, runs the screen's own checks (`--confirm` stands for the "Publish it" tick), and stamps "Last saved" and the undo snapshot like the screen; `--dry-run` shows what would change (O1).
+* Pages and documents share one review control: "Last reviewed … by …" and a "Mark reviewed today when I save" tick; editors no longer type review dates (D1).
+* Documents: a file that passed its own checks waits, off the web, through a save refused for another box, so it isn't chosen again; unused waiting files go after 24 hours (D8).
 
 = 0.3.0 =
 * Fixes from the editor workflow review (wordpress/ux/workflows/index.html; finding ids in brackets).

@@ -2,8 +2,9 @@
 /**
  * Page Text for editors (UX spec §3.8): the Pages list trimmed to the three
  * pages with words to change, and the Page review box (PLAN §3.4) beside
- * About in the block editor: "Last reviewed" and the page owner, with "Mark
- * reviewed today when I save". A classic side meta box, so no build step.
+ * About in the block editor: "Last reviewed Oct 13, 2026 by Frank." with
+ * "Mark reviewed today when I save" (the documents' control too, UX finding
+ * D1), and the page owner. A classic side meta box, so no build step.
  * The page type's labels ("Page Text") are set in governance.php, which is
  * loaded on the site and in REST too.
  *
@@ -142,13 +143,12 @@ function spokares_render_page_review( WP_Post $post ): void {
 		$owner = (string) ( $refused['typed'] ?? $owner );
 	}
 	wp_nonce_field( 'spokares_page_review', 'spokares_page_review_nonce' );
+	// The same review control as every document (UX finding D1).
+	spokares_review_control( $reviewed, absint( get_post_meta( $post->ID, '_spk_reviewed_by', true ) ) );
 	?>
-	<p><?php esc_html_e( 'Last reviewed:', 'spokares-core' ); ?>
-		<strong class="spk-reviewed-date"><?php echo spokares_is_ymd( $reviewed ) ? esc_html( spokares_fmt_date( $reviewed, 'mdy' ) ) : esc_html__( 'not yet', 'spokares-core' ); ?></strong></p>
 	<p><label for="spk-owner"><?php esc_html_e( 'Page owner', 'spokares-core' ); ?></label><br>
 		<input type="text" id="spk-owner" name="spk_page_owner" class="widefat<?php echo is_array( $refused ) ? ' spk-field-error' : ''; ?>" maxlength="60" value="<?php echo esc_attr( $owner ); ?>" aria-describedby="spk-owner-problem">
 		<span class="spk-error-text" id="spk-owner-problem" <?php echo is_array( $refused ) ? '' : 'hidden'; ?>><?php echo is_array( $refused ) ? esc_html( (string) ( $refused['text'] ?? '' ) ) : ''; ?></span></p>
-	<p><label><input type="checkbox" name="spk_mark_reviewed" value="1"> <?php esc_html_e( 'Mark reviewed today when I save', 'spokares-core' ); ?></label></p>
 	<?php
 }
 
@@ -168,7 +168,7 @@ function spokares_page_owner_problem( array $hits ): string {
 /**
  * The block editor saves this classic box in the background and never draws
  * it again: after that save, untick "Mark reviewed today", show the new
- * date, and say if the Page owner wasn't saved (the same checks as the
+ * date and who, and say if the Page owner wasn't saved (the same checks as the
  * server's), so the box isn't stale.
  *
  * @param string $hook Screen hook.
@@ -179,7 +179,8 @@ function spokares_page_review_script( $hook ): void {
 		return;
 	}
 	$data = array(
-		'today'    => spokares_fmt_date( spokares_today(), 'mdy' ),
+		// The line beside the tick once this user's save has marked it (D1).
+		'line'     => spokares_review_line( spokares_today(), get_current_user_id() ),
 		'patterns' => array_map(
 			static fn( $p ) => array(
 				're'   => $p['re'],
@@ -198,8 +199,8 @@ function spokares_page_review_script( $hook ): void {
 		. 'var saving = ed.isSavingMetaBoxes();'
 		. 'if ( was && ! saving ) {'
 		. 'var box = document.getElementById( "spokares_page_review" ); if ( ! box ) { was = saving; return; }'
-		. 'var tick = box.querySelector( "input[name=spk_mark_reviewed]" ), date = box.querySelector( ".spk-reviewed-date" );'
-		. 'if ( tick && tick.checked ) { tick.checked = false; if ( date ) { date.textContent = cfg.today; } }'
+		. 'var tick = box.querySelector( "input[name=spk_mark_reviewed]" ), line = box.querySelector( ".spk-reviewed-line" );'
+		. 'if ( tick && tick.checked ) { tick.checked = false; if ( line ) { line.textContent = cfg.line; } }'
 		. 'var owner = box.querySelector( "#spk-owner" ), out = box.querySelector( "#spk-owner-problem" );'
 		. 'if ( owner && out ) {'
 		. 'var text = owner.value.replace( /[A-Z0-9._%+-]+@spokares\.org\b/gi, " " ), hits = [];'
@@ -253,8 +254,9 @@ function spokares_save_page_review( $post_id ): void {
 			5 * MINUTE_IN_SECONDS
 		);
 	}
-	if ( ! empty( $_POST['spk_mark_reviewed'] ) ) {
+	if ( spokares_review_ticked() ) {
 		update_post_meta( $post_id, '_spk_reviewed', spokares_today() );
+		update_post_meta( $post_id, '_spk_reviewed_by', get_current_user_id() ); // Who, as on documents (D1).
 	}
 	spokares_purge_cache();
 }

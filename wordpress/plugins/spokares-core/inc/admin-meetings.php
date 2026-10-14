@@ -278,17 +278,26 @@ function spokares_meeting_extras_fields( array $data, array $held, array $errors
 }
 
 /**
- * Save Cancel or Move a Meeting: changed rows only, then one notice that
- * names the dates.
+ * Check Cancel or Move a Meeting's rows as the form posts them, without
+ * saving anything: the clash check (a date someone else changed since it was
+ * shown), the "Moved to" date, the note's length, never-publish words and
+ * the phone/e-mail "Publish it" tick, then the one-off dates. The form and
+ * `wp spokares meeting` both use it, then spokares_meetings_write().
+ *
+ * @param array    $posted Meeting id => date => row as posted (unslashed): h
+ *                         (the date's spokares_change_hash() when shown),
+ *                         cancelled, moved, note, confirm.
+ * @param string[] $remove One-off dates to remove ("{meeting}|{date}").
+ * @param array    $extra  "Add a one-off date" as posted: meeting, name,
+ *                         date, start, end, note, confirm.
+ * @return array{data:array,changes:array,confirmed:array,held:array,errors:array,done:array,failed:array}
+ *   done: sort key => what would be saved ("Sat, Oct 10 cancelled");
+ *   failed: sort key => the date not saved; errors: field key => sentence.
  */
-function spokares_handle_save_meetings(): void {
-	spokares_verify_form( 'spokares_save_meetings', 'spokares_edit_rota' );
-	// Read-change-write of one option: wait for a save in progress, then read fresh.
-	spokares_lock_option( 'spk_meetings' );
-	$posted = isset( $_POST['m'] ) && is_array( $_POST['m'] ) ? wp_unslash( $_POST['m'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitised field by field below.
-	$data   = spokares_opt( 'spk_meetings' );
-	$ids    = wp_list_pluck( $data['meetings'], 'name', 'id' );
-	$rules  = array();
+function spokares_meetings_check( array $posted, array $remove = array(), array $extra = array() ): array {
+	$data  = spokares_opt( 'spk_meetings' );
+	$ids   = wp_list_pluck( $data['meetings'], 'name', 'id' );
+	$rules = array();
 	foreach ( $data['meetings'] as $m ) {
 		$rules[ $m['id'] ] = $m;
 	}
@@ -431,19 +440,61 @@ function spokares_handle_save_meetings(): void {
 	}
 
 	// One-off dates (M2): Remove ticks, then "Add a one-off date".
-	spokares_save_meeting_extras( $rules, $changes, $confirmed, $held, $errors, $done, $failed );
+	spokares_save_meeting_extras( $rules, $changes, $confirmed, $held, $errors, $done, $failed, $remove, $extra );
 
-	if ( $done ) {
-		$cutoff = spokares_add_days( spokares_today(), -365 );
-		$list   = array_values( array_filter( $changes, static fn( $c ) => $c['date'] >= $cutoff ) );
-		usort( $list, static fn( $a, $b ) => strcmp( $a['date'], $b['date'] ) );
-		$data['changes'] = $list;
-		if ( $confirmed ) {
-			$data['confirmed'] = $confirmed;
-		}
-		update_option( 'spk_meetings', $data );
-		spokares_purge_cache();
+	return array(
+		'data'      => $data,
+		'changes'   => $changes,
+		'confirmed' => $confirmed,
+		'held'      => $held,
+		'errors'    => $errors,
+		'done'      => $done,
+		'failed'    => $failed,
+	);
+}
+
+/**
+ * Save what spokares_meetings_check() left to save (nothing when nothing
+ * changed), then purge the cache.
+ *
+ * @param array $check spokares_meetings_check() result.
+ */
+function spokares_meetings_write( array $check ): void {
+	if ( ! $check['done'] ) {
+		return;
 	}
+	$data      = $check['data'];
+	$changes   = $check['changes'];
+	$confirmed = $check['confirmed'];
+
+	$cutoff = spokares_add_days( spokares_today(), -365 );
+	$list   = array_values( array_filter( $changes, static fn( $c ) => $c['date'] >= $cutoff ) );
+	usort( $list, static fn( $a, $b ) => strcmp( $a['date'], $b['date'] ) );
+	$data['changes'] = $list;
+	if ( $confirmed ) {
+		$data['confirmed'] = $confirmed;
+	}
+	update_option( 'spk_meetings', $data );
+	spokares_purge_cache();
+}
+
+/**
+ * Save Cancel or Move a Meeting: changed rows only, then one notice that
+ * names the dates.
+ */
+function spokares_handle_save_meetings(): void {
+	spokares_verify_form( 'spokares_save_meetings', 'spokares_edit_rota' );
+	// Read-change-write of one option: wait for a save in progress, then read fresh.
+	spokares_lock_option( 'spk_meetings' );
+	$posted = isset( $_POST['m'] ) && is_array( $_POST['m'] ) ? wp_unslash( $_POST['m'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitised field by field in spokares_meetings_check().
+	$remove = isset( $_POST['extra_remove'] ) && is_array( $_POST['extra_remove'] ) ? array_keys( array_filter( wp_unslash( $_POST['extra_remove'] ) ) ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only the keys are used, matched against stored keys.
+	$extra  = isset( $_POST['extra'] ) && is_array( $_POST['extra'] ) ? wp_unslash( $_POST['extra'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitised field by field in spokares_save_meeting_extras().
+	$check  = spokares_meetings_check( $posted, $remove, $extra );
+	$held   = $check['held'];
+	$errors = $check['errors'];
+	$done   = $check['done'];
+	$failed = $check['failed'];
+	spokares_meetings_write( $check );
 	ksort( $done );
 	ksort( $failed );
 	/* translators: %s: what was saved, e.g. "Sat, Oct 10 cancelled; Thu, Oct 15 moved to Wed, Oct 14". */
@@ -480,12 +531,10 @@ add_action( 'admin_post_spokares_save_meetings', 'spokares_handle_save_meetings'
  * @param array $errors    Errors (updated: 'extra', 'extra-name', 'extra-note', 'extra-confirm').
  * @param array $done      Sort key => what was saved (updated).
  * @param array $failed    Sort key => what wasn't (updated).
+ * @param array $remove    One-off dates ticked Remove ("{meeting}|{date}").
+ * @param array $in        "Add a one-off date" as posted (unslashed).
  */
-function spokares_save_meeting_extras( array $rules, array &$changes, array &$confirmed, array &$held, array &$errors, array &$done, array &$failed ): void {
-	// phpcs:disable WordPress.Security.NonceVerification.Missing -- the caller checked the nonce (spokares_verify_form()).
-	$remove = isset( $_POST['extra_remove'] ) && is_array( $_POST['extra_remove'] ) ? array_keys( array_filter( wp_unslash( $_POST['extra_remove'] ) ) ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only the keys are used, matched against stored keys.
-	$in     = isset( $_POST['extra'] ) && is_array( $_POST['extra'] ) ? wp_unslash( $_POST['extra'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitised field by field below.
-	// phpcs:enable WordPress.Security.NonceVerification.Missing
+function spokares_save_meeting_extras( array $rules, array &$changes, array &$confirmed, array &$held, array &$errors, array &$done, array &$failed, array $remove = array(), array $in = array() ): void {
 	$names = wp_list_pluck( $rules, 'name', 'id' );
 	$other = spokares_meeting_other_id();
 	$today = spokares_today();

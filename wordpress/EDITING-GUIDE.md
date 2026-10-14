@@ -91,7 +91,8 @@ If your menu has Meeting Schedule: change a meeting's regular day or time there,
 
 - **Replace or change one:** on the Dashboard, click **Replace or change a document**, then the document's name. Choose the new file (under **Replace with**, or **Upload a file instead** for a link), tick the “I checked” box, change the version and click **Save**. For a Most Used document (the net script), the Most Used screen's **Replace or change it** link goes straight to it.
 - **Take one down:** click **Take it off the site**. The file leaves the web at once. Changed your mind? Click **Undo** (or **Restore** in the Trash): the document comes back as it was, file and all.
-- **Yearly check:** on the Dashboard, click **… not reviewed in 12 months**. Open each document, check it's still right, click **Mark reviewed today** and **Save**. Giving it a new file with the “I checked” tick counts as a review too.
+- **Yearly check:** on the Dashboard, click **… not reviewed in 12 months**. Open each document, check it's still right, tick **Mark reviewed today when I save** (under the Short note, beside “Last reviewed … by …”) and click **Save**. Giving it a new file with the “I checked” tick counts as a review too.
+- **A red box after Publish or Save, with a file chosen:** you don't need to choose the file again. The form says “Your file … is uploaded and waiting”: fix the boxes outlined in red, then click **Publish** (or **Save**). Until then the site keeps the old file. A waiting file is thrown away after 24 hours.
 - **Most Used:** Documents › **Most Used**. Pick a document for each button and click **Save**.
 
 ## Job 5: Change words on a page (5 minutes)
@@ -111,7 +112,7 @@ You can change the words on **Home**, **How it works** and **About ARES & ACS**.
 - **Undo before you save:** Ctrl+Z (Cmd+Z on a Mac), or the curved Undo arrow at the top left.
 - **A red message starting "Not saved:"** says what to click to put it right. Nothing on the site changed. Words from the "Please don't" list below (a hospital net, a channel number, SHARES channels, 800 MHz, a talkgroup) get one too: it names what it found, so take that out and Save again.
 - **A yellow message starting "On the site now:"** means the words look like a phone number or a personal e-mail address. The page is saved; the Dashboard lists it under **Needs attention** until you change it. If it's a public agency number or address, leave it.
-- **About:** tick **Mark reviewed today when I save** once you've checked the whole page. If it hasn't been marked reviewed in 12 months, the Dashboard lists it under **Needs attention**.
+- **About:** tick **Mark reviewed today when I save** once you've checked the whole page (the same tick as on a document; the line above it says when and by whom it was last reviewed). If it hasn't been marked reviewed in 12 months, the Dashboard lists it under **Needs attention**.
 - **A one-off notice** (“no nets over the holidays”): mark those Tuesdays **No net** and add a Note. Anything else, like “Field Day photos are up”, has no place on the site yet: ask the webmaster.
 - **Get back an earlier version** after you've saved: on the Dashboard, under **Page Text**, click the page after **Earlier versions:**. Drag the slider to the version you want (the left side shows what it said, the right side the page now), then click **Restore This Revision**. Only the words come back. If the webmaster has added, moved or restyled a part since that version, you'll see "Not restored:"; pick a later version or ask the webmaster.
 - Adding a section, a table row or a new page is the webmaster's job (see "For the webmaster" at the end).
@@ -136,6 +137,8 @@ E-mail **webmaster@spokares.org**. Say which job you were doing and what you cli
 ## For the webmaster: adding a section or a page
 
 *Editors can skip this part. It needs an administrator account.*
+
+**Changing the schedule, a meeting or an event's dates from a shell** (a bulk update): use the `wp spokares` commands, which run the same checks and saves as the editors' screens, never `wp eval-file` or `update_option`. See "Content edits over SSH" in `ops/DEPLOY-RUNBOOK.md`.
 
 The layout lock doesn't apply to administrators, so these changes are made in the block editor. A change to a page's layout is also copied into the page's pattern file in git in the next release, so a fresh install matches (PLAN §5.7). Templates, the header, the footer and the styles change only in git, never in Appearance > Editor. A copy saved there silently replaces the theme's file, and the weekly check reports it.
 
