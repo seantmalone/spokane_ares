@@ -420,8 +420,12 @@ function spokares_profile_grant_field( $user ): void {
 				<p class="description"><?php esc_html_e( 'Only for someone the Emergency Coordinator has named. Everyone with the ARES Editor role can already change the Net Control Schedule, events, meetings and documents.', 'spokares-core' ); ?></p>
 				<?php $note = ! empty( $user->allcaps['spokares_edit_net_details'] ) ? spokares_net_grant_note( $user->ID ) : ''; ?>
 				<?php if ( '' !== $note ) : ?>
-					<?php /* translators: %s: who gave the grant and when, e.g. "by admin on Oct 13, 2026". */ ?>
-					<p class="description spk-net-granted"><?php echo esc_html( sprintf( __( 'Given %s.', 'spokares-core' ), $note ) ); ?></p>
+					<p class="description spk-net-granted">
+						<?php
+						/* translators: %s: who gave the grant and when, e.g. "by admin on Oct 13, 2026". */
+						echo esc_html( sprintf( __( 'Given %s.', 'spokares-core' ), $note ) );
+						?>
+					</p>
 				<?php endif; ?>
 			</td>
 		</tr>

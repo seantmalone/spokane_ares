@@ -48,7 +48,7 @@ test(
 		ob_start();
 		\spokares_profile_grant_field( get_userdata( $id ) );
 		$html = (string) ob_get_clean();
-		assert_contains( esc_html( 'Given by ' . $admin->display_name . ' on ' . $date . '.' ), $html, 'the profile' );
+		assert_contains( esc_html( 'Given by ' . $admin->display_name . ' on ' . $date . '.' ), (string) preg_replace( '/\s+/', ' ', $html ), 'the profile' );
 
 		// Saving the profile again with the box still ticked keeps the first record.
 		update_user_meta( $id, 'spk_net_granted_at', 1700000000 );
