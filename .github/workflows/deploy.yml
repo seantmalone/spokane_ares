@@ -170,3 +170,31 @@ jobs:
         run: |
           ssh -O exit spokares-live 2>/dev/null || true
           rm -f ~/.ssh/spokares_deploy ~/.ssh/config
+
+  # A tag that deployed gets a GitHub release with the gate's zips and
+  # SHA256SUMS attached, so they outlive the 90-day workflow artifact. Runs
+  # after the site check, whatever that check said (the deploy itself
+  # succeeded); safe to re-run: an existing release just gets the files again.
+  release:
+    name: GitHub release (tags only)
+    needs: [gate, deploy]
+    if: ${{ always() && needs.deploy.result == 'success' && needs.gate.outputs.tag != '' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      actions: read
+    env:
+      TAG: ${{ needs.gate.outputs.tag }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Attach the release zips
+        run: |
+          gh run download "$GITHUB_RUN_ID" -n "release-$TAG" -D "$RUNNER_TEMP/dist"
+          ls -l "$RUNNER_TEMP/dist"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$RUNNER_TEMP"/dist/* --clobber
+          else
+            gh release create "$TAG" "$RUNNER_TEMP"/dist/* --verify-tag --title "$TAG" --notes "Deployed to production by run $GITHUB_RUN_ID. Changes: wordpress/plugins/spokares-core/readme.txt (Changelog)."
+          fi

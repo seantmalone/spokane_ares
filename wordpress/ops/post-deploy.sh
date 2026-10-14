@@ -47,6 +47,13 @@ for slug in two-factor updraftplus; do
   fi
 done
 say "two-factor and updraftplus active, auto-updates on"
+# The must-use plugin rewords Two-Factor's sign-in and profile strings by
+# exact match (two-factor.php). Auto-updates stay on for security fixes, so
+# say loudly when a new minor version arrives: its strings need a look.
+tf=$(wp plugin get two-factor --field=version 2>/dev/null || echo "?")
+if [[ $tf != 0.17* ]]; then
+  say "NOTE: Two-Factor is $tf; the reworded strings were written for 0.17. Sign in as an editor and check the code screen and Profile > Two-Factor Options still read plainly (mu-plugins/spokares-hardening/two-factor.php)."
+fi
 
 # 3. Our theme and plugin.
 if [[ $(wp option get stylesheet) != spokares ]]; then
