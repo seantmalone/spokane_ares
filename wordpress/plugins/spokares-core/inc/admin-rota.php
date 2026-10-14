@@ -108,6 +108,48 @@ function spokares_rota_saved_line( array $stamp ): string {
 }
 
 /**
+ * Why Undo (or Redo) should ask first, or '' when it needn't: the save it
+ * would take back was made by someone else, is more than a day old, or isn't
+ * the one the editor's screen showed (someone saved since it was opened).
+ *
+ * @param array       $prev    spk_rota_prev: at, by, rows, undo.
+ * @param string|null $seen_at The save's time as the editor's screen showed it (null: not posted).
+ */
+function spokares_rota_undo_reason( array $prev, ?string $seen_at = null ): string {
+	if ( null !== $seen_at && (string) ( $prev['at'] ?? '' ) !== $seen_at ) {
+		return __( 'Someone saved after you opened this screen.', 'spokares-core' );
+	}
+	if ( (int) ( $prev['by'] ?? 0 ) !== get_current_user_id() ) {
+		return empty( $prev['undo'] )
+			? __( 'Someone else made that save.', 'spokares-core' )
+			: __( 'Someone else made that undo.', 'spokares-core' );
+	}
+	$ts = empty( $prev['at'] ) ? false : strtotime( (string) $prev['at'] );
+	if ( ! $ts || $ts < time() - DAY_IN_SECONDS ) {
+		return __( 'It is more than a day old.', 'spokares-core' );
+	}
+	return '';
+}
+
+/**
+ * The question Undo (or Redo) asks first: "Undo the save Frank made on Mon,
+ * Oct 12, 7:11 PM (Oct 13 and Oct 20)?"
+ *
+ * @param array $prev spk_rota_prev.
+ */
+function spokares_rota_undo_question( array $prev ): string {
+	$ts    = empty( $prev['at'] ) ? false : strtotime( (string) $prev['at'] );
+	$when  = $ts ? wp_date( 'D, M j, g:i A', $ts ) : __( 'an earlier date', 'spokares-core' );
+	$who   = spokares_user_name( (int) ( $prev['by'] ?? 0 ) );
+	$dates = spokares_rota_dates_phrase( array_map( 'strval', array_keys( is_array( $prev['rows'] ?? null ) ? $prev['rows'] : array() ) ) );
+	return empty( $prev['undo'] )
+		/* translators: 1: a person's name, 2: date and time, 3: the Tuesdays it changed. */
+		? sprintf( __( 'Undo the save %1$s made on %2$s (%3$s)?', 'spokares-core' ), $who, $when, $dates )
+		/* translators: 1: a person's name, 2: date and time, 3: the Tuesdays it changed. */
+		: sprintf( __( 'Put back what %1$s undid on %2$s (%3$s)?', 'spokares-core' ), $who, $when, $dates );
+}
+
+/**
  * The Net Control Schedule screen.
  */
 function spokares_rota_page(): void {
@@ -140,6 +182,13 @@ function spokares_rota_page(): void {
 	}
 	$saved_line = is_array( $saved ) ? spokares_rota_saved_line( $saved ) : '';
 	$undo       = is_array( $prev ) && ! empty( $prev['rows'] );
+	// Undo of someone else's save, or an old one, asks first, on the page
+	// (?undo=ask draws the question; no browser dialog).
+	$ask_why = $undo ? spokares_rota_undo_reason( $prev ) : '';
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- which panel to draw; read-only.
+	$asking  = $undo && isset( $_GET['undo'] ) && 'ask' === sanitize_key( wp_unslash( $_GET['undo'] ) );
+	$here    = add_query_arg( $weeks > 13 ? array( 'weeks' => $weeks ) : array(), admin_url( 'admin.php?page=spokares-rota' ) );
+	$verb    = empty( $prev['undo'] ) ? __( 'Undo', 'spokares-core' ) : __( 'Redo', 'spokares-core' );
 	?>
 	<div class="wrap spk-screen spk-rota">
 		<h1 class="wp-heading-inline"><?php echo esc_html( spokares_screen_title( 'rota' ) ); ?></h1>
@@ -148,14 +197,27 @@ function spokares_rota_page(): void {
 			<span class="spk-saved">
 				<?php
 				echo esc_html( $saved_line );
-				if ( $undo ) {
+				if ( $undo && '' !== $ask_why ) {
+					// Someone else's save, or an old one: the question first.
+					echo ' · <a class="spk-undo" href="' . esc_url( add_query_arg( 'undo', 'ask', $here ) ) . '">' . esc_html( $verb ) . '</a>';
+				} elseif ( $undo ) {
 					// Undo (or Redo, after an undo) submits the undo form below.
-					echo ' · <button type="submit" form="spk-rota-undo" class="button-link spk-undo">' . ( empty( $prev['undo'] ) ? esc_html__( 'Undo', 'spokares-core' ) : esc_html__( 'Redo', 'spokares-core' ) ) . '</button>';
+					echo ' · <button type="submit" form="spk-rota-undo" class="button-link spk-undo">' . esc_html( $verb ) . '</button>';
 				}
 				?>
 			</span>
 		<?php endif; ?>
 		<hr class="wp-header-end">
+		<?php if ( $asking ) : ?>
+			<div class="notice notice-warning inline spk-undo-ask" role="region" aria-label="<?php echo esc_attr( $verb ); ?>">
+				<p><strong><?php echo esc_html( spokares_rota_undo_question( $prev ) ); ?></strong></p>
+				<p><?php echo esc_html( trim( $ask_why . ' ' . __( 'A Tuesday changed since is left as it is.', 'spokares-core' ) ) ); ?></p>
+				<p>
+					<button type="submit" form="spk-rota-undo" name="confirm" value="1" class="button button-primary"><?php echo esc_html( empty( $prev['undo'] ) ? __( 'Undo it', 'spokares-core' ) : __( 'Redo it', 'spokares-core' ) ); ?></button>
+					<a class="button" href="<?php echo esc_url( $here ); ?>"><?php esc_html_e( 'Keep it', 'spokares-core' ); ?></a>
+				</p>
+			</div>
+		<?php endif; ?>
 		<p class="spk-lede">
 			<?php
 			echo esc_html(
@@ -280,6 +342,7 @@ function spokares_rota_page(): void {
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="spk-rota-undo">
 			<input type="hidden" name="action" value="spokares_undo_rota">
 			<input type="hidden" name="weeks" value="<?php echo esc_attr( (string) $weeks ); ?>">
+			<input type="hidden" name="prev_at" value="<?php echo esc_attr( is_array( $prev ) ? (string) ( $prev['at'] ?? '' ) : '' ); ?>">
 			<?php wp_nonce_field( 'spokares_undo_rota' ); ?>
 		</form>
 	</div>
@@ -496,8 +559,24 @@ function spokares_handle_save_rota(): void {
 			}
 		}
 		$stamp = spokares_stamp();
+		// Each row as this save left it, so Undo can tell a row nobody has
+		// touched since from one changed another way (N3).
+		$after = array();
+		foreach ( $saved as $ymd ) {
+			$after[ $ymd ] = spokares_rota_hash( $stored[ $ymd ] ?? null );
+		}
 		update_option( 'spk_rota', $stored );
-		update_option( 'spk_rota_prev', array_merge( $stamp, array( 'rows' => $prev ) ), false );
+		update_option(
+			'spk_rota_prev',
+			array_merge(
+				$stamp,
+				array(
+					'rows'  => $prev,
+					'after' => $after,
+				)
+			),
+			false
+		);
 		update_option( 'spk_rota_saved', array_merge( $stamp, array( 'dates' => $saved ) ), false );
 		set_transient( 'spokares_rota_changed_' . get_current_user_id(), $saved, 5 * MINUTE_IN_SECONDS );
 		spokares_purge_cache();
@@ -543,8 +622,12 @@ function spokares_handle_save_rota(): void {
 add_action( 'admin_post_spokares_save_rota', 'spokares_handle_save_rota' );
 
 /**
- * Undo the last save: put back the rows it changed (whoever made it). Undo
- * again after an undo is Redo: it puts the saved rows back.
+ * Undo the last save: put back the rows it changed. Undo again after an
+ * undo is Redo: it puts the saved rows back. Only a row still exactly as
+ * that save left it is put back; one changed since (another save, or an
+ * edit outside this screen) is left as it is and named in the notice.
+ * Someone else's save, an old one, or a newer save than the screen showed
+ * asks first (spokares_rota_undo_reason()).
  */
 function spokares_handle_undo_rota(): void {
 	spokares_verify_form( 'spokares_undo_rota', 'spokares_edit_rota' );
@@ -553,14 +636,28 @@ function spokares_handle_undo_rota(): void {
 	$args  = $weeks > 13 ? array( 'weeks' => $weeks ) : array();
 	$prev  = get_option( 'spk_rota_prev', array() );
 	if ( ! is_array( $prev ) || empty( $prev['rows'] ) || ! is_array( $prev['rows'] ) ) {
+		spokares_unlock_option( 'spk_rota' );
 		spokares_add_notice( 'info', __( 'There is nothing to undo.', 'spokares-core' ) );
 		spokares_redirect_to( 'spokares-rota', $args );
 	}
-	$stored = spokares_opt( 'spk_rota' );
-	$redo   = array();
+	$seen_at = isset( $_POST['prev_at'] ) ? sanitize_text_field( wp_unslash( $_POST['prev_at'] ) ) : null;
+	if ( '' !== spokares_rota_undo_reason( $prev, $seen_at ) && empty( $_POST['confirm'] ) ) {
+		spokares_unlock_option( 'spk_rota' );
+		spokares_redirect_to( 'spokares-rota', array_merge( $args, array( 'undo' => 'ask' ) ) );
+	}
+	$stored  = spokares_opt( 'spk_rota' );
+	$after   = is_array( $prev['after'] ?? null ) ? $prev['after'] : null;
+	$redo    = array();
+	$redo_to = array();
+	$skipped = array();
 	foreach ( $prev['rows'] as $ymd => $row ) {
 		$ymd = (string) $ymd;
 		if ( ! spokares_is_ymd( $ymd ) ) {
+			continue;
+		}
+		// A snapshot from before the hashes were kept has none: put it back as before.
+		if ( null !== $after && ! hash_equals( (string) ( $after[ $ymd ] ?? '' ), spokares_rota_hash( $stored[ $ymd ] ?? null ) ) ) {
+			$skipped[] = $ymd;
 			continue;
 		}
 		$redo[ $ymd ] = $stored[ $ymd ] ?? null;
@@ -569,10 +666,24 @@ function spokares_handle_undo_rota(): void {
 		} else {
 			unset( $stored[ $ymd ] );
 		}
+		$redo_to[ $ymd ] = spokares_rota_hash( is_array( $row ) ? $row : null );
 	}
 	$undoing = empty( $prev['undo'] );
 	$dates   = array_keys( $redo );
-	$stamp   = spokares_stamp();
+	$left    = '';
+	if ( $skipped ) {
+		$left = 1 === count( $skipped )
+			/* translators: %s: a Tuesday, e.g. "Oct 20". */
+			? sprintf( __( '%s was changed since; left as is.', 'spokares-core' ), spokares_rota_dates_phrase( $skipped ) )
+			/* translators: %s: the Tuesdays, e.g. "Oct 20 and Oct 27". */
+			: sprintf( __( '%s were changed since; left as they are.', 'spokares-core' ), spokares_rota_dates_phrase( $skipped ) );
+	}
+	if ( ! $dates ) {
+		spokares_unlock_option( 'spk_rota' );
+		spokares_add_notice( 'warning', trim( ( $undoing ? __( 'Nothing undone.', 'spokares-core' ) : __( 'Nothing redone.', 'spokares-core' ) ) . ' ' . $left ) );
+		spokares_redirect_to( 'spokares-rota', $args );
+	}
+	$stamp = spokares_stamp();
 	update_option( 'spk_rota', $stored );
 	// What this took away, flagged as an undo so the title line offers Redo
 	// (and a Redo's rows go back to offering Undo).
@@ -581,8 +692,9 @@ function spokares_handle_undo_rota(): void {
 		array_merge(
 			$stamp,
 			array(
-				'rows' => $redo,
-				'undo' => $undoing,
+				'rows'  => $redo,
+				'after' => $redo_to,
+				'undo'  => $undoing,
 			)
 		),
 		false
@@ -615,7 +727,7 @@ function spokares_handle_undo_rota(): void {
 			/* translators: %s: the Tuesdays, e.g. "Oct 13 and Oct 20". */
 			: sprintf( __( 'Redone: %s are back as they were saved.', 'spokares-core' ), $phrase );
 	}
-	spokares_add_notice( 'success', $text, spokares_site_url( '/members/', 'rota' ), __( 'See it on the For members page', 'spokares-core' ) );
+	spokares_add_notice( $skipped ? 'warning' : 'success', trim( $text . ' ' . $left ), spokares_site_url( '/members/', 'rota' ), __( 'See it on the For members page', 'spokares-core' ) );
 	spokares_redirect_to( 'spokares-rota', $args );
 }
 add_action( 'admin_post_spokares_undo_rota', 'spokares_handle_undo_rota' );

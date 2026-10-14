@@ -43,7 +43,7 @@ After you sign in you land on the Dashboard. The **Site tasks** card has a secti
 
 - **Call signs only.**
 - **Show 13 more Tuesdays** keeps your typing.
-- **Undo** is next to "Last saved" at the top; **Redo** takes the undo back.
+- **Undo** is next to "Last saved" at the top; **Redo** takes the undo back. If someone else made that save, or it is more than a day old, it asks first: click **Undo it** or **Keep it**. A Tuesday changed since that save is left as it is, and the message says so.
 
 ## Job 2: Add or change an exercise or event (3 minutes)
 
