@@ -9,7 +9,8 @@
  * site" remove the old file from the web (an administrator may keep it on
  * Replace, and can pull a file at once; "Take it off the site" sets the file
  * aside outside the web root, so Restore brings the document back whole). Nothing deletes a file a document or
- * page still uses, except those paths.
+ * page still uses, except those paths. A file that passed its checks on a
+ * save refused for another box waits for the next save (D8, files.php).
  *
  * @package spokares-core
  */
@@ -93,7 +94,10 @@ function spokares_document_submitted(): array {
 		'most_used'  => ! empty( $in['spk_most_used'] ),
 		'place'      => $str( 'spk_place' ),
 		'owner'      => $str( 'spk_owner' ),
-		'reviewed'   => $str( 'spk_reviewed' ),
+		// The date box is the administrator's only (More options); null when
+		// the form didn't send it.
+		'reviewed'   => isset( $in['spk_reviewed'] ) ? $str( 'spk_reviewed' ) : null,
+		'mark'       => ! empty( $in['spk_mark_reviewed'] ),
 		'check'      => ! empty( $in['spk_needs_check'] ),
 		'keywords'   => $str( 'spk_keywords' ),
 		'sublinks'   => array(),
@@ -268,10 +272,12 @@ function spokares_document_is_soon( int $post_id ): bool {
  * @param array      $confirmed Field => sha1 of text confirmed as public.
  * @param array|null $file      The file chosen in this request (Upload only).
  * @return array{problems:array,confirm:array,upload:string,new_address:bool}
- *   'upload' = '' (no file chosen), 'ok', or the refused file's sentence.
+ *   'upload' = '' (no file chosen), 'ok', 'pending' (no file chosen, one is
+ *   waiting: D8), or the refused file's sentence.
  */
 function spokares_document_check( array $v, int $post_id, array $confirmed, ?array $file ): array {
 	$stored   = spokares_document_stored( $post_id );
+	$pending  = spokares_document_pending( $post_id );
 	$problems = array();
 	$confirm  = array();
 	$upload   = '';
@@ -290,6 +296,8 @@ function spokares_document_check( array $v, int $post_id, array $confirmed, ?arr
 			if ( '' !== $why ) {
 				$problems['upload'] = $why;
 			}
+		} elseif ( $pending ) {
+			$upload = 'pending'; // Checked and ticked when it was chosen (D8).
 		} elseif ( ! $stored['file'] ) {
 			$problems['upload'] = $v['privacy']
 				? __( 'Choose the file.', 'spokares-core' )
@@ -414,9 +422,18 @@ function spokares_document_insert_data( $data, $postarr ) {
 		'keep_source' => false,
 		'demoted'     => false,
 		'live'        => $stored && 'publish' === $stored->post_status,
+		'refusal'     => false,
+		'wait'        => false,
 	);
 	$publish   = in_array( $data['post_status'] ?? '', array( 'publish', 'future', 'pending' ), true );
 	if ( $check['problems'] && $publish ) {
+		// A file that passed its own checks waits for the next save instead
+		// of going on the site with a refused one (D8), and a file already
+		// waiting keeps waiting. On a live document the file and source on
+		// the site stay as they are meanwhile.
+		$check['refusal']     = true;
+		$check['wait']        = 'ok' === $check['upload'];
+		$check['keep_source'] = $check['live'] && in_array( $check['upload'], array( 'ok', 'pending' ), true );
 		if ( $check['live'] ) {
 			$check = spokares_document_hold( $check, $post_id );
 			if ( in_array( 'title', $check['held'], true ) && ! $check['demoted'] ) {
@@ -628,12 +645,16 @@ function spokares_save_document( $post_id ): void {
 		'keep_source' => false,
 		'demoted'     => false,
 		'live'        => false,
+		'refusal'     => false,
+		'wait'        => false,
 	);
 	$held      = $result['held'];
 	$keep      = $result['keep_source'];
 	$source    = $keep ? $stored['source'] : $v['source'];
-	$file      = 'upload' === $source && ! $keep ? spokares_document_upload() : null;
+	$file      = 'upload' === $source && ! $keep && ! $result['wait'] ? spokares_document_upload() : null;
 	$reviewed  = (string) get_post_meta( $post_id, 'spk_reviewed', true );
+	// An administrator's typed date (More options), when it changes the date.
+	$typed = $admin && null !== $v['reviewed'] && $v['reviewed'] !== $reviewed ? $v['reviewed'] : null;
 
 	// The section (one term).
 	$tax = get_taxonomy( 'spk_doc_cat' );
@@ -696,9 +717,14 @@ function spokares_save_document( $post_id ): void {
 		$clean                 = spokares_clean_url( $v['howto_url'] );
 		$meta['spk_howto_url'] = '' !== $clean ? $clean : $v['howto_url'];
 	}
-	// Publishing with a fresh privacy tick is a review: an empty "Last
-	// reviewed" becomes today.
-	$meta['spk_reviewed'] = spokares_is_ymd( $v['reviewed'] ) ? $v['reviewed'] : ( $v['privacy'] && 'publish' === get_post_status( $post_id ) ? spokares_today() : '' );
+	// Last reviewed (D1): "Mark reviewed today when I save" makes it today;
+	// an administrator may type another date. Publishing with a fresh privacy
+	// tick is a review too: an empty "Last reviewed" becomes today.
+	$now = null === $typed ? $reviewed : ( spokares_is_ymd( $typed ) ? $typed : '' );
+	if ( $v['mark'] || ( '' === $now && $v['privacy'] && 'publish' === get_post_status( $post_id ) ) ) {
+		$now = spokares_today();
+	}
+	$meta['spk_reviewed'] = $now;
 	if ( $admin ) {
 		$meta['spk_needs_check'] = $v['check'] ? '1' : '';
 		$meta['spk_keywords']    = $v['keywords'];
@@ -747,10 +773,35 @@ function spokares_save_document( $post_id ): void {
 		}
 	}
 
-	// The file: only with a fresh tick, only now, only the allowed types.
-	if ( $file && 'ok' === $result['upload'] ) {
+	// The file: only with a fresh tick, only now, only the allowed types. A
+	// file that passed while another box was refused waits for the next save
+	// (D8), which uses it without the file being chosen again.
+	$waiting = '';
+	$att     = 0;
+	$name    = '';
+	if ( $result['wait'] ) {
+		$chosen = spokares_document_upload();
+		$att    = $chosen ? spokares_document_do_upload( $post_id, $chosen ) : 0;
+		if ( is_wp_error( $att ) ) {
+			$refused = $att->get_error_message();
+		} elseif ( $att ) {
+			$waiting = '' !== $chosen['original'] ? $chosen['original'] : $chosen['name'];
+			spokares_document_set_pending( $post_id, (int) $att, $waiting );
+		}
+		$att = 0;
+	} elseif ( $file && 'ok' === $result['upload'] ) {
+		$att  = spokares_document_do_upload( $post_id, $file );
+		$name = '' !== $file['original'] ? $file['original'] : $file['name'];
+	} elseif ( 'pending' === $result['upload'] && 'upload' === $source && ! $keep && ! $result['refusal'] ) {
+		$pending = spokares_document_pending( $post_id );
+		$name    = $pending ? $pending['name'] : '';
+		$att     = spokares_document_take_pending( $post_id );
+		if ( ! $att ) {
+			$att = new WP_Error( 'spokares_pending_lost', __( 'The file that was waiting couldn’t be used. Choose it again.', 'spokares-core' ) );
+		}
+	}
+	if ( $att ) {
 		$old = absint( get_post_meta( $post_id, 'spk_file', true ) );
-		$att = spokares_document_do_upload( $post_id, $file );
 		if ( is_wp_error( $att ) ) {
 			$refused = $att->get_error_message();
 			if ( ! $old && 'publish' === get_post_status( $post_id ) ) {
@@ -764,14 +815,14 @@ function spokares_save_document( $post_id ): void {
 			}
 		} else {
 			update_post_meta( $post_id, 'spk_file', (int) $att );
-			update_post_meta( $post_id, 'spk_file_name', wp_slash( '' !== $file['original'] ? $file['original'] : $file['name'] ) );
+			update_post_meta( $post_id, 'spk_file_name', wp_slash( $name ) );
 			update_post_meta( $post_id, 'spk_privacy_ok', '1' );
 			$ext = strtolower( pathinfo( (string) get_attached_file( (int) $att ), PATHINFO_EXTENSION ) );
 			update_post_meta( $post_id, 'spk_format', spokares_format_for_ext( $ext ) );
 			// A new file with a fresh "I checked" tick is a review (UX finding
-			// D2): Last reviewed becomes today, unless a date was typed in this
-			// save.
-			if ( ! spokares_is_ymd( $v['reviewed'] ) || $v['reviewed'] === $reviewed ) {
+			// D2): Last reviewed becomes today, unless an administrator typed
+			// a date in this save.
+			if ( null === $typed || ! spokares_is_ymd( $typed ) ) {
 				update_post_meta( $post_id, 'spk_reviewed', spokares_today() );
 			}
 			// A new file on the site ends "The file was pulled …" (D11).
@@ -785,15 +836,20 @@ function spokares_save_document( $post_id ): void {
 					: __( 'The old file stays on the web (“Remove the old file from the web” was unticked).', 'spokares-core' );
 			}
 		}
-	} elseif ( '' !== $result['upload'] && 'ok' !== $result['upload'] ) {
+	} elseif ( ! in_array( $result['upload'], array( '', 'ok', 'pending' ), true ) ) {
 		$refused = $result['upload'];
 	}
+	// A save that went through ends any waiting file it didn't use: another
+	// file was taken, or the document no longer uploads one.
+	if ( ! $result['refusal'] && ! $keep && ( 'upload' !== $source || ( $att && ! is_wp_error( $att ) ) ) ) {
+		spokares_document_drop_pending( $post_id );
+	}
 
-	// Who last changed Last reviewed (D4).
+	// Who last changed Last reviewed, or ticked it (D4, D1).
 	$now_reviewed = (string) get_post_meta( $post_id, 'spk_reviewed', true );
 	if ( '' === $now_reviewed ) {
 		delete_post_meta( $post_id, 'spk_reviewed_by' );
-	} elseif ( $now_reviewed !== $reviewed ) {
+	} elseif ( $now_reviewed !== $reviewed || $v['mark'] ) {
 		update_post_meta( $post_id, 'spk_reviewed_by', get_current_user_id() );
 	}
 
@@ -814,7 +870,7 @@ function spokares_save_document( $post_id ): void {
 	spokares_document_retained( $post_id, true );
 	spokares_retain( 'spk_document_' . $post_id, $values, $errors );
 
-	spokares_document_notice( $post_id, $v, $result, $refused, $replaced, $kept );
+	spokares_document_notice( $post_id, $v, $result, $refused, $replaced, $kept, $waiting );
 	unset( $GLOBALS['spokares_document_check'] );
 	$busy = false;
 }
@@ -840,11 +896,20 @@ function spokares_document_default_place( int $post_id ): string {
  * @param string $refused  Why a chosen file was refused ('' when it wasn't).
  * @param bool   $replaced A new file replaced the old one.
  * @param string $kept     Why the old file stays on the web ('' when it doesn't).
+ * @param string $waiting  The name of the file this save set waiting (D8), or ''.
  */
-function spokares_document_notice( int $post_id, array $v, array $result, string $refused, bool $replaced, string $kept ): void {
+function spokares_document_notice( int $post_id, array $v, array $result, string $refused, bool $replaced, string $kept, string $waiting = '' ): void {
 	$status = get_post_status( $post_id );
-	$see    = array( spokares_site_url( '/members/documents/', (string) get_post_field( 'post_name', $post_id ) ), __( 'See it on the Documents & forms page', 'spokares-core' ) );
-	$after  = '' !== $kept ? ' ' . $kept : '';
+	// A file waiting for the next save (D8): chosen now, or before.
+	$pending = $result['refusal'] && 'upload' === $v['source'] ? spokares_document_pending( $post_id ) : null;
+	$waiting = '' !== $waiting ? $waiting : ( $pending ? $pending['name'] : '' );
+	$wait    = '';
+	if ( '' !== $waiting && $pending ) {
+		/* translators: %s: a file name, e.g. "Net script v4.pdf". */
+		$wait = ' ' . sprintf( __( 'Your file %s is uploaded and waiting: no need to choose it again.', 'spokares-core' ), $waiting );
+	}
+	$see   = array( spokares_site_url( '/members/documents/', (string) get_post_field( 'post_name', $post_id ) ), __( 'See it on the Documents & forms page', 'spokares-core' ) );
+	$after = '' !== $kept ? ' ' . $kept : '';
 	// A Most Used button whose document the site no longer shows (D12).
 	$tile   = spokares_tile_gone_sentence( $post_id );
 	$after .= '' !== $tile ? ' ' . $tile : '';
@@ -858,7 +923,7 @@ function spokares_document_notice( int $post_id, array $v, array $result, string
 		} else {
 			$text = __( 'Not published yet. Fix the boxes outlined in red, then click Publish.', 'spokares-core' );
 		}
-		spokares_add_notice( 'error', $text . ( '' !== $tile ? ' ' . $tile : '' ) );
+		spokares_add_notice( 'error', $text . $wait . ( '' !== $tile ? ' ' . $tile : '' ) );
 		return;
 	}
 
@@ -868,14 +933,17 @@ function spokares_document_notice( int $post_id, array $v, array $result, string
 		foreach ( $result['held'] as $field ) {
 			$not[] = $names[ $field ] ?? $field;
 		}
-		if ( $result['keep_source'] ) {
+		if ( '' !== $wait ) {
+			// The new file isn't refused: it waits (and isn't outlined).
+			$not = $not ? $not : array( $names['upload'] );
+		} elseif ( $result['keep_source'] ) {
 			$not[] = 'link' === $v['source'] ? $names['url'] : $names['upload'];
 		} elseif ( '' !== $refused ) {
 			$not[] = $names['upload'];
 		}
 		if ( $not ) {
 			/* translators: %s: the fields that weren't saved, e.g. "the new file". */
-			spokares_add_notice( 'warning', sprintf( __( 'Saved, except %s (outlined in red).', 'spokares-core' ), spokares_and_list( $not ) ) . ( '' !== $tile ? ' ' . $tile : '' ) );
+			spokares_add_notice( 'warning', sprintf( __( 'Saved, except %s (outlined in red).', 'spokares-core' ), spokares_and_list( $not ) ) . $wait . ( '' !== $tile ? ' ' . $tile : '' ) );
 		} elseif ( $replaced ) {
 			$text = '' === $kept
 				? __( 'Saved. The new file is on the site and the old one is off the web.', 'spokares-core' )
@@ -1281,6 +1349,11 @@ function spokares_document_form_fields( $post ): void {
 	// taken): the boxes show it, the site doesn't (D10).
 	$shows_held  = ! $new && 'publish' === $post->post_status && array() !== $retained['values'];
 	$reviewed_by = absint( get_post_meta( $post->ID, 'spk_reviewed_by', true ) );
+	// The file waiting since a refused save (D8); one past its time goes now.
+	$pending = $new ? null : spokares_document_pending( $post->ID );
+	if ( ! $new && ! $pending && metadata_exists( 'post', $post->ID, 'spk_pending_file' ) ) {
+		spokares_document_drop_pending( $post->ID );
+	}
 
 	list( $places, $place ) = spokares_document_place_choices( $post->ID, $v['section'], $new );
 	$tick_file              = $file && $stored['privacy'] ? 'new-file' : 'file';
@@ -1348,8 +1421,24 @@ function spokares_document_form_fields( $post ): void {
 					?>
 					<p class="spk-current-file"><?php echo esc_html( implode( ' · ', $parts ) ); ?> · <a href="<?php echo esc_url( $file_url ); ?>"><?php esc_html_e( 'Open', 'spokares-core' ); ?></a></p>
 				<?php endif; ?>
+				<?php if ( $pending ) : ?>
+					<p class="spk-banner spk-banner--amber spk-pending-file" role="status">
+						<?php
+						echo esc_html(
+							sprintf(
+								'publish' === $post->post_status
+									/* translators: %s: a file name, e.g. "Net script v4.pdf". */
+									? __( 'Your file %s is uploaded and waiting: fix the boxes outlined in red, then Save (no need to choose it again).', 'spokares-core' )
+									/* translators: %s: a file name, e.g. "Net script v4.pdf". */
+									: __( 'Your file %s is uploaded and waiting: fix the boxes outlined in red, then Publish (no need to choose it again).', 'spokares-core' ),
+								'' !== $pending['name'] ? $pending['name'] : __( 'your file', 'spokares-core' )
+							)
+						);
+						?>
+					</p>
+				<?php endif; ?>
 				<p class="spk-privacy<?php echo esc_attr( isset( $p['privacy'] ) || isset( $p['upload'] ) ? ' spk-field-error' : '' ); ?>">
-					<label><input type="checkbox" name="spk_privacy_ok" value="1" id="spk-privacy" data-spk-tick="<?php echo esc_attr( $tick_file ); ?>" <?php disabled( 'upload' !== $source ); ?> <?php echo ! $file || ! $stored['privacy'] ? 'required' : ''; ?>>
+					<label><input type="checkbox" name="spk_privacy_ok" value="1" id="spk-privacy" data-spk-tick="<?php echo esc_attr( $tick_file ); ?>" <?php disabled( 'upload' !== $source ); ?> <?php echo ( ! $file || ! $stored['privacy'] ) && ! $pending ? 'required' : ''; ?>>
 					<?php echo esc_html( spokares_document_privacy_words( $tick_file ) ); ?></label>
 				</p>
 				<?php if ( 'upload' === $source ) : ?>
@@ -1416,6 +1505,9 @@ function spokares_document_form_fields( $post ): void {
 			<?php spokares_err_text( $p, 'note' ); ?>
 			<?php spokares_document_confirm_tick( $c, 'note' ); ?>
 		</div>
+		<div class="spk-field">
+			<?php spokares_review_control( (string) get_post_meta( $post->ID, 'spk_reviewed', true ), $reviewed_by ); // The same control as About's Page review box (D1). ?>
+		</div>
 		<?php if ( ! $admin && $v['sublinks'] ) : ?>
 			<p class="spk-course-links">
 				<?php
@@ -1472,17 +1564,13 @@ function spokares_document_form_fields( $post ): void {
 				<input type="text" id="spk-owner" name="spk_owner" class="regular-text<?php echo esc_attr( $err( 'owner' ) ); ?>" maxlength="60" value="<?php echo esc_attr( $v['owner'] ); ?>">
 				<?php spokares_err_text( $p, 'owner' ); ?>
 			</div>
-			<div class="spk-field">
-				<label for="spk-reviewed"><?php esc_html_e( 'Last reviewed', 'spokares-core' ); ?></label>
-				<input type="date" id="spk-reviewed" name="spk_reviewed" value="<?php echo esc_attr( $v['reviewed'] ); ?>">
-				<button type="button" class="button spk-reviewed-today" data-target="spk-reviewed"><?php esc_html_e( 'Mark reviewed today', 'spokares-core' ); ?></button>
-				<?php
-				if ( $reviewed_by && spokares_is_ymd( $v['reviewed'] ) ) {
-					/* translators: %s: a person's name. */
-					echo '<p class="description">' . esc_html( sprintf( __( 'Marked by %s.', 'spokares-core' ), spokares_user_name( $reviewed_by ) ) ) . '</p>';
-				}
-				?>
-			</div>
+			<?php if ( $admin ) : ?>
+				<div class="spk-field">
+					<label for="spk-reviewed"><?php esc_html_e( 'Review date (administrators)', 'spokares-core' ); ?></label>
+					<input type="date" id="spk-reviewed" name="spk_reviewed" value="<?php echo esc_attr( $v['reviewed'] ); ?>">
+					<p class="description"><?php esc_html_e( 'To set a date other than today. To mark it reviewed today, use the tick above.', 'spokares-core' ); ?></p>
+				</div>
+			<?php endif; ?>
 		</details>
 
 		<?php if ( $admin ) : ?>

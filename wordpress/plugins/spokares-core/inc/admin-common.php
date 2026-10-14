@@ -342,6 +342,54 @@ function spokares_saved_line( array $stamp ): string {
 	);
 }
 
+/* ------------------------------------------------- the review tick (D1) */
+
+/**
+ * "Last reviewed Oct 13, 2026 by Frank." (or "Last reviewed: not yet."), the
+ * line beside the review tick on About and on every document (UX finding D1:
+ * one control for both).
+ *
+ * @param string $reviewed Y-m-d, or '' for never.
+ * @param int    $by       Who marked it (0 when not recorded).
+ */
+function spokares_review_line( string $reviewed, int $by ): string {
+	if ( ! spokares_is_ymd( $reviewed ) ) {
+		return __( 'Last reviewed: not yet.', 'spokares-core' );
+	}
+	if ( $by && get_userdata( $by ) ) {
+		/* translators: 1: a date, e.g. "Oct 13, 2026"; 2: a person's name. */
+		return sprintf( __( 'Last reviewed %1$s by %2$s.', 'spokares-core' ), spokares_fmt_date( $reviewed, 'mdy' ), spokares_user_name( $by ) );
+	}
+	/* translators: %s: a date, e.g. "Oct 13, 2026". */
+	return sprintf( __( 'Last reviewed %s.', 'spokares-core' ), spokares_fmt_date( $reviewed, 'mdy' ) );
+}
+
+/**
+ * The review control: the line saying when and by whom, and the tick "Mark
+ * reviewed today when I save" (field spk_mark_reviewed). The same on About's
+ * Page review box and on the document form.
+ *
+ * @param string $reviewed Y-m-d, or '' for never.
+ * @param int    $by       Who marked it.
+ */
+function spokares_review_control( string $reviewed, int $by ): void {
+	?>
+	<div class="spk-review">
+		<p class="spk-reviewed-line"><?php echo esc_html( spokares_review_line( $reviewed, $by ) ); ?></p>
+		<p><label><input type="checkbox" name="spk_mark_reviewed" value="1" class="spk-mark-reviewed"> <?php esc_html_e( 'Mark reviewed today when I save', 'spokares-core' ); ?></label></p>
+	</div>
+	<?php
+}
+
+/**
+ * Was "Mark reviewed today when I save" ticked in this request? (The caller
+ * has verified its form's nonce.)
+ */
+function spokares_review_ticked(): bool {
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- callers verify their form's nonce first.
+	return ! empty( $_POST['spk_mark_reviewed'] );
+}
+
 /**
  * A stamp for now.
  */

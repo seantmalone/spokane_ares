@@ -395,7 +395,8 @@ Help: none beyond "Stuck?" (R3: every former line restated a label or hint on th
 | 4 | **Version or date** | text 30, placeholder "v3 or Sept 2026" | | | Sits right under the file/link box. Choosing a new file focuses and selects it. |
 | 5 | **Short note (60 characters)** | text 60 | | | A live "{n} left" appears in the last 10 characters. No word warning. |
 | — | Course links (editors, a document with course links) | read-only line: "Course links: IS-100.c, IS-200.c, IS-700.b, IS-800.d (the webmaster changes these)." | | | |
-| 6 | ▸ **More options** | “How to” link (Words · Web address) · **Show under the Most used filter** · **Place in section** [At the top / After “…” / At the end] · **Owner** · **Last reviewed** [Mark reviewed today] | | Place: "At the end" for a new document | For a document that is one of the four buttons, the tick is replaced by one line: "It’s button 2 on the Most Used screen." ("the Most Used screen" links there); such a document is always listed. Place resets to "At the end" when the section changes. |
+| 5a | **Review** | line "Last reviewed Oct 13, 2026 by Frank." (or "Last reviewed: not yet.") and tick **Mark reviewed today when I save** | | unticked | The same control as About's Page review box (workflow review D1, 2026-10-13). |
+| 6 | ▸ **More options** | “How to” link (Words · Web address) · **Show under the Most used filter** · **Place in section** [At the top / After “…” / At the end] · **Owner** · **Review date (administrators)** [date] | | Place: "At the end" for a new document | For a document that is one of the four buttons, the tick is replaced by one line: "It’s button 2 on the Most Used screen." ("the Most Used screen" links there); such a document is always listed. Place resets to "At the end" when the section changes. |
 | — | ▸ Admin only | unchanged | | | |
 
 - **Privacy rule (one rule, create = edit):** a fresh tick is needed whenever something new goes public: a new document, a new file, a new or changed web address, or a switch from Soon or Link to a file. Name, note or version edits need no tick. The script unticks and relocks when the source, file or address changes. The server refuses the new file or address without the tick. The stored `spk_privacy_ok` stays for what is already live.
@@ -418,6 +419,7 @@ Under-field sentences:
 - **Old Word file:** ".doc files aren’t accepted. In Word, use File › Save As › PDF, then choose it again."
 - **Other type:** "Use a PDF, Word (.docx), Excel (.xlsx), JPEG or PNG file."
 - **No tick:** "Tick “I checked this file” first, then choose the file again."
+- **Another box refused, the file fine** (workflow review D8, 2026-10-13): the file waits; above the tick: "Your file Net script v4.pdf is uploaded and waiting: fix the boxes outlined in red, then Publish (no need to choose it again)." ("then Save" on a live document, whose file stays on the site until then). The save's notice adds "Your file Net script v4.pdf is uploaded and waiting: no need to choose it again."
 - **Web address:** "Type a web address, like https://training.fema.gov/…"
 
 Help (form): "New version? Choose the new file (under Replace with, or Upload a file instead of a link), tick “I checked …” and click Save." (the tick's own first words, not "the privacy check")
@@ -472,7 +474,7 @@ The four buttons under Most used on the For members page, left to right.
 | HEIC photo | "Photos must be JPEG, PNG or WebP. On an iPad, pick the photo from Photo Library, which converts it." |
 | Lead-in, empty item, bad link, pasting | as today |
 
-**Page review box:** on About only. The field "Page owner" keeps its words, which the public line uses, and loses its placeholder. "Mark reviewed today when I save" is unchanged.
+**Page review box:** on About only. The field "Page owner" keeps its words, which the public line uses, and loses its placeholder. "Mark reviewed today when I save" is kept, with "Last reviewed Oct 13, 2026 by Frank." above it; the tick records who (`_spk_reviewed_by`). Documents use the same control (workflow review D1, 2026-10-13).
 
 The dynamic blocks' hint in the canvas (`spokares_block_tail()`):
 - For an editor who can open the screen: "Change this on the {Screen} screen." ({Screen} from `spokares_edit_screen()`).

@@ -10,6 +10,12 @@
 //        at the same address.
 //   D9   The file box is printed enabled; the script still locks it until
 //        the tick.
+//   D8   A file that passes its own checks on a save refused for another box
+//        (a never-publish word in the name) waits: the form says so, the
+//        next Publish or Save uses it without choosing it again, and on a
+//        live document the file on the site stays until then.
+//   D1   The editor's form has the tick "Mark reviewed today when I save"
+//        with "Last reviewed … by …" beside it, and no date box.
 //
 // Each run adds its own document (a new name each time) and leaves it in the
 // Trash.
@@ -102,6 +108,65 @@ export const tests = [
 
       // Leave it in the Trash.
       await t.goto(`/wp-admin/post.php?post=${id}&action=edit`);
+      await t.clickAndWait('#spk-trash-link');
+      t.expectNoConsoleErrors();
+    },
+  },
+  {
+    name: 'editor: a file chosen on a refused save waits, and the next save uses it without choosing it again (D8, D1)',
+    role: 'ares-editor',
+    timeout: 180000,
+    async run(t) {
+      const stamp = Date.now();
+      const title = `WF D8 ${stamp}`;
+      await t.goto('/wp-admin/post-new.php?post_type=spk_document');
+      await t.expectStatus(200);
+
+      // Refused: a never-publish word in the name. The file itself is fine.
+      await t.type('#title', `${title} hospital net`, { clear: true });
+      await t.click('input[name="spk_section"][value="forms"]');
+      await t.click('#spk-privacy');
+      await chooseFile(t, pdf('wf-d8-first.pdf'));
+      await t.clickAndWait('input[name="publish"]');
+      await t.waitFor('.spk-doc-form');
+      const id = Number(new URL(await t.url()).searchParams.get('post'));
+      t.expect(id, 'the new document').toBeGreaterThan(0);
+      t.expect(await t.text('.notice'), 'the refusal says the file waits').toContain('Your file wf-d8-first.pdf is uploaded and waiting');
+      t.expect(await t.text('.spk-pending-file'), 'the form says so').toBe('Your file wf-d8-first.pdf is uploaded and waiting: fix the boxes outlined in red, then Publish (no need to choose it again).');
+      t.expect(await t.exists('.spk-current-file'), 'not the document\'s file yet').toBe(false);
+      t.expect(await t.evaluate(() => document.querySelector('#spk-privacy').required), 'no tick needed again').toBe(false);
+
+      // Fixed: Publish with no file chosen.
+      await t.type('#title', title, { clear: true });
+      await t.clickAndWait('input[name="publish"]');
+      t.expect(await t.text('.notice'), 'published').toContain('Published.');
+      t.expect(await t.text('.spk-current-file'), 'the waiting file is the file').toContain('wf-d8-first.pdf');
+      t.expect(await t.exists('.spk-pending-file'), 'nothing waits').toBe(false);
+      const first = await t.attr('.spk-current-file a', 'href');
+      t.expect(await status(t, first), 'on the web').toBe(200);
+
+      // D1: the editor's review control.
+      t.expect(await t.text('.spk-reviewed-line'), 'the line').toMatch(/^Last reviewed [A-Z][a-z]{2} \d{1,2}, \d{4} by .+\.$/);
+      t.expect(await t.exists('input[name="spk_mark_reviewed"]'), 'the tick').toBe(true);
+      t.expect(await t.exists('#spk-reviewed'), 'no date box for an editor').toBe(false);
+
+      // Live: a new file on a refused Save waits; the live file stays.
+      await t.type('#title', `${title} hospital net`, { clear: true });
+      await t.click('#spk-privacy');
+      await chooseFile(t, pdf('wf-d8-second.pdf'));
+      await t.clickAndWait('input[name="save"]');
+      t.expect(await t.text('.notice'), 'saved, except').toContain('Saved, except the document name');
+      t.expect(await t.text('.spk-pending-file'), 'the new file waits').toContain('Your file wf-d8-second.pdf is uploaded and waiting: fix the boxes outlined in red, then Save');
+      t.expect(await t.attr('.spk-current-file a', 'href'), 'the live file stays').toBe(first);
+      t.expect(await status(t, first), 'and stays on the web').toBe(200);
+
+      await t.type('#title', title, { clear: true });
+      await t.clickAndWait('input[name="save"]');
+      t.expect(await t.text('.notice'), 'swapped').toContain('The new file is on the site');
+      t.expect(await t.text('.spk-current-file'), 'the new file').toContain('wf-d8-second.pdf');
+      t.expect(await status(t, first), 'the old file is off the web').toBe(404);
+
+      // Leave it in the Trash.
       await t.clickAndWait('#spk-trash-link');
       t.expectNoConsoleErrors();
     },
