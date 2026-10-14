@@ -11,6 +11,8 @@
 .spk-screen .spk-saved .spk-undo { font-size: inherit; line-height: inherit; vertical-align: baseline; }
 .spk-banner { padding: 10px 14px; border-left: 4px solid; background: #fff; margin: 12px 0 16px; font-weight: 600; }
 .spk-banner--amber { border-color: #dba617; background: #fcf9e8; color: #614a00; font-weight: 400; }
+/* The review control (About's Page review box and the document form, D1). */
+.spk-review p { margin: 0 0 6px; }
 .spk-field-error,
 input.spk-field-error,
 textarea.spk-field-error,

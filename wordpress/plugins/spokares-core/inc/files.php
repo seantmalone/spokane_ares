@@ -2,7 +2,8 @@
 /**
  * Document files (§5.5): where an attachment is used, removing a document's
  * old file from the web, setting the file of a document taken off the site
- * aside outside the web root (and back on Restore), and the deletion guard.
+ * aside outside the web root (and back on Restore), a file waiting after a
+ * refused save (D8), and the deletion guard.
  * Loaded everywhere (REST and WP-CLI too), so nothing deletes a file a
  * document or page still uses except Replace, Trash and Pull, which clear
  * the reference first. A refused delete
@@ -482,6 +483,182 @@ function spokares_document_untrash_file( $post_id ): void {
 	}
 }
 add_action( 'untrash_post', 'spokares_document_untrash_file' );
+
+/* -------------------------------------------- a file waiting (D8, §5.5) */
+
+/**
+ * How long a file stays waiting for its document's next save, in hours.
+ */
+function spokares_document_pending_hours(): int {
+	return 24;
+}
+
+/**
+ * The file waiting for a document (UX finding D8): a file that passed its own
+ * checks (type, size, inspection, the "I checked" tick) on a save another box
+ * refused. It is uploaded, set aside, and not the document's file: the next
+ * save that goes through uses it, so the editor doesn't choose it again.
+ * Null when there is none, or it has expired or gone.
+ *
+ * @param int $post_id Document.
+ * @return array{id:int,name:string,expires:int,by:int}|null
+ */
+function spokares_document_pending( int $post_id ): ?array {
+	$p   = get_post_meta( $post_id, 'spk_pending_file', true );
+	$att = is_array( $p ) ? absint( $p['id'] ?? 0 ) : 0;
+	if ( ! $att || (int) ( $p['expires'] ?? 0 ) < time() || 'attachment' !== get_post_type( $att ) ) {
+		return null;
+	}
+	return array(
+		'id'      => $att,
+		'name'    => (string) ( $p['name'] ?? '' ),
+		'expires' => (int) $p['expires'],
+		'by'      => absint( $p['by'] ?? 0 ),
+	);
+}
+
+/**
+ * Keep an uploaded file waiting for a document, in place of any file that
+ * was waiting. The file is set aside in the held folder while it waits
+ * (off the web), when that folder can be used; otherwise it keeps its
+ * random address, as a draft's file does.
+ *
+ * @param int    $post_id Document.
+ * @param int    $att     The uploaded attachment.
+ * @param string $name    The file's name as the editor knows it.
+ */
+function spokares_document_set_pending( int $post_id, int $att, string $name ): void {
+	spokares_document_drop_pending( $post_id, $att );
+	spokares_hold_attachment( $att );
+	update_post_meta( $att, '_spk_pending_for', $post_id );
+	update_post_meta(
+		$post_id,
+		'spk_pending_file',
+		array(
+			'id'      => $att,
+			'name'    => $name,
+			'expires' => time() + spokares_document_pending_hours() * HOUR_IN_SECONDS,
+			'by'      => get_current_user_id(),
+		)
+	);
+}
+
+/**
+ * Use the waiting file: back on the web, no longer waiting. Returns its
+ * attachment ID, or 0 when there is none or it couldn't be put back.
+ *
+ * @param int $post_id Document.
+ */
+function spokares_document_take_pending( int $post_id ): int {
+	$p = spokares_document_pending( $post_id );
+	if ( ! $p ) {
+		return 0;
+	}
+	if ( spokares_attachment_is_held( $p['id'] ) && ! spokares_release_attachment( $p['id'] ) ) {
+		return 0;
+	}
+	delete_post_meta( $post_id, 'spk_pending_file' );
+	delete_post_meta( $p['id'], '_spk_pending_for' );
+	return $p['id'];
+}
+
+/**
+ * Forget a document's waiting file and delete it, unless a document or page
+ * uses it (the deletion guard) or it is the document's own file.
+ *
+ * @param int $post_id Document.
+ * @param int $keep    An attachment never to delete (the one about to wait).
+ */
+function spokares_document_drop_pending( int $post_id, int $keep = 0 ): void {
+	$p = get_post_meta( $post_id, 'spk_pending_file', true );
+	if ( '' === $p || false === $p ) {
+		return;
+	}
+	delete_post_meta( $post_id, 'spk_pending_file' );
+	$att = is_array( $p ) ? absint( $p['id'] ?? 0 ) : 0;
+	spokares_delete_pending_attachment( $att, $keep );
+}
+
+/**
+ * Delete a waiting file's attachment (its held files go with it,
+ * spokares_delete_held_files()). Never one a document or page uses, nor the
+ * one to keep.
+ *
+ * @param int $att  Attachment.
+ * @param int $keep An attachment never to delete.
+ */
+function spokares_delete_pending_attachment( int $att, int $keep = 0 ): void {
+	if ( ! $att || $att === $keep || 'attachment' !== get_post_type( $att ) ) {
+		return;
+	}
+	if ( spokares_attachment_uses( $att ) ) {
+		delete_post_meta( $att, '_spk_pending_for' ); // In use: it is no longer a waiting file.
+		return;
+	}
+	wp_delete_attachment( $att, true );
+}
+
+/**
+ * A document taken off the site or deleted for good takes its waiting file
+ * with it.
+ *
+ * @param int $post_id Post.
+ */
+function spokares_document_pending_gone( $post_id ): void {
+	if ( 'spk_document' === get_post_type( (int) $post_id ) ) {
+		spokares_document_drop_pending( (int) $post_id );
+	}
+}
+add_action( 'trashed_post', 'spokares_document_pending_gone' );
+add_action( 'before_delete_post', 'spokares_document_pending_gone' );
+
+/**
+ * Delete waiting files nobody used: past their time, or no longer the file
+ * their document waits for. Lazy, on an admin page load at most once an hour
+ * (no cron job: PLAN keeps scheduled work to the host's own checks).
+ *
+ * @param bool $force Sweep now, whenever the last sweep was.
+ */
+function spokares_sweep_pending_files( bool $force = false ): int {
+	if ( ! $force && get_transient( 'spokares_pending_sweep' ) ) {
+		return 0;
+	}
+	set_transient( 'spokares_pending_sweep', 1, HOUR_IN_SECONDS );
+	$atts = get_posts(
+		array(
+			'post_type'   => 'attachment',
+			'post_status' => 'any',
+			'numberposts' => 50,
+			'fields'      => 'ids',
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- at most once an hour, on a small library.
+			'meta_key'    => '_spk_pending_for',
+		)
+	);
+	$n    = 0;
+	foreach ( $atts as $att ) {
+		$att = (int) $att;
+		$doc = absint( get_post_meta( $att, '_spk_pending_for', true ) );
+		$p   = $doc ? get_post_meta( $doc, 'spk_pending_file', true ) : '';
+		$own = is_array( $p ) && absint( $p['id'] ?? 0 ) === $att;
+		if ( $own && (int) ( $p['expires'] ?? 0 ) >= time() && 'spk_document' === get_post_type( $doc ) ) {
+			continue; // Still waiting.
+		}
+		if ( $own ) {
+			delete_post_meta( $doc, 'spk_pending_file' );
+		}
+		spokares_delete_pending_attachment( $att );
+		++$n;
+	}
+	return $n;
+}
+
+/**
+ * The sweep, on admin page loads.
+ */
+function spokares_sweep_pending_files_on_admin(): void {
+	spokares_sweep_pending_files();
+}
+add_action( 'admin_init', 'spokares_sweep_pending_files_on_admin' );
 
 /* ------------------------------------------- draft documents' files (§5.5) */
 

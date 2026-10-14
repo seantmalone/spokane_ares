@@ -254,7 +254,7 @@ The exact meta keys, option shapes and storage rules are in **§6.3** (the contr
 | Meeting rules | option `spk_meetings['meetings']` | Events › Meeting rules | meetings › home, next |
 | Meeting cancellations and moves | option `spk_meetings['changes']` | Events › Regular meetings | meetings › home, next |
 | Meeting place | option `spk_site` | Settings › ARES site (admins) | meetings › home (address) |
-| Page review date and owner | page meta `_spk_reviewed`, `_spk_owner` | Page review box on the page | last-reviewed |
+| Page review date, reviewer and owner | page meta `_spk_reviewed`, `_spk_reviewed_by`, `_spk_owner` | Page review box on the page | last-reviewed |
 
 **Not modelled:** leadership and contact tables, legal basis, definitions, history (page text on About); the members pages' fixed lines (theme patterns, §2.2 #21). They change rarely and have one home each.
 
@@ -412,11 +412,12 @@ Where the file is  (•) Upload a file  ( ) Link to another site  ( ) Not ready 
                     [ ] I checked the page it links to: …                  ("Upload a file instead" to swap a link for a file)
 Version or date [v3 or Sept 2026]
 Short note (60 characters) [Print it; keep sign-offs in a binder.]
+Last reviewed Sep 26, 2026 by Frank.   [ ] Mark reviewed today when I save
 ▸ More options (closed)
     "How to" link: Words [How to write one]   Web address [https://…]
     [ ] Show under the Most used filter        (a Most Used document instead: "It's button 2 on the Most Used screen.")
     Place in section [At the top / After "…" / At the end ▾]
-    Owner [Net Manager]    Last reviewed [2026-09-26]  [Mark reviewed today]
+    Owner [Net Manager]    Review date (administrators) [2026-09-26]
 ▸ Admin only (closed; administrators only)
     Extra links (FEMA course codes): words, full title, web address (+ Add; ids are made from the words)
     Search words [task book, PTB, RADO, S-RADO]
@@ -425,6 +426,8 @@ Short note (60 characters) [Print it; keep sign-offs in a binder.]
 ```
 
 - The file chooser is a plain `<input type="file">` (`enctype="multipart/form-data"` via `post_edit_form_tag`), **not** the media window, so nothing uploads when a file is picked. It is disabled until the "I checked" box is ticked, and the server refuses a file without the tick (the rest of the form is saved; "Saved, except the new file (outlined in red)."). **Privacy re-tick rule:** a fresh tick is needed whenever something new goes public (a new document, a new file, a new or changed web address, or a switch from Soon or Link to a file); edits to the name, note or version need none.
+- **Review (2026-10-13, workflow review D1):** the same control as About's Page review box: "Last reviewed Sep 26, 2026 by Frank." (or "Last reviewed: not yet.") and the tick **Mark reviewed today when I save**, which sets `spk_reviewed` to today and `spk_reviewed_by` to the user. Only administrators can type another date (More options); a date sent by anyone else is ignored. A new file with a fresh tick (D2), and a first Publish with the tick, also set today.
+- **A refused save keeps a good file (2026-10-13, workflow review D8):** when Publish (or Save on a live document) is refused for another box but the chosen file passed its own checks (tick, type, inspection), the file is uploaded and waits (`spk_pending_file`: attachment, name, expiry, who; §5.5); it is not the document's file, and a live document keeps its file and source on the site. The form says "Your file Net script v4.pdf is uploaded and waiting: fix the boxes outlined in red, then Publish (no need to choose it again)." and needs no new tick; the next save that goes through uses it.
 - Upload rules (types, inspection, random suffix, deletion of replaced files) are in §5.5. The original file name is kept for display (`spk_file_name`).
 - **The name check** (on Add only): the typed name against every document's name (exact, starts one, or only words that start its words) and every course link under one ("Already on the site: IS-100.c, under FEMA courses. Open it"). A name WordPress saved on its own from an abandoned Add (no section) is left out; "Open it" leaves without a "Leave site?" question and without saving the typed name as a draft.
 - The slug is the row anchor and the stable link `/docs/<slug>/`; it is read-only for non-admins once published.
@@ -445,7 +448,7 @@ The lists offer published documents with a file or a link that aren't "Soon". A 
 
 **Page Text** (the Pages list, for non-admins): Home, How it works and About ARES & ACS only (the members pages have no words to edit), Title column only. The page type's labels for non-admins read "Page Text", "Edit Page Text" (the admin bar) and "Saved. It's on the site now." (after a save).
 
-**Page review box** (block editor sidebar, **About only**, the page that prints its review line; a classic `side` meta box, so no build): "Last reviewed: Sep 26, 2026" (or "not yet") · Page owner [ ] · **[ ] Mark reviewed today when I save**. It replaces the hover-only row action of the first plan. The settings sidebar opens with it on About and starts closed on the other pages.
+**Page review box** (block editor sidebar, **About only**, the page that prints its review line; a classic `side` meta box, so no build): "Last reviewed Sep 26, 2026 by Frank." (or "Last reviewed: not yet.") · **[ ] Mark reviewed today when I save** · Page owner [ ]. The tick records who (`_spk_reviewed_by`); the line and tick are the documents' control too (workflow review D1). It replaces the hover-only row action of the first plan. The settings sidebar opens with it on About and starts closed on the other pages.
 
 **Settings › ARES site** (`admin.php?page=spokares-site`, `manage_options`): the meeting place (`spk_site`). The groups.io links are page text and theme parts (footer, members menu, Home's Join section), not settings (QA-038).
 
@@ -644,6 +647,7 @@ Hardening and SMTP live in `wp-content/mu-plugins/`, so deactivating `spokares-c
 - **File names:** a document's stored file name gets a random 8-character suffix (`acs-task-book-7f3a9c2b.docx`), so a file saved in a draft isn't at a guessable address.
 - **Replace and Trash** delete the old file from the web by default ("Remove the old file from the web", "Also remove its file from the web", both ticked): `wp_delete_attachment( $id, true )` when no other document's `spk_file` and no page (`wp-image-N` or its URL) uses it; otherwise the file is kept and the notice says where it is used.
 - **Trash ("Take it off the site") sets the file aside instead of deleting it** (changed 2026-10, workflow review D6): the attachment's files (with any image sizes) move to a held folder **outside the web root** (`SPOKARES_HELD_DIR`, default `spokares-held` next to the WordPress folder, i.e. `~/spokares-held` beside `public_html`; made 0700), because OpenLiteSpeed ignores `.htaccess` (§8). The attachment and `spk_file` stay; Restore or Undo moves the files back and the document returns as it was; Delete Permanently (or WordPress's 30-day clean-up) deletes the held files. A held folder that can't be made, written, or is inside the WordPress folder, uploads or the document root is refused, and the trash then deletes the file as before (the notice says so). Held files are not in the UpdraftPlus backups (uploads only).
+- **A file waiting after a refused save** (2026-10-13, workflow review D8; §3.4): uploaded as an attachment of its document, marked `_spk_pending_for`, and set aside in the held folder while it waits (or left at its random address when the held folder can't be used). It becomes the document's file only on the next save that goes through. It is deleted when another file is chosen and accepted, when the document is saved with another source, when the document is trashed or deleted, or once unused for 24 hours: a lazy sweep on admin page loads, at most once an hour (no cron job), and the form drops its own expired file. The deletion guard still applies: a file a document or page uses is never deleted this way.
 - **Pull this file now** (administrators, a nonce'd row action): deletes the attachment at once, even when other documents or pages use it (its question and notice name them), sets the document to "Soon" and Draft, and records who and when in the document's notice area (cleared when a new file is accepted and published).
 - **Deletion guard:** `pre_delete_attachment` refuses to delete a file that a document or page uses, except through the three paths above (which clear the reference first). Editors have no delete caps anyway.
 - **`/docs/<slug>/`** redirects (302) only when the document is published, privacy-checked and is an upload with a file or a link; the target is the stored **https** URL. Anything else, including drafts and "Soon" items, is 404.
@@ -749,7 +753,7 @@ Everything visual, including the CSS for the plugin's block markup and the `spk-
 | Post types | `spk_event`, `spk_document` |
 | Taxonomy | `spk_doc_cat` (terms `net-ops`, `join`, `forms`, `training`, `readiness`, `digital`, `reference`) |
 | Options | `spk_rota`, `spk_rota_prev`, `spk_rota_saved`, `spk_nets`, `spk_radio`, `spk_meetings`, `spk_site`, `spk_tiles`, `spk_db_version`, `spk_seeded` |
-| Page meta | `_spk_reviewed`, `_spk_owner` |
+| Page meta | `_spk_reviewed`, `_spk_reviewed_by`, `_spk_owner` |
 | Attachment meta | `_spk_seed` (`hero` on the imported hero photo) |
 | Role | `ares_editor` ("ARES Editor") |
 | Capabilities | `spokares_edit_rota`, `spokares_edit_net_details`; CPT caps from `capability_type` `spk_event`/`spk_events` and `spk_document`/`spk_documents` |
@@ -890,7 +894,7 @@ spk_tiles = [    // exactly 4 slots, in order; 'doc' = spk_document post ID, or 
 spk_db_version = '1';   spk_seeded = '2026-09-26';   // set by the importer
 ```
 
-**Page meta:** `_spk_reviewed` (`Y-m-d` or absent), `_spk_owner` (string, e.g. "Emergency Coordinator"), saved by the Page review box (nonce + `edit_post`). **Attachment meta:** `_spk_seed` (`'hero'`).
+**Page meta:** `_spk_reviewed` (`Y-m-d` or absent), `_spk_reviewed_by` (user ID of the last "Mark reviewed today when I save"), `_spk_owner` (string, e.g. "Emergency Coordinator"), saved by the Page review box (nonce + `edit_post`). **Attachment meta:** `_spk_seed` (`'hero'`).
 
 **Plugin helper functions** (public, stable; the dashboard, blocks and the importer may call them):
 `spokares_today(): string` · `spokares_fmt_time( string $hhmm ): string` · `spokares_fmt_date( string $ymd, string $style = 'short' ): string` · `spokares_fmt_when( WP_Post|int $event, string $style ): string` · `spokares_net_on( string $ymd ): array` · `spokares_rota_rows( int $weeks ): array` · `spokares_next_meetings( int $per_meeting = 1 ): array` · `spokares_events( string $view, array $args ): WP_Post[]` · `spokares_radio_line( string $variant ): string` · `spokares_link( string $url, string $label, string $class = '', string $source = '' ): string` · `spokares_icon( string $name ): string` · `spokares_call_sign( string $typed ): array` (`['call'=>…, 'dropped'=>bool]`, `call` '' when none matches) · `spokares_check_text( string $text ): array` (list of `['level'=>'block'|'confirm','what'=>…]`) · `spokares_block_skeleton( string $content ): array` · `spokares_is_editor_preview(): bool` · `spokares_purge_cache(): void`.

@@ -18,7 +18,6 @@
  */
 ( function () {
 	'use strict';
-	var admin = window.spokaresAdmin || {};
 	var cfg = window.spokaresDocs || {};
 	var $ = function ( sel, ctx ) { return ( ctx || document ).querySelector( sel ); };
 	var $$ = function ( sel, ctx ) { return Array.prototype.slice.call( ( ctx || document ).querySelectorAll( sel ) ); };
@@ -225,12 +224,6 @@
 			} );
 		}
 
-		$$( '.spk-reviewed-today' ).forEach( function ( b ) {
-			b.addEventListener( 'click', function () {
-				var t = document.getElementById( b.getAttribute( 'data-target' ) );
-				if ( t && admin.today ) { t.value = admin.today; }
-			} );
-		} );
 		spares( '.spk-add-sub', '.spk-sub-row' );
 	}
 

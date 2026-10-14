@@ -7,7 +7,7 @@
  * one, and rows that were skipped got no word. Now the bulk action is the
  * administrator's only (an editor reviews a document by opening it), it
  * records who (spk_reviewed_by, also written when the form changes Last
- * reviewed), it skips documents that aren't on the site and names them in
+ * reviewed or its "Mark reviewed today when I save" tick is ticked, D1), it skips documents that aren't on the site and names them in
  * its notice. Editors get no row ticks outside the Trash, as on the events
  * list.
  *
@@ -93,14 +93,18 @@ test(
 test(
 	'the form records who changed Last reviewed, and shows it',
 	function () {
+		// Changed by D1 (wf-d1-review-control-test.php): editors mark a
+		// document reviewed with the tick "Mark reviewed today when I save"
+		// (the date box is the administrator's only), and the form says who
+		// beside it ("Last reviewed Oct 13, 2026 by …") instead of "Marked by …".
 		$doc = uxdoc_published( 'WF-D4 form', 'link' );
 		as_role( 'ares-editor' );
-		$fields                 = uxdoc_fields( $doc );
-		$fields['spk_reviewed'] = spokares_today();
+		$fields                      = uxdoc_fields( $doc );
+		$fields['spk_mark_reviewed'] = '1';
 		uxdoc_click( $doc, $fields );
 		assert_same( user_id( 'ares-editor' ), absint( get_post_meta( $doc, 'spk_reviewed_by', true ) ), 'the editor is recorded' );
 		$html = uxdoc_render( '\spokares_document_form_fields', get_post( $doc ) );
-		assert_contains( 'Marked by ' . esc_html( get_userdata( user_id( 'ares-editor' ) )->display_name ) . '.', $html, 'the form says who' );
+		assert_contains( esc_html( 'Last reviewed ' . spokares_fmt_date( spokares_today(), 'mdy' ) . ' by ' . get_userdata( user_id( 'ares-editor' ) )->display_name . '.' ), $html, 'the form says who' );
 
 		as_role( 'admin' );
 		$fields                 = uxdoc_fields( $doc );
