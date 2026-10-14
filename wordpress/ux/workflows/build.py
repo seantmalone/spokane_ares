@@ -38,6 +38,7 @@ ORDER = {
 }
 VERDICT_CLASS = {"Sound": "v-ok", "Needs work": "v-warn", "Risky": "v-bad"}
 SEV_CLASS = {"High": "s-high", "Medium": "s-med", "Low": "s-low", "Good": "s-good"}
+ST_CLASS = {"Fixed in 0.3.0": "st-fixed", "Partly": "st-part", "Owner": "st-owner", "Open": "st-open", "Not changed": "st-open", "By design": "st-fixed", "Good": "st-fixed"}
 PRI_ORDER = {"Now": 0, "Next": 1, "Later": 2}
 
 e = html.escape
@@ -123,6 +124,9 @@ svg.wf a .wf-pain{{cursor:pointer}} svg.wf a:hover .wf-pain{{stroke:var(--ink);s
 .fdetail{{margin:4px 0 0;font-size:15px}}
 .ev{{margin:4px 0 0;font:12.5px/1.5 var(--f-mono);color:var(--muted);overflow-wrap:anywhere}}
 .s-high{{background:var(--bad-bg);color:var(--bad)}} .s-med{{background:var(--warn-bg);color:var(--warn)}} .s-low{{background:var(--sunk);color:var(--muted)}} .s-good{{background:var(--ok-bg);color:var(--ok)}}
+.st{{display:block;margin:6px 0 0;font-size:14px}}
+.st .pill{{margin-right:6px}}
+.st-fixed{{background:var(--ok-bg);color:var(--ok)}} .st-part{{background:var(--warn-bg);color:var(--warn)}} .st-owner{{background:var(--sunk);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}} .st-open{{background:var(--bad-bg);color:var(--bad)}}
 .rlist li{{padding:12px 14px;background:var(--card);border:1px solid var(--line);border-radius:8px}}
 .rtop{{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}}
 .p-now{{background:var(--signal);color:var(--card)}} .p-next{{background:var(--sunk);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}} .p-later{{background:transparent;color:var(--muted);box-shadow:inset 0 0 0 1px var(--line)}}
@@ -158,6 +162,13 @@ def legend_svg(kind: str) -> str:
         "lane": '<rect x="2" y="2" width="11" height="20" fill="var(--d-humanhead)" stroke="var(--line)"/><rect x="13" y="2" width="11" height="20" fill="var(--d-systemhead)" stroke="var(--line)"/>',
     }
     return f'<svg width="28" height="24" viewBox="0 0 28 24" aria-hidden="true">{shapes[kind]}</svg>'
+
+
+def status_html(fid: str) -> str:
+    st = getattr(content, "STATUS", {}).get(fid)
+    if not st:
+        return ""
+    return f'<span class="st"><span class="pill {ST_CLASS[st[0]]}">{e(st[0])}</span>{e(st[1])}</span>'
 
 
 def fid_link(fid: str) -> str:
@@ -198,6 +209,12 @@ def render_body(link_badges: bool = True) -> tuple[str, dict]:
              '<h1>Editor Workflow Map</h1>'
              f'<p class="lede">Every custom job an editor or administrator does on the new site, drawn as a UML activity diagram with one swimlane per actor, then assessed. {len(ordered)} workflows, {n_find} findings, and recommendations that each say what would change in the app.</p>'
              '</header>')
+    stat = getattr(content, "STATUS", {})
+    if stat:
+        nfix = sum(1 for v in stat.values() if v[0] == "Fixed in 0.3.0")
+        nown = sum(1 for v in stat.values() if v[0] == "Owner")
+        npart = sum(1 for v in stat.values() if v[0] == "Partly")
+        o.append(f'<p class="prose" style="margin-top:14px;padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:var(--card)"><strong>Status, 2026-10-13:</strong> v0.3.0 fixes {nfix} findings; {npart} are partly done and {nown} wait on the owner (mail, the weekly cron, a second key holder). Each finding shows its status. The diagrams and verdicts below still describe v0.2.0, the state the review read.</p>')
     o.append('<div class="tally" aria-label="Verdicts">'
              f'<span class="v-ok"><b>{counts["Sound"]}</b> sound</span>'
              f'<span class="v-warn"><b>{counts["Needs work"]}</b> need work</span>'
@@ -246,7 +263,7 @@ def render_body(link_badges: bool = True) -> tuple[str, dict]:
                 sev, title, detail, ev = content.FINDINGS[fid]
                 anchor = f' id="f-{fid}"' if owner[fid] == wid else ""
                 o.append(f'<li{anchor}><span class="fid">{fid}</span><span class="pill {SEV_CLASS[sev]}">{sev}</span> <span class="ftitle">{e(title)}</span>'
-                         f'<p class="fdetail">{e(detail)}</p><p class="ev">{e(ev)}</p></li>')
+                         f'<p class="fdetail">{e(detail)}</p><p class="ev">{e(ev)}</p>{status_html(fid)}</li>')
             o.append('</ul></div><div><h4>Recommendations and what they change</h4><ul class="rlist">')
             for pri, eff, rec, chg in n["recs"]:
                 o.append(f'<li><div class="rtop"><span class="pill p-{pri.lower()}">{pri}</span><span class="eff">effort {eff}</span></div>{e(rec)}'
@@ -277,11 +294,11 @@ def render_body(link_badges: bool = True) -> tuple[str, dict]:
     o.append("</tbody></table></div></section>")
 
     # Index
-    o.append('<section id="index"><h2>All findings</h2><div class="tablewrap"><table><thead><tr><th>Id</th><th>Severity</th><th>Finding</th><th>Workflow</th><th>Evidence</th></tr></thead><tbody>')
+    o.append('<section id="index"><h2>All findings</h2><div class="tablewrap"><table><thead><tr><th>Id</th><th>Severity</th><th>Finding</th><th>Workflow</th><th>Status</th><th>Evidence</th></tr></thead><tbody>')
     for fid, (sev, title, _d, ev) in content.FINDINGS.items():
         wid = owner.get(fid)
         wl = f'<a href="#wf-{wid}">{e(wfs[wid].title)}</a>' if wid else "—"
-        o.append(f'<tr><td class="nw"><a href="#f-{fid}" class="mono">{fid}</a></td><td class="nw"><span class="pill {SEV_CLASS[sev]}">{sev}</span></td><td>{e(title)}</td><td>{wl}</td><td class="ev">{e(ev)}</td></tr>')
+        o.append(f'<tr><td class="nw"><a href="#f-{fid}" class="mono">{fid}</a></td><td class="nw"><span class="pill {SEV_CLASS[sev]}">{sev}</span></td><td>{e(title)}</td><td>{wl}</td><td>{status_html(fid)}</td><td class="ev">{e(ev)}</td></tr>')
     o.append("</tbody></table></div></section>")
 
     o.append('<footer><p>Sources: <code>plugins/spokares-core/inc/*.php</code> and <code>assets/js</code>, <code>mu-plugins/spokares-hardening/</code>, <code>ops/</code>, <code>.github/workflows/</code>, <code>EDITING-GUIDE.md</code>, <code>ux/journeys.md</code>, <code>ux/SPEC.md</code>, and the GitHub environment settings. Paths are relative to <code>wordpress/</code>, and <code>inc/</code> means <code>plugins/spokares-core/inc/</code>.</p>'
