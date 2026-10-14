@@ -127,3 +127,21 @@ test(
 		assert_contains( '<p class="spk-2fa-reminder spk-attention">Your sign-in codes come only by e-mail', (string) ob_get_clean(), 'after 14 days' );
 	}
 );
+
+test(
+	'G5: spokares_hard_2fa_user_can_change_site() (the enforcement and the weekly audit) covers edit_posts, the rota and Net details',
+	function () {
+		$sub = get_userdata( user_id( 'subscriber' ) );
+		assert_false( \spokares_hard_2fa_user_can_change_site( $sub->ID ), 'a Subscriber (control)' );
+		$sub->add_cap( 'spokares_edit_rota' );
+		clean_user_cache( $sub->ID );
+		assert_true( \spokares_hard_2fa_user_can_change_site( $sub->ID ), 'with the rota capability' );
+		foreach ( get_users( array( 'fields' => 'ID' ) ) as $uid ) {
+			$uid  = (int) $uid;
+			$want = user_can( $uid, 'edit_posts' ) || user_can( $uid, 'spokares_edit_rota' ) || user_can( $uid, 'spokares_edit_net_details' );
+			assert_same( $want, \spokares_hard_2fa_user_can_change_site( $uid ), 'user ' . $uid );
+		}
+		as_role( 'ares-net' );
+		assert_same( \spokares_hard_2fa_user_can_change_site( get_current_user_id() ), \spokares_hard_2fa_can_change_site(), 'the current user\'s question is the same' );
+	}
+);
