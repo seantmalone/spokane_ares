@@ -479,6 +479,77 @@ function spokares_layout_error( string $why = 'layout' ): WP_Error {
 }
 
 /**
+ * The plain text of some page content for the never-publish check: block
+ * comments out, a space after every tag (so table cells and list items don't
+ * run together), entities decoded and non-breaking spaces made plain, and
+ * role addresses at spokares.org removed.
+ *
+ * @param string $content Post content.
+ */
+function spokares_page_scan_text( string $content ): string {
+	$text = (string) preg_replace( '/<!--.*?-->/s', ' ', $content );
+	$text = wp_strip_all_tags( (string) preg_replace( '/(<[^>]*>)/', '$1 ', $text ) );
+	$text = str_replace( "\u{00A0}", ' ', html_entity_decode( $text, ENT_QUOTES | ENT_HTML5, 'UTF-8' ) );
+	return (string) preg_replace( '/[A-Z0-9._%+-]+@spokares\.org\b/i', ' ', $text );
+}
+
+/**
+ * The never-publish words (spokares_text_patterns() at level "block": a
+ * hospital net, a channel number, SHARES channels, 800 MHz, a talkgroup) in
+ * the new page content that the stored page didn't already have as often.
+ * Text an administrator put on the page stays saveable; only new mentions
+ * count. Each kind once, with the first words found.
+ *
+ * @param string $stored Stored content.
+ * @param string $saved  New content.
+ * @return array<int,array{what:string,match:string}>
+ */
+function spokares_new_never_publish( string $stored, string $saved ): array {
+	$new_text = spokares_page_scan_text( $saved );
+	if ( '' === trim( $new_text ) ) {
+		return array();
+	}
+	$old_text = spokares_page_scan_text( $stored );
+	$found    = array();
+	foreach ( spokares_text_patterns() as $p ) {
+		if ( 'block' !== $p['level'] ) {
+			continue;
+		}
+		// The rest of the last word too, so the sentence quotes "SHARES
+		// frequencies", not "SHARES frequenc".
+		$re = '/' . $p['re'] . '\w*/iu';
+		$n  = (int) preg_match_all( $re, $new_text, $m );
+		if ( $n > (int) preg_match_all( $re, $old_text ) ) {
+			$found[] = array(
+				'what'  => $p['what'],
+				'match' => mb_substr( trim( (string) preg_replace( '/\s+/u', ' ', (string) $m[0][0] ) ), 0, 60, 'UTF-8' ),
+			);
+		}
+	}
+	return $found;
+}
+
+/**
+ * The refusal of a page save that adds never-publish words: what it found,
+ * and what to do.
+ *
+ * @param array $hits spokares_new_never_publish() result.
+ */
+function spokares_never_publish_error( array $hits ): WP_Error {
+	$quoted = array_map( static fn( $hit ) => '“' . $hit['match'] . '”', $hits );
+	return new WP_Error(
+		'spokares_never_publish',
+		sprintf(
+			/* translators: 1: what the text mentions, e.g. "a hospital net"; 2: the words found, quoted, e.g. "“Hospital Net”". */
+			__( 'Not saved: the page mentions %1$s, which we never publish. Take out %2$s, then Save.', 'spokares-core' ),
+			spokares_and_list( wp_list_pluck( $hits, 'what' ) ),
+			spokares_and_list( $quoted )
+		),
+		array( 'status' => 403 )
+	);
+}
+
+/**
  * Take empty list items out of some content. Pressing Enter at the start or
  * end of an item in the block editor leaves an empty one, and on the page it
  * prints as an extra stop, year or hop with no words (a timeline dot with no
@@ -552,9 +623,10 @@ function spokares_is_empty_list_item( array $block ): bool {
 
 /**
  * Would a non-admin's new page content be refused? Returns '' when it may be
- * saved, else 'layout', 'empty-button', 'button-link' or 'hero-photo'. A
- * button with no words or no link, or a Cover with no photo, counts only when
- * the stored page had none.
+ * saved, else 'layout', 'empty-button', 'button-link', 'hero-photo' or
+ * 'never-publish'. A button with no words or no link, or a Cover with no
+ * photo, counts only when the stored page had none; never-publish words only
+ * when they are new (spokares_new_never_publish()).
  *
  * @param string $old Stored content.
  * @param string $new New content.
@@ -572,11 +644,15 @@ function spokares_page_content_problem( string $old, string $new ): string {
 	if ( spokares_has_photoless_cover( $new ) && ! spokares_has_photoless_cover( $old ) ) {
 		return 'hero-photo';
 	}
+	if ( spokares_new_never_publish( $old, $new ) ) {
+		return 'never-publish';
+	}
 	return '';
 }
 
 /**
- * REST saves of a page by a non-admin: refuse a layout change.
+ * REST saves of a page by a non-admin: refuse a layout change, and new
+ * never-publish words (the forms refuse them too; §4.4).
  *
  * An autosave (/autosaves) is never refused: the autosave controller would
  * store the error object itself as an empty autosave, which then shows
@@ -612,13 +688,17 @@ function spokares_rest_layout_check( $prepared, $request ) {
 	if ( $autosave ) {
 		wp_delete_post_revision( $autosave->ID );
 	}
+	if ( 'never-publish' === $problem ) {
+		return spokares_never_publish_error( spokares_new_never_publish( (string) $stored->post_content, (string) $prepared->post_content ) );
+	}
 	return spokares_layout_error( $problem );
 }
 add_filter( 'rest_pre_insert_page', 'spokares_rest_layout_check', 10, 2 );
 
 /**
  * Every other save of a page (classic POST, Quick Edit, revision restore):
- * keep the stored content when a non-admin's save would change the layout.
+ * keep the stored content when a non-admin's save would change the layout
+ * or add never-publish words.
  *
  * For non-admins the page itself is fixed too: its slug, parent, author,
  * order, password, publish date and published status are kept as stored, so
@@ -663,6 +743,42 @@ function spokares_page_insert_guard( $data, $postarr ) {
 	return $data;
 }
 add_filter( 'wp_insert_post_data', 'spokares_page_insert_guard', 20, 2 );
+
+/**
+ * Would restoring this earlier version of a page be refused for a
+ * non-admin? The same rules as a save (spokares_page_content_problem()),
+ * against the page as it is now: the version's layout skeleton must match
+ * the page's, so a version from before the webmaster added, moved or
+ * restyled a part can't be restored by an editor. Only the words come back
+ * (the title and the search-engine description stay as they are), so only
+ * the content is compared.
+ *
+ * @param WP_Post $revision The revision (or autosave).
+ * @param WP_Post $page     The page it belongs to.
+ * @return string '' when it may be restored, else the reason.
+ */
+function spokares_revision_restore_problem( WP_Post $revision, WP_Post $page ): string {
+	return spokares_page_content_problem( (string) $page->post_content, spokares_strip_empty_list_items( (string) $revision->post_content ) );
+}
+
+/**
+ * The sentence for a refused restore of an earlier version.
+ *
+ * @param string       $why      spokares_revision_restore_problem() result.
+ * @param WP_Post|null $revision The revision (for the never-publish words).
+ * @param WP_Post|null $page     The page.
+ */
+function spokares_revision_restore_refusal( string $why, $revision = null, $page = null ): string {
+	if ( 'never-publish' === $why && $revision instanceof WP_Post && $page instanceof WP_Post ) {
+		$hits = spokares_new_never_publish( (string) $page->post_content, (string) $revision->post_content );
+		/* translators: %s: what the text mentions, e.g. "a hospital net". */
+		return sprintf( __( 'Not restored: that version mentions %s, which we never publish. Pick another version, or change the words by hand.', 'spokares-core' ), spokares_and_list( wp_list_pluck( $hits, 'what' ) ) );
+	}
+	if ( 'layout' === $why ) {
+		return __( 'Not restored: that version has a different layout from the page now (a part was added, moved or restyled since). Only the webmaster can restore it. Pick a later version, or ask webmaster@spokares.org.', 'spokares-core' );
+	}
+	return __( 'Not restored: that version has a button with no words or no link, or no Home photo. Pick another version, or ask webmaster@spokares.org.', 'spokares-core' );
+}
 
 /**
  * No non-administrator moves a page to the Trash or deletes it, whatever
@@ -927,7 +1043,7 @@ add_filter( 'allowed_block_types_all', 'spokares_allowed_blocks', 20, 2 );
 
 /**
  * The editor guard script: content-only editing modes, list items as the only
- * insertable block, never-publish/phone/e-mail warnings after a save (page
+ * insertable block, phone/e-mail warnings after a save (page
  * text; the search-engine description is the webmaster's, so editors don't
  * see it), the trimmed editor chrome, Welcome Guide and starter patterns off.
  */
@@ -946,8 +1062,13 @@ function spokares_enqueue_editor_guard(): void {
 		spokares_asset_version( 'assets/js/editor-guard.js' ),
 		true
 	);
+	// After a save, only the phone and e-mail patterns warn: the server
+	// refuses new never-publish words, so a saved page has none of its own.
 	$patterns = array();
 	foreach ( spokares_text_patterns() as $p ) {
+		if ( 'block' === $p['level'] ) {
+			continue;
+		}
 		$patterns[] = array(
 			're'   => $p['re'],
 			'what' => $p['what'],
@@ -983,6 +1104,8 @@ function spokares_enqueue_editor_guard(): void {
 				),
 				// The server's refusals (spokares_layout_error()), shown without core's "Updating failed." in front.
 				'refusals'    => array_values( spokares_layout_refusals() ),
+				// How every refusal starts, for the ones with words of their own (never-publish).
+				'refusalHead' => __( 'Not saved:', 'spokares-core' ),
 				// The settings sidebar opens only where the Page review box is (About).
 				'reviewBox'   => spokares_page_has_review_box( get_post() ),
 			)

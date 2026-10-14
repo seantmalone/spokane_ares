@@ -38,8 +38,27 @@ function spokares_dashboard_no_tasks(): void {
 	<p><?php esc_html_e( 'This account can’t change anything on the site. You can change your own name, e-mail and password, and set up two-step sign-in, on your profile.', 'spokares-core' ); ?></p>
 	<p class="spk-account-actions"><a class="button button-primary" href="<?php echo esc_url( admin_url( 'profile.php' ) ); ?>"><?php esc_html_e( 'Your profile', 'spokares-core' ); ?></a>
 		<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Go to the site', 'spokares-core' ); ?></a></p>
+	<?php $two_step = spokares_dashboard_2fa_reminder(); ?>
+	<?php if ( $two_step ) : ?>
+		<p class="spk-2fa-reminder<?php echo 'due' === $two_step['state'] ? ' spk-attention' : ''; ?>"><?php echo esc_html( $two_step['text'] ); ?> <a href="<?php echo esc_url( $two_step['url'] ); ?>"><?php echo esc_html( $two_step['link'] ); ?></a></p>
+	<?php endif; ?>
 	<p class="spk-stuck"><?php esc_html_e( 'Need to change the Net Control Schedule, events or documents? Ask the webmaster:', 'spokares-core' ); ?> <a href="mailto:webmaster@spokares.org">webmaster@spokares.org</a></p>
 	<?php
+}
+
+/**
+ * The two-factor reminder for the current user (the must-use plugin decides,
+ * §5.4): 'soon' or 'due' with its words, or null. Nobody is locked out for
+ * it; after 14 days it moves up into Needs attention.
+ *
+ * @return array{state:string,text:string,link:string,url:string}|null
+ */
+function spokares_dashboard_2fa_reminder(): ?array {
+	if ( ! function_exists( 'spokares_hard_2fa_reminder' ) ) {
+		return null;
+	}
+	$state = spokares_hard_2fa_reminder( get_current_user_id() );
+	return '' === $state ? null : array_merge( array( 'state' => $state ), spokares_hard_2fa_reminder_words() );
 }
 
 /**
@@ -264,6 +283,13 @@ function spokares_dashboard_widget(): void {
 	$admin     = current_user_can( 'manage_options' );
 	$rota_url  = admin_url( 'admin.php?page=spokares-rota' );
 
+	// Sign-in codes only by e-mail: a line under the tasks for the first 14
+	// days, then here.
+	$two_step = spokares_dashboard_2fa_reminder();
+	if ( $two_step && 'due' === $two_step['state'] ) {
+		$attention[] = spokares_dashboard_line( $two_step['text'], $two_step['url'], $two_step['link'] );
+	}
+
 	$rota = current_user_can( 'spokares_edit_rota' ) ? spokares_rota_summary() : null;
 	if ( $rota && $rota['short'] ) {
 		$attention[] = spokares_dashboard_line( __( 'The Net Control Schedule runs out in under 3 weeks.', 'spokares-core' ), $rota_url, __( 'Fill in more Tuesdays', 'spokares-core' ) );
@@ -285,6 +311,17 @@ function spokares_dashboard_widget(): void {
 				$edit,
 				__( 'Open the page', 'spokares-core' )
 			);
+		}
+		// About prints "Last reviewed"; like a document, it is due once a year.
+		if ( spokares_page_has_review_box( $item['page'] ) ) {
+			$reviewed = (string) get_post_meta( $item['page']->ID, '_spk_reviewed', true );
+			if ( ! spokares_is_ymd( $reviewed ) ) {
+				/* translators: %s: page title. */
+				$attention[] = spokares_dashboard_line( sprintf( __( '%s hasn’t been marked reviewed yet.', 'spokares-core' ), $title ), $edit, __( 'Review the page', 'spokares-core' ) );
+			} elseif ( $reviewed < spokares_add_days( spokares_today(), -365 ) ) {
+				/* translators: 1: page title, 2: date, e.g. "Oct 6, 2025". */
+				$attention[] = spokares_dashboard_line( sprintf( __( '%1$s was last reviewed %2$s, over 12 months ago.', 'spokares-core' ), $title, spokares_fmt_date( $reviewed, 'mdy' ) ), $edit, __( 'Review the page', 'spokares-core' ) );
+			}
 		}
 		// The search-engine description is the webmaster's (editors can't see it).
 		if ( $admin && $item['excerpt_hits'] ) {
@@ -513,7 +550,24 @@ function spokares_dashboard_widget(): void {
 				echo wp_kses( implode( ' · ', $links ), $line_kses );
 				?>
 			</p>
+			<?php
+			// Core's Compare Revisions screen, opened on the newest earlier version;
+			// a version restores only when its layout matches the page now.
+			$earlier = array();
+			foreach ( $pages as $item ) {
+				$revision = spokares_page_latest_revision( (int) $item['page']->ID );
+				if ( $revision ) {
+					$earlier[] = '<a href="' . esc_url( add_query_arg( 'revision', $revision, admin_url( 'revision.php' ) ) ) . '">' . esc_html( get_the_title( $item['page'] ) ) . '</a>';
+				}
+			}
+			?>
+			<?php if ( $earlier ) : ?>
+				<p class="spk-page-earlier"><?php esc_html_e( 'Earlier versions:', 'spokares-core' ); ?> <?php echo wp_kses( implode( ' · ', $earlier ), $line_kses ); ?></p>
+			<?php endif; ?>
 		</section>
+	<?php endif; ?>
+	<?php if ( $two_step && 'soon' === $two_step['state'] ) : ?>
+		<p class="spk-2fa-reminder"><?php echo esc_html( $two_step['text'] ); ?> <a href="<?php echo esc_url( $two_step['url'] ); ?>"><?php echo esc_html( $two_step['link'] ); ?></a></p>
 	<?php endif; ?>
 		<p class="spk-stuck"><?php esc_html_e( 'Stuck?', 'spokares-core' ); ?> <a href="mailto:webmaster@spokares.org">webmaster@spokares.org</a></p>
 	</div>

@@ -20,6 +20,8 @@ This page is for the volunteers who keep the website up to date. You don't need 
 2. Type your own username and password.
 3. Type the code from the app on your phone. No phone? Click **E-mail me a code**. Neither works? Click **Use a printed backup code**, then tell the webmaster.
 
+If your codes come only by e-mail, the Dashboard asks you to set up the phone app or print backup codes (your name, top right, then **Edit Profile**, under Two-Factor Options), so a slow e-mail never locks you out. After two weeks the reminder moves up under **Needs attention**. Nothing is switched off; the webmaster can also help you set it up in person.
+
 Never share your sign-in. Sign out on a shared computer (your name, top right, then **Log Out**).
 
 ## Your Dashboard: "Site tasks"
@@ -103,17 +105,18 @@ You can change the words on **Home**, **How it works** and **About ARES & ACS**.
 <img src="shots/final/admin-editor-home.png" width="600" alt="The Home page in the editor with the photo selected: Replace in the toolbar and the blue Save button top right.">
 
 - **Undo before you save:** Ctrl+Z (Cmd+Z on a Mac), or the curved Undo arrow at the top left.
-- **A red message starting "Not saved:"** says what to click to put it right. Nothing on the site changed.
-- **A yellow message starting "On the site now:"** means the words look like a phone number, a personal e-mail address or something on the "Please don't" list below. The page is saved; the Dashboard lists it under **Needs attention** until you change it.
-- **About:** tick **Mark reviewed today when I save** once you've checked the whole page.
+- **A red message starting "Not saved:"** says what to click to put it right. Nothing on the site changed. Words from the "Please don't" list below (a hospital net, a channel number, SHARES channels, 800 MHz, a talkgroup) get one too: it names what it found, so take that out and Save again.
+- **A yellow message starting "On the site now:"** means the words look like a phone number or a personal e-mail address. The page is saved; the Dashboard lists it under **Needs attention** until you change it. If it's a public agency number or address, leave it.
+- **About:** tick **Mark reviewed today when I save** once you've checked the whole page. If it hasn't been marked reviewed in 12 months, the Dashboard lists it under **Needs attention**.
 - **A one-off notice** (“no nets over the holidays”): mark those Tuesdays **No net** and add a Note. Anything else, like “Field Day photos are up”, has no place on the site yet: ask the webmaster.
-- Getting back an older version of a page after you've saved is the webmaster's job. So is adding a section, a table row or a new page (see "For the webmaster" at the end).
+- **Get back an earlier version** after you've saved: on the Dashboard, under **Page Text**, click the page after **Earlier versions:**. Drag the slider to the version you want (the left side shows what it said, the right side the page now), then click **Restore This Revision**. Only the words come back. If the webmaster has added, moved or restyled a part since that version, you'll see "Not restored:"; pick a later version or ask the webmaster.
+- Adding a section, a table row or a new page is the webmaster's job (see "For the webmaster" at the end).
 
 ---
 
 ## Please don't
 
-- **Publish anything on this list:** the roster or any member list; personal phone numbers, e-mails or home addresses; county, hospital, SHARES or 800 MHz channels or talkgroups; the Hospital Net or its channel; simplex frequencies or GMRS repeater details; a "current readiness level". The forms stop the most common ones and ask you to confirm a phone number or e-mail address.
+- **Publish anything on this list:** the roster or any member list; personal phone numbers, e-mails or home addresses; county, hospital, SHARES or 800 MHz channels or talkgroups; the Hospital Net or its channel; simplex frequencies or GMRS repeater details; a "current readiness level". The forms and the page editor stop the most common ones; the forms ask you to confirm a phone number or e-mail address, and the page editor warns about them.
 - **Use names.** Call signs only, everywhere.
 - **Type the same fact in two places.** The net time, the repeater and the meeting place come from one form and appear on every page automatically.
 - **Ask for access you don't need.** **Net Settings** (repeater, tone, net weeks) and the **Meeting Schedule** are changed by the webmaster or someone the Emergency Coordinator names.
@@ -138,7 +141,10 @@ The layout lock doesn't apply to administrators, so these changes are made in th
 2. Select the section most like the new one, then copy it from its ⋮ menu (the first item; Shift+Cmd+D, or Ctrl+Shift+D on Windows). The copy keeps the section's background, spacing and inner column (a Group with the class `wrap`). Move it into place with the arrows or by dragging it in List View.
 3. Change the copy's words. If its heading has an **HTML anchor** (Block > Advanced), give the copy a new one: two headings with the same anchor break the jump links.
 4. Click **Save**. Editors can change the new section's words straight away. Their layout check compares against the page as you saved it.
-5. Copy the section into the page's pattern file in git (`theme/spokares/patterns/`: `home-*.php`, `how-*.php` or `about-*.php`) for the next release.
+5. Copy the section into the page's pattern file in git (`theme/spokares/patterns/`: `home-*.php`, `how-*.php` or `about-*.php`) for the next release. WP-CLI on the host helps:
+   - `wp spokares page export about --sections` lists the page's sections and whether each matches the theme's pattern (`same`, `words`, `layout`, `added` or `removed`); the classes column names the section's file (`about-head` is `about-head.php`).
+   - `wp spokares page export about > page-about.php` prints the whole page as a pattern file (the theme file's header, then the page's markup); `--file=<path>` writes it instead. Copy the changed sections from it into their files, or replace `page-about.php` with it, then diff and commit. Use `home`, `how` or `about`.
+   - It warns when the markup links a photo in the Media Library: a fresh install doesn't have it, so point it at a theme image before committing.
 
 A single paragraph, heading or list added at the page's top level sits in the site's column, with the side margins, by itself. A new Group or Columns block at the top level is different: it runs the full width of the window with no margins. Copy a section instead, or put the content in a Group with the class `wrap` (Block > Advanced > Additional CSS class(es)).
 
