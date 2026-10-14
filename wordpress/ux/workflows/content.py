@@ -433,7 +433,7 @@ STATUS = {
     "G3": ("Owner", "SMTP isn't configured on the host yet (checked 2026-10-13): create the mailbox and add the constants."),
     "G4": ("Not changed", "The repository is public; an administrator login in git would undo the enumeration hardening."),
     "G5": (FIXED, "The audit uses the enforcement's own rule."),
-    "O1": ("Partly", "Owner: give AG7QP and the EC their accounts. A wp spokares command for schedule, meeting and event data is still to build."),
+    "O1": ("Partly", "Owner: give AG7QP and the EC their accounts. Built after 0.3.0: wp spokares rota, meeting and event run the screens' checks and saves, and the runbook says to use them over SSH."),
     "O2": ("Partly", "host-backup.sh prunes after 14 days. One older dump on the host still needs chmod 600 or deleting."),
     "O3": (FIXED, "bump-version.sh, and the Deploy workflow creates the GitHub release."),
     "O4": (FIXED, "The runbook matches GitHub: a required reviewer is set."),
