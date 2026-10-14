@@ -102,8 +102,8 @@ You can change the words on **Home**, **How it works** and **About ARES & ACS**.
 <img src="shots/final/admin-editor-home.png" width="600" alt="The Home page in the editor with the photo selected: Replace in the toolbar and the blue Save button top right.">
 
 - **Undo before you save:** Ctrl+Z (Cmd+Z on a Mac), or the curved Undo arrow at the top left.
-- **A red message starting "Not saved:"** says what to click to put it right. Nothing on the site changed.
-- **A yellow message starting "On the site now:"** means the words look like a phone number, a personal e-mail address or something on the "Please don't" list below. The page is saved; the Dashboard lists it under **Needs attention** until you change it.
+- **A red message starting "Not saved:"** says what to click to put it right. Nothing on the site changed. Words from the "Please don't" list below (a hospital net, a channel number, SHARES channels, 800 MHz, a talkgroup) get one too: it names what it found, so take that out and Save again.
+- **A yellow message starting "On the site now:"** means the words look like a phone number or a personal e-mail address. The page is saved; the Dashboard lists it under **Needs attention** until you change it. If it's a public agency number or address, leave it.
 - **About:** tick **Mark reviewed today when I save** once you've checked the whole page.
 - **A one-off notice** (“no nets over the holidays”): mark those Tuesdays **No net** and add a Note. Anything else, like “Field Day photos are up”, has no place on the site yet: ask the webmaster.
 - Getting back an older version of a page after you've saved is the webmaster's job. So is adding a section, a table row or a new page (see "For the webmaster" at the end).
@@ -112,7 +112,7 @@ You can change the words on **Home**, **How it works** and **About ARES & ACS**.
 
 ## Please don't
 
-- **Publish anything on this list:** the roster or any member list; personal phone numbers, e-mails or home addresses; county, hospital, SHARES or 800 MHz channels or talkgroups; the Hospital Net or its channel; simplex frequencies or GMRS repeater details; a "current readiness level". The forms stop the most common ones and ask you to confirm a phone number or e-mail address.
+- **Publish anything on this list:** the roster or any member list; personal phone numbers, e-mails or home addresses; county, hospital, SHARES or 800 MHz channels or talkgroups; the Hospital Net or its channel; simplex frequencies or GMRS repeater details; a "current readiness level". The forms and the page editor stop the most common ones; the forms ask you to confirm a phone number or e-mail address, and the page editor warns about them.
 - **Use names.** Call signs only, everywhere.
 - **Type the same fact in two places.** The net time, the repeater and the meeting place come from one form and appear on every page automatically.
 - **Ask for access you don't need.** **Net Settings** (repeater, tone, net weeks) and the **Meeting Schedule** are changed by the webmaster or someone the Emergency Coordinator names.

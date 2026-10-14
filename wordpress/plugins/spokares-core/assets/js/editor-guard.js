@@ -17,14 +17,15 @@
  *     paragraphs, which the lock forbids, so the paste did nothing at all.
  *     Now they arrive as one paragraph with line breaks (one line in a
  *     heading or a button), and a notice says so. List items still split.
- *  4. After each save, a warning if the page text looks like something we
- *     never publish (hospital nets, channels, 800 MHz, phone numbers,
- *     personal e-mail addresses), naming what was found; if a new item in a
+ *  4. After each save, a warning if the page text has what looks like a
+ *     phone number or a personal e-mail address, naming what was found
+ *     (new never-publish words, such as a hospital net or 800 MHz, are
+ *     refused by the server instead); if a new item in a
  *     "title" list (What we do, the timeline, the message hops) has no bold
  *     first words; if a list item is empty (the server leaves empty items out
  *     of the saved page); if a new or changed link doesn't start with
- *     https://; or if a link shows its web address as its words. Saving is
- *     never blocked. A save the server refuses shows only the server's
+ *     https://; or if a link shows its web address as its words. These
+ *     warnings never block saving. A save the server refuses shows only the server's
  *     sentence (not core's "Updating failed." in front of it).
  *  5. The Page panel's Status, Publish, Slug, Author, Template and Trash
  *     rows, the Slug/Parent/Featured image/Excerpt panels, the Welcome Guide
@@ -278,6 +279,12 @@
 			var refusal = ( cfg.refusals || [] ).filter( function ( r ) {
 				return r && text !== r && text.indexOf( r ) !== -1;
 			} )[ 0 ];
+			// A refusal with words of its own (the never-publish one names what
+			// it found): everything from "Not saved:" on.
+			var head = cfg.refusalHead ? text.indexOf( cfg.refusalHead ) : -1;
+			if ( ! refusal && head > 0 ) {
+				refusal = text.slice( head );
+			}
 			if ( refusal ) {
 				swaps.push( [ n, refusal ] );
 			} else if ( cfg.photoType && text !== cfg.photoType && PHOTO_TYPE.test( text ) ) {
@@ -581,10 +588,9 @@
 		}
 	}
 
-	/* What the never-publish, phone and e-mail patterns find in some page
-	   text or markup (block comments and tags left out; role addresses
-	   @spokares.org are fine): each kind once, with the first words that
-	   matched. */
+	/* What the phone and e-mail patterns find in some page text or markup
+	   (block comments and tags left out; role addresses @spokares.org are
+	   fine): each kind once, with the first words that matched. */
 	function neverPublish( html ) {
 		var text = plainText( html );
 		if ( cfg.allowed ) {
