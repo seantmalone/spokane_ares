@@ -112,11 +112,16 @@ test(
 		expect_not_wp_error( $saved, 'the save itself goes through' );
 		assert_same( $before, wfp1_content( $about ), 'About as stored' );
 
-		$res = rest( 'POST', '/wp/v2/pages/' . $about . '/autosaves', array( 'content' => wfp1_add_words( $before, 'Use talk group 7.' ) ) );
-		expect_not_wp_error( $res, 'an autosave is never refused' );
-		$autosave = wp_get_post_autosave( $about, get_current_user_id() );
-		assert_true( (bool) $autosave, 'an autosave was stored' );
-		assert_not_contains( 'talk group', (string) $autosave->post_content, 'the autosave keeps the stored words' );
+		// The autosave route's filter, called directly: a real REST autosave
+		// defines DOING_AUTOSAVE for the rest of the test request, which stops
+		// later tests' saves from making revisions.
+		$prepared = (object) array(
+			'ID'           => $about,
+			'post_content' => wfp1_add_words( $before, 'Use talk group 7.' ),
+		);
+		$result   = \spokares_rest_layout_check( $prepared, new \WP_REST_Request( 'POST', '/wp/v2/pages/' . $about . '/autosaves' ) );
+		expect_not_wp_error( $result, 'an autosave is never refused' );
+		assert_same( $before, $result->post_content, 'the autosave keeps the stored words' );
 	}
 );
 

@@ -33,6 +33,7 @@ require SPOKARES_CORE_DIR . 'inc/render.php';
 require SPOKARES_CORE_DIR . 'inc/routes.php';
 require SPOKARES_CORE_DIR . 'inc/files.php';
 require SPOKARES_CORE_DIR . 'inc/governance.php';
+require SPOKARES_CORE_DIR . 'inc/page-export.php';
 
 if ( is_admin() ) {
 	require SPOKARES_CORE_DIR . 'inc/admin-common.php';

@@ -140,7 +140,10 @@ The layout lock doesn't apply to administrators, so these changes are made in th
 2. Select the section most like the new one, then copy it from its ⋮ menu (the first item; Shift+Cmd+D, or Ctrl+Shift+D on Windows). The copy keeps the section's background, spacing and inner column (a Group with the class `wrap`). Move it into place with the arrows or by dragging it in List View.
 3. Change the copy's words. If its heading has an **HTML anchor** (Block > Advanced), give the copy a new one: two headings with the same anchor break the jump links.
 4. Click **Save**. Editors can change the new section's words straight away. Their layout check compares against the page as you saved it.
-5. Copy the section into the page's pattern file in git (`theme/spokares/patterns/`: `home-*.php`, `how-*.php` or `about-*.php`) for the next release.
+5. Copy the section into the page's pattern file in git (`theme/spokares/patterns/`: `home-*.php`, `how-*.php` or `about-*.php`) for the next release. WP-CLI on the host helps:
+   - `wp spokares page export about --sections` lists the page's sections and whether each matches the theme's pattern (`same`, `words`, `layout`, `added` or `removed`); the classes column names the section's file (`about-head` is `about-head.php`).
+   - `wp spokares page export about > page-about.php` prints the whole page as a pattern file (the theme file's header, then the page's markup); `--file=<path>` writes it instead. Copy the changed sections from it into their files, or replace `page-about.php` with it, then diff and commit. Use `home`, `how` or `about`.
+   - It warns when the markup links a photo in the Media Library: a fresh install doesn't have it, so point it at a theme image before committing.
 
 A single paragraph, heading or list added at the page's top level sits in the site's column, with the side margins, by itself. A new Group or Columns block at the top level is different: it runs the full width of the window with no margins. Copy a section instead, or put the content in a Group with the class `wrap` (Block > Advanced > Additional CSS class(es)).
 
