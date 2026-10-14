@@ -484,7 +484,10 @@ test(
 	'the Documents list: five columns for editors, a Soon view, no "Mine", the line above the table, and site order',
 	function () {
 		as_role( 'ares-editor' );
-		assert_same( array( 'cb', 'title', 'taxonomy-spk_doc_cat', 'spk_source', 'spk_version', 'spk_reviewed' ), array_keys( \spokares_document_columns( array() ) ), 'editor columns' );
+		// No row ticks for editors since the workflow review's D4: outside the
+		// Trash they have no bulk action left (Mark reviewed today is the
+		// administrator's), as on the events list.
+		assert_same( array( 'title', 'taxonomy-spk_doc_cat', 'spk_source', 'spk_version', 'spk_reviewed' ), array_keys( \spokares_document_columns( array() ) ), 'editor columns' );
 		$r = call_request(
 			'GET',
 			array( 'post_type' => 'spk_document' ),
@@ -498,7 +501,8 @@ test(
 				)
 			)
 		);
-		assert_same( array( 'all', 'publish', 'spk_soon', 'trash' ), array_keys( $r['returned'] ), 'views for an editor' );
+		// Needs review (D3) shows only while documents are due; it is tested in wf-d3-needs-review-test.php.
+		assert_same( array( 'all', 'publish', 'spk_soon', 'trash' ), array_values( array_diff( array_keys( $r['returned'] ), array( 'spk_review' ) ) ), 'views for an editor' );
 		assert_contains( 'spk_source=soon', $r['returned']['spk_soon'], 'the Soon view' );
 		assert_contains( 'Click a name to change it, give it a new file or take it off the site.', $r['output'], 'the line above the table' );
 		as_role( 'admin' );

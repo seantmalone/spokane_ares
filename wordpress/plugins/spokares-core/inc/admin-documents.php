@@ -789,6 +789,14 @@ function spokares_save_document( $post_id ): void {
 		$refused = $result['upload'];
 	}
 
+	// Who last changed Last reviewed (D4).
+	$now_reviewed = (string) get_post_meta( $post_id, 'spk_reviewed', true );
+	if ( '' === $now_reviewed ) {
+		delete_post_meta( $post_id, 'spk_reviewed_by' );
+	} elseif ( $now_reviewed !== $reviewed ) {
+		update_post_meta( $post_id, 'spk_reviewed_by', get_current_user_id() );
+	}
+
 	// Typing that wasn't saved, and the reason, for the form after the redirect.
 	$errors = $result['problems'];
 	if ( '' !== $refused ) {
@@ -1470,6 +1478,12 @@ function spokares_document_form_fields( $post ): void {
 				<label for="spk-reviewed"><?php esc_html_e( 'Last reviewed', 'spokares-core' ); ?></label>
 				<input type="date" id="spk-reviewed" name="spk_reviewed" value="<?php echo esc_attr( $v['reviewed'] ); ?>">
 				<button type="button" class="button spk-reviewed-today" data-target="spk-reviewed"><?php esc_html_e( 'Mark reviewed today', 'spokares-core' ); ?></button>
+				<?php
+				if ( $reviewed_by && spokares_is_ymd( $v['reviewed'] ) ) {
+					/* translators: %s: a person's name. */
+					echo '<p class="description">' . esc_html( sprintf( __( 'Marked by %s.', 'spokares-core' ), spokares_user_name( $reviewed_by ) ) ) . '</p>';
+				}
+				?>
 			</div>
 		</details>
 
@@ -1594,10 +1608,20 @@ function spokares_document_columns( $cols ): array {
 	);
 	if ( current_user_can( 'manage_options' ) ) {
 		$out['spk_check'] = __( 'Needs checking', 'spokares-core' );
+	} elseif ( ! spokares_document_list_trash() ) {
+		unset( $out['cb'] ); // No bulk actions for editors outside the Trash (below), so no row ticks.
 	}
 	return $out;
 }
 add_filter( 'manage_spk_document_posts_columns', 'spokares_document_columns' );
+
+/**
+ * Is the list showing the Trash?
+ */
+function spokares_document_list_trash(): bool {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- which list view; read-only.
+	return isset( $_GET['post_status'] ) && 'trash' === $_GET['post_status'];
+}
 
 /**
  * Column values.
@@ -1630,8 +1654,10 @@ function spokares_document_column( $col, $post_id ): void {
 			echo esc_html( $get( 'spk_version' ) );
 			break;
 		case 'spk_reviewed':
-			$d   = $get( 'spk_reviewed' );
-			$old = ! spokares_is_ymd( $d ) || $d < spokares_add_days( spokares_today(), -365 );
+			$d = $get( 'spk_reviewed' );
+			// Red for what the Dashboard counts and Needs review lists: on the
+			// site, privacy-checked, and not reviewed in 12 months (D3).
+			$old = spokares_document_review_due( $d ) && 'publish' === get_post_status( $post_id ) && '1' === $get( 'spk_privacy_ok' );
 			echo '<span class="' . ( $old ? 'spk-flag' : '' ) . '">' . esc_html( spokares_is_ymd( $d ) ? spokares_fmt_date( $d, 'mdy' ) : __( 'Not yet', 'spokares-core' ) ) . '</span>';
 			break;
 		case 'spk_check':
@@ -1640,6 +1666,50 @@ function spokares_document_column( $col, $post_id ): void {
 	}
 }
 add_action( 'manage_spk_document_posts_custom_column', 'spokares_document_column', 10, 2 );
+
+/**
+ * How often a document is reviewed, in days: the Dashboard's "not reviewed
+ * in 12 months", the Needs review view and the list's red dates all use it.
+ */
+function spokares_document_review_days(): int {
+	return 365;
+}
+
+/**
+ * Is a review due for this "Last reviewed" date (Y-m-d, or '' for never)?
+ *
+ * @param string $reviewed Last reviewed.
+ */
+function spokares_document_review_due( string $reviewed ): bool {
+	return ! spokares_is_ymd( $reviewed ) || $reviewed < spokares_add_days( spokares_today(), -spokares_document_review_days() );
+}
+
+/**
+ * The documents the Dashboard counts as "not reviewed in 12 months": those on
+ * the Documents & forms page (published, privacy-checked, in a section)
+ * whose review is due.
+ *
+ * @return int[]
+ */
+function spokares_documents_needing_review(): array {
+	$ids = array();
+	foreach ( spokares_library_documents() as $docs ) {
+		foreach ( $docs as $doc ) {
+			if ( spokares_document_review_due( (string) get_post_meta( (int) $doc['id'], 'spk_reviewed', true ) ) ) {
+				$ids[] = (int) $doc['id'];
+			}
+		}
+	}
+	return $ids;
+}
+
+/**
+ * Is the list showing the Needs review view (edit.php?…&spk_review=1)?
+ */
+function spokares_document_list_review(): bool {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- list filtering only.
+	return isset( $_GET['spk_review'] ) && '1' === $_GET['spk_review'];
+}
 
 /**
  * Sortable: Document and Reviewed (the Dashboard links to Reviewed, oldest first).
@@ -1729,6 +1799,16 @@ function spokares_document_list_query( $q ): void {
 		// What members see as "Soon" (the Dashboard's "{n} marked Soon").
 		$meta[] = spokares_document_soon_meta_query();
 		$q->set( 'post_status', 'publish' );
+	}
+	if ( spokares_document_list_review() ) {
+		// Exactly the documents the Dashboard counts (D3), oldest review first.
+		$due = spokares_documents_needing_review();
+		$q->set( 'post__in', $due ? $due : array( 0 ) );
+		$q->set( 'post_status', 'publish' );
+		if ( ! $chosen ) {
+			$q->set( 'orderby', 'spk_reviewed' );
+			$q->set( 'order', 'ASC' );
+		}
 	}
 	if ( $meta ) {
 		$q->set( 'meta_query', array_merge( array( 'relation' => 'AND' ), $meta ) );
@@ -1830,9 +1910,11 @@ function spokares_document_views( $views ): array {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		unset( $views['mine'] );
 	}
-	$on = spokares_document_list_soon();
-	$n  = spokares_document_soon_count();
-	if ( $on && isset( $views['all'] ) ) {
+	$on     = spokares_document_list_soon();
+	$n      = spokares_document_soon_count();
+	$review = spokares_document_list_review();
+	$due    = count( spokares_documents_needing_review() );
+	if ( ( $on || $review ) && isset( $views['all'] ) ) {
 		$views['all'] = str_replace( array( ' class="current"', ' aria-current="page"' ), '', $views['all'] );
 	}
 	$trash = $views['trash'] ?? null;
@@ -1846,6 +1928,15 @@ function spokares_document_views( $views ): array {
 			$n
 		);
 	}
+	if ( $due || $review ) {
+		$views['spk_review'] = sprintf(
+			'<a href="%1$s"%2$s>%3$s <span class="count">(%4$d)</span></a>',
+			esc_url( spokares_document_review_url() ),
+			$review ? ' class="current" aria-current="page"' : '',
+			esc_html__( 'Needs review', 'spokares-core' ),
+			$due
+		);
+	}
 	if ( null !== $trash ) {
 		$views['trash'] = $trash;
 	}
@@ -1857,6 +1948,13 @@ function spokares_document_views( $views ): array {
 	return $views;
 }
 add_filter( 'views_edit-spk_document', 'spokares_document_views' );
+
+/**
+ * The Needs review view's address (the Dashboard links to it).
+ */
+function spokares_document_review_url(): string {
+	return admin_url( 'edit.php?post_type=spk_document&spk_review=1' );
+}
 
 /**
  * The section dropdown above the list.
@@ -1876,6 +1974,9 @@ function spokares_document_filter_ui( $post_type ): void {
 	if ( spokares_document_list_soon() ) {
 		echo '<input type="hidden" name="spk_source" value="soon">';
 	}
+	if ( spokares_document_list_review() ) {
+		echo '<input type="hidden" name="spk_review" value="1">';
+	}
 	// phpcs:enable
 	echo '<label class="screen-reader-text" for="spk-section-filter">' . esc_html__( 'Filter by section', 'spokares-core' ) . '</label>';
 	echo '<select name="spk_section" id="spk-section-filter"><option value="">' . esc_html__( 'All sections', 'spokares-core' ) . '</option>';
@@ -1887,15 +1988,16 @@ function spokares_document_filter_ui( $post_type ): void {
 add_action( 'restrict_manage_posts', 'spokares_document_filter_ui' );
 
 /**
- * Bulk actions: Mark reviewed today (no bulk Edit, no bulk Trash).
+ * Bulk actions: Mark reviewed today, for administrators only (no bulk Edit,
+ * no bulk Trash). An editor reviews a document by opening it (UX finding D4:
+ * a bulk tick marks documents reviewed that nobody opened).
  *
  * @param array $actions Actions.
  */
 function spokares_document_bulk_actions( $actions ): array {
+	$actions = is_array( $actions ) ? $actions : array();
 	unset( $actions['edit'], $actions['trash'] );
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- which list view; read-only.
-	$in_trash = isset( $_GET['post_status'] ) && 'trash' === $_GET['post_status'];
-	if ( ! $in_trash ) {
+	if ( ! spokares_document_list_trash() && current_user_can( 'manage_options' ) ) {
 		// The Trash view keeps only Restore and Delete permanently.
 		$actions['spk_mark_reviewed'] = __( 'Mark reviewed today', 'spokares-core' );
 	}
@@ -1915,16 +2017,32 @@ function spokares_document_bulk_handle( $redirect, $action, $ids ) {
 		return $redirect;
 	}
 	check_admin_referer( 'bulk-posts' );
-	$n = 0;
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( esc_html__( 'Only the webmaster can mark several documents reviewed at once. Open a document to mark it reviewed.', 'spokares-core' ), '', array( 'response' => 403 ) );
+	}
+	$n       = 0;
+	$skipped = array();
 	foreach ( (array) $ids as $id ) {
 		$id = (int) $id;
-		if ( 'spk_document' === get_post_type( $id ) && current_user_can( 'edit_post', $id ) ) {
-			update_post_meta( $id, 'spk_reviewed', spokares_today() );
-			++$n;
+		if ( 'spk_document' !== get_post_type( $id ) || ! current_user_can( 'edit_post', $id ) ) {
+			continue;
 		}
+		if ( 'publish' !== get_post_status( $id ) ) {
+			// Not on the site: there is nothing public to review.
+			$skipped[] = html_entity_decode( get_the_title( $id ), ENT_QUOTES, 'UTF-8' );
+			continue;
+		}
+		update_post_meta( $id, 'spk_reviewed', spokares_today() );
+		update_post_meta( $id, 'spk_reviewed_by', get_current_user_id() );
+		++$n;
 	}
 	/* translators: %d: number of documents. */
-	spokares_add_notice( 'success', sprintf( _n( 'Marked %d document reviewed today.', 'Marked %d documents reviewed today.', $n, 'spokares-core' ), $n ) );
+	$text = sprintf( _n( 'Marked %d document reviewed today.', 'Marked %d documents reviewed today.', $n, 'spokares-core' ), $n );
+	if ( $skipped ) {
+		/* translators: %s: document names. */
+		$text .= ' ' . sprintf( _n( 'Not marked, because it isn’t on the site: %s.', 'Not marked, because they aren’t on the site: %s.', count( $skipped ), 'spokares-core' ), spokares_and_list( $skipped ) );
+	}
+	spokares_add_notice( $skipped ? 'warning' : 'success', $text );
 	return $redirect;
 }
 add_filter( 'handle_bulk_actions-edit-spk_document', 'spokares_document_bulk_handle', 10, 3 );

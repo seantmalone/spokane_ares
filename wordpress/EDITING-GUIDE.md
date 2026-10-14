@@ -84,7 +84,8 @@ If your menu has Meeting Schedule: change a meeting's regular day or time there,
 <img src="shots/final/admin-document-ics-213.png" width="600" alt="The form of the ICS 213 General Message document, a link to another site: Document name, Section, Where the file is with the web address and its tick, Version or date and Short note, with Save in the Save box.">
 
 - **Replace or change one:** on the Dashboard, click **Replace or change a document**, then the document's name. Choose the new file (under **Replace with**, or **Upload a file instead** for a link), tick the “I checked” box, change the version and click **Save**. For a Most Used document (the net script), the Most Used screen's **Replace or change it** link goes straight to it.
-- **Take one down:** click **Take it off the site**.
+- **Take one down:** click **Take it off the site**. The file leaves the web at once. Changed your mind? Click **Undo** (or **Restore** in the Trash): the document comes back as it was, file and all.
+- **Yearly check:** on the Dashboard, click **… not reviewed in 12 months**. Open each document, check it's still right, click **Mark reviewed today** and **Save**. Giving it a new file with the “I checked” tick counts as a review too.
 - **Most Used:** Documents › **Most Used**. Pick a document for each button and click **Save**.
 
 ## Job 5: Change words on a page (5 minutes)

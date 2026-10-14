@@ -403,23 +403,13 @@ function spokares_dashboard_widget(): void {
 
 	<?php if ( current_user_can( 'edit_spk_documents' ) ) : ?>
 		<?php
-		$library = spokares_library_documents();
-		$total   = 0;
-		$stale   = 0;
-		$cutoff  = spokares_add_days( spokares_today(), -365 );
+		$total = array_sum( array_map( 'count', spokares_library_documents() ) );
+		// The number the Needs review view lists (D3): the same function.
+		$stale = function_exists( 'spokares_documents_needing_review' ) ? count( spokares_documents_needing_review() ) : 0;
 		// The number the Soon view lists (a FEMA course with its course links shows those, not "Soon").
 		$marked = function_exists( 'spokares_document_soon_count' ) ? spokares_document_soon_count() : 0;
-		foreach ( $library as $docs ) {
-			foreach ( $docs as $doc ) {
-				++$total;
-				$r = (string) get_post_meta( $doc['id'], 'spk_reviewed', true );
-				if ( ! spokares_is_ymd( $r ) || $r < $cutoff ) {
-					++$stale;
-				}
-			}
-		}
-		$list  = admin_url( 'edit.php?post_type=spk_document' );
-		$tiles = spokares_edit_screen( 'tiles' );
+		$list   = admin_url( 'edit.php?post_type=spk_document' );
+		$tiles  = spokares_edit_screen( 'tiles' );
 		?>
 		<section class="spk-task">
 			<h3><?php echo esc_html( spokares_edit_screen( 'documents' )[0] ); ?></h3>
@@ -432,15 +422,8 @@ function spokares_dashboard_widget(): void {
 					echo ' · <a href="' . esc_url( add_query_arg( 'spk_source', 'soon', $list ) ) . '">' . esc_html( sprintf( __( '%d marked Soon', 'spokares-core' ), $marked ) ) . '</a>';
 				}
 				if ( $stale ) {
-					$oldest = add_query_arg(
-						array(
-							'orderby' => 'spk_reviewed',
-							'order'   => 'asc',
-						),
-						$list
-					);
 					/* translators: %d: number of documents. */
-					echo ' · <a href="' . esc_url( $oldest ) . '">' . esc_html( sprintf( __( '%d not reviewed in 12 months', 'spokares-core' ), $stale ) ) . '</a>';
+					echo ' · <a href="' . esc_url( spokares_document_review_url() ) . '">' . esc_html( sprintf( __( '%d not reviewed in 12 months', 'spokares-core' ), $stale ) ) . '</a>';
 				}
 				?>
 			</p>

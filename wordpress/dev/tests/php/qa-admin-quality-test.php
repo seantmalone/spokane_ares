@@ -129,6 +129,12 @@ test(
 		as_role( 'ares-editor' );
 		$r = call_request( 'GET', array( 'post_status' => 'trash' ), array(), static fn() => \spokares_document_bulk_actions( array( 'delete' => 'Delete permanently' ) ) );
 		assert_false( isset( $r['returned']['spk_mark_reviewed'] ), 'Trash view offers Mark reviewed today' );
+		// Since the workflow review's D4 the bulk action is the administrator's
+		// only (an editor reviews a document by opening it), so the other views
+		// are checked as the administrator; wf-d4-bulk-review-test.php has the rest.
+		as_role( 'admin' );
+		$r = call_request( 'GET', array( 'post_status' => 'trash' ), array(), static fn() => \spokares_document_bulk_actions( array( 'delete' => 'Delete permanently' ) ) );
+		assert_false( isset( $r['returned']['spk_mark_reviewed'] ), 'Trash view offers the administrator Mark reviewed today' );
 		$r = call_request( 'GET', array(), array(), static fn() => \spokares_document_bulk_actions( array() ) );
 		assert_true( isset( $r['returned']['spk_mark_reviewed'] ), 'the other views keep Mark reviewed today' );
 
