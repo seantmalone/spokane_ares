@@ -38,7 +38,7 @@ One term per concept. "Retired" words must not appear in editor-facing text, pub
 | The repeater, net times, which Tuesdays, the two wording lines | **Net Settings** | Net details |
 | The /members/ page | **the For members page** | members hub, hub, the members page |
 | The four document buttons on the For members page | **Most Used** (screen); each row is a **button**, numbered 1–4 left to right | Hub tiles, tiles, slot, Tile slot, Slot 1, Members page shortcuts |
-| Library filter item on the Documents & forms page | **Also list under Most used** (per-document tick; the four buttons' documents are always listed) | Show under "Most used" |
+| Library filter item on the Documents & forms page | **Show under the Most used filter** (per-document tick, renamed 2026-10-13 from "Also list under Most used"; the four buttons' documents are always listed) | Show under "Most used" |
 | The Events screens (public page "Exercises & events") | **Exercises & Events** (menu, list title); an item is an **event** | Events (as the menu name) |
 | Event category | **Type of event** (form, list column, errors): Exercise · Training or meeting · On the air (from home stations) · Public service | Kind, "(pick one first)", "(no kind)" |
 | The events list column of places | **Where it shows** | Shows, Status |
@@ -395,7 +395,7 @@ Help: none beyond "Stuck?" (R3: every former line restated a label or hint on th
 | 4 | **Version or date** | text 30, placeholder "v3 or Sept 2026" | | | Sits right under the file/link box. Choosing a new file focuses and selects it. |
 | 5 | **Short note (60 characters)** | text 60 | | | A live "{n} left" appears in the last 10 characters. No word warning. |
 | — | Course links (editors, a document with course links) | read-only line: "Course links: IS-100.c, IS-200.c, IS-700.b, IS-800.d (the webmaster changes these)." | | | |
-| 6 | ▸ **More options** | “How to” link (Words · Web address) · **Also list under Most used** · **Place in section** [At the top / After “…” / At the end] · **Owner** · **Last reviewed** [Mark reviewed today] | | Place: "At the end" for a new document | For a document that is one of the four buttons, the tick is replaced by one line: "It’s button 2 on the Most Used screen." ("the Most Used screen" links there); such a document is always listed. Place resets to "At the end" when the section changes. |
+| 6 | ▸ **More options** | “How to” link (Words · Web address) · **Show under the Most used filter** · **Place in section** [At the top / After “…” / At the end] · **Owner** · **Last reviewed** [Mark reviewed today] | | Place: "At the end" for a new document | For a document that is one of the four buttons, the tick is replaced by one line: "It’s button 2 on the Most Used screen." ("the Most Used screen" links there); such a document is always listed. Place resets to "At the end" when the section changes. |
 | — | ▸ Admin only | unchanged | | | |
 
 - **Privacy rule (one rule, create = edit):** a fresh tick is needed whenever something new goes public: a new document, a new file, a new or changed web address, or a switch from Soon or Link to a file. Name, note or version edits need no tick. The script unticks and relocks when the source, file or address changes. The server refuses the new file or address without the tick. The stored `spk_privacy_ok` stays for what is already live.
@@ -443,7 +443,7 @@ The four buttons under Most used on the For members page, left to right.
 - The foot sentence is removed. Save button **Save**. The form has the leave guard.
 - Notice: "Saved." + "See it on the For members page" / "Saved, except button 2’s words (outlined in red)."
 - Help (1 line): "Only published documents with a file or a link are offered."
-- The Documents & forms page's **Most used** filter always includes the four buttons' documents, plus any document ticked "Also list under Most used".
+- The Documents & forms page's **Most used** filter always includes the four buttons' documents, plus any document ticked "Show under the Most used filter".
 
 ### 3.8 Page Text and the block editor
 

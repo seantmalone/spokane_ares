@@ -3,7 +3,7 @@ Contributors: spokares
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.2.0
+Stable tag: 0.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -52,6 +52,9 @@ Fonts (assets/fonts/), SIL Open Font License 1.1, subset to Latin and Latin Exte
 Images (assets/img/): the ARES-ACS seal and the Home sunset photo belong to Spokane County ARES-ACS.
 
 == Changelog ==
+
+= 0.3.0 =
+* No theme changes; the version moves with spokares-core 0.3.0 (the editor workflow fixes print through the plugin's blocks).
 
 = 0.2.0 =
 * Volunteer-editor review (wordpress/ux/REPORT.md): plain names on the public site — "Net Control Schedule" (never "rota"), "Volunteer needed", "No net" and "Not posted yet" on the For members page.

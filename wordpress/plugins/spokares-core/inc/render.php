@@ -809,7 +809,7 @@ function spokares_library_documents(): array {
 		)
 	);
 	// The four Most Used buttons' documents are always under the Most used
-	// filter, with any document ticked "Also list under Most used".
+	// filter, with any document ticked "Show under the Most used filter".
 	$tiles  = array_filter( array_map( 'absint', wp_list_pluck( array_slice( (array) spokares_opt( 'spk_tiles' ), 0, 4 ), 'doc' ) ) );
 	$groups = array();
 	foreach ( $posts as $post ) {

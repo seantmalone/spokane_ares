@@ -3,7 +3,7 @@ Contributors: spokane-county-ares-acs
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.2.0
+Stable tag: 0.3.0
 License: GPL-2.0-or-later
 Update URI: false
 
@@ -49,6 +49,18 @@ The full contract is `wordpress/PLAN.md` §6; build notes are in
 `wordpress/build-notes/plugin.md`.
 
 == Changelog ==
+
+= 0.3.0 =
+* Fixes from the editor workflow review (wordpress/ux/workflows/index.html; finding ids in brackets).
+* Net Control Schedule: Undo and Redo leave alone any Tuesday changed since that save and ask first when the save is someone else's or older than a day (N3). Paste the schedule, with a preview (N1). The two sentences under the schedule and the Winlink list are edited here, so every editor can change them (N7). Refused typing stays for a day, until the next save (N5).
+* Net Settings: names Winlink assignments a week change takes off the site (N4); refuses an offset or tone not in the list (N8).
+* Cancel or Move a Meeting: about six months of dates with Show more dates (M1); Add a one-off date for a potluck, an annual meeting or a hidden meeting, shown on Home and For members (M2).
+* Events: a multi-day event with times saves and prints each time with its day (E1). A past date is asked about before publishing, not after (E2). Save draft says how many boxes need fixing (E6). Changing the type clears boxes it doesn't use, and says so (E5); so does clearing Cancelled (E4). Make a copy asks you to check the name and leaves Needs checking behind (E8). Where it shows reads the theme's list settings (E9).
+* Dashboard: the next five events with direct links (E7); reminders for events undated over 30 days (E3), documents due for review, empty Most Used buttons (D12), About not reviewed in 12 months (P4), and sign-in by e-mailed codes only (G2).
+* Documents: Take it off the site sets the file aside outside the web root, so Undo brings the document back whole (D6). A new checked file sets Last reviewed (D2). A Needs review view (D3); bulk review for administrators only, recording who (D4). Pull names the links it breaks, and its banner clears with a new file (D11). The file box works without JavaScript (D9); held typing is explained (D10); the Most used tick is renamed (D5).
+* Page text: never-publish words are refused on save (P1). Editors can restore an earlier version when its layout matches (P2). New `wp spokares page export` for the webmaster (P3).
+* Accounts: the Net grant records who gave it and when (G1). The weekly two-factor audit covers the same accounts as the enforcement (G5). Two-Factor rewording checked against 0.17.0.
+* Ops: restore.sh and a Restore runbook section, host-backup.sh (pruned after 14 days), bump-version.sh, and a GitHub release per deployed tag.
 
 = 0.2.0 =
 * Volunteer-editor review (wordpress/ux/SPEC.md, REPORT.md): one plain vocabulary everywhere ("Net Control Schedule", "Net Settings", "Most Used", "Cancel or Move a Meeting", "Meeting Schedule"); menus regrouped around real tasks.

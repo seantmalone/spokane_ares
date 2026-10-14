@@ -301,8 +301,8 @@ The exact meta keys, option shapes and storage rules are in **§6.3** (the contr
 │   [ Update the schedule ]   Net Settings*                                          │
 │ Exercises & Events                                                                 │
 │   Happening now: ARES-ACS / WSDOT exercise                                         │
-│   Next: Simulated Emergency Test, Sat, Oct 3 · {n} more                            │
-│   [ Add an event ]  [ Change or cancel an event ]                                  │
+│   Coming up: Simulated Emergency Test, Sat, Oct 3 · … (next five, each a link)     │
+│   [ Add an event ]   All events                                                    │
 │ Meetings                                                                           │
 │   Next: Second Saturday Workshop, Sat, Oct 10, 9:00 AM                             │
 │   [ Cancel or move a meeting ]   Meeting Schedule*                                 │
