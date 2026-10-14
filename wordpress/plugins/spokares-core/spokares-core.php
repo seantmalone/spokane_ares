@@ -34,6 +34,10 @@ require SPOKARES_CORE_DIR . 'inc/routes.php';
 require SPOKARES_CORE_DIR . 'inc/files.php';
 require SPOKARES_CORE_DIR . 'inc/governance.php';
 require SPOKARES_CORE_DIR . 'inc/page-export.php';
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	// `wp spokares rota|meeting|event`: content edits through the screens' checks (O1).
+	require SPOKARES_CORE_DIR . 'inc/cli.php';
+}
 
 if ( is_admin() ) {
 	require SPOKARES_CORE_DIR . 'inc/admin-common.php';

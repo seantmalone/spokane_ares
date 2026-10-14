@@ -137,6 +137,8 @@ E-mail **webmaster@spokares.org**. Say which job you were doing and what you cli
 
 *Editors can skip this part. It needs an administrator account.*
 
+**Changing the schedule, a meeting or an event's dates from a shell** (a bulk update): use the `wp spokares` commands, which run the same checks and saves as the editors' screens, never `wp eval-file` or `update_option`. See "Content edits over SSH" in `ops/DEPLOY-RUNBOOK.md`.
+
 The layout lock doesn't apply to administrators, so these changes are made in the block editor. A change to a page's layout is also copied into the page's pattern file in git in the next release, so a fresh install matches (PLAN §5.7). Templates, the header, the footer and the styles change only in git, never in Appearance > Editor. A copy saved there silently replaces the theme's file, and the weekly check reports it.
 
 **Add a section to Home, How it works or About**
