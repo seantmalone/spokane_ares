@@ -329,9 +329,7 @@ function spokares_handle_save_meetings(): void {
 	} else {
 		spokares_add_notice( 'info', __( 'Nothing changed, so nothing was saved.', 'spokares-core' ) );
 	}
-	if ( $errors ) {
-		spokares_retain( 'spokares-meetings', $held, $errors );
-	}
+	spokares_retain( 'spokares-meetings', $held, $errors );
 	spokares_redirect_to( 'spokares-meetings' );
 }
 add_action( 'admin_post_spokares_save_meetings', 'spokares_handle_save_meetings' );
@@ -928,12 +926,12 @@ function spokares_handle_save_meeting_rules(): void {
 			/* translators: %s: meeting names. */
 			spokares_add_notice( 'error', sprintf( __( 'Not saved: %s (outlined in red).', 'spokares-core' ), $names ) );
 		}
-		spokares_retain( 'spokares-meeting-rules', $held, $errors );
 	} elseif ( $saved ) {
 		spokares_add_notice( 'success', trim( __( 'Saved.', 'spokares-core' ) . ' ' . implode( ' ', $said ) ), $url, $see );
 	} else {
 		spokares_add_notice( 'info', __( 'Nothing changed, so nothing was saved.', 'spokares-core' ) );
 	}
+	spokares_retain( 'spokares-meeting-rules', $held, $errors );
 	spokares_redirect_to( 'spokares-meeting-rules' );
 }
 add_action( 'admin_post_spokares_save_meeting_rules', 'spokares_handle_save_meeting_rules' );

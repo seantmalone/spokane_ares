@@ -537,9 +537,7 @@ function spokares_handle_save_rota(): void {
 	} else {
 		spokares_add_notice( 'info', __( 'Nothing changed, so nothing was saved.', 'spokares-core' ) );
 	}
-	if ( $held || $errors ) {
-		spokares_retain( 'spokares-rota', $held, $errors );
-	}
+	spokares_retain( 'spokares-rota', $held, $errors );
 	spokares_redirect_to( 'spokares-rota', $weeks > 13 ? array( 'weeks' => $weeks ) : array() );
 }
 add_action( 'admin_post_spokares_save_rota', 'spokares_handle_save_rota' );

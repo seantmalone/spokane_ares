@@ -792,9 +792,7 @@ function spokares_save_document( $post_id ): void {
 		$values += array_intersect_key( $v, array_flip( array( 'source', 'url', 'label', 'format' ) ) );
 	}
 	spokares_document_retained( $post_id, true );
-	if ( $values || '' !== $refused || $result['demoted'] ) {
-		spokares_retain( 'spk_document_' . $post_id, $values, $errors );
-	}
+	spokares_retain( 'spk_document_' . $post_id, $values, $errors );
 
 	spokares_document_notice( $post_id, $v, $result, $refused, $replaced, $kept );
 	unset( $GLOBALS['spokares_document_check'] );

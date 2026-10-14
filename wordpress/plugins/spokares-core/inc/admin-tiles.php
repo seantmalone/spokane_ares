@@ -220,10 +220,10 @@ function spokares_handle_save_tiles(): void {
 			/* translators: %s: button numbers, e.g. "1 and 3". */
 			: sprintf( __( 'Saved, except the words on buttons %s (outlined in red).', 'spokares-core' ), spokares_and_list( array_map( 'strval', $rows ) ) );
 		spokares_add_notice( 'warning', $text );
-		spokares_retain( 'spokares-tiles', $held, $errors );
 	} else {
 		spokares_add_notice( 'success', __( 'Saved.', 'spokares-core' ), spokares_site_url( '/members/', 'quick-links' ), __( 'See it on the For members page', 'spokares-core' ) );
 	}
+	spokares_retain( 'spokares-tiles', $held, $errors );
 	spokares_redirect_to( 'spokares-tiles' );
 }
 add_action( 'admin_post_spokares_save_tiles', 'spokares_handle_save_tiles' );

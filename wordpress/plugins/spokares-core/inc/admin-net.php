@@ -853,9 +853,7 @@ function spokares_handle_save_net_details(): void {
 	} else {
 		spokares_add_notice( 'info', __( 'Nothing changed, so nothing was saved.', 'spokares-core' ) );
 	}
-	if ( $errors ) {
-		spokares_retain( 'spokares-net-details', $held, $errors );
-	}
+	spokares_retain( 'spokares-net-details', $held, $errors );
 	spokares_redirect_to( 'spokares-net-details' );
 }
 add_action( 'admin_post_spokares_save_net_details', 'spokares_handle_save_net_details' );
