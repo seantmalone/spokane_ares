@@ -30,6 +30,7 @@ function spokares_event_field_names(): array {
 		'main_url'   => __( 'Web address', 'spokares-core' ),
 		'main_label' => __( 'Words on the button', 'spokares-core' ),
 		'links'      => __( 'More links', 'spokares-core' ),
+		'extra_doc'  => __( 'Document members need', 'spokares-core' ),
 		'contact'    => __( 'Volunteer through', 'spokares-core' ),
 	);
 }
@@ -43,6 +44,49 @@ function spokares_event_field_name( string $field ): string {
 	$names = spokares_event_field_names();
 	$base  = str_starts_with( $field, 'links' ) ? 'links' : $field;
 	return $names[ $base ] ?? $field;
+}
+
+/**
+ * The fields only some types of event use, and those types (the form's
+ * data-kinds). The form shows a field only for these types, the save checks
+ * it only for them, and a save with another type clears it (§3.4).
+ * Fields not listed (name, When, Where) are for every type.
+ */
+function spokares_event_kind_fields(): array {
+	$listed = array( 'exercise', 'training', 'on-air' );
+	return array(
+		'summary'      => $listed,
+		'tasks'        => array( 'exercise' ),
+		'main_url'     => $listed,
+		'main_label'   => $listed,
+		'links'        => $listed,
+		'extra_doc'    => array( 'exercise' ),
+		'contact'      => array( 'public-service' ),
+		'keep_past'    => array( 'exercise' ),
+		'as_requested' => array( 'public-service' ),
+	);
+}
+
+/**
+ * Does this type of event use this field? (A field for every type, or no
+ * type picked yet: yes.)
+ *
+ * @param string $field Field key (spokares_event_kind_fields()).
+ * @param string $kind  Type of event.
+ */
+function spokares_event_kind_uses( string $field, string $kind ): bool {
+	$map = spokares_event_kind_fields();
+	return '' === $kind || ! isset( $map[ $field ] ) || in_array( $kind, $map[ $field ], true );
+}
+
+/**
+ * The form's data-kinds attribute for a field (escaped, with its leading
+ * space).
+ *
+ * @param string $field Field key (spokares_event_kind_fields()).
+ */
+function spokares_event_kinds_attr( string $field ): string {
+	return ' data-kinds="' . esc_attr( implode( ',', spokares_event_kind_fields()[ $field ] ?? array() ) ) . '"';
 }
 
 /**
@@ -106,7 +150,7 @@ function spokares_event_submitted(): array {
 	$v['links'] = array_slice( $v['links'], 0, 3 );
 	// "As requested" belongs to Public service; with another type the date
 	// simply isn't posted yet.
-	if ( 'as-requested' === $v['mode'] && 'public-service' !== $v['kind'] ) {
+	if ( 'as-requested' === $v['mode'] && ! spokares_event_kind_uses( 'as_requested', $v['kind'] ) ) {
 		$v['mode'] = 'not-posted';
 	}
 	// phpcs:enable
@@ -124,16 +168,71 @@ function spokares_event_spans_days( array $v ): bool {
 }
 
 /**
+ * An event's first and last day as they were before this save, for the
+ * past-date check: whether it was on the site, and its stored When.
+ *
+ * @param WP_Post|null $post Event (null: a new one).
+ * @return array{published:bool,mode:string,start:string,end:string}
+ */
+function spokares_event_was( ?WP_Post $post ): array {
+	if ( ! $post ) {
+		return array(
+			'published' => false,
+			'mode'      => '',
+			'start'     => '',
+			'end'       => '',
+		);
+	}
+	$mode = (string) get_post_meta( $post->ID, 'spk_date_mode', true );
+	$was  = array(
+		'published' => 'publish' === $post->post_status,
+		'mode'      => in_array( $mode, spokares_event_date_modes(), true ) ? $mode : 'date',
+		'start'     => (string) get_post_meta( $post->ID, 'spk_start', true ),
+		'end'       => (string) get_post_meta( $post->ID, 'spk_end', true ),
+	);
+	// A Last day that isn't after the First day is no Last day (as on the site).
+	if ( ! spokares_event_spans_days( $was ) ) {
+		$was['end'] = '';
+	}
+	return $was;
+}
+
+/**
+ * The confirmation stored when the editor ticks "The date is right" for a
+ * past date: it covers these dates only.
+ *
+ * @param array $v Values (spokares_event_submitted() shape).
+ */
+function spokares_event_past_hash( array $v ): string {
+	return sha1( 'past|' . $v['start'] . '|' . ( spokares_event_spans_days( $v ) ? $v['end'] : '' ) );
+}
+
+/**
+ * Is this a field's past-date hit (rather than a phone or e-mail)?
+ *
+ * @param array $hits A field's confirm hits.
+ */
+function spokares_event_is_past_hit( array $hits ): bool {
+	return 'past' === ( $hits[0]['kind'] ?? '' );
+}
+
+/**
  * What's wrong with an event's values. Returns field => the sentence under
  * the field for blocking problems, plus 'confirm' => [field => hits] for
- * phone/e-mail shapes that need the "Publish it" tick, plus the call sign
- * kept from Volunteer through.
+ * phone/e-mail shapes that need the "Publish it" tick (and a past date that
+ * needs "The date is right"), plus the call sign kept from Volunteer through.
  *
- * @param array $v         Values (spokares_event_submitted() shape).
- * @param array $confirmed Stored confirmations (field => sha1).
+ * A past date is asked about only when the dates are new or changed: a new
+ * event, a draft, or a published event whose dates this save changes. An
+ * old event saved again with its dates as they were is history, not a typo.
+ *
+ * @param array      $v         Values (spokares_event_submitted() shape).
+ * @param array      $confirmed Stored confirmations (field => sha1).
+ * @param array|null $was       spokares_event_was() for the past-date check
+ *                              (null: no past-date check).
  * @return array{problems:array,confirm:array,call:string,dropped:bool}
  */
-function spokares_event_problems( array $v, array $confirmed ): array {
+function spokares_event_problems( array $v, array $confirmed, ?array $was = null ): array {
 	$problems = array();
 	$confirm  = array();
 	$kind     = $v['kind'];
@@ -163,9 +262,28 @@ function spokares_event_problems( array $v, array $confirmed ): array {
 			// end time is after the start (Fri 6:00 PM to Sun noon).
 			$problems['t_end'] = __( 'The end time must be after the start time.', 'spokares-core' );
 		}
+		if ( null !== $was && ! isset( $problems['start'] ) && ! isset( $problems['end'] ) ) {
+			$spans = spokares_event_spans_days( $v );
+			$last  = $spans ? $v['end'] : $v['start'];
+			$end   = $spans ? $v['end'] : '';
+			$same  = $was['published'] && 'date' === $was['mode'] && $was['start'] === $v['start'] && $was['end'] === $end;
+			$ok    = in_array( 'past', $v['confirm'], true ) || ( isset( $confirmed['past'] ) && hash_equals( (string) $confirmed['past'], spokares_event_past_hash( $v ) ) );
+			if ( $last < spokares_today() && ! $same && ! $ok ) {
+				$confirm[ $spans ? 'end' : 'start' ] = array(
+					array(
+						'what' => spokares_fmt_date( $last, 'long' ),
+						'kind' => 'past',
+					),
+				);
+			}
+		}
 	}
 	// The browser's maxlength, checked again here (a request can skip it).
+	// A field the type doesn't use is cleared on save, so it isn't checked.
 	foreach ( spokares_event_max_lengths() as $field => $max ) {
+		if ( ! spokares_event_kind_uses( $field, $kind ) ) {
+			continue;
+		}
 		$texts_to_cap = 'links' === $field ? wp_list_pluck( $v['links'], 'label' ) : array( (string) $v[ $field ] );
 		foreach ( $texts_to_cap as $text ) {
 			if ( spokares_too_long( (string) $text, $max ) ) {
@@ -174,10 +292,10 @@ function spokares_event_problems( array $v, array $confirmed ): array {
 			}
 		}
 	}
-	if ( 'public-service' !== $kind ) {
-		if ( '' !== $v['main_url'] && '' === spokares_clean_url( $v['main_url'] ) ) {
-			$problems['main_url'] = $address;
-		}
+	if ( spokares_event_kind_uses( 'main_url', $kind ) && '' !== $v['main_url'] && '' === spokares_clean_url( $v['main_url'] ) ) {
+		$problems['main_url'] = $address;
+	}
+	if ( spokares_event_kind_uses( 'links', $kind ) ) {
 		foreach ( $v['links'] as $i => $link ) {
 			if ( '' === $link['url'] || '' === spokares_clean_url( $link['url'] ) ) {
 				$problems[ 'links' . $i ] = $address;
@@ -201,18 +319,17 @@ function spokares_event_problems( array $v, array $confirmed ): array {
 	// The words members read. A field the type hides isn't shown on the site,
 	// so it isn't checked either.
 	$texts = array(
-		'title' => $v['title'],
-		'where' => $v['where'],
+		'title'      => $v['title'],
+		'where'      => $v['where'],
+		'summary'    => $v['summary'],
+		'main_label' => $v['main_label'],
+		'links'      => implode( ' ', wp_list_pluck( $v['links'], 'label' ) ),
+		'tasks'      => $v['tasks'],
 	);
-	if ( 'public-service' !== $kind ) {
-		$texts['summary']    = $v['summary'];
-		$texts['main_label'] = $v['main_label'];
-		$texts['links']      = implode( ' ', wp_list_pluck( $v['links'], 'label' ) );
-	}
-	if ( 'exercise' === $kind ) {
-		$texts['tasks'] = $v['tasks'];
-	}
 	foreach ( $texts as $field => $text ) {
+		if ( ! spokares_event_kind_uses( $field, $kind ) ) {
+			continue;
+		}
 		if ( isset( $problems[ $field ] ) ) {
 			continue; // Already not saved (too long).
 		}
@@ -240,9 +357,23 @@ function spokares_event_problems( array $v, array $confirmed ): array {
 function spokares_event_problem_sentences( array $result ): array {
 	$sentences = $result['problems'];
 	foreach ( $result['confirm'] as $field => $hits ) {
-		$sentences[ $field ] = spokares_problem_sentence( array( 'confirm' => $hits ) );
+		$sentences[ $field ] = spokares_event_confirm_sentence( $hits );
 	}
 	return $sentences;
+}
+
+/**
+ * The sentence under a field that needs its tick: a phone number or e-mail
+ * address, or a date that has passed.
+ *
+ * @param array $hits The field's confirm hits.
+ */
+function spokares_event_confirm_sentence( array $hits ): string {
+	if ( spokares_event_is_past_hit( $hits ) ) {
+		/* translators: %s: the event's last day, e.g. "Sat, May 15, 2026". */
+		return sprintf( __( '%s has passed. Check the year, or tick the box to publish it anyway.', 'spokares-core' ), (string) $hits[0]['what'] );
+	}
+	return spokares_problem_sentence( array( 'confirm' => $hits ) );
 }
 
 /**
@@ -276,8 +407,8 @@ function spokares_event_insert_data( $data, $postarr ) {
 	}
 	$v         = spokares_event_submitted();
 	$confirmed = get_post_meta( $post_id, 'spk_confirmed', true );
-	$result    = spokares_event_problems( $v, is_array( $confirmed ) ? $confirmed : array() );
 	$stored    = get_post( $post_id );
+	$result    = spokares_event_problems( $v, is_array( $confirmed ) ? $confirmed : array(), spokares_event_was( $stored ) );
 	$live      = $stored && 'publish' === $stored->post_status && 'publish' === ( $data['post_status'] ?? '' );
 
 	$GLOBALS['spokares_event_check']           = $result;
@@ -392,6 +523,17 @@ function spokares_save_event( $post_id ): void {
 	$confirmed = is_array( $confirmed ) ? $confirmed : array();
 	$result    = $GLOBALS['spokares_event_check'] ?? spokares_event_problems( $v, $confirmed );
 
+	// The boxes the type of event doesn't use are cleared (the form hides
+	// them, so old text there would come back unseen on a switch back),
+	// with their "Publish it" ticks; the notice names them.
+	$result['cleared'] = spokares_event_clear_unused( $post_id, $v, $confirmed );
+	if ( ! spokares_event_kind_uses( 'contact', $v['kind'] ) ) {
+		$result['call'] = '';
+	}
+	// Cancelled belongs to an event on a date: another When clears it, and
+	// the notice says so.
+	$result['uncancelled'] = 'date' !== $v['mode'] && ( $v['cancelled'] || '1' === (string) get_post_meta( $post_id, 'spk_cancelled', true ) );
+
 	// Record "Publish it" ticks for the fields whose text is now confirmed
 	// (every field spokares_event_problems() checks).
 	foreach ( array( 'title', 'summary', 'where', 'tasks', 'main_label', 'links' ) as $field ) {
@@ -401,6 +543,10 @@ function spokares_save_event( $post_id ): void {
 				$confirmed[ $field ] = sha1( $text );
 			}
 		}
+	}
+	// "The date is right": these dates are not asked about again.
+	if ( in_array( 'past', $v['confirm'], true ) && 'date' === $v['mode'] && spokares_is_ymd( $v['start'] ) ) {
+		$confirmed['past'] = spokares_event_past_hash( $v );
 	}
 
 	// A published event with a problem: those fields keep their live values.
@@ -487,6 +633,8 @@ function spokares_save_event( $post_id ): void {
 	}
 	if ( $confirmed ) {
 		update_post_meta( $post_id, 'spk_confirmed', $confirmed );
+	} else {
+		delete_post_meta( $post_id, 'spk_confirmed' );
 	}
 	spokares_update_event_sort( $post_id );
 
@@ -496,9 +644,81 @@ function spokares_save_event( $post_id ): void {
 add_action( 'save_post_spk_event', 'spokares_save_event' );
 
 /**
+ * Empty the submitted values the type of event doesn't use, drop their
+ * "Publish it" ticks, and say which boxes had something in them (by label;
+ * the Button's two boxes as "Button"). List under Past exercises is cleared
+ * without a word: it is ticked by default and means nothing for other types.
+ *
+ * @param int   $post_id   Event.
+ * @param array $v         Values, emptied in place.
+ * @param array $confirmed Stored confirmations, trimmed in place.
+ * @return string[] The labels of the boxes that were cleared.
+ */
+function spokares_event_clear_unused( int $post_id, array &$v, array &$confirmed ): array {
+	if ( '' === $v['kind'] ) {
+		return array();
+	}
+	$meta    = array(
+		'summary'    => 'spk_summary',
+		'tasks'      => 'spk_tasks',
+		'main_url'   => 'spk_main_url',
+		'main_label' => 'spk_main_label',
+		'links'      => 'spk_links',
+		'extra_doc'  => 'spk_extra_doc',
+		'contact'    => 'spk_contact_call',
+		'keep_past'  => 'spk_keep_past',
+	);
+	// Emptied in the value's own type ('' for text).
+	$empty   = array(
+		'links'     => array(),
+		'extra_doc' => 0,
+		'keep_past' => false,
+	);
+	$names   = spokares_event_field_names();
+	$cleared = array();
+	foreach ( $meta as $field => $key ) {
+		if ( spokares_event_kind_uses( $field, $v['kind'] ) ) {
+			continue;
+		}
+		$stored = get_post_meta( $post_id, $key, true );
+		$had    = ! empty( $v[ $field ] ) || ! empty( $stored );
+		$v[ $field ] = $empty[ $field ] ?? '';
+		unset( $confirmed[ $field ] );
+		if ( $had && 'keep_past' !== $field ) {
+			$cleared[] = in_array( $field, array( 'main_url', 'main_label' ), true ) ? __( 'Button', 'spokares-core' ) : $names[ $field ];
+		}
+	}
+	return array_values( array_unique( $cleared ) );
+}
+
+/**
+ * What else the save did, for the end of its notice: the boxes the type of
+ * event doesn't use that were cleared, and Cancelled cleared by a When
+ * other than On a date ('' when neither).
+ *
+ * @param array $result spokares_event_problems() result, with the save's flags.
+ */
+function spokares_event_save_extras( array $result ): string {
+	$out     = '';
+	$cleared = (array) ( $result['cleared'] ?? array() );
+	if ( $cleared ) {
+		$out .= ' ' . sprintf(
+			/* translators: %s: boxes' labels, e.g. "What members do and More links". */
+			_n( 'Cleared %s: this type of event doesn’t use it.', 'Cleared %s: this type of event doesn’t use them.', count( $cleared ), 'spokares-core' ),
+			spokares_and_list( $cleared )
+		);
+	}
+	if ( ! empty( $result['uncancelled'] ) ) {
+		$out .= ' ' . __( 'Cancelled is cleared: only an event on a date can be cancelled.', 'spokares-core' );
+	}
+	return $out;
+}
+
+/**
  * The one notice after an event save (§3.4): what happened and where it
- * shows. A draft saved without a problem gets WordPress's own "Draft saved"
- * message instead (spokares_one_notice_location()).
+ * shows. A draft saved without a problem and with nothing else to say gets
+ * WordPress's own "Draft saved" message instead
+ * (spokares_one_notice_location()).
  *
  * @param int    $post_id Event.
  * @param array  $result  spokares_event_problems() result, with the save's flags.
@@ -507,7 +727,11 @@ add_action( 'save_post_spk_event', 'spokares_save_event' );
 function spokares_event_save_notice( int $post_id, array $result, string $before ): void {
 	$sentences = spokares_event_problem_sentences( $result );
 	/* translators: %s: call sign, e.g. "NV2Z". */
-	$cut = $result['dropped'] && '' !== $result['call'] ? ' ' . sprintf( __( '(saved %s only; names aren’t posted)', 'spokares-core' ), $result['call'] ) : '';
+	$cut    = $result['dropped'] && '' !== $result['call'] ? ' ' . sprintf( __( '(saved %s only; names aren’t posted)', 'spokares-core' ), $result['call'] ) : '';
+	$extras = spokares_event_save_extras( $result );
+	$cut   .= $extras;
+	// The one problem, when it is a date that has passed.
+	$past = 1 === count( $sentences ) && spokares_event_is_past_hit( (array) ( $result['confirm'][ array_key_first( $sentences ) ] ?? array() ) );
 
 	if ( ! empty( $result['hold'] ) && $sentences ) {
 		// A published event: only the fields with a problem weren't saved.
@@ -518,7 +742,8 @@ function spokares_event_save_notice( int $post_id, array $result, string $before
 				/* translators: 1: a field's label, e.g. "Where"; 2: what is wrong and what to do. */
 				__( 'Saved, except %1$s: %2$s Everything else is on the site now.', 'spokares-core' ),
 				$labels[0],
-				lcfirst( $sentence )
+				// "Sat, May 15, 2026 has passed…" starts with a date: keep its capital.
+				$past ? $sentence : lcfirst( $sentence )
 			);
 		} else {
 			$text = sprintf(
@@ -539,18 +764,29 @@ function spokares_event_save_notice( int $post_id, array $result, string $before
 			'start' => __( 'Not published yet: pick the first day, then click Publish.', 'spokares-core' ),
 		);
 		$only    = 1 === count( $sentences ) ? (string) array_key_first( $sentences ) : '';
-		if ( isset( $actions[ $only ] ) ) {
+		if ( $past ) {
+			$text = sprintf(
+				/* translators: %s: the event's last day, e.g. "Sat, May 15, 2026". */
+				__( 'Not published yet: %s has passed. Check the year, or tick the box under When, then click Publish.', 'spokares-core' ),
+				(string) $result['confirm'][ $only ][0]['what']
+			);
+		} elseif ( isset( $actions[ $only ] ) ) {
 			$text = $actions[ $only ];
 		} elseif ( '' !== $only ) {
 			$text = __( 'Not published yet. Fix the box outlined in red, then click Publish.', 'spokares-core' );
 		} else {
 			$text = __( 'Not published yet. Fix the boxes outlined in red, then click Publish.', 'spokares-core' );
 		}
-		spokares_add_notice( 'error', $text );
+		spokares_add_notice( 'error', $text . $extras );
 		return;
 	}
 	if ( 'publish' !== get_post_status( $post_id ) ) {
-		if ( '' !== $cut ) {
+		if ( $sentences ) {
+			// The outlines are on the form; the notice says they are there.
+			$n = count( $sentences );
+			/* translators: %d: number of boxes. */
+			spokares_add_notice( 'warning', sprintf( _n( 'Draft saved. %d box needs fixing before you can Publish.', 'Draft saved. %d boxes need fixing before you can Publish.', $n, 'spokares-core' ), $n ) . $cut );
+		} elseif ( '' !== $cut ) {
 			spokares_add_notice( 'info', __( 'Draft saved. It isn’t on the site until you Publish.', 'spokares-core' ) . $cut );
 		}
 		return;
@@ -673,13 +909,13 @@ function spokares_event_where_notice( int $post_id, bool $published_now ): array
 				$notice['text'] = sprintf( __( '%s It isn’t listed anywhere now: it has ended and isn’t kept under Past exercises.', 'spokares-core' ), $lead );
 				return $notice;
 			}
-			$notice['type'] = 'warning';
+			// A new or changed past date was asked about before the save
+			// ("The date is right"); an old event's dates are history.
+			$notice['type'] = 'info';
 			$notice['text'] = sprintf(
-				$published_now
-					/* translators: %s: the event's last day, e.g. "Fri, May 15, 2026". */
-					? __( 'Published, but %s has passed, so no list shows it. Check the year.', 'spokares-core' )
-					/* translators: %s: the event's last day, e.g. "Fri, May 15, 2026". */
-					: __( 'Saved, but %s has passed, so no list shows it. Check the year.', 'spokares-core' ),
+				/* translators: 1: "Saved." or "Published."; 2: the event's last day, e.g. "Fri, May 15, 2026". */
+				__( '%1$s It isn’t listed anywhere now: %2$s has passed.', 'spokares-core' ),
+				$lead,
 				spokares_fmt_date( $last, 'long' )
 			);
 			return $notice;
@@ -845,7 +1081,7 @@ function spokares_event_form_check( WP_Post $post, array $v ): array {
 		);
 	}
 	$confirmed = get_post_meta( $post->ID, 'spk_confirmed', true );
-	return spokares_event_problems( $v, is_array( $confirmed ) ? $confirmed : array() );
+	return spokares_event_problems( $v, is_array( $confirmed ) ? $confirmed : array(), spokares_event_was( $post ) );
 }
 
 /**
@@ -939,18 +1175,18 @@ function spokares_event_form_fields( $post ): void {
 				<label class="spk-choice"><input type="radio" name="spk_date_mode" value="date" <?php checked( 'date', $v['mode'] ); ?>> <?php esc_html_e( 'On a date', 'spokares-core' ); ?></label>
 				<label class="spk-choice"><input type="radio" name="spk_date_mode" value="postponed" <?php checked( 'postponed', $v['mode'] ); ?>> <?php esc_html_e( 'Postponed', 'spokares-core' ); ?></label>
 				<label class="spk-choice"><input type="radio" name="spk_date_mode" value="not-posted" <?php checked( 'not-posted', $v['mode'] ); ?>> <?php esc_html_e( 'Date not posted yet', 'spokares-core' ); ?></label>
-				<label class="spk-choice" data-kinds="public-service"><input type="radio" name="spk_date_mode" value="as-requested" <?php checked( 'as-requested', $v['mode'] ); ?>> <?php esc_html_e( 'As requested', 'spokares-core' ); ?></label>
+				<label class="spk-choice"<?php echo spokares_event_kinds_attr( 'as_requested' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the helper. ?>><input type="radio" name="spk_date_mode" value="as-requested" <?php checked( 'as-requested', $v['mode'] ); ?>> <?php esc_html_e( 'As requested', 'spokares-core' ); ?></label>
 			</p>
 			<div class="spk-dates" data-mode="date">
 				<p class="spk-days">
 					<span class="spk-day">
 						<label for="spk-start"><?php esc_html_e( 'First day (required)', 'spokares-core' ); ?></label>
-						<input type="date" id="spk-start" name="spk_start" value="<?php echo esc_attr( $v['start'] ); ?>" class="<?php echo esc_attr( trim( spokares_err_class( $p, 'start' ) . ( $copy_start ? ' spk-field-error' : '' ) ) ); ?>"<?php echo $on_date ? ' required' : ''; ?>>
+						<input type="date" id="spk-start" name="spk_start" value="<?php echo esc_attr( $v['start'] ); ?>" class="<?php echo esc_attr( trim( spokares_err_class( $p + $c, 'start' ) . ( $copy_start ? ' spk-field-error' : '' ) ) ); ?>"<?php echo $on_date ? ' required' : ''; ?>>
 						<span class="spk-weekday" data-for="spk-start"><?php echo esc_html( $weekday( $v['start'] ) ); ?></span>
 					</span>
 					<span class="spk-day">
 						<label for="spk-end"><?php esc_html_e( 'Last day', 'spokares-core' ); ?></label>
-						<input type="date" id="spk-end" name="spk_end" value="<?php echo esc_attr( $v['end'] ); ?>" class="<?php echo esc_attr( trim( spokares_err_class( $p, 'end' ) ) ); ?>">
+						<input type="date" id="spk-end" name="spk_end" value="<?php echo esc_attr( $v['end'] ); ?>" class="<?php echo esc_attr( trim( spokares_err_class( $p + $c, 'end' ) ) ); ?>">
 						<span class="spk-weekday" data-for="spk-end"><?php echo esc_html( $weekday( $v['end'] ) ); ?></span>
 					</span>
 					<?php if ( '' !== $shown_as ) : ?>
@@ -960,6 +1196,8 @@ function spokares_event_form_fields( $post ): void {
 				</p>
 				<?php spokares_err_text( $p, 'start' ); ?>
 				<?php spokares_err_text( $p, 'end' ); ?>
+				<?php spokares_event_confirm( $c, 'start' ); ?>
+				<?php spokares_event_confirm( $c, 'end' ); ?>
 				<p>
 					<label class="spk-choice"><input type="checkbox" name="spk_all_day" value="1" id="spk-all-day" <?php checked( $all_day ); ?>> <?php esc_html_e( 'All day', 'spokares-core' ); ?></label>
 					<span class="spk-times" <?php echo $all_day ? 'hidden' : ''; ?>>
@@ -988,21 +1226,21 @@ function spokares_event_form_fields( $post ): void {
 			<?php spokares_event_confirm( $c, 'where' ); ?>
 		</div>
 
-		<div class="spk-field" data-kinds="exercise,training,on-air">
+		<div class="spk-field"<?php echo spokares_event_kinds_attr( 'summary' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the helper. ?>>
 			<label for="spk-summary"><?php esc_html_e( 'Short description', 'spokares-core' ); ?></label>
 			<input type="text" id="spk-summary" name="spk_summary" maxlength="90" class="large-text<?php echo esc_attr( spokares_err_class( $p + $c, 'summary' ) ); ?>" value="<?php echo esc_attr( $v['summary'] ); ?>">
 			<?php spokares_err_text( $p, 'summary' ); ?>
 			<?php spokares_event_confirm( $c, 'summary' ); ?>
 		</div>
 
-		<div class="spk-field" data-kinds="exercise">
+		<div class="spk-field"<?php echo spokares_event_kinds_attr( 'tasks' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the helper. ?>>
 			<label for="spk-tasks"><?php esc_html_e( 'What members do (one task per line)', 'spokares-core' ); ?></label>
 			<textarea id="spk-tasks" name="spk_tasks" rows="5" class="large-text<?php echo esc_attr( spokares_err_class( $p + $c, 'tasks' ) ); ?>"><?php echo esc_textarea( $v['tasks'] ); ?></textarea>
 			<?php spokares_err_text( $p, 'tasks' ); ?>
 			<?php spokares_event_confirm( $c, 'tasks' ); ?>
 		</div>
 
-		<fieldset class="spk-card spk-button" data-kinds="exercise,training,on-air">
+		<fieldset class="spk-card spk-button"<?php echo spokares_event_kinds_attr( 'main_url' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the helper. ?>>
 			<legend><?php esc_html_e( 'Button', 'spokares-core' ); ?></legend>
 			<p>
 				<label for="spk-main-url"><?php echo esc_html( $address ); ?></label><br>
@@ -1018,7 +1256,7 @@ function spokares_event_form_fields( $post ): void {
 			</p>
 		</fieldset>
 
-		<fieldset class="spk-card spk-links" data-kinds="exercise,training,on-air">
+		<fieldset class="spk-card spk-links"<?php echo spokares_event_kinds_attr( 'links' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the helper. ?>>
 			<legend><?php esc_html_e( 'More links (up to 3)', 'spokares-core' ); ?></legend>
 			<?php foreach ( $links as $i => $link ) : ?>
 				<p class="spk-link-row<?php echo isset( $p[ 'links' . $i ] ) ? ' spk-field-error' : ''; ?>" <?php echo ( $i > 0 && '' === $link['url'] && '' === $link['label'] ) ? 'data-spk-spare hidden' : ''; ?>>
@@ -1032,7 +1270,7 @@ function spokares_event_form_fields( $post ): void {
 			<?php spokares_event_confirm( $c, 'links' ); ?>
 		</fieldset>
 
-		<div class="spk-field" data-kinds="exercise">
+		<div class="spk-field"<?php echo spokares_event_kinds_attr( 'extra_doc' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the helper. ?>>
 			<label for="spk-extra-doc"><?php esc_html_e( 'Document members need', 'spokares-core' ); ?></label>
 			<select id="spk-extra-doc" name="spk_extra_doc">
 				<option value="0"><?php esc_html_e( '— none —', 'spokares-core' ); ?></option>
@@ -1045,7 +1283,7 @@ function spokares_event_form_fields( $post ): void {
 			</select>
 		</div>
 
-		<div class="spk-field" data-kinds="public-service">
+		<div class="spk-field"<?php echo spokares_event_kinds_attr( 'contact' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the helper. ?>>
 			<label for="spk-contact"><?php esc_html_e( 'Volunteer through (call sign)', 'spokares-core' ); ?></label>
 			<input type="text" id="spk-contact" name="spk_contact_call" class="regular-text<?php echo esc_attr( spokares_err_class( $p, 'contact' ) ); ?>" value="<?php echo esc_attr( $v['contact'] ); ?>" maxlength="40" list="spk-calls" spellcheck="false">
 			<?php spokares_err_text( $p, 'contact' ); ?>
@@ -1056,7 +1294,7 @@ function spokares_event_form_fields( $post ): void {
 			</datalist>
 		</div>
 
-		<div class="spk-field" data-kinds="exercise">
+		<div class="spk-field"<?php echo spokares_event_kinds_attr( 'keep_past' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the helper. ?>>
 			<label class="spk-choice"><input type="checkbox" name="spk_keep_past" value="1" <?php checked( $v['keep_past'] ); ?>> <?php esc_html_e( 'List under Past exercises after it ends', 'spokares-core' ); ?></label>
 		</div>
 
@@ -1090,11 +1328,12 @@ function spokares_event_confirm( array $confirm, string $field ): void {
 	if ( empty( $confirm[ $field ] ) ) {
 		return;
 	}
-	spokares_err_text( array( $field => spokares_problem_sentence( array( 'confirm' => $confirm[ $field ] ) ) ), $field );
+	$past = spokares_event_is_past_hit( $confirm[ $field ] );
+	spokares_err_text( array( $field => spokares_event_confirm_sentence( $confirm[ $field ] ) ), $field );
 	printf(
 		'<label class="spk-confirm"><input type="checkbox" name="spk_confirm[%1$s]" value="1"> %2$s</label>',
-		esc_attr( $field ),
-		esc_html( spokares_confirm_label( $confirm[ $field ] ) )
+		esc_attr( $past ? 'past' : $field ),
+		esc_html( $past ? __( 'The date is right. Publish it.', 'spokares-core' ) : spokares_confirm_label( $confirm[ $field ] ) )
 	);
 }
 

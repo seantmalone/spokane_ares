@@ -313,9 +313,11 @@ More rules:
 | Saved, shown | "Saved. It shows under Next up on the Exercises & events page and in This week on the For members page. See it" |
 | Saved, cancelled | "Saved. Members see “Cancelled” until Sat, Oct 17. See it" |
 | Saved, postponed | "Saved. It shows as Postponed on the Exercises & events page. See it" |
-| Saved, past date | "Saved, but Fri, May 15, 2026 has passed, so no list shows it. Check the year." (warning) |
+| Saved, past date | "Saved. It isn’t listed anywhere now: Fri, May 15, 2026 has passed." (info). A new or changed past date is asked about before the save (workflow review E2): "Fri, May 15, 2026 has passed. Check the year, or tick the box to publish it anyway." under the date, with the tick "The date is right. Publish it."; Publish refused: "Not published yet: Fri, May 15, 2026 has passed. Check the year, or tick the box under When, then click Publish." An old event saved with its dates as they were is not asked about. |
 | Saved, ended and not kept | "Saved. It isn’t listed anywhere now: it has ended and isn’t kept under Past exercises." (info) |
-| Draft saved | "Draft saved. It isn’t on the site until you Publish." (info) |
+| Draft saved | "Draft saved. It isn’t on the site until you Publish." (info). With problems: "Draft saved. 2 boxes need fixing before you can Publish." (warning; workflow review E6) |
+| Boxes the type doesn't use | appended: "Cleared What members do and More links: this type of event doesn’t use them." The save clears them (E5); List under Past exercises is cleared without a word |
+| Cancelled, When changed from On a date | appended: "Cancelled is cleared: only an event on a date can be cancelled." (E4) |
 | Publish refused, one problem | "Not published yet: pick the type of event, then click Publish." (error; no green notice) |
 | Publish refused, several problems | "Not published yet. Fix the boxes outlined in red, then click Publish." |
 | Published event, a field not saved | "Saved, except Where: it has a phone number. If it’s a public agency number, tick the box under Where and click Save. Everything else is on the site now." (warning, amber like every other screen's partial save; changed by the verifier from error). It names fields by their labels. This is true to the code: `spokares_save_event()` skips only the problem fields' meta and saves the rest. The typed text stays in the form until the next save of that event. |
