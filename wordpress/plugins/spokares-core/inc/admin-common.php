@@ -196,35 +196,41 @@ add_action( 'admin_notices', 'spokares_print_notices' );
 /* ---------------------------------------------------------- retained input */
 
 /**
- * Hold what the editor typed for a field that wasn't saved, across the
- * redirect, for five minutes (§4.4).
+ * Hold what the editor typed for the fields that weren't saved, across the
+ * redirect, until the next save of that screen or for 24 hours (§4.4).
+ * Every save of a screen calls this: a save with nothing to hold clears what
+ * an earlier save held, so a reload or a second look never loses the typing.
  *
  * @param string $screen Screen slug.
  * @param array  $values Submitted values to show again.
  * @param array  $errors Field key => sentence.
  */
 function spokares_retain( string $screen, array $values, array $errors ): void {
+	$key = 'spokares_retain_' . get_current_user_id() . '_' . $screen;
+	if ( ! $values && ! $errors ) {
+		delete_transient( $key );
+		return;
+	}
 	set_transient(
-		'spokares_retain_' . get_current_user_id() . '_' . $screen,
+		$key,
 		array(
 			'values' => $values,
 			'errors' => $errors,
 		),
-		5 * MINUTE_IN_SECONDS
+		DAY_IN_SECONDS
 	);
 }
 
 /**
- * Read (and clear) the held input for a screen.
+ * The held input for a screen. Reading it doesn't clear it: it stays until
+ * the screen's next save (spokares_retain()) or 24 hours.
  *
  * @param string $screen Screen slug.
  * @return array{values:array,errors:array}
  */
 function spokares_retained( string $screen ): array {
-	$key  = 'spokares_retain_' . get_current_user_id() . '_' . $screen;
-	$data = get_transient( $key );
+	$data = get_transient( 'spokares_retain_' . get_current_user_id() . '_' . $screen );
 	if ( is_array( $data ) ) {
-		delete_transient( $key );
 		return array(
 			'values' => is_array( $data['values'] ?? null ) ? $data['values'] : array(),
 			'errors' => is_array( $data['errors'] ?? null ) ? $data['errors'] : array(),

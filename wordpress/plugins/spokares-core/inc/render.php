@@ -629,6 +629,20 @@ function spokares_render_meetings( array $a ): string {
 				/* translators: %s: date, e.g. "Sat, Oct 10". */
 				$items .= '<span class="meetings__next">' . spokares_text( sprintf( __( 'Next: %s', 'spokares-core' ), spokares_fmt_date( $next['date'], 'short' ) ) . $extra ) . '</span>';
 			}
+			// A one-off date: "Extra: Sat, Dec 12, 6:00 PM, Holiday potluck"
+			// under a regular meeting; "On Sat, Dec 12, 6:00 PM" for a meeting
+			// of its own (an annual meeting).
+			$one = $item['extras'][0] ?? null;
+			if ( $one ) {
+				$words  = implode( ', ', array_filter( array( spokares_fmt_date( $one['date'], 'short' ), spokares_meeting_extra_words( $one ) ) ) );
+				$items .= '<span class="meetings__next meetings__extra">' . spokares_text(
+					empty( $item['one_off'] )
+						/* translators: %s: date, time and note, e.g. "Sat, Dec 12, 6:00 PM, Holiday potluck". */
+						? sprintf( __( 'Extra: %s', 'spokares-core' ), $words )
+						/* translators: %s: date, time and note, e.g. "Sat, Dec 12, 6:00 PM, Holiday potluck". */
+						: sprintf( __( 'On %s', 'spokares-core' ), $words )
+				) . '</span>';
+			}
 			$items .= '</li>';
 		}
 		if ( '' !== $items ) {
@@ -655,7 +669,12 @@ function spokares_render_meetings( array $a ): string {
 				}
 				$date = spokares_fmt_date( $c['date'], 'short' );
 				$name = $item['meeting']['name'];
-				if ( 'moved' === $c['kind'] && spokares_is_ymd( $c['new_date'] ) ) {
+				if ( 'extra' === $c['kind'] ) {
+					// "Extra: Sat, Dec 12, 6:00 PM, Second Saturday Workshop. Holiday potluck."
+					/* translators: %s: date, time and meeting name, e.g. "Sat, Dec 12, 6:00 PM, Annual meeting". */
+					$text      = sprintf( __( 'Extra: %s.', 'spokares-core' ), implode( ', ', array_filter( array( $date, spokares_fmt_time_range( (string) $c['start'], (string) $c['end'] ), $name ) ) ) );
+					$c['note'] = spokares_sentence( (string) $c['note'] );
+				} elseif ( 'moved' === $c['kind'] && spokares_is_ymd( $c['new_date'] ) ) {
 					/* translators: 1: date, 2: meeting name, 3: new date. */
 					$text = sprintf( __( '%1$s: %2$s moved to %3$s.', 'spokares-core' ), $date, $name, spokares_fmt_date( $c['new_date'], 'short' ) );
 				} elseif ( 'note' === $c['kind'] ) {
@@ -670,7 +689,8 @@ function spokares_render_meetings( array $a ): string {
 				if ( '' !== trim( $c['note'] ) ) {
 					$text .= ' ' . $c['note'];
 				}
-				$lines[ $c['date'] . $item['meeting']['id'] ] = $text;
+				// Two one-off dates on one day (another meeting and a hidden one) both show.
+				$lines[ $c['date'] . $item['meeting']['id'] . ( 'extra' === $c['kind'] ? '|' . $name : '' ) ] = $text;
 			}
 		}
 		ksort( $lines );

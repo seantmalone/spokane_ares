@@ -53,6 +53,11 @@ tr.spk-row-error > * { background: #fcf0f1 !important; }
 /* ---------- Net Control Schedule: one row per Tuesday ---------- */
 .spk-rota-table td, .spk-rota-table th { vertical-align: middle; }
 .spk-rota-table tr[hidden] { display: none !important; }
+/* Cancel or Move: the later dates of a meeting until "Show more dates" (the phone layout makes rows blocks). */
+.spk-meetings-table tr[hidden] { display: none !important; }
+.spk-extra-new { margin-top: 12px; max-width: 100%; box-sizing: border-box; min-width: 0; }
+.spk-extra-new .spk-rule-grid > div { min-width: 0; max-width: 100%; }
+.spk-extra-new input[type="text"], .spk-extra-new select { max-width: 100%; box-sizing: border-box; }
 .spk-rota-table th[scope="row"] { font-weight: 600; }
 .spk-rota-table th[scope="row"] .spk-day { display: block; white-space: nowrap; }
 .spk-rota-table th[scope="row"] .spk-kind { display: block; font-weight: 400; color: #50575e; font-size: 12px; }

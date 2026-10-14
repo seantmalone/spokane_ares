@@ -8,7 +8,7 @@
  *
  * - a 327-character rota note (the field's maxlength is 80),
  * - a 660-character open-slot line (maxlength 160), printed in full under
- *   the rota on /members/,
+ *   the rota on /members/ (now on the Net Control Schedule screen),
  * - a 270-character meeting name (maxlength 80),
  * - a 400-character event Short line (maxlength 90) and a 300-character
  *   Where (maxlength 80), both live on a published event,
@@ -218,16 +218,28 @@ test(
 );
 
 test(
-	'Net details: a 660-character open-slot line (maxlength 160) is held back, not saved',
+	'Net Control Schedule: a 660-character open-slot line (maxlength 160) is held back, not saved',
 	function () {
-		as_role( 'ares-net' );
+		// The line moved from Net Settings to the Net Control Schedule (workflow finding N7).
+		as_role( 'ares-editor' );
 		$before = \spokares_opt( 'spk_nets' )['open_slot_line'];
 		$typed  = qa054_text( 660 );
-		$out    = qa054_save_net( array( 'open_slot_line' => $typed ), '660-character open-slot line' );
-		assert_true( mb_strlen( $out['nets']['open_slot_line'] ) <= 160, '660-character open-slot line: stored ' . mb_strlen( $out['nets']['open_slot_line'] ) . ' characters (form maxlength 160), printed under the rota on /members/' );
-		assert_same( $before, $out['nets']['open_slot_line'], '660-character open-slot line: the stored line changed' );
-		qa054_assert_retained( $out['retained'], $typed, '660-character open-slot line' );
-		qa054_assert_told( $out['notices'], '660-character open-slot line' );
+		qa054_notices();
+		$res = post_form(
+			'spokares_save_rota',
+			array(
+				'weeks' => '13',
+				'words' => array( 'open_slot_line' => $typed ),
+			)
+		);
+		assert_same( null, $res['die'], 'save refused' );
+		\spokares_unlock_option( 'spk_rota' );
+		\spokares_opt_flush();
+		$nets = \spokares_opt( 'spk_nets' );
+		assert_true( mb_strlen( $nets['open_slot_line'] ) <= 160, '660-character open-slot line: stored ' . mb_strlen( $nets['open_slot_line'] ) . ' characters (form maxlength 160), printed under the schedule on /members/' );
+		assert_same( $before, $nets['open_slot_line'], '660-character open-slot line: the stored line changed' );
+		qa054_assert_retained( \spokares_retained( 'spokares-rota' ), $typed, '660-character open-slot line' );
+		qa054_assert_told( qa054_notices(), '660-character open-slot line' );
 	}
 );
 

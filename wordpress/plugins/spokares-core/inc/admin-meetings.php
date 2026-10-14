@@ -24,21 +24,43 @@ function spokares_change_hash( ?array $c ): string {
 }
 
 /**
- * The rule dates shown for a meeting: the next five, plus any later date that
+ * How many dates of each meeting Cancel or Move shows before "Show more dates".
+ */
+function spokares_meeting_admin_first(): int {
+	return 5;
+}
+
+/**
+ * The rule dates offered for a meeting: about six months ahead (the screen
+ * shows the first few and "Show more dates"), plus any later date that
  * already has a change.
  *
  * @param array $m Meeting.
  */
 function spokares_meeting_admin_dates( array $m ): array {
 	$today = spokares_today();
-	$dates = array_slice( spokares_meeting_rule_dates( $m, $today, spokares_add_days( $today, 400 ) ), 0, 5 );
+	$dates = spokares_meeting_rule_dates( $m, $today, spokares_add_days( $today, 183 ) );
 	foreach ( spokares_opt( 'spk_meetings' )['changes'] as $c ) {
-		if ( $c['meeting'] === $m['id'] && $c['date'] >= $today && ! in_array( $c['date'], $dates, true ) ) {
+		if ( 'extra' !== $c['kind'] && $c['meeting'] === $m['id'] && $c['date'] >= $today && ! in_array( $c['date'], $dates, true ) ) {
 			$dates[] = $c['date'];
 		}
 	}
 	sort( $dates );
 	return $dates;
+}
+
+/**
+ * The name a one-off date goes under: its meeting's, or its own for another
+ * meeting.
+ *
+ * @param array $c     One-off date.
+ * @param array $names Meeting id => name.
+ */
+function spokares_meeting_extra_name( array $c, array $names ): string {
+	if ( spokares_meeting_other_id() === $c['meeting'] || ! isset( $names[ $c['meeting'] ] ) ) {
+		return (string) ( $c['name'] ?? '' );
+	}
+	return (string) $names[ $c['meeting'] ];
 }
 
 /**
@@ -63,8 +85,11 @@ function spokares_meetings_page(): void {
 	$errors   = $retained['errors'];
 	$grant    = current_user_can( 'spokares_edit_net_details' );
 	$schedule = (string) ( spokares_edit_screen( 'meeting-rules' )[0] ?? '' );
-	// Only the meetings the site shows: a change to a hidden one would appear nowhere.
+	// Only the meetings the site shows: a change to a hidden one would appear
+	// nowhere. (A one-off date may go under any meeting: it shows on its own.)
 	$shown = array_values( array_filter( $data['meetings'], 'spokares_meeting_shown' ) );
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- which rows to show; read-only.
+	$all = isset( $_GET['dates'] ) && 'all' === sanitize_key( wp_unslash( $_GET['dates'] ) );
 	?>
 	<div class="wrap spk-screen spk-meetings">
 		<h1 class="wp-heading-inline"><?php echo esc_html( spokares_screen_title( 'meetings' ) ); ?></h1>
@@ -80,10 +105,11 @@ function spokares_meetings_page(): void {
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=spokares-meeting-rules' ) ); ?>"><?php echo esc_html( $schedule ); ?></a>
 				<?php endif; ?>
 			</p>
-		<?php else : ?>
-		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" data-spk-guard>
+		<?php endif; ?>
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="spk-meetings-form" data-spk-guard<?php echo $held ? ' data-spk-dirty' : ''; ?>>
 			<input type="hidden" name="action" value="spokares_save_meetings">
 			<?php wp_nonce_field( 'spokares_save_meetings' ); ?>
+			<?php if ( $shown ) : ?>
 			<table class="widefat spk-table spk-meetings-table">
 				<thead>
 					<tr>
@@ -97,6 +123,7 @@ function spokares_meetings_page(): void {
 				<?php
 				foreach ( $shown as $m ) :
 					$dates = spokares_meeting_admin_dates( $m );
+					$more  = 0;
 					?>
 					<tbody class="spk-meeting">
 					<?php
@@ -112,8 +139,12 @@ function spokares_meetings_page(): void {
 						$name  = 'm[' . $m['id'] . '][' . $d . ']';
 						$label = spokares_fmt_date( $d, 'short' );
 						$bad   = isset( $errors[ $key ] );
+						// The first few dates show; a later one shows when it has a
+						// change, typing that wasn't saved, or a problem.
+						$hide  = ! $all && $i >= spokares_meeting_admin_first() && ! $c && ! isset( $held[ $key ] ) && ! $bad && ! isset( $errors[ $key . '-note' ] );
+						$more += $hide ? 1 : 0;
 						?>
-						<tr class="spk-meeting-row<?php echo $bad ? ' spk-row-error' : ''; ?>">
+						<tr class="spk-meeting-row<?php echo $bad ? ' spk-row-error' : ''; ?>"<?php echo $hide ? ' hidden' : ''; ?>>
 							<th scope="row"<?php echo 0 === $i ? '' : ' class="spk-name-repeat"'; ?>>
 								<?php if ( 0 === $i ) : ?>
 									<?php echo esc_html( $m['name'] ); ?>
@@ -138,13 +169,111 @@ function spokares_meetings_page(): void {
 							</td>
 						</tr>
 					<?php endforeach; ?>
+					<?php if ( $more ) : ?>
+						<tr class="spk-meeting-more">
+							<td colspan="5">
+								<?php // Without the script, the link opens the screen with every date; the script shows them in place. ?>
+								<a class="spk-more-dates" href="<?php echo esc_url( add_query_arg( 'dates', 'all', admin_url( 'admin.php?page=spokares-meetings' ) ) ); ?>"><?php echo esc_html( sprintf( /* translators: %s: meeting name. */ __( 'Show more dates of %s', 'spokares-core' ), $m['name'] ) ); ?></a>
+							</td>
+						</tr>
+					<?php endif; ?>
 					</tbody>
 				<?php endforeach; ?>
 			</table>
+			<?php endif; ?>
+			<?php spokares_meeting_extras_fields( $data, $held, $errors ); ?>
 			<p class="submit"><button type="submit" class="button button-primary button-large"><?php esc_html_e( 'Save', 'spokares-core' ); ?></button></p>
 		</form>
-		<?php endif; ?>
 	</div>
+	<?php
+}
+
+/**
+ * The one-off dates on Cancel or Move a Meeting (M2): the ones coming up,
+ * each with a Remove tick, and "Add a one-off date".
+ *
+ * @param array $data   spk_meetings.
+ * @param array $held   Held typing ('extra' => the new date's fields).
+ * @param array $errors Errors ('extra', 'extra-note', 'extra-name', 'extra-confirm').
+ */
+function spokares_meeting_extras_fields( array $data, array $held, array $errors ): void {
+	$names  = wp_list_pluck( $data['meetings'], 'name', 'id' );
+	$extras = spokares_meeting_extras();
+	$v      = array_merge(
+		array(
+			'meeting' => '',
+			'name'    => '',
+			'date'    => '',
+			'start'   => '',
+			'end'     => '',
+			'note'    => '',
+		),
+		is_array( $held['extra'] ?? null ) ? $held['extra'] : array()
+	);
+	$other  = spokares_meeting_other_id();
+	$bad    = isset( $errors['extra'] ) || isset( $errors['extra-name'] ) || isset( $errors['extra-note'] );
+	?>
+	<h2 id="spk-extras"><?php esc_html_e( 'One-off dates', 'spokares-core' ); ?></h2>
+	<p class="description"><?php esc_html_e( 'An extra date that isn’t one of the regular ones, like a holiday potluck or an annual meeting. It shows on Home and the For members page.', 'spokares-core' ); ?></p>
+	<?php if ( $extras ) : ?>
+		<table class="widefat striped spk-table spk-extras-table">
+			<thead>
+				<tr>
+					<th scope="col"><?php esc_html_e( 'Date', 'spokares-core' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Meeting', 'spokares-core' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Time', 'spokares-core' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Note', 'spokares-core' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Remove', 'spokares-core' ); ?></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ( $extras as $c ) : ?>
+					<?php
+					$label = spokares_fmt_date( $c['date'], 'short' );
+					$name  = spokares_meeting_extra_name( $c, $names );
+					?>
+					<tr class="spk-extra-row">
+						<th scope="row"><?php echo esc_html( $label ); ?></th>
+						<td data-label="<?php esc_attr_e( 'Meeting', 'spokares-core' ); ?>"><?php echo esc_html( $name ); ?></td>
+						<td data-label="<?php esc_attr_e( 'Time', 'spokares-core' ); ?>"><?php echo esc_html( spokares_fmt_time_range( (string) $c['start'], (string) $c['end'] ) ); ?></td>
+						<td data-label="<?php esc_attr_e( 'Note', 'spokares-core' ); ?>"><?php echo esc_html( (string) $c['note'] ); ?></td>
+						<td data-label="<?php esc_attr_e( 'Remove', 'spokares-core' ); ?>"><label><input type="checkbox" name="extra_remove[<?php echo esc_attr( $c['meeting'] . '|' . $c['date'] ); ?>]" value="1"> <span class="screen-reader-text"><?php echo esc_html( sprintf( /* translators: 1: meeting, 2: date. */ __( 'Remove %1$s on %2$s', 'spokares-core' ), $name, $label ) ); ?></span></label></td>
+					</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+	<?php endif; ?>
+	<fieldset class="spk-card spk-extra-new<?php echo $bad ? ' spk-row-error' : ''; ?>">
+		<legend><?php esc_html_e( 'Add a one-off date', 'spokares-core' ); ?></legend>
+		<?php spokares_err_text( $errors, 'extra' ); ?>
+		<div class="spk-rule-grid">
+			<div><label for="spk-extra-meeting"><?php esc_html_e( 'Meeting', 'spokares-core' ); ?></label><br>
+				<select id="spk-extra-meeting" name="extra[meeting]">
+					<option value=""><?php esc_html_e( '—', 'spokares-core' ); ?></option>
+					<?php foreach ( $names as $id => $label ) : ?>
+						<option value="<?php echo esc_attr( (string) $id ); ?>" <?php selected( (string) $id, (string) $v['meeting'] ); ?>><?php echo esc_html( $label ); ?></option>
+					<?php endforeach; ?>
+					<option value="<?php echo esc_attr( $other ); ?>" <?php selected( $other, (string) $v['meeting'] ); ?>><?php esc_html_e( 'Another meeting (type its name)', 'spokares-core' ); ?></option>
+				</select></div>
+			<div><label for="spk-extra-name"><?php esc_html_e( 'Name (another meeting only)', 'spokares-core' ); ?></label><br>
+				<input type="text" id="spk-extra-name" name="extra[name]" class="regular-text<?php echo esc_attr( spokares_err_class( $errors, 'extra-name' ) ); ?>" value="<?php echo esc_attr( (string) $v['name'] ); ?>" maxlength="80" placeholder="<?php esc_attr_e( 'Annual meeting', 'spokares-core' ); ?>">
+				<?php spokares_err_text( $errors, 'extra-name' ); ?></div>
+		</div>
+		<div class="spk-rule-grid">
+			<div><label for="spk-extra-date"><?php esc_html_e( 'Date', 'spokares-core' ); ?></label><br>
+				<input type="date" id="spk-extra-date" name="extra[date]" min="<?php echo esc_attr( spokares_today() ); ?>" value="<?php echo esc_attr( (string) $v['date'] ); ?>"<?php echo isset( $errors['extra'] ) ? ' class="spk-field-error"' : ''; ?>></div>
+			<div><label for="spk-extra-start"><?php esc_html_e( 'Start', 'spokares-core' ); ?></label><br>
+				<input type="time" id="spk-extra-start" name="extra[start]" value="<?php echo esc_attr( (string) $v['start'] ); ?>"></div>
+			<div><label for="spk-extra-end"><?php esc_html_e( 'End', 'spokares-core' ); ?></label><br>
+				<input type="time" id="spk-extra-end" name="extra[end]" value="<?php echo esc_attr( (string) $v['end'] ); ?>"></div>
+		</div>
+		<p><label for="spk-extra-note"><?php esc_html_e( 'Note (shown with the date)', 'spokares-core' ); ?></label><br>
+			<input type="text" id="spk-extra-note" name="extra[note]" class="large-text<?php echo esc_attr( spokares_err_class( $errors, 'extra-note' ) ); ?>" value="<?php echo esc_attr( (string) $v['note'] ); ?>" maxlength="120" placeholder="<?php esc_attr_e( 'Holiday potluck', 'spokares-core' ); ?>">
+			<?php spokares_err_text( $errors, 'extra-note' ); ?>
+			<?php if ( ! empty( $errors['extra-confirm'] ) ) : ?>
+				<label class="spk-confirm"><input type="checkbox" name="extra[confirm]" value="1"> <?php echo esc_html( $errors['extra-confirm'] ); ?></label>
+			<?php endif; ?></p>
+	</fieldset>
 	<?php
 }
 
@@ -301,6 +430,9 @@ function spokares_handle_save_meetings(): void {
 		}
 	}
 
+	// One-off dates (M2): Remove ticks, then "Add a one-off date".
+	spokares_save_meeting_extras( $rules, $changes, $confirmed, $held, $errors, $done, $failed );
+
 	if ( $done ) {
 		$cutoff = spokares_add_days( spokares_today(), -365 );
 		$list   = array_values( array_filter( $changes, static fn( $c ) => $c['date'] >= $cutoff ) );
@@ -329,12 +461,139 @@ function spokares_handle_save_meetings(): void {
 	} else {
 		spokares_add_notice( 'info', __( 'Nothing changed, so nothing was saved.', 'spokares-core' ) );
 	}
-	if ( $errors ) {
-		spokares_retain( 'spokares-meetings', $held, $errors );
-	}
+	spokares_retain( 'spokares-meetings', $held, $errors );
 	spokares_redirect_to( 'spokares-meetings' );
 }
 add_action( 'admin_post_spokares_save_meetings', 'spokares_handle_save_meetings' );
+
+/**
+ * Save the one-off dates from Cancel or Move a Meeting: each ticked Remove,
+ * then the "Add a one-off date" fields when anything was typed there. The
+ * new date must be today or later (and within about a year), not already
+ * one of that meeting's regular dates or one-off dates, with sensible times
+ * and words members may read.
+ *
+ * @param array $rules     Meeting id => meeting.
+ * @param array $changes   Key => change (updated).
+ * @param array $confirmed Confirmed hashes (updated).
+ * @param array $held      Held typing (updated: 'extra').
+ * @param array $errors    Errors (updated: 'extra', 'extra-name', 'extra-note', 'extra-confirm').
+ * @param array $done      Sort key => what was saved (updated).
+ * @param array $failed    Sort key => what wasn't (updated).
+ */
+function spokares_save_meeting_extras( array $rules, array &$changes, array &$confirmed, array &$held, array &$errors, array &$done, array &$failed ): void {
+	// phpcs:disable WordPress.Security.NonceVerification.Missing -- the caller checked the nonce (spokares_verify_form()).
+	$remove = isset( $_POST['extra_remove'] ) && is_array( $_POST['extra_remove'] ) ? array_keys( array_filter( wp_unslash( $_POST['extra_remove'] ) ) ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only the keys are used, matched against stored keys.
+	$in     = isset( $_POST['extra'] ) && is_array( $_POST['extra'] ) ? wp_unslash( $_POST['extra'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitised field by field below.
+	// phpcs:enable WordPress.Security.NonceVerification.Missing
+	$names = wp_list_pluck( $rules, 'name', 'id' );
+	$other = spokares_meeting_other_id();
+	$today = spokares_today();
+	$keyed = array();
+	foreach ( $changes as $key => $c ) {
+		if ( 'extra' === $c['kind'] ) {
+			$keyed[ $c['meeting'] . '|' . $c['date'] ] = $key;
+		}
+	}
+	foreach ( $remove as $posted ) {
+		$posted = (string) $posted;
+		if ( ! isset( $keyed[ $posted ] ) ) {
+			continue; // Gone already (someone else removed it).
+		}
+		$c = $changes[ $keyed[ $posted ] ];
+		unset( $changes[ $keyed[ $posted ] ], $keyed[ $posted ] );
+		/* translators: 1: meeting name, 2: date, e.g. "Sat, Dec 12". */
+		$done[ $c['date'] . '|x|' . $c['meeting'] ] = sprintf( __( '%1$s on %2$s removed', 'spokares-core' ), spokares_meeting_extra_name( $c, $names ), spokares_fmt_date( $c['date'], 'short' ) );
+	}
+
+	$typed = array(
+		'meeting' => sanitize_key( spokares_post_str( $in, 'meeting' ) ),
+		'name'    => sanitize_text_field( spokares_post_str( $in, 'name' ) ),
+		'date'    => sanitize_text_field( spokares_post_str( $in, 'date' ) ),
+		'start'   => sanitize_text_field( spokares_post_str( $in, 'start' ) ),
+		'end'     => sanitize_text_field( spokares_post_str( $in, 'end' ) ),
+		'note'    => sanitize_text_field( spokares_post_str( $in, 'note' ) ),
+	);
+	if ( '' === $typed['date'] && '' === $typed['name'] && '' === $typed['note'] && '' === $typed['start'] && '' === $typed['end'] ) {
+		return; // Nothing typed in "Add a one-off date" (the meeting list alone is no entry).
+	}
+	$mid     = $typed['meeting'];
+	$date    = $typed['date'];
+	$problem = '';
+	$field   = 'extra';
+	if ( $other !== $mid && ! isset( $rules[ $mid ] ) ) {
+		$problem = __( 'Pick the meeting, or Another meeting and type its name.', 'spokares-core' );
+	} elseif ( $other === $mid && '' === $typed['name'] ) {
+		$problem = __( 'Type the name of the meeting.', 'spokares-core' );
+		$field   = 'extra-name';
+	} elseif ( spokares_too_long( $typed['name'], 80 ) ) {
+		$problem = __( 'Keep the name to 80 characters.', 'spokares-core' );
+		$field   = 'extra-name';
+	} elseif ( ! spokares_is_ymd( $date ) ) {
+		$problem = __( 'Pick the date.', 'spokares-core' );
+	} elseif ( $date < $today ) {
+		$problem = __( 'The date must be today or later.', 'spokares-core' );
+	} elseif ( $date > spokares_add_days( $today, 400 ) ) {
+		$problem = __( 'Pick a date within the next year.', 'spokares-core' );
+	} elseif ( $other !== $mid && spokares_meeting_on( $rules[ $mid ], $date ) ) {
+		$problem = __( 'That is already one of this meeting’s regular dates. Use its row above to cancel it, move it or add a note.', 'spokares-core' );
+	} elseif ( isset( $keyed[ $mid . '|' . $date ] ) ) {
+		$problem = __( 'That date is already listed under One-off dates.', 'spokares-core' );
+	} elseif ( ( '' !== $typed['start'] && ! spokares_is_hhmm( $typed['start'] ) ) || ( '' !== $typed['end'] && ! spokares_is_hhmm( $typed['end'] ) ) ) {
+		$problem = __( 'Type the times like 6:00 PM, or leave them empty.', 'spokares-core' );
+	} elseif ( '' !== $typed['end'] && '' === $typed['start'] ) {
+		$problem = __( 'An end time needs a start time. Type the start, or clear the end.', 'spokares-core' );
+	} elseif ( '' !== $typed['start'] && '' !== $typed['end'] && $typed['end'] <= $typed['start'] ) {
+		$problem = __( 'The end time must be after the start time.', 'spokares-core' );
+	} elseif ( spokares_too_long( $typed['note'], 120 ) ) {
+		/* translators: %d: number of characters. */
+		$problem = sprintf( __( 'Keep it to %d characters.', 'spokares-core' ), 120 );
+		$field   = 'extra-note';
+	}
+	// The words members read: a phone, an e-mail or a never-publish word is not saved.
+	$key = 'extra|' . $mid . '|' . $date;
+	if ( '' === $problem ) {
+		foreach ( array(
+			'note' => 'extra-note',
+			'name' => 'extra-name',
+		) as $part => $where ) {
+			if ( '' === $typed[ $part ] ) {
+				continue;
+			}
+			$check = spokares_check_field( $typed[ $part ], $key . '-' . $part, $confirmed, ! empty( $in['confirm'] ) );
+			if ( $check['block'] || $check['confirm'] ) {
+				$problem = spokares_problem_sentence( $check );
+				$field   = $where;
+				if ( ! $check['block'] ) {
+					$errors['extra-confirm'] = spokares_confirm_label( $check['confirm'] );
+				}
+				break;
+			}
+			if ( $check['confirmed'] ) {
+				$confirmed[ $key . '-' . $part ] = sha1( $typed[ $part ] );
+			}
+		}
+	}
+	if ( '' !== $problem ) {
+		$errors[ $field ]        = $problem;
+		$held['extra']           = $typed;
+		$failed[ $date . '|x|' ] = __( 'the one-off date', 'spokares-core' );
+		return;
+	}
+	$c               = array(
+		'date'     => $date,
+		'meeting'  => $mid,
+		'kind'     => 'extra',
+		'new_date' => '',
+		'note'     => $typed['note'],
+		'start'    => $typed['start'],
+		'end'      => $typed['end'],
+		'name'     => $other === $mid ? $typed['name'] : '',
+	);
+	$changes[ $key ] = $c;
+	/* translators: 1: meeting name, 2: date, e.g. "Sat, Dec 12". */
+	$done[ $date . '|x|' . $mid ] = sprintf( __( '%1$s on %2$s added', 'spokares-core' ), spokares_meeting_extra_name( $c, $names ), spokares_fmt_date( $date, 'short' ) );
+}
 
 /**
  * What a saved row now says, for the notice: "Sat, Oct 10 cancelled", "Thu,
@@ -875,7 +1134,11 @@ function spokares_handle_save_meeting_rules(): void {
 	$changes = array();
 	foreach ( $data['changes'] as $c ) {
 		$rule = $rules[ $c['meeting'] ] ?? null;
-		if ( $rule && $c['date'] >= $today && ! spokares_meeting_on( $rule, $c['date'] ) ) {
+		// A one-off date is never on a regular date: it goes only when the
+		// new pattern makes its day a regular meeting date.
+		$extra = 'extra' === $c['kind'];
+		$on    = $rule && spokares_meeting_on( $rule, $c['date'] );
+		if ( $rule && $c['date'] >= $today && ( $extra ? $on : ! $on ) ) {
 			$orphans[] = spokares_meeting_orphan_words( $c );
 			continue;
 		}
@@ -898,7 +1161,9 @@ function spokares_handle_save_meeting_rules(): void {
 	if ( $now ) {
 		$next = array();
 		foreach ( spokares_next_meetings( 1 ) as $item ) {
-			$next[ $item['meeting']['id'] ] = $item['dates'][0]['date'] ?? '';
+			if ( empty( $item['one_off'] ) ) {
+				$next[ $item['meeting']['id'] ] = $item['dates'][0]['date'] ?? '';
+			}
 		}
 		foreach ( $now as $id => $name ) {
 			if ( '' !== ( $next[ $id ] ?? '' ) ) {
@@ -928,12 +1193,12 @@ function spokares_handle_save_meeting_rules(): void {
 			/* translators: %s: meeting names. */
 			spokares_add_notice( 'error', sprintf( __( 'Not saved: %s (outlined in red).', 'spokares-core' ), $names ) );
 		}
-		spokares_retain( 'spokares-meeting-rules', $held, $errors );
 	} elseif ( $saved ) {
 		spokares_add_notice( 'success', trim( __( 'Saved.', 'spokares-core' ) . ' ' . implode( ' ', $said ) ), $url, $see );
 	} else {
 		spokares_add_notice( 'info', __( 'Nothing changed, so nothing was saved.', 'spokares-core' ) );
 	}
+	spokares_retain( 'spokares-meeting-rules', $held, $errors );
 	spokares_redirect_to( 'spokares-meeting-rules' );
 }
 add_action( 'admin_post_spokares_save_meeting_rules', 'spokares_handle_save_meeting_rules' );
@@ -946,6 +1211,10 @@ add_action( 'admin_post_spokares_save_meeting_rules', 'spokares_handle_save_meet
  */
 function spokares_meeting_orphan_words( array $c ): string {
 	$date = spokares_fmt_date( $c['date'], 'day' );
+	if ( 'extra' === $c['kind'] ) {
+		/* translators: %s: date, e.g. "Dec 12". */
+		return sprintf( __( '%s is now a regular meeting date, so its one-off date was removed.', 'spokares-core' ), $date );
+	}
 	if ( 'moved' === $c['kind'] && spokares_is_ymd( $c['new_date'] ) ) {
 		/* translators: 1: date, e.g. "Oct 15"; 2: new date, e.g. "Oct 14". */
 		return sprintf( __( '%1$s is no longer a meeting date, so its move to %2$s was removed.', 'spokares-core' ), $date, spokares_fmt_date( $c['new_date'], 'day' ) );

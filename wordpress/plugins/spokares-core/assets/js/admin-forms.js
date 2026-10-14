@@ -8,6 +8,8 @@
  *    in place.
  *  - Net Settings: the "Members see" lines follow the form; a frequency the
  *    save would refuse says why under the box.
+ *  - Cancel or Move a Meeting: "Show more dates of …" shows that meeting's
+ *    later dates in place.
  *  - Forms marked data-spk-guard ask before you leave with unsaved changes.
  *  - Links marked data-spk-ask ask first (Pull this file now).
  *  - Fields outlined for a problem are tied to their sentence.
@@ -169,6 +171,26 @@
 				}
 			} );
 		}
+	}
+
+	/* ------------------------------------------ Cancel or Move a Meeting */
+	/* "Show more dates of …": every date is on the page; show this meeting's
+	   later ones in place, so nothing typed is lost, and move the focus to
+	   the first of them. */
+	function meetingDates() {
+		$$( '#spk-meetings-form a.spk-more-dates' ).forEach( function ( link ) {
+			link.addEventListener( 'click', function ( e ) {
+				var body = link.closest( 'tbody' );
+				if ( ! body ) { return; }
+				e.preventDefault();
+				var rows = $$( 'tr.spk-meeting-row[hidden]', body );
+				rows.forEach( function ( r ) { r.hidden = false; } );
+				var row = link.closest( 'tr' );
+				if ( row ) { row.parentNode.removeChild( row ); }
+				var first = rows[ 0 ] && $( 'input:not([type="hidden"])', rows[ 0 ] );
+				if ( first ) { first.focus(); }
+			} );
+		} );
 	}
 
 	/* ------------------------------------------------------- Net Settings */
@@ -361,7 +383,7 @@
 	}
 
 	function boot() {
-		[ rota, netPreview, guard, asks, problems ].forEach( function ( fn ) {
+		[ rota, meetingDates, netPreview, guard, asks, problems ].forEach( function ( fn ) {
 			try { fn(); } catch ( e ) { if ( window.console ) { window.console.warn( '[spokares-admin-forms]', e ); } }
 		} );
 	}
