@@ -313,6 +313,22 @@ function spokares_dashboard_widget(): void {
 		$attention[] = esc_html( sprintf( _n( '%d event has had no date for over 30 days:', '%d events have had no date for over 30 days:', $n, 'spokares-core' ), $n ) ) . ' ' . implode( ' · ', $links );
 	}
 
+	// A Most Used button whose document isn't on the site is missing from the
+	// For members page (D12).
+	$tiles_off = current_user_can( 'edit_spk_documents' ) && function_exists( 'spokares_tiles_off_site' ) ? spokares_tiles_off_site() : array();
+	foreach ( $tiles_off as $button => $doc ) {
+		$attention[] = spokares_dashboard_line(
+			sprintf(
+				/* translators: 1: button number (1-4), 2: document name. */
+				__( 'Most Used button %1$d is empty on the site: “%2$s” isn’t on the site now.', 'spokares-core' ),
+				$button,
+				html_entity_decode( get_the_title( $doc ), ENT_QUOTES, 'UTF-8' )
+			),
+			admin_url( 'admin.php?page=spokares-tiles' ),
+			__( 'Pick another document or publish it', 'spokares-core' )
+		);
+	}
+
 	$checks = $admin ? spokares_needs_check_places() : array();
 	if ( $checks ) {
 		$n     = array_sum( wp_list_pluck( $checks, 'n' ) );
@@ -450,23 +466,13 @@ function spokares_dashboard_widget(): void {
 
 	<?php if ( current_user_can( 'edit_spk_documents' ) ) : ?>
 		<?php
-		$library = spokares_library_documents();
-		$total   = 0;
-		$stale   = 0;
-		$cutoff  = spokares_add_days( spokares_today(), -365 );
+		$total = array_sum( array_map( 'count', spokares_library_documents() ) );
+		// The number the Needs review view lists (D3): the same function.
+		$stale = function_exists( 'spokares_documents_needing_review' ) ? count( spokares_documents_needing_review() ) : 0;
 		// The number the Soon view lists (a FEMA course with its course links shows those, not "Soon").
 		$marked = function_exists( 'spokares_document_soon_count' ) ? spokares_document_soon_count() : 0;
-		foreach ( $library as $docs ) {
-			foreach ( $docs as $doc ) {
-				++$total;
-				$r = (string) get_post_meta( $doc['id'], 'spk_reviewed', true );
-				if ( ! spokares_is_ymd( $r ) || $r < $cutoff ) {
-					++$stale;
-				}
-			}
-		}
-		$list  = admin_url( 'edit.php?post_type=spk_document' );
-		$tiles = spokares_edit_screen( 'tiles' );
+		$list   = admin_url( 'edit.php?post_type=spk_document' );
+		$tiles  = spokares_edit_screen( 'tiles' );
 		?>
 		<section class="spk-task">
 			<h3><?php echo esc_html( spokares_edit_screen( 'documents' )[0] ); ?></h3>
@@ -479,15 +485,8 @@ function spokares_dashboard_widget(): void {
 					echo ' · <a href="' . esc_url( add_query_arg( 'spk_source', 'soon', $list ) ) . '">' . esc_html( sprintf( __( '%d marked Soon', 'spokares-core' ), $marked ) ) . '</a>';
 				}
 				if ( $stale ) {
-					$oldest = add_query_arg(
-						array(
-							'orderby' => 'spk_reviewed',
-							'order'   => 'asc',
-						),
-						$list
-					);
 					/* translators: %d: number of documents. */
-					echo ' · <a href="' . esc_url( $oldest ) . '">' . esc_html( sprintf( __( '%d not reviewed in 12 months', 'spokares-core' ), $stale ) ) . '</a>';
+					echo ' · <a href="' . esc_url( spokares_document_review_url() ) . '">' . esc_html( sprintf( __( '%d not reviewed in 12 months', 'spokares-core' ), $stale ) ) . '</a>';
 				}
 				?>
 			</p>

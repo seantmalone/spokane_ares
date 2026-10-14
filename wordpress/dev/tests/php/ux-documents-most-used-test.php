@@ -10,7 +10,8 @@
  * - every save of a document ends in one notice, and WordPress's own is
  *   dropped;
  * - a document that is one of the four Most Used buttons says so instead of
- *   offering "Also list under Most used";
+ *   offering "Show under the Most used filter" (until the workflow review's
+ *   D5, "Also list under Most used");
  * - on Most Used, a different document gets no words (the site prints its
  *   name) unless words were typed, a swap keeps them, and each row's
  *   "Replace or change it" opens that document's form;
@@ -191,7 +192,7 @@ function uxdoc_render( callable $callback, ...$args ): string {
 }
 
 test(
-	'the button line replaces "Also list under Most used" for a Most Used document, and editors get no Webmaster check',
+	'the button line replaces "Show under the Most used filter" for a Most Used document, and editors get no Webmaster check',
 	function () {
 		as_role( 'ares-net' );
 		$tiles  = \spokares_opt( 'spk_tiles' );
@@ -199,11 +200,12 @@ test(
 		assert_true( $button > 0, 'set-up: button 1 has a document' );
 		$html = uxdoc_render( '\spokares_document_form_fields', get_post( $button ) );
 		assert_contains( 'It’s button 1 on <a href="' . esc_url( admin_url( 'admin.php?page=spokares-tiles' ) ) . '">the Most Used screen</a>.', $html, 'the button line' );
-		assert_not_contains( 'Also list under Most used', $html, 'the tick beside the button line' );
+		assert_not_contains( 'Show under the Most used filter', $html, 'the tick beside the button line' );
 
 		$other = post_id( 'spk_document', 'ics-309' );
 		$html  = uxdoc_render( '\spokares_document_form_fields', get_post( $other ) );
-		assert_contains( 'Also list under Most used', $html, 'a document that is no button has the tick' );
+		// Renamed by the workflow review's D5 (the data key, spk_most_used, is the same).
+		assert_contains( 'Show under the Most used filter', $html, 'a document that is no button has the tick' );
 		assert_not_contains( 'the Most Used screen', $html, 'a document that is no button has no button line' );
 
 		global $wp_meta_boxes;
@@ -482,7 +484,10 @@ test(
 	'the Documents list: five columns for editors, a Soon view, no "Mine", the line above the table, and site order',
 	function () {
 		as_role( 'ares-editor' );
-		assert_same( array( 'cb', 'title', 'taxonomy-spk_doc_cat', 'spk_source', 'spk_version', 'spk_reviewed' ), array_keys( \spokares_document_columns( array() ) ), 'editor columns' );
+		// No row ticks for editors since the workflow review's D4: outside the
+		// Trash they have no bulk action left (Mark reviewed today is the
+		// administrator's), as on the events list.
+		assert_same( array( 'title', 'taxonomy-spk_doc_cat', 'spk_source', 'spk_version', 'spk_reviewed' ), array_keys( \spokares_document_columns( array() ) ), 'editor columns' );
 		$r = call_request(
 			'GET',
 			array( 'post_type' => 'spk_document' ),
@@ -496,7 +501,8 @@ test(
 				)
 			)
 		);
-		assert_same( array( 'all', 'publish', 'spk_soon', 'trash' ), array_keys( $r['returned'] ), 'views for an editor' );
+		// Needs review (D3) shows only while documents are due; it is tested in wf-d3-needs-review-test.php.
+		assert_same( array( 'all', 'publish', 'spk_soon', 'trash' ), array_values( array_diff( array_keys( $r['returned'] ), array( 'spk_review' ) ) ), 'views for an editor' );
 		assert_contains( 'spk_source=soon', $r['returned']['spk_soon'], 'the Soon view' );
 		assert_contains( 'Click a name to change it, give it a new file or take it off the site.', $r['output'], 'the line above the table' );
 		as_role( 'admin' );
