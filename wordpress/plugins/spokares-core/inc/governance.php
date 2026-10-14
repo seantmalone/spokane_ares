@@ -500,16 +500,16 @@ function spokares_page_scan_text( string $content ): string {
  * Text an administrator put on the page stays saveable; only new mentions
  * count. Each kind once, with the first words found.
  *
- * @param string $old Stored content.
- * @param string $new New content.
+ * @param string $stored Stored content.
+ * @param string $saved  New content.
  * @return array<int,array{what:string,match:string}>
  */
-function spokares_new_never_publish( string $old, string $new ): array {
-	$new_text = spokares_page_scan_text( $new );
+function spokares_new_never_publish( string $stored, string $saved ): array {
+	$new_text = spokares_page_scan_text( $saved );
 	if ( '' === trim( $new_text ) ) {
 		return array();
 	}
-	$old_text = spokares_page_scan_text( $old );
+	$old_text = spokares_page_scan_text( $stored );
 	$found    = array();
 	foreach ( spokares_text_patterns() as $p ) {
 		if ( 'block' !== $p['level'] ) {

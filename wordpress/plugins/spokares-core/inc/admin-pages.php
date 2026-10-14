@@ -278,9 +278,10 @@ function spokares_revision_restore_for_editors(): void {
 	if ( ! spokares_layout_locked_for_user() ) {
 		return;
 	}
+	// Restore This Revision is a link (GET).
 	// phpcs:disable WordPress.Security.NonceVerification -- routing only; the restore's nonce is checked below, as core checks it.
-	$action      = isset( $_REQUEST['action'] ) ? sanitize_key( wp_unslash( $_REQUEST['action'] ) ) : '';
-	$revision_id = isset( $_REQUEST['revision'] ) ? absint( $_REQUEST['revision'] ) : 0;
+	$action      = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : '';
+	$revision_id = isset( $_GET['revision'] ) ? absint( $_GET['revision'] ) : 0;
 	// phpcs:enable WordPress.Security.NonceVerification
 	if ( 'restore' !== $action || ! $revision_id ) {
 		return;

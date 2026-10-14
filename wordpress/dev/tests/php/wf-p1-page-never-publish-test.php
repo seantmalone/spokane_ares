@@ -43,9 +43,9 @@ test(
 	'REST: an editor\'s page save that adds never-publish words is refused, naming what was found; the page is unchanged',
 	function () {
 		$cases = array(
-			'Our Hospital Net meets on Tuesdays.' => 'Not saved: the page mentions a hospital net, which we never publish. Take out “Hospital Net”, then Save.',
-			'Listen on channel 3.'                => 'Not saved: the page mentions a channel number, which we never publish. Take out “channel 3”, then Save.',
-			'We use SHARES frequencies.'          => 'Not saved: the page mentions SHARES channels or frequencies, which we never publish. Take out “SHARES frequencies”, then Save.',
+			'Our Hospital Net meets on Tuesdays.'       => 'Not saved: the page mentions a hospital net, which we never publish. Take out “Hospital Net”, then Save.',
+			'Listen on channel 3.'                      => 'Not saved: the page mentions a channel number, which we never publish. Take out “channel 3”, then Save.',
+			'We use SHARES frequencies.'                => 'Not saved: the page mentions SHARES channels or frequencies, which we never publish. Take out “SHARES frequencies”, then Save.',
 			'Ask on the county 800&nbsp;MHz talkgroup.' => 'Not saved: the page mentions 800 MHz and a talkgroup, which we never publish. Take out “800 MHz” and “talkgroup”, then Save.',
 		);
 		foreach ( array( 'ares-editor', 'ares-net', 'core-editor' ) as $role ) {

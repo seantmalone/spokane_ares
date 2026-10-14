@@ -98,11 +98,11 @@ test(
 	function () {
 		$user = get_userdata( user_id( 'ares-editor' ) );
 		delete_user_meta( $user->ID, 'spk_first_sign_in' );
-		do_action( 'wp_login', $user->user_login, $user );
+		\spokares_hard_2fa_note_sign_in( $user->user_login, $user );
 		$first = (int) get_user_meta( $user->ID, 'spk_first_sign_in', true );
 		assert_true( $first > 0, 'recorded' );
 		update_user_meta( $user->ID, 'spk_first_sign_in', 1700000000 );
-		do_action( 'wp_login', $user->user_login, $user );
+		\spokares_hard_2fa_note_sign_in( $user->user_login, $user );
 		assert_same( 1700000000, (int) get_user_meta( $user->ID, 'spk_first_sign_in', true ), 'kept' );
 	}
 );

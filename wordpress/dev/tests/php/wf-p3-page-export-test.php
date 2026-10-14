@@ -36,10 +36,22 @@ test(
 test(
 	'page export --sections: a fresh site matches the theme; a words edit and a layout edit are named by section',
 	function () {
+		// About as page setup made it (the browser tests save it too).
+		as_role( 'admin' );
+		$pattern = \WP_Block_Patterns_Registry::get_instance()->get_registered( 'spokares/page-about' );
+		wp_update_post(
+			wp_slash(
+				array(
+					'ID'           => page_id( 'about' ),
+					'post_content' => $pattern['content'],
+				)
+			)
+		);
+		clean_post_cache( page_id( 'about' ) );
 		$rows = \spokares_page_export_sections( 'about' );
 		expect_not_wp_error( $rows );
 		assert_true( count( $rows ) > 1, 'About has sections' );
-		assert_same( array( 'same' ), array_values( array_unique( array_column( $rows, 'state' ) ) ), 'a fresh site matches its patterns' );
+		assert_same( array( 'same' ), array_values( array_unique( array_column( $rows, 'state' ) ) ), 'the page as set up matches its pattern' );
 
 		$about   = page_id( 'about' );
 		$content = get_post( $about )->post_content;
@@ -55,7 +67,7 @@ test(
 			)
 		);
 		clean_post_cache( $about );
-		$rows = \spokares_page_export_sections( 'about' );
+		$rows  = \spokares_page_export_sections( 'about' );
 		$words = array_values( array_filter( $rows, static fn( $r ) => 'words' === $r['state'] ) );
 		assert_count( 1, $words, 'one section\'s words changed' );
 		assert_contains( 'about-head', $words[0]['classes'], 'the page head (about-head.php), where the first paragraph is' );
