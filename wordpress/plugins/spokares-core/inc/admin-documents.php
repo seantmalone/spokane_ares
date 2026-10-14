@@ -7,7 +7,8 @@
  * checked this file" tick, only in the allowed types, with a random suffix on
  * its name. Replace, a switch away from "Upload a file" and "Take it off the
  * site" remove the old file from the web (an administrator may keep it on
- * Replace, and can pull a file at once). Nothing deletes a file a document or
+ * Replace, and can pull a file at once; "Take it off the site" sets the file
+ * aside outside the web root, so Restore brings the document back whole). Nothing deletes a file a document or
  * page still uses, except those paths.
  *
  * @package spokares-core
@@ -240,7 +241,7 @@ function spokares_document_stored( int $post_id ): array {
 		'url'     => (string) get_post_meta( $post_id, 'spk_url', true ),
 		'privacy' => '1' === (string) get_post_meta( $post_id, 'spk_privacy_ok', true ),
 		'file_id' => $att,
-		'file'    => $att && '' !== (string) wp_get_attachment_url( $att ) ? $att : 0,
+		'file'    => $att && '' !== (string) wp_get_attachment_url( $att ) && ! spokares_attachment_is_held( $att ) ? $att : 0,
 	);
 }
 
@@ -886,9 +887,13 @@ add_action( 'post_edit_form_tag', 'spokares_document_form_tag' );
 
 /**
  * "Take it off the site" (the Save box's trash link, which carries
- * spk_remove_file=1) takes the file off the web too (§3.9). WordPress has
- * already checked the trash nonce and the capability. A document trashed any
- * other way keeps its file, so it can be restored with it.
+ * spk_remove_file=1) takes the file off the web too (§3.9): it is set aside
+ * in the held folder, outside the web root, so Restore or Undo can bring the
+ * document back whole (UX finding D6). If the held folder can't be used the
+ * file is deleted, as before, and the notice says so. A file another
+ * document or a page uses stays on the web. WordPress has already checked
+ * the trash nonce and the capability. A document trashed any other way keeps
+ * its file on the web, so it can be restored with it.
  *
  * @param int $post_id Post.
  */
@@ -906,14 +911,19 @@ function spokares_document_trashed( $post_id ): void {
 	}
 	// phpcs:enable
 	$att = absint( get_post_meta( $post_id, 'spk_file', true ) );
-	if ( $att ) {
-		$note = spokares_remove_document_file( $att, $post_id );
-		if ( '' !== $note ) {
-			spokares_add_notice( 'warning', $note );
-		} else {
-			delete_post_meta( $post_id, 'spk_file_name' );
-		}
+	if ( ! $att || 'attachment' !== get_post_type( $att ) ) {
+		return;
 	}
+	if ( ! spokares_attachment_uses( $att, $post_id ) && spokares_hold_attachment( $att ) ) {
+		return; // Set aside: spk_file and its name stay, for Restore.
+	}
+	$note = spokares_remove_document_file( $att, $post_id );
+	if ( '' !== $note ) {
+		spokares_add_notice( 'warning', $note );
+		return;
+	}
+	delete_post_meta( $post_id, 'spk_file_name' );
+	spokares_add_notice( 'warning', __( 'The file couldn’t be set aside, so it was deleted from the web. If you bring the document back, upload the file again.', 'spokares-core' ) );
 }
 add_action( 'trashed_post', 'spokares_document_trashed' );
 
@@ -934,7 +944,7 @@ add_filter( 'get_delete_post_link', 'spokares_document_trash_link', 10, 2 );
 
 /**
  * Does this document say "Upload a file" but have no file on the web (its
- * file was removed when it went to the Trash)?
+ * file was deleted, or is still set aside, when it went to the Trash)?
  *
  * @param int $post_id Document.
  */
@@ -943,14 +953,16 @@ function spokares_document_lost_file( int $post_id ): bool {
 		return false;
 	}
 	$att = absint( get_post_meta( $post_id, 'spk_file', true ) );
-	return ! $att || ! wp_get_attachment_url( $att );
+	return ! $att || ! wp_get_attachment_url( $att ) || spokares_attachment_is_held( $att );
 }
 
 /**
  * Restore and Undo bring a document back as it was (Published or Draft),
- * except one whose file was removed from the web when it went to the Trash:
- * it comes back as a Draft, never Published without a file. Runs after
- * WordPress's own wp_untrash_post_set_previous_status (10).
+ * with its file: files.php spokares_document_untrash_file() has already put
+ * a held file back. A document whose file is gone (deleted because it
+ * couldn't be set aside, or it couldn't be put back) comes back as a Draft,
+ * never Published without a file. Runs after WordPress's own
+ * wp_untrash_post_set_previous_status (10).
  *
  * @param string $status   Status to restore to.
  * @param int    $post_id  Post.
@@ -1018,12 +1030,19 @@ function spokares_document_bulk_messages( $messages, $bulk_counts ) {
 			}
 			$m['untrashed'] = sprintf( $text, $quote( $id ) );
 		} else {
-			$drafts         = array_filter( $ids, static fn( $id ) => 'draft' === get_post_status( $id ) );
-			$m['untrashed'] = $drafts
+			$n      = (int) $bulk_counts['untrashed'];
+			$lost   = array_filter( $ids, static fn( $id ) => spokares_document_lost_file( (int) $id ) );
+			$drafts = array_filter( $ids, static fn( $id ) => 'publish' !== get_post_status( $id ) );
+			if ( $lost ) {
 				/* translators: %s: how many. */
-				? _n( '%s document is back; drafts need their file uploaded again, then Publish.', '%s documents are back; drafts need their file uploaded again, then Publish.', (int) $bulk_counts['untrashed'], 'spokares-core' )
+				$m['untrashed'] = _n( '%s document is back; drafts need their file uploaded again, then Publish.', '%s documents are back; drafts need their file uploaded again, then Publish.', $n, 'spokares-core' );
+			} elseif ( $drafts ) {
 				/* translators: %s: how many. */
-				: _n( '%s document is back on the site.', '%s documents are back on the site.', (int) $bulk_counts['untrashed'], 'spokares-core' );
+				$m['untrashed'] = _n( '%s document is back as it was.', '%s documents are back as they were.', $n, 'spokares-core' );
+			} else {
+				/* translators: %s: how many. */
+				$m['untrashed'] = _n( '%s document is back on the site.', '%s documents are back on the site.', $n, 'spokares-core' );
+			}
 		}
 	}
 	$messages['spk_document'] = $m;
