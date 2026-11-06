@@ -72,8 +72,8 @@ defined( 'ABSPATH' ) || exit;
 <h3 class="wp-block-heading">Readiness levels</h3>
 <!-- /wp:heading -->
 
-<!-- wp:paragraph {"className":"needs-verify"} -->
-<p class="needs-verify">Four levels tell members what to do. This site never shows a current level.</p>
+<!-- wp:paragraph -->
+<p>Four levels tell members what to do.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 

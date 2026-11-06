@@ -53,6 +53,11 @@ grep -q 'wp-block-cover__image-background wp-image-' <<<"$home" && grep -q 'srcs
 members=$(curl -s -m 30 "$URL/members/")
 grep -q 'Net control' <<<"$members" && pass "/members/ contains \"Net control\" (uptime keyword)" || fail "/members/ lacks \"Net control\""
 grep -q '<b>NZ2S</b>' <<<"$members" && pass "/members/ rota shows the seeded NZ2S row" || fail "/members/ rota lacks the seeded NZ2S row"
+grep -q 'Mockup' <<<"$home" && fail "Home still says Mockup" || pass "Home has no Mockup line"
+grep -q 'Privacy (coming)' <<<"$home" && fail "Home still says Privacy (coming)" || pass "Home has no Privacy (coming)"
+grep -q 'Santa' <<<"$home$(curl -s -m 30 "$URL/members/exercises/")" && fail "an unverified Winlink task is on the site" || pass "no unverified Winlink task text"
+grep -q '6:00' <<<"$home" && pass "Home shows the 6:00 PM training meeting" || fail "Home does not show 6:00 PM"
+grep -q '5:30' <<<"$home" && pass "Home shows the 5:30 PM staff meeting" || fail "Home does not show 5:30 PM"
 # The search-engine description is text people read: "Net Control Schedule", never "rota" (UX spec §7).
 desc=$(grep -o '<meta name="description"[^>]*>' <<<"$members" | head -1)
 if [[ -z $desc ]]; then fail "/members/ has no <meta name=\"description\">"

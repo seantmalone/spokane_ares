@@ -278,15 +278,6 @@ function spokares_too_long( string $text, int $max ): bool {
 }
 
 /**
- * The events and documents lists narrowed to "Needs checking" (the
- * Dashboard's link): edit.php?…&spk_check=1, administrators only.
- */
-function spokares_list_needs_check(): bool {
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- list filtering only.
-	return ! empty( $_GET['spk_check'] ) && current_user_can( 'manage_options' );
-}
-
-/**
  * Posted value helper: unslashed string from $_POST (the caller has already
  * checked the nonce).
  *

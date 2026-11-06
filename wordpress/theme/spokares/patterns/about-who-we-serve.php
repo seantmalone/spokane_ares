@@ -58,8 +58,8 @@ defined( 'ABSPATH' ) || exit;
 <!-- /wp:paragraph -->
 
 <!-- wp:buttons -->
-<div class="wp-block-buttons"><!-- wp:button {"className":"btn--ghost needs-verify"} -->
-<div class="wp-block-button btn--ghost needs-verify"><a class="wp-block-button__link wp-element-button" href="mailto:ec@spokares.org">Email the Emergency Coordinator</a></div>
+<div class="wp-block-buttons"><!-- wp:button {"className":"btn--ghost"} -->
+<div class="wp-block-button btn--ghost"><a class="wp-block-button__link wp-element-button" href="/#visit">Come to a meeting</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></section>
 <!-- /wp:group -->

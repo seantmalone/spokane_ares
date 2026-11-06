@@ -791,10 +791,11 @@ function spokares_meeting_week_boxes( string $name, array $current, string $lege
  * @param int   $i      Index.
  * @param array $m      Card rule, with typing that wasn't saved laid over it.
  * @param array $errors Errors.
- * @param bool  $admin  Show the webmaster's own flag.
+ * @param bool  $admin  Unused. Kept so existing callers stay compatible.
  * @param array $stored The stored meeting's card rule (empty for "Add a meeting").
  */
 function spokares_meeting_rule_fields( int $i, array $m, array $errors, bool $admin, array $stored = array() ): void {
+	unset( $admin );
 	$n       = 'rules[' . $i . ']';
 	$new     = '' === $m['id'];
 	$names   = spokares_weekday_names();
@@ -864,9 +865,6 @@ function spokares_meeting_rule_fields( int $i, array $m, array $errors, bool $ad
 		</fieldset>
 		<p class="spk-show">
 			<label class="spk-choice"><input type="checkbox" name="<?php echo esc_attr( $n ); ?>[show_home]" value="1" <?php checked( $show ); ?>> <?php esc_html_e( 'Show on the site', 'spokares-core' ); ?></label>
-			<?php if ( $admin ) : ?>
-				<label class="spk-choice"><input type="checkbox" name="<?php echo esc_attr( $n ); ?>[needs_check]" value="1" <?php checked( ! empty( $m['needs_check'] ) ); ?>> <?php esc_html_e( 'Needs checking (webmaster only)', 'spokares-core' ); ?></label>
-			<?php endif; ?>
 		</p>
 		<p class="spk-from">
 			<label for="<?php echo esc_attr( $pre . 'from' ); ?>"><?php esc_html_e( 'Takes effect on', 'spokares-core' ); ?></label><br>
@@ -1008,7 +1006,7 @@ function spokares_handle_save_meeting_rules(): void {
 			'show'        => ! empty( $p['show_home'] ),
 			'from'        => spokares_is_ymd( $from ) ? $from : '',
 		);
-		$typed['needs_check'] = $admin ? ! empty( $p['needs_check'] ) : (bool) ( $old['needs_check'] ?? false );
+		$typed['needs_check'] = (bool) ( $old['needs_check'] ?? false );
 
 		if ( ! $old && '' === $typed['name'] ) {
 			continue; // The empty "Add a meeting" card.

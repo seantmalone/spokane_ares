@@ -3,7 +3,7 @@ Contributors: spokane-county-ares-acs
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.3.1
+Stable tag: 0.3.2
 License: GPL-2.0-or-later
 Update URI: false
 
@@ -49,6 +49,10 @@ The full contract is `wordpress/PLAN.md` §6; build notes are in
 `wordpress/build-notes/plugin.md`.
 
 == Changelog ==
+
+= 0.3.2 =
+* ARES Editors have `publish_posts` for an ordinary post they already own. Creating posts and pages, and every administrator control, stay as they were.
+* The webmaster check box, the Needs checking column and the Dashboard "Needs checking" list are gone. Editors publish events and documents themselves.
 
 = 0.3.1 =
 * WP-CLI for the webmaster: `wp spokares rota show|set|paste`, `wp spokares meeting show|cancel|move|note|extra|clear`, `wp spokares event list|set-date|cancel`. Each write needs `--user`, runs the screen's own checks (`--confirm` stands for the "Publish it" tick), and stamps "Last saved" and the undo snapshot like the screen; `--dry-run` shows what would change (O1).

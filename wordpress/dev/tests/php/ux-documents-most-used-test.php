@@ -212,10 +212,10 @@ test(
 		$saved = $wp_meta_boxes;
 		try {
 			\spokares_document_boxes();
-			assert_false( isset( $wp_meta_boxes['spk_document']['side']['default']['spokares_checking'] ), 'an editor gets the Webmaster check box' );
+			assert_false( isset( $wp_meta_boxes['spk_document']['side']['default']['spokares_checking'] ), 'an editor gets no Webmaster check box' );
 			as_role( 'admin' );
 			\spokares_document_boxes();
-			assert_true( isset( $wp_meta_boxes['spk_document']['side']['default']['spokares_checking'] ), 'the administrator keeps the Webmaster check box' );
+			assert_false( isset( $wp_meta_boxes['spk_document']['side']['default']['spokares_checking'] ), 'an administrator has no Webmaster check box either' );
 		} finally {
 			$wp_meta_boxes = $saved; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- restoring.
 		}
@@ -506,7 +506,7 @@ test(
 		assert_contains( 'spk_source=soon', $r['returned']['spk_soon'], 'the Soon view' );
 		assert_contains( 'Click a name to change it, give it a new file or take it off the site.', $r['output'], 'the line above the table' );
 		as_role( 'admin' );
-		assert_contains( 'spk_check', array_keys( \spokares_document_columns( array() ) ), 'the administrator keeps Needs checking' );
+		assert_not_contains( 'spk_check', array_keys( \spokares_document_columns( array() ) ), 'Needs checking is not a column' );
 
 		// Site order: section order, then place, then name.
 		$posts = get_posts(

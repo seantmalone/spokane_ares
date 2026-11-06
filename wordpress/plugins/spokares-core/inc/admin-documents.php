@@ -726,8 +726,7 @@ function spokares_save_document( $post_id ): void {
 	}
 	$meta['spk_reviewed'] = $now;
 	if ( $admin ) {
-		$meta['spk_needs_check'] = $v['check'] ? '1' : '';
-		$meta['spk_keywords']    = $v['keywords'];
+		$meta['spk_keywords'] = $v['keywords'];
 		if ( ! in_array( 'sublinks', $held, true ) ) {
 			$meta['spk_sublinks'] = $v['sublinks'];
 		}
@@ -1616,13 +1615,11 @@ function spokares_document_form_fields( $post ): void {
 add_action( 'edit_form_after_title', 'spokares_document_form_fields' );
 
 /**
- * Side boxes: Save, and (administrators) Webmaster check.
+ * Side box: Save. Editors publish a document themselves; there is no
+ * webmaster check.
  */
 function spokares_document_boxes(): void {
 	add_meta_box( 'spokares_savebox', __( 'Save', 'spokares-core' ), static fn( $post ) => spokares_render_save_box( $post ), 'spk_document', 'side', 'high' );
-	if ( current_user_can( 'manage_options' ) ) {
-		add_meta_box( 'spokares_checking', __( 'Webmaster check', 'spokares-core' ), 'spokares_render_checking_box', 'spk_document', 'side', 'default' );
-	}
 }
 add_action( 'add_meta_boxes_spk_document', 'spokares_document_boxes' );
 
@@ -1678,8 +1675,7 @@ add_action( 'admin_enqueue_scripts', 'spokares_document_assets', 20 );
 /* -------------------------------------------------------------- list table */
 
 /**
- * Columns: Document, Section, Source, Version, Reviewed, and (administrators)
- * Needs checking.
+ * Columns: Document, Section, Source, Version, Reviewed.
  *
  * @param array $cols Columns.
  */
@@ -1692,9 +1688,7 @@ function spokares_document_columns( $cols ): array {
 		'spk_version'          => __( 'Version', 'spokares-core' ),
 		'spk_reviewed'         => __( 'Reviewed', 'spokares-core' ),
 	);
-	if ( current_user_can( 'manage_options' ) ) {
-		$out['spk_check'] = __( 'Needs checking', 'spokares-core' );
-	} elseif ( ! spokares_document_list_trash() ) {
+	if ( ! current_user_can( 'manage_options' ) && ! spokares_document_list_trash() ) {
 		unset( $out['cb'] ); // No bulk actions for editors outside the Trash (below), so no row ticks.
 	}
 	return $out;
@@ -1745,9 +1739,6 @@ function spokares_document_column( $col, $post_id ): void {
 			// site, privacy-checked, and not reviewed in 12 months (D3).
 			$old = spokares_document_review_due( $d ) && 'publish' === get_post_status( $post_id ) && '1' === $get( 'spk_privacy_ok' );
 			echo '<span class="' . ( $old ? 'spk-flag' : '' ) . '">' . esc_html( spokares_is_ymd( $d ) ? spokares_fmt_date( $d, 'mdy' ) : __( 'Not yet', 'spokares-core' ) ) . '</span>';
-			break;
-		case 'spk_check':
-			echo '1' === $get( 'spk_needs_check' ) ? '<span class="spk-flag">' . esc_html__( 'Yes', 'spokares-core' ) . '</span>' : '';
 			break;
 	}
 }
@@ -1875,12 +1866,6 @@ function spokares_document_list_query( $q ): void {
 		);
 	}
 	$meta = array();
-	if ( spokares_list_needs_check() ) {
-		$meta[] = array(
-			'key'   => 'spk_needs_check',
-			'value' => '1',
-		);
-	}
 	if ( spokares_document_list_soon() ) {
 		// What members see as "Soon" (the Dashboard's "{n} marked Soon").
 		$meta[] = spokares_document_soon_meta_query();

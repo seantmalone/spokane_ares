@@ -361,14 +361,14 @@ test(
 );
 
 test(
-	'Meeting Schedule: a meeting with time words and no times (Third Thursday) still saves unchanged (control)',
+	'Meeting Schedule: the Third Thursday 6:00 PM start still saves unchanged (control)',
 	function () {
 		as_role( 'admin' );
 		$notices = qa058_save( qa058_browser_fields( qa058_screen() ) );
 		assert_not_contains( 'error', wp_list_pluck( $notices, 'type' ), 'an unchanged save is not refused (' . qa058_said( $notices ) . ')' );
 		assert_same( array( 'Nothing changed, so nothing was saved.' ), array_values( wp_list_pluck( $notices, 'text' ) ), 'an unchanged save says so (' . qa058_said( $notices ) . ')' );
 		$tt = qa058_meeting( 'third-thursday' );
-		assert_same( array( '', '', 'evenings' ), array( (string) $tt['start'], (string) $tt['end'], (string) $tt['time_text'] ), 'Third Thursday keeps its time words and no times' );
+		assert_same( array( '18:00', '', '' ), array( (string) $tt['start'], (string) $tt['end'], (string) $tt['time_text'] ), 'Third Thursday keeps 6:00 PM and no end time' );
 	}
 );
 

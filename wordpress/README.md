@@ -119,7 +119,7 @@ Rejected: events calendars, ACF and similar field plugins, security suites, form
 - A published document with a problem (for example a phone number) goes back to Draft, off the site, until it is fixed. Events keep their live version instead. Changing documents to work the same way is deferred.
 - A file saved with a Draft document can be reached by anyone who has its exact random web address. The Privacy check must be ticked before it can be uploaded.
 - Small fidelity differences remain: abbreviations in event text are plain (no dotted underline), the W1AW/7 link covers the whole event name, the WSDOT extra-form label reads "WSDOT Form 580-020…", the "Radio settings" jump link sits under the How it works title on desktop too, and the 404 and search pages are plain.
-- The footer's "Mockup — content to be verified before launch" and "Privacy (coming)" stay until the launch release and a privacy page exist.
+- The footer no longer says the site is a mockup, and it does not advertise a privacy page. Add that page when its text exists.
 - The rota, meetings, net details and tiles are WordPress options. Database backups cover them; a WordPress export (WXR) does not.
 - Deferred to after launch (P2): a paste box for the rota, a `/calendar.ics` feed, JSON export of the settings, and `page-sync` to re-apply a page pattern.
 - PLAN §6.13 asked for a printable HTML Editing guide with a box for each editor's backup codes. `EDITING-GUIDE.md` covers the content; the printed version and the codes box are made at enrolment.

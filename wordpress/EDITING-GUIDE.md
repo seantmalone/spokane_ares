@@ -160,10 +160,8 @@ A single paragraph, heading or list added at the page's top level sits in the si
 1. Pages > **Add New Page**. Only administrators have this.
 2. Type the title. It becomes the page's heading. Type the text below it, and leave **Template** on the default "Pages". The three "For members" templates belong to the members pages only.
 3. **Publish.** The page gets the site's header and footer, with its text in the reading column. Its address is `spokares.org/<its slug>/`.
-4. Links to it in the header or footer are in the theme's parts (`theme/spokares/parts/header.html` and `footer.html`). Add them in git and release, so they are never changed in the Site Editor. The footer's "Privacy (coming)" line is there too.
+4. Links to it in the header or footer are in the theme's parts (`theme/spokares/parts/header.html` and `footer.html`). Add them in git and release, so they are never changed in the Site Editor.
 
-For the Privacy Policy, Settings > Privacy > **Create** makes a draft page with this same plain layout. Edit the text, then publish it.
+For the Privacy Policy, Settings > Privacy > **Create** makes a draft page with this same plain layout. Edit the text, then publish it. The footer does not advertise a privacy page before that page exists.
 
----
-
-*Draft for the launch-gate session, 2026-09-27. The screenshots are from the test site. Before printing: check that the webmaster address works (it is still a proposal) and add a box on the back for the editor's backup codes, filled in by hand at the two-factor setup and never saved anywhere.*
+You decide when an event, a document or a schedule change is ready. Publish it yourself. An administrator is still the person who adds accounts, changes the theme, or opens Net Settings and the Meeting Schedule for someone the Emergency Coordinator has named.

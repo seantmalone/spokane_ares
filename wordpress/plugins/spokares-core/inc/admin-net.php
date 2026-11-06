@@ -451,9 +451,6 @@ function spokares_net_details_page(): void {
 				<tr>
 					<th scope="row"><label for="spk-a-show"><?php esc_html_e( 'Show on How it works', 'spokares-core' ); ?></label></th>
 					<td><input type="checkbox" name="radio[alternate][show]" id="spk-a-show" value="1" <?php checked( $a['show'] ); ?>>
-					<?php if ( $admin ) : ?>
-						<label class="spk-admin-tick"><input type="checkbox" name="radio[alternate][needs_check]" value="1" <?php checked( $a['needs_check'] ); ?>> <?php esc_html_e( 'Needs checking (webmaster only)', 'spokares-core' ); ?></label>
-					<?php endif; ?>
 					<?php spokares_err_text( $errors, 'a_show' ); ?>
 					<?php spokares_err_text( $errors, 'a_needs_check' ); ?></td>
 				</tr>
@@ -514,13 +511,6 @@ function spokares_net_details_page(): void {
 						<?php endforeach; ?>
 					</ul></td>
 				</tr>
-				<?php if ( $admin ) : ?>
-				<tr>
-					<th scope="row"><?php esc_html_e( 'Checking', 'spokares-core' ); ?></th>
-					<td><label><input type="checkbox" name="nets[needs_check]" value="1" <?php checked( $nets['needs_check'] ); ?>> <?php esc_html_e( 'Needs checking (webmaster only): the Winlink, simplex and GMRS lines', 'spokares-core' ); ?></label>
-					<?php spokares_err_text( $errors, 'needs_check' ); ?></td>
-				</tr>
-				<?php endif; ?>
 			</table>
 
 			<h2><?php esc_html_e( 'Wording on the site', 'spokares-core' ); ?></h2>
@@ -679,12 +669,12 @@ function spokares_handle_save_net_details(): void {
 		'a_offset'      => sanitize_text_field( spokares_post_str( $ain, 'offset' ) ),
 		'a_tone'        => sanitize_text_field( spokares_post_str( $ain, 'tone' ) ),
 		'a_show'        => ! empty( $ain['show'] ) ? '1' : '',
-		'a_needs_check' => ! empty( $ain['needs_check'] ) ? '1' : '',
+		'a_needs_check' => ! empty( $radio['alternate']['needs_check'] ) ? '1' : '',
 		'winlink_nth'   => $lists['winlink'],
 		'simplex_nth'   => $lists['simplex'],
 		'gmrs_nth'      => $lists['gmrs'],
 		'gmrs_time'     => sanitize_text_field( spokares_post_str( $in_nets, 'gmrs_time' ) ),
-		'needs_check'   => ! empty( $in_nets['needs_check'] ) ? '1' : '',
+		'needs_check'   => ! empty( $nets['needs_check'] ) ? '1' : '',
 	);
 	$shown = array_map( static fn( $x ) => is_array( $x ) ? implode( ',', $x ) : (string) $x, $typed );
 
