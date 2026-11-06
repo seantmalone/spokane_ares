@@ -5,7 +5,6 @@
  * Version:           0.3.2
  * Requires at least: 7.1
  * Requires PHP:      8.3
- * Tested up to:      7.1
  * Author:            Spokane County ARES-ACS
  * License:           GPL-2.0-or-later
  * Text Domain:       spokares-core

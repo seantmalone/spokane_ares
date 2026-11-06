@@ -256,7 +256,17 @@ test(
 	function () {
 		as_role( 'ares-editor' );
 		$seed = uxncs_row( static fn( $r ) => '' === $r['wl_task'] );
-		uxncs_save( array( $seed['date'] => uxncs_fields( $seed['date'], array( 'wl_form' => 'ICS-213', 'wl_task' => 'A practice message' ) ) ) );
+		uxncs_save(
+			array(
+				$seed['date'] => uxncs_fields(
+					$seed['date'],
+					array(
+						'wl_form' => 'ICS-213',
+						'wl_task' => 'A practice message',
+					)
+				),
+			)
+		);
 		$row  = uxncs_row( static fn( $r ) => 'ICS-213' === $r['wl_form'] && 'A practice message' === $r['wl_task'] );
 		$date = $row['date'];
 		$tr   = uxncs_tr( uxncs_screen(), $date );

@@ -363,19 +363,15 @@ function qa_admin_event_list( array $args ): array {
 }
 
 test(
-	'QA-086 and QA-088: a search looks through every event; spk_check=1 lists only flagged events',
+	'QA-086: a search looks through every event; spk_check is not a list filter',
 	function () {
 		as_role( 'admin' );
 		$past = post_id( 'spk_event', 'past-2022-10-rockford-exercise' );
 		update_user_option( get_current_user_id(), 'edit_spk_event_per_page', 500 );
-		assert_not_contains( $past, qa_admin_event_list( array() ), 'set-up: the past Rockford exercise is not in the Upcoming view' );
+		$upcoming = qa_admin_event_list( array() );
+		assert_not_contains( $past, $upcoming, 'set-up: the past Rockford exercise is not in the Upcoming view' );
 		assert_contains( $past, qa_admin_event_list( array( 's' => 'Rockford' ) ), 'a search from the Upcoming view finds the past exercise' );
-
-		$flagged = qa_admin_event_list( array( 'spk_check' => '1' ) );
-		assert_true( count( $flagged ) > 0, 'set-up: some events still carry the stored flag' );
-		foreach ( $flagged as $id ) {
-			assert_same( '1', (string) get_post_meta( $id, 'spk_needs_check', true ), 'spk_check=1 lists an event not marked' );
-		}
+		assert_same( $upcoming, qa_admin_event_list( array( 'spk_check' => '1' ) ), 'spk_check does not narrow the list' );
 	}
 );
 

@@ -120,7 +120,7 @@ function spokares_option_defaults(): array {
 			'gmrs_time'      => '19:30',
 			'winlink_howto'  => 'Answer on an ICS-213 unless another form is named. Send to NV2Z and AG7QP between 5:00 and 9:00 PM on the date shown. Radio preferred; Telnet OK.',
 			'open_slot_line' => 'Can you take a Tuesday marked “Volunteer needed”? Tell the Net Manager (AG7QP) on the net or on groups.io.',
-			'needs_check'    => true,
+			'needs_check'    => false,
 		),
 		'spk_radio'      => array(
 			'primary'   => array(
@@ -134,7 +134,7 @@ function spokares_option_defaults(): array {
 				'offset'      => '-600 kHz',
 				'tone'        => '123 Hz',
 				'show'        => true,
-				'needs_check' => true,
+				'needs_check' => false,
 			),
 		),
 		'spk_meetings'   => array(
@@ -205,7 +205,7 @@ function spokares_option_defaults(): array {
 				'city'        => 'Spokane',
 				'state'       => 'WA',
 				'zip'         => '99260',
-				'needs_check' => true,
+				'needs_check' => false,
 			),
 		),
 		'spk_tiles'      => array(

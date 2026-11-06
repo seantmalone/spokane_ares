@@ -1740,9 +1740,6 @@ function spokares_document_column( $col, $post_id ): void {
 			$old = spokares_document_review_due( $d ) && 'publish' === get_post_status( $post_id ) && '1' === $get( 'spk_privacy_ok' );
 			echo '<span class="' . ( $old ? 'spk-flag' : '' ) . '">' . esc_html( spokares_is_ymd( $d ) ? spokares_fmt_date( $d, 'mdy' ) : __( 'Not yet', 'spokares-core' ) ) . '</span>';
 			break;
-		case 'spk_check':
-			echo '1' === $get( 'spk_needs_check' ) ? '<span class="spk-flag">' . esc_html__( 'Yes', 'spokares-core' ) . '</span>' : '';
-			break;
 	}
 }
 add_action( 'manage_spk_document_posts_custom_column', 'spokares_document_column', 10, 2 );
@@ -1869,12 +1866,6 @@ function spokares_document_list_query( $q ): void {
 		);
 	}
 	$meta = array();
-	if ( spokares_list_needs_check() ) {
-		$meta[] = array(
-			'key'   => 'spk_needs_check',
-			'value' => '1',
-		);
-	}
 	if ( spokares_document_list_soon() ) {
 		// What members see as "Soon" (the Dashboard's "{n} marked Soon").
 		$meta[] = spokares_document_soon_meta_query();

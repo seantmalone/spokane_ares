@@ -1686,13 +1686,16 @@ function spokares_event_views( $views ): array {
 		'drafts'   => array( __( 'Drafts', 'spokares-core' ), $count( array( 'post_status' => 'draft' ) ) ),
 	);
 	$out     = array();
-	$all     = 'trash' !== $current && ( spokares_event_list_searching() || spokares_list_needs_check() );
+	$all     = 'trash' !== $current && spokares_event_list_searching();
 	if ( $all ) {
-		// A search (or the Needs checking link) lists every event, whatever view it was typed in.
+		// A search lists every event, whatever view it was typed in.
 		$out['spk_all'] = sprintf(
 			'<a href="%1$s" class="current" aria-current="page">%2$s</a>',
 			esc_url( remove_query_arg( 'spk_view' ) ),
-			esc_html( spokares_list_needs_check() ? __( 'Marked “Needs checking” (upcoming, past and drafts)', 'spokares-core' ) : __( 'Search results from every event (upcoming, past and drafts)', 'spokares-core' ) )
+			esc_html__(
+				'Search results from every event (upcoming, past and drafts)',
+				'spokares-core'
+			)
 		);
 	}
 	foreach ( $defs as $key => [ $label, $n ] ) {
@@ -1753,21 +1756,9 @@ function spokares_event_list_query( $q ): void {
 	if ( 'trash' === $view ) {
 		return;
 	}
-	if ( spokares_event_list_searching() || spokares_list_needs_check() ) {
-		// A search, or the Dashboard's "Needs checking" link, looks through
-		// every event (upcoming, past and drafts), not just the view's.
+	if ( spokares_event_list_searching() ) {
+		// A search looks through every event (upcoming, past and drafts), not just the view's.
 		$q->set( 'post_status', array( 'publish', 'draft', 'pending', 'future' ) );
-		if ( spokares_list_needs_check() ) {
-			$q->set(
-				'meta_query',
-				array(
-					array(
-						'key'   => 'spk_needs_check',
-						'value' => '1',
-					),
-				)
-			);
-		}
 	} elseif ( 'drafts' === $view ) {
 		$q->set( 'post_status', 'draft' );
 	} else {
@@ -1879,9 +1870,6 @@ function spokares_event_column( $col, $post_id ): void {
 			break;
 		case 'spk_status':
 			echo wp_kses( spokares_event_where_it_shows( $ev ), array( 'strong' => array() ) );
-			break;
-		case 'spk_check':
-			echo $ev['check'] ? '<span class="spk-flag">' . esc_html__( 'Yes', 'spokares-core' ) . '</span>' : '';
 			break;
 	}
 }
