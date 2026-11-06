@@ -44,6 +44,7 @@ function spokares_sync_roles(): void {
 		'edit_others_pages'    => true,
 		'edit_published_pages' => true,
 		'publish_pages'        => true,
+		'publish_posts'        => true,
 		'spokares_edit_rota'   => true,
 	);
 	foreach ( array_merge( spokares_type_caps( 'spk_event', 'spk_events' ), spokares_type_caps( 'spk_document', 'spk_documents' ) ) as $cap ) {

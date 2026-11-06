@@ -988,14 +988,12 @@ h2.m-head, .doc-group__head h2 { font-size: clamp(1.6rem, 1.3rem + .8vw, 2rem); 
 .ex-past__when { font-weight: 600; color: var(--ink-2); font-variant-numeric: tabular-nums lining-nums; }
 
 /* ============================================================ 29. Footer (minimal)
-   parts/footer.html: seal, five links, "Privacy (coming)", the safety line,
-   the copyright and mockup note. */
+   parts/footer.html: seal, five links, the safety line and the copyright. */
 .site-footer { background: var(--night); padding: 36px 0 28px; font-size: 15px; line-height: 1.5; }
 .footer__bar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 26px; }
 .footer__seal { display: inline-flex; flex: none; margin-right: 10px; border-radius: 50%; }
 .footer__seal img { width: 44px; height: 44px; border-radius: 50%; background: #fff; }
-/* .footer__nav holds the Navigation and "Privacy (coming)" as one inline run,
-   so the note wraps with the links, as B's last <li> did. */
+/* .footer__nav holds the footer Navigation as one inline run. */
 .footer__nav { flex: 0 1 auto; min-width: 0; margin-right: -26px; font-size: 0; } /* the negative margin absorbs the last item's gap; font-size 0 drops the space between the blocks */
 .footer__nav > * { font-size: 15px; }
 .footer__nav > nav.footer__links,
@@ -1004,7 +1002,7 @@ h2.m-head, .doc-group__head h2 { font-size: clamp(1.6rem, 1.3rem + .8vw, 2rem); 
    ".editor-styles-wrapper .wp-block-navigation .wp-block-navigation-item.wp-block { margin: revert }",
    which ran the links together in the Site Editor and in page editors. */
 .footer__nav > nav.footer__links .wp-block-navigation-item.wp-block-navigation-item { display: inline-flex; align-items: center; min-height: 44px; margin-right: 26px; vertical-align: top; }
-.footer__nav > .footer__privacy { vertical-align: top; }
+.footer__nav > .footer__privacy { vertical-align: top; } /* unused; kept so an older saved footer part still aligns */
 .site-footer a,
 nav.footer__links .wp-block-navigation-item > .wp-block-navigation-item__content {
   color: #fff; text-decoration-line: underline; text-decoration-color: rgba(197, 206, 223, .45); text-decoration-thickness: 1.5px; text-underline-offset: .2em;
@@ -1014,7 +1012,7 @@ nav.footer__links .wp-block-navigation-item > .wp-block-navigation-item__content
 .footer__privacy { display: inline-flex; align-items: center; min-height: 44px; color: var(--mist-2); }
 .footer__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 28px; margin-top: 20px; padding-top: 18px; border-top: 1px solid rgba(197, 206, 223, .16); font-size: 14px; color: var(--mist-2); }
 .footer__emergency { color: #fff; font-weight: 500; }
-.footer__mock { color: #95A1B8; font-size: 13.5px; }
+.footer__copy, .footer__mock { color: #C5CEDF; font-size: 14px; }
 
 /* ============================================================ 30. Home
    Night (hero, What we do) -> dawn strip -> Come visit on dawn -> Join on day. */

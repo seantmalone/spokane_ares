@@ -117,15 +117,12 @@ export const tests = [
     },
   },
   {
-    name: 'admin (phone): Meeting Schedule cards, fields and the "Needs checking" tick fit a 390px screen',
+    name: 'admin (phone): Meeting Schedule cards and fields fit a 390px screen',
     role: 'admin',
     viewport: 'phone',
     async run(t) {
-      await expectFits(t, {
-        path: RULES,
-        formSel: '.spk-rules form',
-        mustSee: [...RULE_FIELDS, 'input[name="rules[0][needs_check]"]'],
-      });
+      await expectFits(t, { path: RULES, formSel: '.spk-rules form', mustSee: RULE_FIELDS });
+      t.expect(await t.exists('input[name="rules[0][needs_check]"]'), 'no webmaster check on the card').toBe(false);
     },
   },
   {

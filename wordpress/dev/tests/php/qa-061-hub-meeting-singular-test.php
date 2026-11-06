@@ -3,18 +3,11 @@
  * Regression tests for QA-061 (PLAN §6.0 rule 2: B's pages and data.js are
  * the wording reference; §6 spk_meetings: Home line and Hub line).
  *
- * A meeting with no start time carries "time words" for Home, where the line
- * describes the recurring meeting: "Third Thursday training meeting,
- * evenings". The members hub's "Next meeting:" line names one dated
- * meeting, but spokares_meeting_hub_line() reuses the same recurring words,
- * so the hub reads "Next meeting: Thu, Oct 15, evenings, Third Thursday
- * training meeting" (e.g. /members/?today=2026-10-11 or 2027-03-15). The
- * reference prints a single dated Third Thursday as "Evening" (data.js
- * displayTime 'Evening'; site.js eventRow), so a single date reads
- * "Thu, Oct 15, evening, Third Thursday training meeting".
- *
- * Home keeps the recurring "evenings", and a meeting with a start time keeps
- * its time on the hub.
+ * A meeting with no start time carries time words for Home ("evenings"),
+ * and the hub turns that into the singular "evening" for one date. The
+ * seeded Third Thursday is 6:00 PM (ag7qp.com, fetched 2026-11-06), so Home
+ * and the hub print that time. A meeting built here with time words still
+ * checks the singular.
  *
  * @package spokares-dev
  */
@@ -65,21 +58,23 @@ function qa061_plain( string $html ): string {
 }
 
 /**
- * The seeded Third Thursday meeting, checked to be a time-words meeting.
+ * A meeting that still uses time words, for the singular-date rule.
  */
-function qa061_third_thursday(): array {
-	$m = qa061_meeting( 'third-thursday' );
-	assert_same( '', $m['start'], 'precondition: the Third Thursday meeting has no start time' );
-	assert_same( 'evenings', $m['time_text'], 'precondition: the Third Thursday meeting uses the seeded time words' );
-	return $m;
+function qa061_time_words_meeting(): array {
+	return array(
+		'name'       => 'Third Thursday training meeting',
+		'start'      => '',
+		'end'        => '',
+		'time_text'  => 'evenings',
+		'home_extra' => '',
+	);
 }
 
 test(
 	'hub line: a time-words meeting on one date reads "evening", not the recurring "evenings"',
 	function () {
-		$m     = qa061_third_thursday();
-		$dates = array_merge( array( '2026-10-15', '2027-03-18' ), qa061_dates( 'third-thursday', 3 ) );
-		foreach ( array_unique( $dates ) as $ymd ) {
+		$m = qa061_time_words_meeting();
+		foreach ( array( '2026-10-15', '2027-03-18' ) as $ymd ) {
 			$date = qa061_plain( \spokares_fmt_date( $ymd, 'short' ) );
 			$line = qa061_plain( \spokares_meeting_hub_line( $m, $ymd ) );
 			assert_not_contains( 'evenings', $line, $ymd . ': the hub line names one date, so it does not use Home\'s recurring "evenings"' );
@@ -93,9 +88,11 @@ test(
 );
 
 test(
-	'members hub block: "Next meeting:" for the Third Thursday reads "evening"',
+	'members hub block: "Next meeting:" for the Third Thursday reads 6:00 PM',
 	function () {
-		qa061_third_thursday();
+		$m = qa061_meeting( 'third-thursday' );
+		assert_same( '18:00', $m['start'], 'precondition: the seeded meeting starts at 6:00 PM' );
+		assert_same( '', $m['time_text'], 'precondition: it does not use time words' );
 		$next = qa061_dates( 'third-thursday', 1 )[0] ?? '';
 		$date = qa061_plain( \spokares_fmt_date( $next, 'short' ) );
 		$html = \spokares_render_meetings(
@@ -107,20 +104,21 @@ test(
 		assert_matches( '/<p class="m-line hub-meeting">.*?<\/p>/s', $html, 'the next-meeting view prints the hub line' );
 		preg_match( '/<p class="m-line hub-meeting">(.*?)<\/p>/s', $html, $hit );
 		$line = qa061_plain( $hit[1] ?? '' );
-		assert_not_contains( 'evenings', $line, 'the hub\'s "Next meeting:" line does not use the recurring "evenings"' );
-		assert_matches(
-			'/^Next meeting: ' . preg_quote( $date, '/' ) . ', evening, Third Thursday training meeting$/i',
+		assert_same(
+			'Next meeting: ' . $date . ', 6:00 PM, Third Thursday training meeting',
 			$line,
-			'the hub reads "Next meeting: ' . $date . ', evening, Third Thursday training meeting" (got "' . $line . '")'
+			'the hub reads the 6:00 PM start (got "' . $line . '")'
 		);
 	}
 );
 
 test(
-	'Home line: the Third Thursday keeps the recurring "evenings"',
+	'Home line: the Third Thursday reads 6:00 PM',
 	function () {
-		$m = qa061_third_thursday();
-		assert_same( 'Third Thursday training meeting, evenings', qa061_plain( \spokares_meeting_home_line( $m ) ), 'Home describes the recurring meeting' );
+		$m = qa061_meeting( 'third-thursday' );
+		assert_same( 'Third Thursday training meeting, 6:00 PM', qa061_plain( \spokares_meeting_home_line( $m ) ), 'Home describes the recurring meeting' );
+		$words = qa061_time_words_meeting();
+		assert_same( 'Third Thursday training meeting, evenings', qa061_plain( \spokares_meeting_home_line( $words ) ), 'time words are still printed when a meeting has no clock time' );
 	}
 );
 

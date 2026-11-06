@@ -44,8 +44,8 @@ defined( 'ABSPATH' ) || exit;
 <!-- /wp:buttons -->
 
 <!-- wp:list {"ordered":true,"start":2,"className":"seq"} -->
-<ol start="2" class="wp-block-list seq"><!-- wp:list-item {"className":"needs-verify"} -->
-<li class="needs-verify">Hand it to the Emergency Coordinator or an AEC at a meeting, or <a href="mailto:join@spokares.org">email it</a>.</li>
+<ol start="2" class="wp-block-list seq"><!-- wp:list-item -->
+<li>Hand it to the Emergency Coordinator or an AEC at a meeting.</li>
 <!-- /wp:list-item -->
 
 <!-- wp:list-item -->
@@ -74,8 +74,8 @@ defined( 'ABSPATH' ) || exit;
 <li>Pass the Sheriff’s Office background check. The county assigns your volunteer number.</li>
 <!-- /wp:list-item -->
 
-<!-- wp:list-item {"className":"needs-verify"} -->
-<li class="needs-verify">Attend New Member Orientation. It’s held regularly; <a href="#contact">ask us</a> for the next date.</li>
+<!-- wp:list-item -->
+<li>Attend New Member Orientation. It is usually the 4th Tuesday at 6:00 PM at the county emergency management building.</li>
 <!-- /wp:list-item -->
 
 <!-- wp:list-item -->

@@ -26,10 +26,11 @@
  *   - No '#' hrefs. href null = no target yet: print the title and "Soon".
  *   - src: where the fact comes from (paths relative to research/).
  *
- * Deliberately NOT in this file (do not add): the 1st-Tuesday staff meeting,
- * the Hospital Net or its channel, any simplex frequency, the W7GBU-10
- * frequency, GMRS repeater details, county/hospital/SHARES/800 MHz channels,
- * the net roster, member counts, and any "current readiness level".
+ * Deliberately NOT in this file (do not add): the Hospital Net or its channel,
+ * any simplex frequency, the W7GBU-10 frequency, GMRS repeater details,
+ * county/hospital/SHARES/800 MHz channels, the net roster, member counts,
+ * and any current readiness level. The 1st-Tuesday staff meeting is included
+ * as of the 2026-11-06 public listing (it is open to the public there).
  *
  * Helpers (SPOKARES.fn): today(), parse(iso), iso(date), fmtDate(iso, style),
  * fmtTime("20:00"), netOn(iso), nextNet(fromIso), nextMeetings(fromIso, n),
@@ -47,7 +48,7 @@
     asOf: '2026-09-26',               // frozen mockup "today" (a Saturday; day 1 of the WSDOT exercise)
     timezone: 'America/Los_Angeles',
     version: 'round3-shared-2026-09-26',
-    footerNote: 'Mockup — content to be verified before launch'
+    footerNote: '© Spokane County ARES-ACS'
   };
 
   /* ------------------------------------------------------------------- org */
@@ -90,8 +91,10 @@
   ];
 
   /* ------------------------------------------------------------------ rota */
-  // Net control for the Tuesday net (ag7qp.com, seen 2026-09-25), from asOf
-  // onward. Call signs only. callsign null + open: true = open slot. The Note
+  // Net control through 2026-10-27, from ag7qp.com/spokane-county-ares-acs
+  // as captured 2026-09-25. That page returned 404 on 2026-11-06 and no
+  // later assignment was published, so nothing after 2026-10-27 is listed.
+  // Call signs only. callsign null + open: true = open slot. The Note
   // column (Simplex / Winlink night / GMRS) comes from fn.netOn(), not from here.
   S.rotaMeta = {
     openSlotAction: 'Open slot? Tell the Net Manager (AG7QP) on the net or on groups.io.',
@@ -109,14 +112,10 @@
   // members/exercises.html#winlink-assignments (the only place the tasks appear).
   S.winlink = {
     howTo: 'Answer on an ICS-213 unless another form is named. Send to NV2Z and AG7QP between 5:00 and 9:00 PM on the date shown. Radio preferred; Telnet OK.',
-    src: 'interim-ag7qp/spokane-county-ares-acs.md',
+    src: 'interim-ag7qp/spokane-county-ares-acs.md (captured 2026-09-25). Tasks after 2026-10-27 were on that page and were not on ag7qp.com when it was fetched 2026-11-06, so they are not listed.',
     assignments: [
       { date: '2026-10-13', form: 'DYFI', task: 'Did You Feel It report (ShakeOut practice)' },
-      { date: '2026-10-27', form: 'Welfare Message / Quick Health & Welfare', task: 'A welfare message' },
-      { date: '2026-11-10', form: 'ICS-213', task: 'Where you expect to have Thanksgiving dinner' },
-      { date: '2026-11-24', form: 'ICS-213RR', task: 'What you want Santa to bring you' },
-      { date: '2026-12-08', form: 'ICS-213', task: 'Justify to Santa that you were good this year' },
-      { date: '2026-12-22', form: 'ICS-213', task: 'Your New Year’s Eve plans' }
+      { date: '2026-10-27', form: 'Welfare Message / Quick Health & Welfare', task: 'A welfare message' }
     ]
   };
 
@@ -130,12 +129,15 @@
       verify: false, src: 'facts.yaml meeting.workshop' },
     { id: 'winlink-workshop', name: 'Winlink workshop', rule: { freq: 'monthly', weekday: 6, nth: 2 },
       start: '12:30', end: '15:30', next: ['2026-10-10', '2026-11-14', '2026-12-12'],
-      verify: true, src: 'facts.yaml meeting.winlink_workshop' },
+      verify: false, src: 'https://ag7qp.com/winlink fetched 2026-11-06 (2nd Saturday, 12:30–3:30 PM, DEM)' },
     { id: 'third-thursday', name: 'Third Thursday training meeting', rule: { freq: 'monthly', weekday: 4, nth: 3 },
-      start: null, end: null, displayTime: 'Evening',    // 6 PM vs 7 PM unresolved (D13 #4)
-      skipMonths: [12],                                  // no December meeting? (D13 #10)
+      start: '18:00', end: null,                         // 6:00 PM; no end time is published
+      skipMonths: [12],                                  // December skip is still not restated on the 2026-11-06 pages
       next: ['2026-10-15', '2026-11-19', '2027-01-21'],
-      verify: true, src: 'facts.yaml meeting.third_thursday' }
+      verify: false, src: 'https://ag7qp.com/ and https://ag7qp.com/emcomm-groups fetched 2026-11-06 (3rd Thursday, 6:00 PM)' },
+    { id: 'staff', name: 'ARES-ACS staff meeting', rule: { freq: 'monthly', weekday: 2, nth: 1 },
+      start: '17:30', end: null, next: ['2026-10-06', '2026-11-03', '2026-12-01'],
+      verify: false, src: 'https://ag7qp.com/ fetched 2026-11-06 (listed with meetings open to the public; 1st Tuesday, 5:30 PM)' }
   ];
 
   /* ----------------------------------------------------------------- events */
@@ -170,14 +172,14 @@
       start: '2026-10-24', allDay: true,
       verify: true, src: 'interim-ag7qp/spokane-county-ares-acs.md' },
     { id: 'w1aw7-2026', title: 'Washington operates as W1AW/7', type: 'on-air', optional: true,
-      start: '2026-11-18', end: '2026-11-25', allDay: true,
+      start: '2026-11-18', end: '2026-11-24', allDay: true,
       summary: 'optional shifts',
       links: [{ label: 'W1AW/7', href: 'https://www.arrl.org/america250-was' }],
-      verify: true, src: 'interim-ag7qp/home.md' },
+      verify: false, src: 'https://ag7qp.com/ fetched 2026-11-06 (November 18th to 24th)' },
     { id: 'srd-2026', title: 'SKYWARN Recognition Day', type: 'on-air',
       start: '2026-12-04', end: '2026-12-05', allDay: true,
       links: [{ label: 'SKYWARN Recognition Day', href: 'https://www.weather.gov/crh/skywarnrecognition' }],
-      verify: true, src: 'interim-ag7qp/home.md' },
+      verify: false, src: 'https://ag7qp.com/ fetched 2026-11-06 (December 4-5)' },
     { id: 'wfd-2027', title: 'Winter Field Day', type: 'on-air',
       start: '2027-01-23', end: '2027-01-24', allDay: true,
       links: [{ label: 'Winter Field Day', href: 'https://winterfieldday.org/' }],

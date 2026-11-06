@@ -616,8 +616,7 @@ function spokares_save_event( $post_id ): void {
 		'spk_keep_past'    => $v['keep_past'] ? '1' : '',
 	);
 	if ( current_user_can( 'manage_options' ) ) {
-		$meta['spk_needs_check'] = $v['check'] ? '1' : '';
-		$meta['spk_precision']   = $v['precision'];
+		$meta['spk_precision'] = $v['precision'];
 	}
 	foreach ( $meta as $key => $value ) {
 		if ( isset( $held_keys[ $key ] ) ) {
@@ -1423,16 +1422,13 @@ function spokares_event_confirm( array $confirm, string $field ): void {
 }
 
 /**
- * Side boxes: Save (with Make a copy once the event is saved) and, for the
- * webmaster, Webmaster check.
+ * Side box: Save (with Make a copy once the event is saved). Editors publish
+ * an event themselves; there is no webmaster check.
  *
  * @param WP_Post $post Post.
  */
 function spokares_event_boxes( $post ): void {
 	add_meta_box( 'spokares_savebox', __( 'Save', 'spokares-core' ), 'spokares_event_save_box', 'spk_event', 'side', 'high' );
-	if ( current_user_can( 'manage_options' ) ) {
-		add_meta_box( 'spokares_checking', __( 'Webmaster check', 'spokares-core' ), 'spokares_render_checking_box', 'spk_event', 'side', 'default' );
-	}
 	unset( $post );
 }
 add_action( 'add_meta_boxes_spk_event', 'spokares_event_boxes' );
@@ -1451,19 +1447,6 @@ function spokares_event_save_box( WP_Post $post ): void {
 		);
 	}
 	spokares_render_save_box( $post, $links );
-}
-
-/**
- * The webmaster's own "Needs checking" flag (administrators only).
- *
- * @param WP_Post $post Post.
- */
-function spokares_render_checking_box( WP_Post $post ): void {
-	if ( ! current_user_can( 'manage_options' ) ) {
-		return;
-	}
-	$on = '1' === (string) get_post_meta( $post->ID, 'spk_needs_check', true );
-	echo '<label><input type="checkbox" name="spk_needs_check" value="1" ' . checked( $on, true, false ) . '> ' . esc_html__( 'Needs checking (webmaster only)', 'spokares-core' ) . '</label>';
 }
 
 /**
@@ -1815,8 +1798,7 @@ function spokares_event_list_query( $q ): void {
 add_action( 'pre_get_posts', 'spokares_event_list_query' );
 
 /**
- * Columns: When, Event, Type of event, Where it shows (and the webmaster's
- * Needs checking).
+ * Columns: When, Event, Type of event, Where it shows.
  *
  * @param array $cols Columns.
  */
@@ -1828,9 +1810,6 @@ function spokares_event_columns( $cols ): array {
 		'spk_kind'   => __( 'Type of event', 'spokares-core' ),
 		'spk_status' => __( 'Where it shows', 'spokares-core' ),
 	);
-	if ( current_user_can( 'manage_options' ) ) {
-		$out['spk_check'] = __( 'Needs checking', 'spokares-core' );
-	}
 	if ( ! spokares_is_site_admin() ) {
 		unset( $out['cb'] ); // No bulk actions for editors (below), so no row ticks.
 	}

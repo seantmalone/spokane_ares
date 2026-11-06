@@ -345,7 +345,7 @@ test(
 );
 
 test(
-	'the Webmaster check box and the Needs checking column are for administrators only',
+	'events have no Webmaster check box and no Needs checking column',
 	function () {
 		global $wp_meta_boxes;
 		$saved = $wp_meta_boxes;
@@ -359,8 +359,8 @@ test(
 			$wp_meta_boxes = $saved; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- restoring.
 			as_role( 'admin' );
 			\spokares_event_boxes( get_post( post_id( 'spk_event', 'set-2026' ) ) );
-			assert_true( isset( $wp_meta_boxes['spk_event']['side']['default']['spokares_checking'] ), 'the webmaster keeps the box' );
-			assert_true( isset( \spokares_event_columns( array() )['spk_check'] ), 'the webmaster keeps the column' );
+			assert_false( isset( $wp_meta_boxes['spk_event']['side']['default']['spokares_checking'] ), 'an administrator has no Webmaster check box' );
+			assert_false( isset( \spokares_event_columns( array() )['spk_check'] ), 'an administrator has no Needs checking column' );
 		} finally {
 			$wp_meta_boxes = $saved; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- restoring.
 		}
@@ -1109,7 +1109,7 @@ test(
 
 		// The card: the stored pattern, one line for the change, and "Drop this change".
 		$html = uxevt_rules_screen();
-		assert_contains( 'From ' . \spokares_fmt_date( $from, 'long' ) . ': Third Thursday training meeting, 4th Thursday, evenings.', $html, 'the pending line' );
+		assert_contains( 'From ' . \spokares_fmt_date( $from, 'long' ) . ': Third Thursday training meeting, 4th Thursday, ' . \spokares_fmt_time( '18:00' ) . '.', $html, 'the pending line' );
 		assert_contains( '[drop_next]', $html, 'the Drop this change tick' );
 
 		// On its date the change becomes the rule.

@@ -255,7 +255,9 @@ test(
 	'the Form select: a stored ICS-213 shows as "ICS-213 (usual)", and an untouched save leaves the row as it is',
 	function () {
 		as_role( 'ares-editor' );
-		$row  = uxncs_row( static fn( $r ) => 'ICS-213' === $r['wl_form'] && '' !== $r['wl_task'] );
+		$seed = uxncs_row( static fn( $r ) => '' === $r['wl_task'] );
+		uxncs_save( array( $seed['date'] => uxncs_fields( $seed['date'], array( 'wl_form' => 'ICS-213', 'wl_task' => 'A practice message' ) ) ) );
+		$row  = uxncs_row( static fn( $r ) => 'ICS-213' === $r['wl_form'] && 'A practice message' === $r['wl_task'] );
 		$date = $row['date'];
 		$tr   = uxncs_tr( uxncs_screen(), $date );
 		assert_matches( '#<option value=""\s+selected=[\'"]selected[\'"]\s*>ICS-213 \(usual\)</option>#', $tr, 'the blank choice reads "ICS-213 (usual)" and is chosen' );

@@ -3,7 +3,7 @@ Contributors: spokares
 Requires at least: 7.1
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.3.1
+Stable tag: 0.3.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -52,6 +52,10 @@ Fonts (assets/fonts/), SIL Open Font License 1.1, subset to Latin and Latin Exte
 Images (assets/img/): the ARES-ACS seal and the Home sunset photo belong to Spokane County ARES-ACS.
 
 == Changelog ==
+
+= 0.3.2 =
+* Footer: the mockup line and "Privacy (coming)" are gone.
+* About: contact uses meetings, the Tuesday net and groups.io. The training meeting time and the staff meeting come from the 2026-11-06 public listings.
 
 = 0.3.1 =
 * No theme changes; the version moves with spokares-core 0.3.1.

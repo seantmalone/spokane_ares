@@ -42,10 +42,6 @@ function spokares_site_page(): void {
 							<?php spokares_err_text( $errors, 'place_' . $key ); ?></td>
 					</tr>
 				<?php endforeach; ?>
-				<tr>
-					<th scope="row"><?php esc_html_e( 'Checking', 'spokares-core' ); ?></th>
-					<td><label><input type="checkbox" name="site[place][needs_check]" value="1" <?php checked( $place['needs_check'] ); ?>> <?php esc_html_e( 'Needs checking (webmaster only)', 'spokares-core' ); ?></label></td>
-				</tr>
 			</table>
 			<p class="submit"><button type="submit" class="button button-primary button-large"><?php esc_html_e( 'Save', 'spokares-core' ); ?></button></p>
 		</form>
@@ -74,7 +70,6 @@ function spokares_handle_save_site(): void {
 		}
 		$site['place'][ $key ] = $typed;
 	}
-	$site['place']['needs_check'] = ! empty( $place['needs_check'] );
 
 	update_option( 'spk_site', $site );
 	spokares_purge_cache();

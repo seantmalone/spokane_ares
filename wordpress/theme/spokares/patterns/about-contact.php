@@ -5,7 +5,7 @@
  * Categories: spokares-sections
  * Inserter: no
  * Viewport Width: 1440
- * Description: Chapter 9: the role addresses (role addresses only, never personal ones).
+ * Description: Chapter 9: how to reach the group. No proposed mailboxes.
  *
  * @package spokares
  */
@@ -17,9 +17,19 @@ defined( 'ABSPATH' ) || exit;
 <h2 id="contact" class="wp-block-heading">Contact</h2>
 <!-- /wp:heading -->
 
-<!-- wp:table {"hasFixedLayout":false,"className":"table contacts has-vh-caption needs-verify"} -->
-<figure class="wp-block-table table contacts has-vh-caption needs-verify"><table><thead><tr><th scope="col">For</th><th scope="col">Address</th></tr></thead><tbody><tr><th scope="row">Joining</th><td><a href="mailto:join@spokares.org">join@spokares.org</a></td></tr><tr><th scope="row">Agencies and partners</th><td><a href="mailto:ec@spokares.org">ec@spokares.org</a></td></tr><tr><th scope="row">This website</th><td><a href="mailto:webmaster@spokares.org">webmaster@spokares.org</a></td></tr></tbody></table><figcaption class="wp-element-caption">Role addresses</figcaption></figure>
-<!-- /wp:table -->
+<!-- wp:paragraph -->
+<p>Come to a meeting or check in on the Tuesday net. Member files and the calendar are on <a href="https://spokaneares-acs.groups.io/g/main">groups.io</a>.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:list -->
+<ul class="wp-block-list"><!-- wp:list-item -->
+<li><strong>Joining:</strong> bring the ARES application to a meeting.</li>
+<!-- /wp:list-item -->
+
+<!-- wp:list-item -->
+<li><strong>Agencies:</strong> request support through Spokane County Emergency Management.</li>
+<!-- /wp:list-item --></ul>
+<!-- /wp:list -->
 
 <!-- wp:paragraph -->
 <p><strong>In person:</strong> see <a href="/#visit">Come visit</a>.</p>

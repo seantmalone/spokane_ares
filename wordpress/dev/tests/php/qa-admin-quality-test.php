@@ -372,14 +372,9 @@ test(
 		assert_contains( $past, qa_admin_event_list( array( 's' => 'Rockford' ) ), 'a search from the Upcoming view finds the past exercise' );
 
 		$flagged = qa_admin_event_list( array( 'spk_check' => '1' ) );
-		assert_true( count( $flagged ) > 0, 'set-up: some events are marked Needs checking' );
+		assert_true( count( $flagged ) > 0, 'set-up: some events still carry the stored flag' );
 		foreach ( $flagged as $id ) {
 			assert_same( '1', (string) get_post_meta( $id, 'spk_needs_check', true ), 'spk_check=1 lists an event not marked' );
-		}
-		foreach ( \spokares_needs_check_places() as $place ) {
-			if ( str_contains( $place['url'], 'post_type=spk_event' ) ) {
-				assert_contains( 'spk_check=1', $place['url'], 'the Events link filters to Needs checking' );
-			}
 		}
 	}
 );

@@ -114,71 +114,6 @@ function spokares_rota_summary(): array {
 }
 
 /**
- * Where the "Needs checking" items are, for the Dashboard's links: the events
- * and documents lists filtered to them, and the settings screens that hold
- * the rest. Only places with items are listed.
- *
- * @return array<int,array{label:string,url:string,n:int}>
- */
-function spokares_needs_check_places(): array {
-	$out = array();
-	foreach ( array(
-		'spk_event'    => spokares_edit_screen( 'events' )[0],
-		'spk_document' => spokares_edit_screen( 'documents' )[0],
-	) as $type => $label ) {
-		$q = new WP_Query(
-			array(
-				'post_type'      => $type,
-				'post_status'    => array( 'publish', 'draft' ),
-				'posts_per_page' => 1,
-				'fields'         => 'ids',
-				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- dashboard count, small tables.
-				'meta_query'     => array(
-					array(
-						'key'   => 'spk_needs_check',
-						'value' => '1',
-					),
-				),
-			)
-		);
-		if ( $q->found_posts ) {
-			$out[] = array(
-				'label' => $label,
-				'url'   => admin_url( 'edit.php?post_type=' . $type . '&spk_check=1' ),
-				'n'     => (int) $q->found_posts,
-			);
-		}
-	}
-	$nets  = spokares_opt( 'spk_nets' );
-	$radio = spokares_opt( 'spk_radio' );
-	$site  = spokares_opt( 'spk_site' );
-	$net_n = ( $nets['needs_check'] ? 1 : 0 ) + ( $radio['alternate']['needs_check'] ? 1 : 0 );
-	if ( $net_n ) {
-		$out[] = array(
-			'label' => spokares_edit_screen( 'net-details' )[0],
-			'url'   => admin_url( 'admin.php?page=spokares-net-details' ),
-			'n'     => $net_n,
-		);
-	}
-	$meet_n = count( array_filter( spokares_opt( 'spk_meetings' )['meetings'], static fn( $m ) => ! empty( $m['needs_check'] ) ) );
-	if ( $meet_n ) {
-		$out[] = array(
-			'label' => spokares_edit_screen( 'meeting-rules' )[0],
-			'url'   => admin_url( 'admin.php?page=spokares-meeting-rules' ),
-			'n'     => $meet_n,
-		);
-	}
-	if ( $site['place']['needs_check'] ) {
-		$out[] = array(
-			'label' => __( 'ARES site settings', 'spokares-core' ),
-			'url'   => admin_url( 'options-general.php?page=spokares-site' ),
-			'n'     => 1,
-		);
-	}
-	return $out;
-}
-
-/**
  * Published events that have had no date for more than 30 days: Postponed
  * or Date not posted yet, and not saved since. They stay "upcoming" for
  * ever, so the Dashboard reminds the editors (As requested is a public
@@ -364,17 +299,6 @@ function spokares_dashboard_widget(): void {
 			admin_url( 'admin.php?page=spokares-tiles' ),
 			__( 'Pick another document or publish it', 'spokares-core' )
 		);
-	}
-
-	$checks = $admin ? spokares_needs_check_places() : array();
-	if ( $checks ) {
-		$n     = array_sum( wp_list_pluck( $checks, 'n' ) );
-		$links = array();
-		foreach ( $checks as $place ) {
-			$links[] = '<a href="' . esc_url( $place['url'] ) . '">' . esc_html( $place['label'] ) . '</a> (' . esc_html( (string) $place['n'] ) . ')';
-		}
-		/* translators: %d: number of items. */
-		$attention[] = esc_html( sprintf( _n( '%d item marked “Needs checking”:', '%d items marked “Needs checking”:', $n, 'spokares-core' ), $n ) ) . ' ' . implode( ' · ', $links );
 	}
 
 	$line_kses = array( 'a' => array( 'href' => true ) );
